@@ -2,7 +2,7 @@ import React from "react";
 import { Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-const Input = ({ name, details, label, error, ...rest }) => {
+const Input = ({ name, placeholder, label, error, ...rest }) => {
 	return (
 		<div className="form-group">
 			<label htmlFor={name}>{label}</label>
@@ -10,7 +10,7 @@ const Input = ({ name, details, label, error, ...rest }) => {
 				{...rest}
 				id={name}
 				name={name}
-				placeholder={details}
+				placeholder={placeholder}
 				className="formControl"
 				autoComplete="true"
 			/>
@@ -26,7 +26,7 @@ Input.propTypes = {
 	details: PropTypes.string,
 	type: PropTypes.string,
 	error: PropTypes.string,
-	label: PropTypes.string.isRequired
+	label: PropTypes.string
 };
 
 export default Input;
