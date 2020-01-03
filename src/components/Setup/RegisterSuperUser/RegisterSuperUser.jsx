@@ -14,16 +14,21 @@ export default class RegisterSuperUser extends Form {
 	};
 
 	schema = {
-		fullName: Joi.string().required(),
+		fullName: Joi.string()
+			.required()
+			.label("FullName"),
 		email: Joi.string()
 			.email()
-			.required(),
+			.required()
+			.label("Email"),
 		username: Joi.string()
 			.min(0)
-			.required(),
+			.required()
+			.label("Username"),
 		password: Joi.string()
 			.min(0)
 			.required()
+			.label("Password")
 	};
 
 	doSubmit() {

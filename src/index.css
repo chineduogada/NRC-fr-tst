@@ -42,4 +42,9 @@ p {
 	background: none;
 	color: var(--text-soft);
 	font-weight: normal;
+	outline-color: var(--basic);
+}
+.alert {
+	padding: 0.375rem !important;
+	text-align: center;
 }

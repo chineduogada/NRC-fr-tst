@@ -16,12 +16,22 @@ export default class registerDatabase extends Form {
 	};
 
 	schema = {
-		dialect: Joi.string(),
-		database: Joi.string().required(),
-		host: Joi.string().required(),
-		port: Joi.number().required(),
-		username: Joi.string().allow(""),
-		password: Joi.string().allow("")
+		dialect: Joi.string().label("Dialect"),
+		database: Joi.string()
+			.required()
+			.label("Database"),
+		host: Joi.string()
+			.required()
+			.label("Host"),
+		port: Joi.number()
+			.required()
+			.label("Port"),
+		username: Joi.string()
+			.allow("")
+			.label("Username"),
+		password: Joi.string()
+			.allow("")
+			.label("Password")
 	};
 
 	doSubmit() {

@@ -24,6 +24,7 @@
 
 .button.dark {
 	color: var(--text);
+	outline-color: var(--text);
 }
 .button.highlight,
 .button.fill,
@@ -32,9 +33,11 @@
 }
 .button.fill {
 	background: var(--basic);
+	outline-color: var(--basic);
 }
 .button.highlight {
 	background: var(--assent);
+	outline-color: var(--assent);
 }
 .button.fill::before,
 .button.highlight::before {
