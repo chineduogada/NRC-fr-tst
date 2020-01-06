@@ -27,7 +27,7 @@ export default function Button({
 }
 
 Button.propTypes = {
-	label: PropTypes.string.isRequired,
+	label: PropTypes.any.isRequired,
 	light: PropTypes.bool,
 	dark: PropTypes.bool,
 	fill: PropTypes.bool,

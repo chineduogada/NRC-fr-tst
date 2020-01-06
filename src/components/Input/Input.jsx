@@ -20,9 +20,9 @@ const Input = ({ name, placeholder, label, error, ...rest }) => {
 };
 
 Input.propTypes = {
-	name: PropTypes.string.isRequired,
-	value: PropTypes.any.isRequired,
-	onChange: PropTypes.func.isRequired,
+	name: PropTypes.string,
+	value: PropTypes.any,
+	onChange: PropTypes.func,
 	details: PropTypes.string,
 	type: PropTypes.string,
 	error: PropTypes.string,
