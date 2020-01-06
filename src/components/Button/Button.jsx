@@ -8,7 +8,8 @@ export default function Button({
 	dark,
 	fill,
 	highlight,
-	disabled
+	disabled,
+	...rest
 }) {
 	const getClass = () => {
 		let _class = "button";
@@ -19,7 +20,11 @@ export default function Button({
 		if (disabled) _class += " disabled";
 		return _class;
 	};
-	return <button className={getClass()}>{label}</button>;
+	return (
+		<button className={getClass()} {...rest}>
+			{label}
+		</button>
+	);
 }
 
 Button.propTypes = {
