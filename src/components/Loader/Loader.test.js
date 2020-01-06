@@ -39,6 +39,7 @@ describe("Loader", () => {
 		beforeEach(() => {
 			wrapper = setup();
 		});
+
 		it("Should not render a Brand", () => {
 			const brand = findByTestAttr(wrapper, "brand");
 			expect(brand.length).toBe(0);
