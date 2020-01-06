@@ -1,0 +1,17 @@
+.Employees {
+	overflow-y: scroll;
+	height: 100vh;
+}
+.Employees header {
+	position: sticky;
+	top: 0;
+	background: var(--inverse-text);
+}
+.Employees main {
+	// min-height: 100vh;
+}
+.Employees footer {
+	display: flex;
+	justify-content: flex-end;
+	// min-height: 100vh;
+}

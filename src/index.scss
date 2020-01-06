@@ -13,7 +13,7 @@ html {
 	--assent: #24b967;
 	--text: #2a2a2a;
 	--text-soft: #6d6d6d;
-	--inverse-text: #e6e6e6;
+	--inverse-text: #ffffff;
 }
 body {
 	font-family: -apple-system, BlinkMacSystemFont, "Raleway", "Segoe UI",
@@ -24,7 +24,6 @@ body {
 	min-height: 100vh;
 	background: var(--inverse-text);
 	color: var(--text);
-	overflow: hidden;
 }
 h1,
 h2,
@@ -51,4 +50,18 @@ p {
 }
 ul {
 	list-style: none;
+}
+
+.TableRow {
+	display: flex;
+	border: 1px solid;
+	padding: 0.75rem;
+	margin-bottom: 0.1875rem;
+}
+.TableCol {
+	flex: 1 1 25%;
+	padding-left: 0.75rem;
+}
+.TableHeader .TableCol:not(:last-child) {
+	border-right: 1px solid var(--text-soft);
 }

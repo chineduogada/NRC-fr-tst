@@ -1,5 +1,5 @@
 import React from "react";
-import "./Button.css";
+import "./Button.scss";
 import PropTypes from "prop-types";
 
 export default function Button({

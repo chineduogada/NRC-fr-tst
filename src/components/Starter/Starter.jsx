@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import classes from "./Starter.module.css";
+import classes from "./Starter.module.scss";
 import Button from "../Button/Button";
+import Loader from "../Loader/Loader";
 
 export default class Starter extends Component {
 	state = {
@@ -20,8 +21,7 @@ export default class Starter extends Component {
 		return (
 			<div className={classes.Starter}>
 				<main className="d-flex flex-column align-items-center justify-content-center">
-					<h3>Brand here</h3>
-					<h2>Loading...</h2>
+					<Loader brand="brand here" />
 
 					<div className="msg">
 						<p>
