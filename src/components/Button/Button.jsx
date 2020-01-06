@@ -19,7 +19,11 @@ export default function Button({
 		if (disabled) _class += " disabled";
 		return _class;
 	};
-	return <button className={getClass()}>{label}</button>;
+	return (
+		<button data-test="button" className={getClass()}>
+			<span data-test="label">{label}</span>
+		</button>
+	);
 }
 
 Button.propTypes = {
