@@ -4,14 +4,28 @@ import Button from "../Button/Button";
 import Searchbox from "../Searchbox/Searchbox";
 import Filter from "../Filter/Filter";
 import Pagination from "../Pagination/Pagination";
+import { getEmployees } from "../../services/employees";
 
 export default class Employees extends Component {
 	state = {
+		employees: [],
 		pageSize: 20,
 		currentPage: 1
+	};
+
+	componentDidMount() {
+		const employees = getEmployees();
+
+		this.setState({ employees });
 	}
 
+	handlePageChange = page => {
+		console.log(page);
+	};
+
 	render() {
+		const { employees, currentPage } = this.state;
+
 		return (
 			<section className="Employees">
 				<h4>Employees</h4>
@@ -47,66 +61,29 @@ export default class Employees extends Component {
 
 				<main>
 					<div className="TableBody">
-						<div className="TableRow">
-							<div className="TableCol">
-								<h6>richCode</h6>
+						{employees.map(employee => (
+							<div key={employee.id} className="TableRow">
+								<div className="TableCol">
+									<h6>{employee.name}</h6>
+								</div>
+								<div className="TableCol">
+									<h6>{employee.department}</h6>
+								</div>
+								<div className="TableCol">
+									<h6>{employee.jobType}</h6>
+								</div>
+								<div className="TableCol">
+									<h6>{employee.jobTitle}</h6>
+								</div>
 							</div>
-							<div className="TableCol">
-								<h6>Software dev</h6>
-							</div>
-							<div className="TableCol">
-								<h6>NYSC</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Whatever!</h6>
-							</div>
-						</div>
-						<div className="d-flex TableRow">
-							<div className="TableCol">
-								<h6>richCode</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Software dev</h6>
-							</div>
-							<div className="TableCol">
-								<h6>NYSC</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Whatever!</h6>
-							</div>
-						</div>
-						<div className="d-flex TableRow">
-							<div className="TableCol">
-								<h6>richCode</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Software dev</h6>
-							</div>
-							<div className="TableCol">
-								<h6>NYSC</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Whatever!</h6>
-							</div>
-						</div>
-						<div className="d-flex TableRow">
-							<div className="TableCol">
-								<h6>richCode</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Software dev</h6>
-							</div>
-							<div className="TableCol">
-								<h6>NYSC</h6>
-							</div>
-							<div className="TableCol">
-								<h6>Whatever!</h6>
-							</div>
-						</div>
+						))}
 					</div>
 				</main>
 				<footer>
-					<Pagination />
+					<Pagination
+						currentPage={currentPage}
+						onPageChange={this.handlePageChange}
+					/>
 				</footer>
 			</section>
 		);

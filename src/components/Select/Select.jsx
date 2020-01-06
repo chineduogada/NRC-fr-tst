@@ -19,12 +19,12 @@ const Select = ({ name, error, label, options, ...rest }) => {
 };
 
 Select.propTypes = {
-	name: PropTypes.string.isRequired,
-	value: PropTypes.string.isRequired,
-	options: PropTypes.array.isRequired,
-	label: PropTypes.string.isRequired,
+	name: PropTypes.string,
+	value: PropTypes.string,
+	options: PropTypes.array,
+	label: PropTypes.string,
 	error: PropTypes.string,
-	onChange: PropTypes.func.isRequired
+	onChange: PropTypes.func
 };
 
 export default Select;
