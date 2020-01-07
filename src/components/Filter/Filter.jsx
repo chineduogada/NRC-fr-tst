@@ -1,8 +1,8 @@
 import React from "react";
-import "./Filter.css";
+import "./Filter.scss";
 import { DropdownButton, Row, Col } from "react-bootstrap";
 import Button from "../Button/Button";
-import { IoIosList, IoIosJet } from "react-icons/io";
+import { AiFillFilter } from "react-icons/ai";
 
 export default function Filter() {
 	return (
@@ -12,6 +12,7 @@ export default function Filter() {
 			id="dropdown-menu-align-right"
 			variant="light"
 			className="Filter"
+			data-test="FilterComponent"
 		>
 			<Row className="Head">
 				<Col>
@@ -68,7 +69,14 @@ export default function Filter() {
 				</Col>
 			</Row>
 			<Row className="Footer">
-				<Button label={<IoIosJet />} fill />
+				<Button
+					label={
+						<span>
+							filter <AiFillFilter />
+						</span>
+					}
+					fill
+				/>
 			</Row>
 		</DropdownButton>
 	);

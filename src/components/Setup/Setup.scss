@@ -1,0 +1,29 @@
+.Setup {
+	display: flex;
+
+	.Col {
+		flex: 1 1 50%;
+		&:nth-child(1) {
+			height: 100vh;
+			display: grid;
+			place-items: center;
+			overflow-y: scroll;
+
+			& .form-title {
+				margin-bottom: 1.5rem;
+				text-transform: capitalize;
+				text-align: center;
+				width: 250px;
+			}
+			& .form-group {
+				margin-bottom: 0.75rem;
+			}
+			& .formControl {
+				width: 100%;
+			}
+		}
+		&:nth-child(2) {
+			background: var(--basic-color);
+		}
+	}
+}

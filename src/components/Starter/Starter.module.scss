@@ -1,0 +1,13 @@
+.Starter {
+	main {
+		min-width: 100vw;
+		min-height: 100vh;
+		background: var(--basic-color);
+		color: var(--inverse-text);
+		text-align: center;
+		display: flex !important;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+}

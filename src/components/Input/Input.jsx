@@ -21,6 +21,7 @@ const Input = ({ name, placeholder, label, error, ...rest }) => {
 };
 
 Input.propTypes = {
+<<<<<<< HEAD
   name: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -28,6 +29,15 @@ Input.propTypes = {
   type: PropTypes.string,
   error: PropTypes.string,
   label: PropTypes.string
+=======
+	name: PropTypes.string,
+	value: PropTypes.any,
+	onChange: PropTypes.func,
+	details: PropTypes.string,
+	type: PropTypes.string,
+	error: PropTypes.string,
+	label: PropTypes.string
+>>>>>>> 84f15c05c6d63c8045a505fd9fcf9d3e791b8044
 };
 
 export default Input;

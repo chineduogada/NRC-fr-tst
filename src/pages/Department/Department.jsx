@@ -5,8 +5,6 @@ import Layout from '../../components/Layout/Layout';
 import Loader from '../../components/Loader/Loader';
 import { isUserSignedIn } from '../../services/Credentials';
 import Section from '../../hoc/Section/Section';
-import InputField from '../../components/InputField/InputField';
-import Button from '../../components/Button/Button';
 import classes from './Department.module.scss';
 
 class Department extends Component {

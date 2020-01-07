@@ -12,12 +12,21 @@
   padding: 0;
 }
 .Filter .Head {
+<<<<<<< HEAD:src/components/Filter/Filter.css
   text-align: center;
   padding: 0.75rem 0 !important;
   border-bottom: 1px solid rgba(77, 43, 43, 0.15);
 }
 .Filter .Head div:not(:last-child) {
   border-right: 1px solid rgba(168, 168, 168, 0.15);
+=======
+	text-align: center;
+	padding: 0.75rem 0 !important;
+	border-bottom: 1px solid var(--line-color);
+}
+.Filter .Head div:not(:last-child) {
+	border-right: 1px solid var(--line-color);
+>>>>>>> 84f15c05c6d63c8045a505fd9fcf9d3e791b8044:src/components/Filter/Filter.scss
 }
 /* border-right: 1px solid; */
 .Filter .Head,

@@ -1,36 +1,43 @@
 import React, { Component } from "react";
-import classes from "./Employees.module.css";
-import Button from "../Button/Button";
-import { Row, Col, DropdownButton, Dropdown } from "react-bootstrap";
-import Searchbox from "../Searchbox/Searchbox";
-import Filter from "../Filter/Filter";
+import { getEmployees } from "../../services/employees";
+import TableView from "../TableView/TableView";
 
 export default class Employees extends Component {
+	state = {
+		employees: [],
+		columns: [
+			{ title: "name", label: "Name" },
+			{ title: "department", label: "Department" },
+			{ title: "jobType", label: "Job Type" },
+			{ title: "time", label: "Time" },
+			{ title: "date", label: "Date" },
+			{ title: "jobTitle", label: "Job Title" }
+		],
+		pageSize: 20,
+		currentPage: 1
+	};
+
+	componentDidMount() {
+		const employees = getEmployees();
+
+		this.setState({ employees });
+	}
+
+	handlePageChange = page => {
+		this.setState({ currentPage: page });
+	};
+
 	render() {
+		const { employees, currentPage, columns } = this.state;
+
 		return (
-			<section className={classes.Employee}>
-				<h4>Employees</h4>
-
-				<header>
-					<div className="d-flex justify-content-end">
-						<Button label="add new" fill />
-						<Button label="print" />
-					</div>
-					<div className="d-flex justify-content-between mt-2">
-						<Searchbox />
-
-						<Filter />
-					</div>
-					<Row className={classes.TableHeader}>
-						<Col>Name</Col>
-						<Col>Department</Col>
-						<Col>Job Type</Col>
-						<Col>Job Title</Col>
-					</Row>
-				</header>
-				<main></main>
-				<footer></footer>
-			</section>
+			<TableView
+				data={employees}
+				columns={columns}
+				currentPage={currentPage}
+				onPageChange={this.handlePageChange}
+				title="employees"
+			/>
 		);
 	}
 }
