@@ -1,48 +1,39 @@
 .Filter button {
-  background-color: rgb(138, 138, 138);
-  color: #fff;
+	background-color: rgb(138, 138, 138);
+	color: #fff;
 }
 
 .Filter .dropdown-menu {
-  min-width: 90vw;
-  min-height: 20vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  top: 40px !important;
-  transform: translateX(-95%) !important;
-  padding: 0;
+	min-width: 90vw;
+	min-height: 20vh;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+	top: 40px !important;
+	transform: translateX(-95%) !important;
+	padding: 0;
 }
 .Filter .Head {
-<<<<<<< HEAD:src/components/Filter/Filter.css
-  text-align: center;
-  padding: 0.75rem 0 !important;
-  border-bottom: 1px solid rgba(77, 43, 43, 0.15);
-}
-.Filter .Head div:not(:last-child) {
-  border-right: 1px solid rgba(168, 168, 168, 0.15);
-=======
 	text-align: center;
 	padding: 0.75rem 0 !important;
 	border-bottom: 1px solid var(--line-color);
 }
 .Filter .Head div:not(:last-child) {
 	border-right: 1px solid var(--line-color);
->>>>>>> 84f15c05c6d63c8045a505fd9fcf9d3e791b8044:src/components/Filter/Filter.scss
 }
 /* border-right: 1px solid; */
 .Filter .Head,
 .Filter .Head div {
-  padding: 0;
-  margin: 0;
-  width: 100%;
+	padding: 0;
+	margin: 0;
+	width: 100%;
 }
 .Filter ul {
-  text-align: left;
-  padding: 0 0.75rem;
+	text-align: left;
+	padding: 0 0.75rem;
 }
 .Filter input {
-  margin-right: 0.75rem;
+	margin-right: 0.75rem;
 }
 .Filter .Footer {
-  justify-content: center;
-  padding: 0.75rem 0;
+	justify-content: center;
+	padding: 0.75rem 0;
 }
