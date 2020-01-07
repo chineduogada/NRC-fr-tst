@@ -1,5 +1,7 @@
 .Table {
 	overflow-x: auto;
+	min-width: 100%;
+	width: auto;
 
 	&Header {
 		background: var(--inverse-text);
