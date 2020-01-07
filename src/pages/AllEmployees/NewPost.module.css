@@ -1,0 +1,44 @@
+.Tab {
+  /* background-color: #FFF; */
+  width: 100%;
+}
+
+.TabControls {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  transform: translateY(1px);
+  width: fit-content;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px 1px 0;
+  border-bottom: 1px solid #fff;
+}
+
+.TabControl {
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  color: #222;
+}
+
+.TabControl.Active {
+  background-color: rgb(7, 111, 180);
+  color: #fff;
+}
+
+.TabBody {
+  padding: 0.5em 1em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.TabBody form {
+  width: 100%;
+}
+
+.Search input {
+  width: 50%;
+  background: none;
+}

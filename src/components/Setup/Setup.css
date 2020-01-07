@@ -1,0 +1,25 @@
+.Setup .col:nth-child(1) {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow-y: scroll;
+}
+.Setup .col:nth-child(1) form {
+  padding: 1.5rem 0;
+}
+.Setup .col:nth-child(1) .form-title {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-align: center;
+}
+.Setup .col:nth-child(1) .form-group {
+  margin-bottom: 0.75rem;
+}
+.Setup .col:nth-child(1) .formControl {
+  width: 100%;
+}
+
+.Setup .col:nth-child(2) {
+  background: var(--basic);
+}

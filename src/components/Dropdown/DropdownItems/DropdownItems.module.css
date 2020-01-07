@@ -1,0 +1,10 @@
+.DropdownItems {
+  position: absolute;
+  top: 30%;
+  right: 0;
+  transform: translateX(-5%);
+  padding: 0.3em 0.5em;
+  border-radius: 3px;
+  box-shadow: -3px 5px 7px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}

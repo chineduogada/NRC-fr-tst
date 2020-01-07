@@ -1,0 +1,83 @@
+.LoginWrapper {
+  background-color: #f2f2f2;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.7fr 2.7fr;
+}
+
+.Image {
+  display: none;
+}
+
+.Login {
+  /* order: 3; */
+  padding: 2em 3em;
+  width: 90%;
+  background-color: #fff;
+  min-height: 400px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 900px) {
+  .Image {
+    display: block;
+  }
+}
+
+@media (min-width: 900px) {
+  .LoginWrapper {
+    background-color: #f2f2f2;
+    width: 100%;
+    position: relative;
+  }
+
+  .Banner {
+    /* display: none; */
+    background: linear-gradient(45deg, rgba(31, 89, 143, 0.884) 30%, rgba(8, 169, 209, 0.87));
+  }
+
+
+  .Image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .Image img {
+    width: 80%;
+    position: absolute;
+    right: 0;
+  }
+  
+  .Login {
+    /* position: absolute; */
+    /* left: 20%; */
+    /* transform: translateX(-20%); */
+    padding: 2em 3em;
+    /* max-width: 700px; */
+    min-height: 400px;
+  }
+}
+
+.Brand {
+  text-align: center;
+  padding: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  width: fit-content;
+  margin: 0 auto 1.5em;
+  border-radius: 5px;
+}
+
+.Brand h1 {
+  color: rgb(7, 111, 180);
+}
+
+.Login p {
+  font-size: 0.95rem;
+}
+
+.Login form {
+  margin-top: 1em;
+}

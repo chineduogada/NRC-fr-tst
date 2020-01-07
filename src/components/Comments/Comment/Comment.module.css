@@ -1,0 +1,59 @@
+.Comment {
+
+}
+
+.Comment:not(:last-child) {
+  margin-bottom: 2.5em;
+}
+
+.Footer {
+  margin-top: 1em;
+}
+
+/* .Author, .Timestamp {
+  display: inline-block;
+}
+
+.Author {
+  margin-right: 1em;
+  height: 20px;
+  width: 20px;
+  background-color: rgb(8, 108, 155);
+  border-radius: 50%;
+  text-align: center;
+} */
+
+.Author {
+  display: flex;
+  align-items: center;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+a .Author {
+  color: #222;
+}
+
+.AuthorImage {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: rgb(224, 224, 224);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1em;
+}
+
+.AuthorImage img {
+  width: 100%;
+}
+
+.AuthorName {
+  text-transform: capitalize;
+}
+
+.Timestamp {
+  font-size: 0.7rem !important;
+  color: #444;
+}

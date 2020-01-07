@@ -1,19 +1,12 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import Starter from "../components/Starter/Starter";
-import Setup from "../components/Setup/Setup";
-import Employees from "../components/Employees/Employees";
+import React from 'react';
+import axios from 'axios';
+import GlobalRouter from '../hoc/Routers/GlobalRoutes';
+
+// Configure Axios Defaults:: baseURL and Token
+axios.defaults.baseURL = 'https://floating-lowlands-92074.herokuapp.com/api/v1';
 
 const App = () => {
-	return (
-		<Switch>
-			<Route path="/starter" component={Starter} />
-			<Route path="/setup" component={Setup} />
-			<Route path="/employees" component={Employees} />
-
-			<Redirect from="/" exact to="/starter" />
-		</Switch>
-	);
+  return <GlobalRouter />;
 };
 
 export default App;

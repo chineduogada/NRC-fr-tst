@@ -1,0 +1,35 @@
+button, .btn {
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+button, .btn, input[type='submit'], a {
+  cursor: pointer;
+}
+
+.btn {
+  background: linear-gradient(45deg, rgb(48, 26, 146), rgb(95, 33, 175));
+  color: #fff;
+  padding: 0.5em 0.7em;
+  text-transform: uppercase;
+  margin: 0.5em 0;
+  font-size: 1rem;
+  border-radius: 3px;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.dead {
+  background-color: #999;
+}
+
+.danger {
+  background-color: rgb(207, 5, 5);
+}
+
+.btn-full-width {
+  width: 100%;
+}
