@@ -4,6 +4,8 @@ const employees = [
 		name: "ogada chinedu stanley",
 		department: "software developer",
 		jobType: "NYSC",
+		time: "09:03",
+		date: "2019-10-06",
 		jobTitle: "job title 1"
 	},
 	{
@@ -11,6 +13,8 @@ const employees = [
 		name: "richCode stanley",
 		department: "software developer",
 		jobType: "NYSC",
+		time: "09:03",
+		date: "2019-10-06",
 		jobTitle: "job title 2"
 	},
 	{
@@ -18,13 +22,332 @@ const employees = [
 		name: "aaa bbb ccc",
 		department: "software developer",
 		jobType: "NYSC",
+		time: "09:03",
+		date: "2019-10-06",
 		jobTitle: "job title 3"
 	},
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
+	// {
+	// 	id: "abc3",
+	// 	name: "aaa bbb ccc",
+	// 	department: "software developer",
+	// 	jobType: "NYSC",
+	// 	time: "09:03",
+	// 	date: "2019-10-06",
+	// 	jobTitle: "job title 3"
+	// },
 	{
 		id: "abc4",
 		name: "ogada chinedu stanley",
 		department: "software developer",
 		jobType: "NYSC",
+		time: "09:03",
+		date: "2019-10-06",
 		jobTitle: "job title 4"
 	}
 ];

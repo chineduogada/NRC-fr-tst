@@ -12,6 +12,7 @@ export default function Filter() {
 			id="dropdown-menu-align-right"
 			variant="light"
 			className="Filter"
+			data-test="FilterComponent"
 		>
 			<Row className="Head">
 				<Col>

@@ -7,12 +7,13 @@
 	scroll-behavior: smooth;
 }
 html {
-	--basic: #550fb1;
-	--basic-light: #9c7bc7;
-	--basic-dark: #200542;
+	--basic-color: #550fb1;
+	--basic-color-light: #9c7bc7;
+	--basic-color-dark: #200542;
 	--assent: #24b967;
 	--text: #2a2a2a;
-	--text-soft: #6d6d6d;
+	--text-light: #6b6b6b;
+	--line-color: #eee;
 	--inverse-text: #ffffff;
 }
 body {
@@ -40,9 +41,9 @@ p {
 	border-radius: 5px;
 	border: 1.3px solid;
 	background: none;
-	color: var(--text-soft);
+	color: var(--text-light);
 	font-weight: normal;
-	outline-color: var(--basic);
+	outline-color: var(--basic-color);
 }
 .alert {
 	padding: 0.375rem !important;
@@ -54,14 +55,14 @@ ul {
 
 .TableRow {
 	display: flex;
-	border: 1px solid;
-	padding: 0.75rem;
 	margin-bottom: 0.1875rem;
 }
 .TableCol {
-	flex: 1 1 25%;
+	flex: 1 0 25%;
 	padding-left: 0.75rem;
+	padding: 0.75rem;
+	border: 1px solid var(--line-color);
 }
-.TableHeader .TableCol:not(:last-child) {
-	border-right: 1px solid var(--text-soft);
+.TableHeader .TableCol {
+	border: 1px solid var(--text-light);
 }

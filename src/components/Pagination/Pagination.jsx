@@ -5,15 +5,19 @@ import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
 
 export default function Pagination({ currentPage, onPageChange }) {
 	return (
-		<div className={classes.Pagination}>
+		<div className={classes.Pagination} data-test="PaginationComponent">
 			<Button
 				label={<AiOutlineCaretLeft />}
-				onClick={() => onPageChange(currentPage)}
+				data-test="prev-control-btn"
+				onClick={() => onPageChange(currentPage - 1)}
 			/>
-			<span className={classes.CurrentPage}>{currentPage}</span>
+			<span className={classes.CurrentPage} data-test="current-page">
+				{currentPage}
+			</span>
 			<Button
 				label={<AiOutlineCaretRight />}
-				onClick={() => onPageChange(currentPage)}
+				data-test="next-control-btn"
+				onClick={() => onPageChange(currentPage + 1)}
 			/>
 		</div>
 	);

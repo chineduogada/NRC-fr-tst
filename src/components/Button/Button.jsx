@@ -21,8 +21,8 @@ export default function Button({
 		return _class;
 	};
 	return (
-		<button className={getClass()} {...rest}>
-			{label}
+		<button data-test="button" className={getClass()} {...rest}>
+			<span data-test="label">{label}</span>
 		</button>
 	);
 }

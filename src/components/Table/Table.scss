@@ -1,0 +1,9 @@
+.Table {
+	overflow-x: auto;
+
+	&Header {
+		background: var(--inverse-text);
+	}
+	&Body {
+	}
+}
