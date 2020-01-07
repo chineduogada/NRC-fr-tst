@@ -28,17 +28,12 @@ body {
   background-color: #f7f2ff;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
+h1, h2, h3, h4, h5, h6, p {
   margin-bottom: 1.5rem;
 }
 
 /* ICONS */
+
 .icon {
   color: var(--basic);
   margin: 0 0.2em;
@@ -50,8 +45,7 @@ p {
   border: none;
 }
 
-.button,
-.formControl {
+.button, .formControl {
   padding: 0.375rem 0.75rem;
   border-radius: 5px;
   border: 1.3px solid;
@@ -70,12 +64,6 @@ ul {
   list-style: none;
 }
 
-main {
-  display: grid;
-  width: 95%;
-  margin: 2em auto 0;
-}
-
 /* Feedbacks */
 
 .error {
@@ -86,17 +74,35 @@ main {
 
 .TableRow {
   display: flex;
+  text-decoration: none;
 }
+
 .TableCol {
   flex: 1 0 25%;
   padding-left: 0.75rem;
   padding: 0.75rem;
   border: 1px solid var(--line-color);
 }
+
 .TableHeader .TableCol {
   border: 1px solid var(--text-light);
   background: var(--line-color);
 }
+
+.TableBody .TableCol p {
+  font-size: 90%;
+  color: var(--text-light)
+}
+
+.TableHeader .TableCol {
+  border: 1px solid var(--text-light);
+  background: var(--line-color);
+}
+
+.TableHeader .TableCol h6 {
+  margin: 0;
+}
+
 .TableBody .TableRow:nth-child(even) .TableCol {
   background: var(--line-color);
 }

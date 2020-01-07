@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { getToken } from '../../services/Credentials';
 import Nav from '../Nav/Nav';
 import Aside from './Aside/Aside';
+import MainArea from './MainArea/MainArea';
 import classes from './Layout.module.css';
 
 const layout = props => {
@@ -24,7 +25,7 @@ const layout = props => {
         <Nav triggerSignOut={props.signOutHandler} />
 
         {/* Main Section */}
-        <main>{props.children}</main>
+        <MainArea>{props.children}</MainArea>
       </div>
     </div>
   );

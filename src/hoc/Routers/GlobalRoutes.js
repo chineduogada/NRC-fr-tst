@@ -18,7 +18,7 @@ const globalRoutes = props => {
         <Route path="/setup/database" exact component={Setup} />
         <Route path="/setup/superuser" exact component={Setup} />
         <Route path="/training-schedule" exact component={AllEmployees} />
-        <Route path="/employee/" exact component={Employees} />
+        <Route path="/employee/" exact component={AllEmployees} />
         <Route path="/employee/:id" exact component={Department} />
         <Route path="/department" exact component={Department} />
         <Route path="/department/([0-9]+)" exact component={Department} />
