@@ -1,0 +1,10 @@
+.Section {
+  margin-bottom: 2em;
+}
+
+.SectionTitle {
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  color: rgb(48, 26, 146);
+  text-transform: capitalize;
+}

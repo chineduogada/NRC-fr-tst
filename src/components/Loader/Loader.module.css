@@ -1,0 +1,40 @@
+.Loader {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  height: 50px;
+  width: 50px;
+  border-radius: 10%;
+  background-color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: loader 1.5s infinite;
+}
+
+.LoaderChild {
+  height: 40%;
+  width: 40%;
+  background-color: rgb(4, 208, 235);
+  animation: loaderChild 1.5s 0.5s infinite;
+  position: absolute;
+}
+
+@keyframes loader {
+  0% {
+    transform: translate(-50%, -30%);
+  }
+  100% {
+    transform: translate(-50%, -30%) rotate(360deg);
+  }
+}
+
+@keyframes loaderChild {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(-50%) rotate(-360deg);
+  }
+}

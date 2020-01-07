@@ -1,0 +1,11 @@
+.CommentBox {
+  margin-bottom: 2em;
+  display: grid;
+}
+
+.CommentBox .Input {
+  height: 5vh;
+  min-height: 50px;
+  flex-grow: 1;
+  margin-bottom: -1em;
+}

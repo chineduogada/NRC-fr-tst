@@ -1,0 +1,31 @@
+.InputField {
+  display: flex;
+  flex-flow: column;
+}
+
+.InputField:not(:last-child) {
+  margin-bottom: 1em;
+}
+.Label {
+  margin-bottom: 0.5em;
+  text-transform: capitalize;
+}
+
+.Control {
+  width: 100%;
+  padding: 0.8em 0.3em;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  /* transition: border 0.1s ease; */
+}
+
+.Control:focus {
+  border: 2px solid rgb(7, 111, 180);
+}
+
+textarea.Control {
+  max-width: 100%;
+  height: 30vh;
+  min-height: 80px;
+}

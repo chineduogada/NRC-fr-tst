@@ -1,0 +1,41 @@
+.Dropdown {
+  position: relative;
+}
+
+.Dropdown .MenuItems {
+  transform: scale(0);
+  transform-origin: top;
+  transition: transform 0.2s ease;
+}
+
+.Dropdown:hover .MenuItems {
+  transform: scale(1);
+}
+
+.MenuIcon {
+  position: relative;
+}
+
+.MenuIcon, .MenuIcon::before, .MenuIcon::after {
+  height: 5px;
+  width: 5px;
+  background-color: #444;
+  border-radius: 50%;
+}
+
+.MenuIcon:hover, .MenuIcon:hover::before, .MenuIcon:hover::after {
+  background-color: rgb(4, 184, 207);
+}
+
+.MenuIcon::before, .MenuIcon::after {
+  content: '';
+  position: absolute;
+}
+
+.MenuIcon::before {
+  transform: translateX(120%);
+}
+
+.MenuIcon::after {
+  transform: translateX(240%);
+}

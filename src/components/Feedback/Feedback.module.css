@@ -1,0 +1,25 @@
+.Feedback {
+  position: fixed;
+  top: 70px;
+  right: 0;
+  min-height: 20px;
+  min-width: 30px;
+  padding: 1em 2em;
+  z-index: 3;
+  background-color: #fff;
+  box-shadow: -1px 3px 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(110%);
+  transition: all 0.3s ease;
+}
+
+.Feedback.Default {
+  background-color: rgb(7, 111, 180);
+}
+
+.Message {
+  color: #FFF;
+}
+
+.Feedback.Show {
+  transform: translateX(0);
+}

@@ -1,0 +1,11 @@
+.DropdownItem a {
+  color: #222;
+}
+
+.DropdownItem a:hover {
+  color: rgb(4, 184, 207);
+}
+
+.DropdownItem:not(:last-child) {
+  margin-bottom: 0.2em;
+}
