@@ -1,17 +1,23 @@
 .TableView {
-  // overflow-y: scroll;
-  height: 100vh;
+	// overflow-y: scroll;
+	height: 100vh;
 
-  // header {
-  // }
+	header {
+		.TableTitle {
+			margin-bottom: 0.5em;
+			font-weight: 600;
+			color: var(--basic-color);
+			text-transform: capitalize;
+		}
+	}
 
-  // main {
-  // 	// min-height: 100vh;
-  // }
+	// main {
+	// 	// min-height: 100vh;
+	// }
 
-  footer {
-    display: flex;
-    justify-content: flex-end;
-    // min-height: 100vh;
-  }
+	footer {
+		display: flex;
+		justify-content: flex-end;
+		// min-height: 100vh;
+	}
 }

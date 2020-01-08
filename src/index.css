@@ -1,108 +1,116 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-  font-family: 'Raleway', sans-serif;
-  letter-spacing: 1.2px;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	font-family: "Raleway", sans-serif;
+	letter-spacing: 1.2px;
 }
 
 html {
-  --basic-color: #550fb1;
-  --basic-color-light: #9c7bc7;
-  --basic-color-dark: #200542;
-  --assent: #24b967;
-  --text: #2a2a2a;
-  --text-light: #6b6b6b;
-  --line-color: #f8f8f8;
-  --inverse-text: #ffffff;
+	--basic-color: #550fb1;
+	--basic-color-light: #9c7bc7;
+	--basic-color-dark: #200542;
+	--assent: #24b967;
+	--text: #2a2a2a;
+	--text-light: #6b6b6b;
+	--line-color: #f8f8f8;
+	--inverse-text: #ffffff;
 }
 
 body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
-  background: var(--inverse-text);
-  color: var(--text);
-  background-color: #f7f2ff;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	min-height: 100vh;
+	background: var(--inverse-text);
+	color: var(--text);
+	background-color: #f7f2ff;
 }
 
-h1, h2, h3, h4, h5, h6, p {
-  margin-bottom: 1.5rem;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+	margin-bottom: 1.5rem;
 }
 
 /* ICONS */
 
 .icon {
-  color: var(--basic);
-  margin: 0 0.2em;
-  font-size: 1.2em;
+	color: var(--basic);
+	margin: 0 0.2em;
+	font-size: 1.2em;
 }
 
 .button:focus {
-  outline: none;
-  border: none;
+	outline: none;
+	border: none;
 }
 
-.button, .formControl {
-  padding: 0.375rem 0.75rem;
-  border-radius: 5px;
-  border: 1.3px solid;
-  background: none;
-  color: var(--text-light);
-  font-weight: normal;
-  outline-color: var(--basic-color);
+.button,
+.formControl {
+	padding: 0.375rem 0.75rem;
+	border-radius: 5px;
+	border: 1.3px solid;
+	background: none;
+	color: var(--text-light);
+	font-weight: normal;
+	outline-color: var(--basic-color);
 }
 
 .alert {
-  padding: 0.375rem !important;
-  text-align: center;
+	padding: 0.375rem !important;
+	text-align: center;
 }
 
 ul {
-  list-style: none;
+	list-style: none;
 }
 
 /* Feedbacks */
 
 .error {
-  font-size: 0.875rem;
-  color: red;
-  margin: 0.3em 0;
+	font-size: 0.875rem;
+	color: red;
+	margin: 0.3em 0;
 }
 
 .TableRow {
-  display: flex;
-  text-decoration: none;
+	display: flex;
+	text-decoration: none !important;
 }
 
 .TableCol {
-  flex: 1 0 25%;
-  padding-left: 0.75rem;
-  padding: 0.75rem;
-  border: 1px solid var(--line-color);
+	flex: 1 0 25%;
+	padding-left: 0.75rem;
+	padding: 0.75rem;
+	border: 1px solid var(--line-color);
 }
 
 .TableHeader .TableCol {
-  border: 1px solid var(--text-light);
-  background: var(--line-color);
+	border: 1px solid var(--text-light);
+	background: var(--line-color);
 }
 
 .TableBody .TableCol p {
-  font-size: 90%;
-  color: var(--text-light)
+	font-size: 90%;
+	color: var(--text-light);
 }
 
 .TableHeader .TableCol {
-  border: 1px solid var(--text-light);
-  background: var(--line-color);
+	border: 1px solid var(--text-light);
+	background: var(--line-color);
 }
 
 .TableHeader .TableCol h6 {
-  margin: 0;
+	margin: 0;
 }
 
-.TableBody .TableRow:nth-child(even) .TableCol {
-  background: var(--line-color);
+.TableBody .TableRow:nth-child(even) .TableCol,
+.TableBody .TableRow:hover .TableCol {
+	background: var(--line-color);
 }

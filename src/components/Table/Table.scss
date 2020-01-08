@@ -1,11 +1,11 @@
 .Table {
-  overflow-x: auto;
-  min-width: 100%;
-  width: auto;
+	overflow-x: auto;
+	min-width: 100%;
+	width: auto;
 
-  &Header {
-    background: var(--inverse-text);
-  }
-  &Body {
-  }
+	&Header {
+		background: var(--inverse-text);
+	}
+	&Body {
+	}
 }

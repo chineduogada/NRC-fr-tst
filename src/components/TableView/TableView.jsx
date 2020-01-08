@@ -12,7 +12,7 @@ const TableView = ({ title, data, onPageChange, currentPage, columns }) => {
 			<header>
 				<div className="d-flex justify-content-between">
 					<div className="title text-capitalize">
-						<h4>{title}</h4>
+						<h2 className={classes.TableTitle}>{title}</h2>
 					</div>
 					<div className="buttons">
 						<Button label="add new" fill />

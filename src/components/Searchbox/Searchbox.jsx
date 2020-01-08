@@ -1,12 +1,11 @@
-import React from 'react';
-import Input from '../Input/Input';
+import React from "react";
 
 export default function Searchbox({ placeholder }) {
-  return (
-    <input
-      className="formControl"
-      placeholder={`search ${placeholder}...`}
-      data-test="field"
-    />
-  );
+	return (
+		<input
+			className="formControl"
+			placeholder={`search ${placeholder}...`}
+			data-test="field"
+		/>
+	);
 }
