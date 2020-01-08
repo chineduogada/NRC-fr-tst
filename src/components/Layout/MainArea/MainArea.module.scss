@@ -1,4 +1,6 @@
 .MainArea {
-  width: 95%;
-  margin: 2em auto 0;
+	padding: 1.75rem 0.75rem 0.75rem;
+	flex: 1 0 65vh;
+	// height: 100px;
+	overflow-y: scroll;
 }
