@@ -1,8 +1,8 @@
 import React from "react";
-import credentials from "../../services/Credentials";
+// import credentials from "../../services/Credentials";
 import { Link } from "react-router-dom";
-import InputField from "../InputField/InputField";
-import "./Nav.css";
+// import InputField from "../InputField/InputField";
+import "./Nav.scss";
 
 // Navigation
 const Nav = props => {

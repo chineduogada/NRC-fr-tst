@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-import Aux from "../../hoc/Auxiliary/Auxiliary";
 import Section from "../../hoc/Section/Section";
-import Layout from "../../components/Layout/Layout";
-import classes from "./Home.module.css";
+import classes from "./Dashboard.module.scss";
 
-class Home extends Component {
+export default class Dashboard extends Component {
 	data = {};
 
 	render() {
 		return (
-			<Layout sectionId="post" sectionTitle="dashboard">
+			<Section id="post" title="dashboard">
 				<Section>
 					<div className={classes.BasicSummary}>
 						<div className={classes.Summary}>No data to render</div>
@@ -33,9 +31,7 @@ class Home extends Component {
 						</div>
 					</div>
 				</Section>
-			</Layout>
+			</Section>
 		);
 	}
 }
-
-export default Home;
