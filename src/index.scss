@@ -108,6 +108,11 @@ ul {
 .TableBody .TableCol p {
 	font-size: 90%;
 	color: var(--text-light);
+	margin: 0;
+}
+.TableBody .TableRow:hover .TableCol p {
+	color: var(--basic-color);
+	font-weight: bold;
 }
 
 .TableHeader .TableCol {
@@ -119,7 +124,6 @@ ul {
 	margin: 0;
 }
 
-.TableBody .TableRow:nth-child(even) .TableCol,
-.TableBody .TableRow:hover .TableCol {
+.TableBody .TableRow:nth-child(even) .TableCol {
 	background: var(--line-color);
 }
