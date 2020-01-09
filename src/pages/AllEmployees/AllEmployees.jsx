@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { getEmployees } from "../../services/employees";
 import TableView from "../../components/TableView/TableView";
-import Layout from "../../components/Layout/Layout";
 
 export default class AllEmployees extends Component {
 	state = {
