@@ -1,18 +1,35 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
-import classes from "./Input.module.scss";
+import "./Input.scss";
 
-const Input = ({ name, placeholder, label, error, ...rest }) => {
+const Input = ({
+	name,
+	label,
+	error,
+	noBorder,
+	placeholder,
+	disabled,
+	defaultValue,
+	...rest
+}) => {
+	const getClass = () => {
+		let _class = "formControl";
+
+		return (_class += noBorder ? " noBorder" : "");
+	};
+
 	return (
 		<div className="form-group">
 			<label htmlFor={name}>{label}</label>
 			<input
-				className={`${classes.Control} ${classes.InputField}`}
+				className={getClass()}
 				{...rest}
+				disabled={disabled}
+				placeholder={placeholder}
+				defaultValue={defaultValue}
 				id={name}
 				name={name}
-				placeholder={placeholder}
 				autoComplete="true"
 			/>
 			{error && <Alert variant="danger">{error}</Alert>}
