@@ -2,20 +2,33 @@ import React, { Component } from "react";
 import classes from "./Employee.module.scss";
 import TabsComponent from "../../components/Tabs/Tabs";
 import Button from "../../components/Button/Button";
+import EmployeeBasicInfo from "./EmployeeBasicInfo/EmployeeBasicInfo";
 
 export default class Employee extends Component {
 	state = {
 		tabs: [
-			{ title: "Basic Information", key: "basicInformation" },
-			{ title: "Job Information", key: "jobInformation" },
-			{ title: "Appointment", key: "appointment" },
-			{ title: "Relation", key: "relation" },
-			{ title: "Career", key: "career" }
+			{ label: "Basic Information", key: "basicInformation" },
+			{ label: "Job Information", key: "jobInformation" },
+			{ label: "Appointment", key: "appointment" },
+			{ label: "Relation", key: "relation" },
+			{ label: "Career", key: "career" }
 		],
-		defaultActiveKey: "basicInformation"
+
+		activeTab: "basicInformation"
 	};
+
+	handleTabChange = tab => {
+		this.setState({ activeTab: tab });
+	};
+
+	renderTabComponent() {
+		const { activeTab } = this.state;
+
+		if (activeTab === "basicInformation") return <EmployeeBasicInfo />;
+	}
+
 	render() {
-		const { tabs, defaultActiveKey } = this.state;
+		const { tabs, activeTab } = this.state;
 
 		return (
 			<section className={classes.Employee}>
@@ -35,115 +48,13 @@ export default class Employee extends Component {
 				</header>
 
 				<main>
-					<TabsComponent tabs={tabs} defaultActiveKey={defaultActiveKey} />
+					<TabsComponent
+						tabs={tabs}
+						activeTab={activeTab}
+						onTabChange={this.handleTabChange}
+					/>
 
-					<div className={classes.InfoBlock}>
-						<h6 className={classes.Title}>title</h6>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-					</div>
-
-					<div className={classes.InfoBlock}>
-						<h6 className={classes.Title}>title</h6>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-					</div>
-
-					<div className={classes.InfoBlock}>
-						<h6 className={classes.Title}>title</h6>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-						<div className={classes.InfoCol}>
-							<p className={classes.ColLabel}>first name</p>
-							<p className={classes.ColField}>stanley</p>
-						</div>
-					</div>
+					{this.renderTabComponent()}
 				</main>
 				<footer></footer>
 			</section>

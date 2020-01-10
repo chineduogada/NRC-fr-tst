@@ -5,7 +5,7 @@ const TableHeader = ({ columns }) => {
 		<div className="TableHeader">
 			<div className="TableRow">
 				{columns.map((column, index) => (
-					<div className="TableCol" key={column.title + index}>
+					<div className="TableCol" key={`${column.key} ${index}`}>
 						<h6>{column.label}</h6>
 					</div>
 				))}
