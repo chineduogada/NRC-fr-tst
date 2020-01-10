@@ -1,4 +1,10 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+
+%bordered {
+	border: 2px solid var(--line-color);
+	border-radius: 5px;
+}
+
 * {
 	margin: 0;
 	padding: 0;

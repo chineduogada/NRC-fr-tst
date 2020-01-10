@@ -7,8 +7,9 @@ const TableBody = ({ data, columns }) => {
 			{data.map(data => (
 				<Link to={`/employee/${data.id}`} key={data.id} className="TableRow">
 					{columns.map(column => (
-						<div className="TableCol" key={column.title + data.id}>
-							<p>{data[column.title]}</p>
+						<div className="TableCol" key={`${column.key} + ${data.id}`}>
+							<p>{data[column.key]}</p>
+							{console.log(column.key, data.id)}
 						</div>
 					))}
 				</Link>

@@ -1,14 +1,26 @@
 import React from "react";
-import "./Tabs.scss";
-import { Tabs, Tab } from "react-bootstrap";
+import classes from "./Tabs.module.scss";
 
-const TabsComponent = ({ tabs, defaultActiveKey }) => {
+const TabsComponent = ({ tabs, onTabChange, activeTab }) => {
+	const getClass = tab => {
+		let _class = `${classes.Tab}`;
+
+		_class += tab.key === activeTab ? ` ${classes.Active}` : "";
+
+		return _class;
+	};
 	return (
-		<Tabs defaultActiveKey={defaultActiveKey}>
+		<ul className={classes.Tabs}>
 			{tabs.map(tab => (
-				<Tab key={tab.key} eventKey={tab.key} title={tab.title}></Tab>
+				<li
+					onClick={() => onTabChange(tab.key)}
+					key={tab.key}
+					className={getClass(tab)}
+				>
+					{tab.label}
+				</li>
 			))}
-		</Tabs>
+		</ul>
 	);
 };
 

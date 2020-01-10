@@ -6,9 +6,9 @@ export default class AllEmployees extends Component {
 	state = {
 		employees: [],
 		columns: [
-			{ title: "name", label: "Name" },
-			{ title: "department", label: "Department" },
-			{ title: "district", label: "District" }
+			{ key: "name", label: "Name" },
+			{ key: "department", label: "Department" },
+			{ key: "district", label: "District" }
 		],
 		pageSize: 20,
 		currentPage: 1

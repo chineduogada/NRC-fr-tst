@@ -20,34 +20,5 @@
 		// min-height: 45vh;
 		@extend %bordered;
 		margin-top: 0.75rem;
-
-		.InfoBlock {
-			@extend %bordered;
-			min-height: 100px;
-			margin: 0.375rem;
-			padding: 0.375rem;
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-			.Title {
-				grid-column: 1/-1;
-				text-transform: capitalize;
-				font-weight: bold;
-			}
-			.InfoCol {
-				// @extend %bordered;
-
-				.ColLabel {
-					text-transform: capitalize;
-					font-weight: bold;
-					font-size: 80%;
-					margin: 0;
-				}
-				.ColField {
-					text-transform: capitalize;
-					margin-left: 0.37rem;
-				}
-			}
-		}
 	}
 }
