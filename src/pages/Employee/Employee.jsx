@@ -3,6 +3,7 @@ import classes from "./Employee.module.scss";
 import TabsComponent from "../../components/Tabs/Tabs";
 import Button from "../../components/Button/Button";
 import EmployeeBasicInfo from "./EmployeeBasicInfo/EmployeeBasicInfo";
+import CleanSlate from "../../components/CleanSlate/CleanSlate";
 
 export default class Employee extends Component {
 	state = {
@@ -25,6 +26,12 @@ export default class Employee extends Component {
 		const { activeTab } = this.state;
 
 		if (activeTab === "basicInformation") return <EmployeeBasicInfo />;
+		else if (activeTab === "relation")
+			return (
+				<CleanSlate msg="no relation has been registered for this employee"  buttonLabel="add relation" />
+			);
+		else if (activeTab === "career")
+			return <CleanSlate msg="no career info exists for this employee" buttonLabel="add career" />;
 	}
 
 	render() {
