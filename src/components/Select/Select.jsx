@@ -8,8 +8,8 @@ const Select = ({ name, error, label, options, ...rest }) => {
 			<select {...rest} id={name} name={name} className="formControl">
 				<option value=""></option>
 				{options.map(option => (
-					<option key={option} value={option}>
-						{option}
+					<option key={option.id} value={option.id}>
+						{option.name}
 					</option>
 				))}
 			</select>

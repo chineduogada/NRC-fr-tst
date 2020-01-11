@@ -1,13 +1,4 @@
-%bordered {
-	border: 2px solid var(--line-color);
-	border-radius: 5px;
-}
-
 .Slate {
-	@extend %bordered;
-
-	margin: 0.375rem;
-
 	min-height: 200px;
 
 	display: flex;
