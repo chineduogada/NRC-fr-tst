@@ -12,13 +12,18 @@
 				width: 200px;
 			}
 		}
-
-		.Controls {
-		}
 	}
 	main {
-		// min-height: 45vh;
-		@extend %bordered;
 		margin-top: 0.75rem;
+		padding: 0;
+
+		form {
+			div {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(202px, 1fr));
+				grid-column-gap: 0.375rem;
+				align-items: flex-start;
+			}
+		}
 	}
 }

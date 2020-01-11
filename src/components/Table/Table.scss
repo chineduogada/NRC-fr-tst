@@ -1,7 +1,12 @@
+@import "../../mixins/mixins";
+
 .Table {
 	overflow-x: auto;
 	min-width: 100%;
-	width: auto;
+
+	@include screen-1050 {
+		width: 70vw;
+	}
 
 	&Header {
 		background: var(--inverse-text);

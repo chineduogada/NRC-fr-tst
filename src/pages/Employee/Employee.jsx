@@ -3,7 +3,8 @@ import classes from "./Employee.module.scss";
 import TabsComponent from "../../components/Tabs/Tabs";
 import Button from "../../components/Button/Button";
 import EmployeeBasicInfo from "./EmployeeBasicInfo/EmployeeBasicInfo";
-import CleanSlate from "../../components/CleanSlate/CleanSlate";
+import EmployeeRelationInfo from "./EmployeeRelationInfo/EmployeeRelationInfo";
+import EmployeeCareerInfo from "./EmployeeCareerInfo/EmployeeCareerInfo";
 
 export default class Employee extends Component {
 	state = {
@@ -26,12 +27,8 @@ export default class Employee extends Component {
 		const { activeTab } = this.state;
 
 		if (activeTab === "basicInformation") return <EmployeeBasicInfo />;
-		else if (activeTab === "relation")
-			return (
-				<CleanSlate msg="no relation has been registered for this employee"  buttonLabel="add relation" />
-			);
-		else if (activeTab === "career")
-			return <CleanSlate msg="no career info exists for this employee" buttonLabel="add career" />;
+		else if (activeTab === "relation") return <EmployeeRelationInfo />;
+		else if (activeTab === "career") return <EmployeeCareerInfo />;
 	}
 
 	render() {
@@ -54,7 +51,7 @@ export default class Employee extends Component {
 					</div>
 				</header>
 
-				<main>
+				<main className="sect">
 					<TabsComponent
 						tabs={tabs}
 						activeTab={activeTab}

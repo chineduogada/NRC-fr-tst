@@ -79,7 +79,7 @@ p {
 
 .alert {
 	padding: 0.375rem !important;
-	text-align: center;
+	width: fit-content;
 }
 
 ul {
@@ -128,8 +128,19 @@ ul {
 
 .TableHeader .TableCol h6 {
 	margin: 0;
+	text-transform: capitalize;
 }
 
 .TableBody .TableRow:nth-child(even) .TableCol {
 	background: var(--line-color);
+}
+
+.sect {
+	@extend %bordered;
+	margin: 0.375rem;
+	padding: 0.375rem;
+}
+
+.no-data {
+	opacity: 0.65;
 }

@@ -4,13 +4,15 @@ import getBasicInformation from "../../../mock/employee/employeeBasic";
 
 export default class EmployeeBasicInfo extends Component {
 	state = {
-		basicInformation: []
+		basicInformation: [],
+		otherInformation: []
 	};
 
 	componentDidMount() {
 		const basicInformation = this.mapToBasicView(getBasicInformation.data);
+		const otherInformation = this.mapToOtherView(getBasicInformation.data);
 
-		this.setState({ basicInformation });
+		this.setState({ basicInformation, otherInformation });
 	}
 
 	mapToBasicView(data) {
@@ -24,7 +26,11 @@ export default class EmployeeBasicInfo extends Component {
 			{ label: "country of birth", value: data.countryOfBirth },
 			{ label: "nationality", value: data.nationality },
 			{ label: "email", value: data.email },
-			{ label: "professional", value: data.professional },
+			{ label: "professional", value: data.professional }
+		];
+	}
+	mapToOtherView(data) {
+		return [
 			{ label: "efxf01", value: data.efxf01 },
 			{ label: "efxf02", value: data.efxf02 },
 			{ label: "efxf03", value: data.efxf03 },
@@ -40,6 +46,13 @@ export default class EmployeeBasicInfo extends Component {
 	}
 
 	render() {
-		return <EmployeeInfoBlock data={this.state.basicInformation} />;
+		const { basicInformation, otherInformation } = this.state;
+
+		return (
+			<div>
+				<EmployeeInfoBlock data={basicInformation} title="basic" />
+				<EmployeeInfoBlock data={otherInformation} title="other" />
+			</div>
+		);
 	}
 }
