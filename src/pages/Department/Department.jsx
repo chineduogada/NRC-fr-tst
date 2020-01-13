@@ -5,6 +5,7 @@ import Loader from "../../components/Loader/Loader";
 import { isUserSignedIn } from "../../services/Credentials";
 import Section from "../../hoc/Section/Section";
 import classes from "./Department.module.scss";
+import TableView from "../../components/TableView/TableView";
 
 class Department extends Component {
 	constructor(props) {
@@ -15,7 +16,24 @@ class Department extends Component {
 		console.log(this.id);
 
 		this.state = {
-			departments: null,
+			departments: [
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" },
+				{ code: "rich coding", desc: "he likes coding than himself" }
+			],
+
+			columns: [
+				{ key: "code", label: "code" },
+				{ key: "desc", label: "description" }
+			],
+
+			pageSize: 20,
+			currentPage: 1,
 
 			redirect: false
 		};
@@ -30,30 +48,35 @@ class Department extends Component {
 		}
 	}
 
+	handlePageChange = page => {
+		if (page) {
+			this.setState({ currentPage: page });
+		}
+	};
+
 	render() {
+		const { departments, columns, currentPage } = this.state;
+
 		return (
 			<React.Fragment>
 				{/* Redirect back to home route if the user is not signed in */}
-				{isUserSignedIn() ? null : <Redirect to="/" />}
+				{/* {isUserSignedIn() ? null : <Redirect to="/" />} */}
+				{true ? null : <Redirect to="/" />}
+				{/* Conditinally redirect the user */}
+				{this.renderRedirect()}
 
-				<Section title={this.isEditingPost ? "Update Article" : "Department"}>
-					{/* Conditinally redirect the user */}
-					{this.renderRedirect()}
-
-					{/* Show the loader first if the user is trying to edit a post */}
-					{this.state.departments ? (
-						<Loader />
-					) : (
-						<div className={classes.Tab}>
-							<Section>
-								<p>departments page</p>
-							</Section>
-							<Section>
-								Let thine heart be not troubled for data shall be displayed!
-							</Section>
-						</div>
-					)}
-				</Section>
+				{/* Show the loader first if the user is trying to edit a post */}
+				{!this.state.departments ? (
+					<Loader />
+				) : (
+					<TableView
+						data={departments}
+						columns={columns}
+						currentPage={currentPage}
+						onPageChange={this.handlePageChange}
+						title={this.isEditingPost ? "Update Article" : "Department"}
+					/>
+				)}
 			</React.Fragment>
 		);
 	}

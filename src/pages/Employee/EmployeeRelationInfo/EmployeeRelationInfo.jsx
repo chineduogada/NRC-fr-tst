@@ -4,6 +4,7 @@ import Form from "../../../components/Form/Form";
 import Table from "../../../components/Table/Table";
 import Joi from "joi-browser";
 import Button from "../../../components/Button/Button";
+import axios from "axios";
 export default class EmployeeRelationInfo extends Form {
 	state = {
 		columns: [
@@ -34,7 +35,8 @@ export default class EmployeeRelationInfo extends Form {
 		},
 		errors: {},
 		hasRelation: false,
-		addRelation: false
+		addRelation: false,
+		relations: []
 	};
 
 	schema = {
@@ -68,6 +70,17 @@ export default class EmployeeRelationInfo extends Form {
 		const addRelation = !this.state.addRelation;
 
 		this.setState({ addRelation });
+	}
+
+	componentDidMount() {
+		axios
+			.get(`/employee/${this.props.ippisNo}/relation`)
+			.then(res => {
+				// const relations = [];
+
+				console.log(res);
+			})
+			.catch(e => console.log(e));
 	}
 
 	render() {
