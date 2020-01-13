@@ -1,59 +1,80 @@
-import React, { Component } from "react";
-import TableView from "../../components/TableView/TableView";
-import getAllEmployees from "../../mock/employee/allEmployees";
+import React, { Component } from 'react';
+import axios from 'axios';
+import TableView from '../../components/TableView/TableView';
+// import getAllEmployees from '../../mock/employee/allEmployees';
 
 export default class AllEmployees extends Component {
-	state = {
-		employees: [],
-		columns: [
-			{ key: "name", label: "Name" },
-			{ key: "department", label: "Department" },
-			{ key: "district", label: "District" }
-		],
-		pageSize: 20,
-		currentPage: 1
-	};
+  state = {
+    employees: [],
+    columns: [
+      { key: 'name', label: 'Name' },
+      { key: 'department', label: 'Department' },
+      { key: 'district', label: 'District' },
+      { key: 'employeeStatus', label: 'Employee Status' },
+      { key: 'pensionable', label: 'Pensionable' },
+      { key: 'firstAppointmentDate', label: 'First Appointment Date' },
+      { key: 'presentAppointmentDate', label: 'Present Appointment Date' },
+      { key: 'presentJobType', label: 'present job type' },
+      { key: 'presentJobTitle', label: 'present job title' }
+    ],
+    pageSize: 20,
+    currentPage: 1
+  };
 
-	componentDidMount() {
-		const employees = [];
+  componentDidMount() {
+    axios
+      .get('/employee')
+      .then(({ data }) => {
+        console.log(data);
 
-		getAllEmployees.data.rows.forEach(employee => {
-			employees.push(this.mapToViewModel(employee));
-		});
+        data.data.rows.forEach(employee => {
+          employees.push(this.mapToViewModel(employee));
+        });
 
-		this.setState({ employees });
-	}
+        this.setState({ employees });
+      })
+      .catch(e => console.log(e));
 
-	mapToViewModel(employee) {
-		return {
-			id: employee.ippisNo,
-			name: `${employee.firstName} ${employee.lastName}`,
-			department: employee.employeeJob.department.description,
-			district: employee.employeeJob.district.siteName
-		};
-	}
+    const employees = [];
+  }
 
-	renderAllEmp() {
-		console.log(this.state.employees);
-	}
+  mapToViewModel(employee) {
+    return {
+      id: employee.ippisNo,
+      name: `${employee.firstName} ${employee.lastName}`,
+      department: employee.employeeJob.department.description,
+      district: employee.employeeJob.district.siteName,
+      employeeStatus: employee.employeeJob.employeeStatus,
+      pensionable: employee.employeeJob.pensionable,
+      firstAppointmentDate: employee.employeeAppointment.firstAppointmentDate,
+      presentAppointmentDate:
+        employee.employeeAppointment.presentAppointmentDate,
+      presentJobType: employee.employeeAppointment.presentJobType.type,
+      presentJobTitle: employee.employeeAppointment.presentJobTitle.description
+    };
+  }
 
-	handlePageChange = page => {
-		this.setState({ currentPage: page });
-	};
+  renderAllEmp() {
+    console.log(this.state.employees);
+  }
 
-	render() {
-		const { employees, currentPage, columns } = this.state;
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
 
-		this.renderAllEmp();
+  render() {
+    const { employees, currentPage, columns } = this.state;
 
-		return (
-			<TableView
-				data={employees}
-				columns={columns}
-				currentPage={currentPage}
-				onPageChange={this.handlePageChange}
-				title="employees"
-			/>
-		);
-	}
+    this.renderAllEmp();
+
+    return (
+      <TableView
+        data={employees}
+        columns={columns}
+        currentPage={currentPage}
+        onPageChange={this.handlePageChange}
+        title="employees"
+      />
+    );
+  }
 }

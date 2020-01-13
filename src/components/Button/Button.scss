@@ -1,80 +1,84 @@
 .button.fill,
 .button.highlight {
-	border: 2px solid;
+  border: 2px solid;
 }
 .button {
-	cursor: pointer;
-	transition: opacity 0.3s ease 0.15s;
-	font-weight: bold;
-	text-transform: uppercase;
-	text-decoration: none;
-	position: relative;
-	z-index: 1;
-	transition: all 500ms;
-	text-transform: capitalize;
-	letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity 0.3s ease 0.15s;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  transition: all 500ms;
+  // text-transform: capitalize;
+  font-size: 80%;
+  letter-spacing: 1px;
 }
 .button,
 .button::before {
-	transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
 }
 .button:hover {
-	color: var(--text-light);
+  color: var(--text-light);
 }
 
 .button.dark {
-	color: var(--text);
-	outline-color: var(--text);
+  color: var(--text);
+  outline-color: var(--text);
 }
 .button.highlight,
 .button.fill,
 .button.light {
-	color: var(--inverse-text);
+  color: var(--inverse-text);
 }
 .button.fill {
-	background: var(--basic-color);
-	outline-color: var(--basic-color);
+  background: var(--basic-gradient);
+  // outline-color: var(--basic-color);
 }
 .button.highlight {
-	background: var(--assent);
-	outline-color: var(--assent);
+  background: var(--assent);
+  outline-color: var(--assent);
 }
-.button.fill::before,
-.button.highlight::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	transform: scaleX(0);
-	transform-origin: left;
-	z-index: -1;
-}
-.button.fill:hover::before,
-.button.highlight:hover::before {
-	transform: scaleX(1);
-	transform-origin: right;
-}
+// .button.fill::before,
+// .button.highlight::before {
+//   content: '';
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   transform: scaleX(0);
+//   transform-origin: left;
+//   z-index: -1;
+// }
+// .button.fill:hover::before,
+// .button.highlight:hover::before {
+//   transform: scaleX(1);
+//   transform-origin: right;
+// }
 .button.fill:hover {
-	color: var(--basic-color);
+  color: var(--basic-color);
 }
 .button.fill:hover::before,
 .button.highlight:hover::before {
-	background: var(--inverse-text);
+  background: var(--inverse-text);
 }
 .button.highlight:hover {
-	color: var(--assent);
+  color: var(--assent);
 }
 
 .button.disabled {
-	opacity: 0.5;
-	cursor: no-drop;
+  opacity: 0.5;
+  cursor: no-drop;
 }
 .button.disabled.fill:hover,
 .button.disabled.highlight:hover {
-	color: var(--inverse-text);
+  color: var(--inverse-text);
 }
 .button.disabled:hover::before {
-	transform: scaleX(0);
+  transform: scaleX(0);
+}
+.button:hover {
+  color: #fff !important;
 }

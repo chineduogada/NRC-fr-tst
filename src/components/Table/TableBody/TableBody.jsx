@@ -14,7 +14,7 @@ const TableBody = ({ data, columns }) => {
 							{columns.map(column => (
 								<div className="TableCol" key={`${column.key} + ${data.id}`}>
 									<p>{data[column.key]}</p>
-									{console.log(column.key, data.id)}
+									{/* {console.log(column.key, data.id)} */}
 								</div>
 							))}
 						</Link>
