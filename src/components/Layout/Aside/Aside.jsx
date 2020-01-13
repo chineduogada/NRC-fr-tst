@@ -1,6 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { IoMdHome, IoIosMan, IoIosContacts, IoIosSchool, IoMdMedal } from 'react-icons/io';
+import {
+  IoMdHome,
+  IoIosMan,
+  IoIosContacts,
+  IoIosSchool,
+  IoMdMedal,
+  IoIosCalendar
+} from 'react-icons/io';
 import classes from './Aside.module.scss';
 
 const Aside = props => (
@@ -40,7 +47,7 @@ const Aside = props => (
         <li className={classes}>
           <Link to="/training-schedule">
             <span className="icon">
-              <IoMdHome className="icon" />
+              <IoIosCalendar className="icon" />
             </span>
             <span>Training Schedules</span>
           </Link>

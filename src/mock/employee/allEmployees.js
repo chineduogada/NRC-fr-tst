@@ -7,8 +7,8 @@ export default {
       {
         id: 3,
         ippisNo: 153941,
-        firstName: 'uiouirhoi',
-        lastName: 'vsdvsv',
+        firstName: 'ebere',
+        lastName: 'jackson',
         employeeJob: {
           section: 2,
           employeeStatus: 'A',

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import EmployeeInfoBlock from '../EmployeeInfoBlock/EmployeeInfoBlock';
 import getBasicInformation from '../../../mock/employee/employeeBasic';
 
@@ -10,16 +9,10 @@ export default class EmployeeBasicInfo extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get(`/employee/${this.props.id}`)
-      .then(({ status, data }) => {
-        console.log(data.data);
-        const basicInformation = this.mapToBasicView(data.data);
-        const otherInformation = this.mapToOtherView(data.data);
+    const basicInformation = this.mapToBasicView(getBasicInformation.data);
+    const otherInformation = this.mapToOtherView(getBasicInformation.data);
 
-        this.setState({ basicInformation, otherInformation });
-      })
-      .catch(e => console.log(e));
+    this.setState({ basicInformation, otherInformation });
   }
 
   mapToBasicView(data) {

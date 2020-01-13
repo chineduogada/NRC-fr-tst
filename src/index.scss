@@ -1,46 +1,47 @@
-@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
 
 %bordered {
-	border: 2px solid var(--line-color);
-	border-radius: 5px;
+  border: 2px solid var(--line-color);
+  border-radius: 5px;
 }
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	scroll-behavior: smooth;
-	font-family: "Raleway", sans-serif;
-	letter-spacing: 1.2px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: 'Raleway', sans-serif;
+  letter-spacing: 1.2px;
 
-	&::-webkit-scrollbar {
-		width: 0.4em;
-		height: 0.4em;
+  &::-webkit-scrollbar {
+    width: 0.4em;
+    height: 0.4em;
 
-		&-track {
-		}
-		&-thumb {
-			background: var(--basic-color);
-			border-radius: 5px;
-		}
-	}
+    &-track {
+    }
+    &-thumb {
+      background: var(--basic-color);
+      border-radius: 5px;
+    }
+  }
 }
 
 html {
-	--basic-color: #550fb1;
-	--basic-color-light: #d9bcff;
-	--basic-color-dark: #34086b;
-	--assent: #29df7a;
-	--text: #2a2a2a;
-	--text-light: #6b6b6b;
-	--line-color: #eee;
-	--inverse-text: #f8f8f8;
+  --basic-color: #550fb1;
+  --basic-gradient: linear-gradient(45deg, #550fb1, #270fb1cb);
+  --basic-color-light: #d9bcff;
+  --basic-color-dark: #34086b;
+  --assent: #29df7a;
+  --text: #2a2a2a;
+  --text-light: #6b6b6b;
+  --line-color: #eee;
+  --inverse-text: #f8f8f8;
 }
 
 body {
-	min-height: 100vh;
-	background: var(--inverse-text) !important;
-	color: var(--text);
+  min-height: 100vh;
+  background: var(--inverse-text) !important;
+  color: var(--text);
 }
 
 h1,
@@ -50,97 +51,110 @@ h4,
 h5,
 h6,
 p {
-	margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 /* ICONS */
 
 .icon {
-	color: var(--basic);
-	margin: 0 0.2em;
-	font-size: 1.2em;
+  color: var(--basic);
+  margin: 0 0.2em;
+  font-size: 1.2em;
 }
 
 .button:focus {
-	outline: none;
-	border: none;
+  outline: none;
+  border: none;
 }
 
 .button,
 .formControl {
-	padding: 0.375rem 0.75rem;
-	border-radius: 5px;
-	border: 1.3px solid;
-	background: none;
-	color: var(--text-light);
-	font-weight: normal;
-	outline-color: var(--basic-color);
+  padding: 0.375rem 0.75rem;
+  border-radius: 5px;
+  border: 1.3px solid;
+  background: none;
+  color: var(--text-light);
+  font-weight: normal;
+  outline-color: var(--basic-color);
 }
 
 .alert {
-	padding: 0.375rem !important;
-	width: fit-content;
+  padding: 0.375rem !important;
+  width: fit-content;
 }
 
 ul {
-	list-style: none;
+  list-style: none;
 }
 
 /* Feedbacks */
 
 .error {
-	font-size: 0.875rem;
-	color: red;
-	margin: 0.3em 0;
+  font-size: 0.875rem;
+  color: red;
+  margin: 0.3em 0;
 }
 
 .TableRow {
-	display: flex;
-	text-decoration: none !important;
+  display: flex;
+  text-decoration: none !important;
 }
 
 .TableCol {
-	flex: 1 0 25%;
-	padding-left: 0.75rem;
-	padding: 0.75rem;
-	border: 1px solid var(--line-color);
+  flex: 1 0 23%;
+  padding-left: 0.75rem;
+  padding: 0.75rem;
+  // border: 1px solid var(--line-color);
 }
 
 .TableHeader .TableCol {
-	border: 1px solid var(--text-light);
-	background: var(--line-color);
+  // border: 1px solid var(--text-light);
+  background: var(--line-color);
+}
+
+.TableBody .TableRow {
+  transition: all 0.2s ease;
+  margin: 0.5em 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.TableBody .TableRow:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  padding: 0.3em;
 }
 
 .TableBody .TableCol p {
-	font-size: 90%;
-	color: var(--text-light);
-	margin: 0;
+  font-size: 80%;
+  color: var(--text-light);
+  margin: 0;
+  background: #fff;
 }
 .TableBody .TableRow:hover .TableCol p {
-	color: var(--basic-color);
-	font-weight: bold;
+  transition: all 0.5s ease;
+  color: var(--basic-color);
+  font-weight: bold;
 }
 
-.TableHeader .TableCol {
-	border: 1px solid var(--text-light);
-	background: var(--line-color);
+.TableHeader {
+  border: 0.1px solid var(--text-light);
+  // background: var(--line-color);
 }
 
 .TableHeader .TableCol h6 {
-	margin: 0;
-	text-transform: capitalize;
+  margin: 0;
+  text-transform: capitalize;
 }
 
-.TableBody .TableRow:nth-child(even) .TableCol {
-	background: var(--line-color);
-}
+// .TableBody .TableRow:nth-child(even) .TableCol {
+//   background: var(--line-color);
+// }
 
 .sect {
-	@extend %bordered;
-	margin: 0.375rem;
-	padding: 0.375rem;
+  @extend %bordered;
+  margin: 0.375rem;
+  padding: 0.375rem;
 }
 
 .no-data {
-	opacity: 0.65;
+  opacity: 0.65;
 }
