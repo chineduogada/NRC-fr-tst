@@ -6,7 +6,14 @@ import Filter from "../Filter/Filter";
 import Pagination from "../Pagination/Pagination";
 import Table from "../Table/Table";
 
-const TableView = ({ title, data, onPageChange, currentPage, columns }) => {
+const TableView = ({
+	title,
+	data,
+	onPageChange,
+	currentPage,
+	columns,
+	useLinks
+}) => {
 	return (
 		<section className={classes.TableView}>
 			<header>
@@ -27,7 +34,7 @@ const TableView = ({ title, data, onPageChange, currentPage, columns }) => {
 			</header>
 
 			<main>
-				<Table columns={columns} data={data} />
+				<Table columns={columns} data={data} useLinks={useLinks} />
 			</main>
 
 			<footer>

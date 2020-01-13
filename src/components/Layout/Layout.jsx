@@ -21,7 +21,6 @@ const Layout = props => {
 			token
 		};
 	}
-	const comp = () => <h3>Hello world</h3>;
 
 	const renderLayout = () => (
 		<div className={classes.Layout}>
@@ -38,7 +37,7 @@ const Layout = props => {
 						<Route path="/" exact component={Dashboard} />
 						<Route path="/training-schedule" exact component={AllEmployees} />
 						<Route path="/employee/" exact component={AllEmployees} />
-						<Route path="/employee/:id" exact component={Employee} />
+						<Route path="/employee/:ippisNo" exact component={Employee} />
 						<Route path="/department" exact component={Department} />
 						<Route path="/department/([0-9]+)" exact component={Department} />
 					</Switch>
