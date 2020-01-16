@@ -83,7 +83,7 @@ export default class EmployeeRelationInfo extends Form {
 
 		const obj = this.state.formData;
 
-		const res = await http.post(`/employee/${this.props.ippisNo}/relation`, [
+		const res = await http.post(`/employee/${this.props.ippisNo}/relations`, [
 			{ ...obj, ippisNo: this.props.ippisNo }
 		]);
 
@@ -92,7 +92,7 @@ export default class EmployeeRelationInfo extends Form {
 
 	async componentDidMount() {
 		const relations = [];
-		const res = await http.get(`/employee/${this.props.ippisNo}/relation`);
+		const res = await http.get(`/employee/${this.props.ippisNo}/relations`);
 
 		if (res) {
 			res.data.data.forEach(relation => {
@@ -127,17 +127,13 @@ export default class EmployeeRelationInfo extends Form {
 		return hasRelation !== null ? (
 			hasRelation ? (
 				<section>
-					<header className="sect">
-						<Button
-							highlight
-							label="add relation"
-							onClick={this.handleAddRelation}
-						/>
-						<Table columns={columns} data={relations} />
-					</header>
-
+					<Button
+						highlight
+						label="add relation"
+						onClick={this.handleAddRelation}
+					/>
 					{addRelation ? (
-						<main>
+						<header>
 							<div className="sect">
 								<form onSubmit={this.handleSubmit}>
 									<div>
@@ -185,8 +181,12 @@ export default class EmployeeRelationInfo extends Form {
 									{this.renderButton("save")}
 								</form>
 							</div>
-						</main>
+						</header>
 					) : null}
+
+					<main className="sect">
+						<Table columns={columns} data={relations} />
+					</main>
 				</section>
 			) : (
 				<CleanSlate

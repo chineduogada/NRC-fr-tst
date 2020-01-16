@@ -1,4 +1,11 @@
 .Loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: columns;
+
+	padding: 1.5rem;
+
 	.Brand {
 		text-transform: capitalize;
 	}

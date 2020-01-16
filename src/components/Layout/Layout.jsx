@@ -11,6 +11,7 @@ import AllEmployees from "../../pages/AllEmployees/AllEmployees";
 import Dashboard from "../../pages/Dashboard/Dashboard";
 import Department from "../../pages/Department/Department";
 import Employee from "../../pages/Employee/Employee";
+import AddNewEmployee from "../../pages/AddNewEmployee/AddNewEmployee";
 
 const Layout = props => {
 	// set token
@@ -37,6 +38,7 @@ const Layout = props => {
 						<Route path="/" exact component={Dashboard} />
 						<Route path="/training-schedule" exact component={AllEmployees} />
 						<Route path="/employee/" exact component={AllEmployees} />
+						<Route path="/employee/new" exact component={AddNewEmployee} />
 						<Route path="/employee/:ippisNo" exact component={Employee} />
 						<Route path="/department" exact component={Department} />
 						<Route path="/department/([0-9]+)" exact component={Department} />

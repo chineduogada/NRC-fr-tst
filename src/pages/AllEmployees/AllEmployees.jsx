@@ -62,6 +62,7 @@ export default class AllEmployees extends Component {
 			<TableView
 				data={employees}
 				useLinks={true}
+				
 				columns={columns}
 				currentPage={currentPage}
 				onPageChange={this.handlePageChange}
