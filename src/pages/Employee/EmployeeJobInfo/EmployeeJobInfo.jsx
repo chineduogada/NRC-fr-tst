@@ -1,27 +1,30 @@
 import React, { Component } from "react";
 import EmployeeInfoBlock from "../EmployeeInfoBlock/EmployeeInfoBlock";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import http from "../../../services/httpService";
+import Loader from "../../../components/Loader/Loader";
+// import { Link } from "react-router-dom";
 
 export default class EmployeeBasicInfo extends Component {
 	state = {
-		jobInformation: []
+		jobInformation: null
 	};
 
-	componentDidMount() {
-		axios
-			.get(`/employee/${this.props.ippisNo}/job`)
-			.then(({ data }) => {
-				const jobInformation = this.mapToJobView(data.data);
+	async componentDidMount() {
+		const res = await http.get(`/employee/${this.props.ippisNo}/job`);
 
-				this.setState({ jobInformation });
-			})
-			.catch(e => console.log(e));
+		if (res) {
+			const jobInformation = this.mapToViewModel(res.data.data);
+
+			this.setState({ jobInformation });
+		}
 	}
 
-	mapToJobView(data) {
+	mapToViewModel(data) {
 		return [
-			{ label: "department", value: data.department.description },
+			{
+				label: "department",
+				value: data.department.description
+			},
 			{ label: "district", value: data.district.siteName },
 			{ label: "location", value: data.location },
 			{ label: "section", value: data.section },
@@ -41,10 +44,12 @@ export default class EmployeeBasicInfo extends Component {
 	render() {
 		const { jobInformation } = this.state;
 
-		return (
+		return jobInformation ? (
 			<div>
 				<EmployeeInfoBlock data={jobInformation} title="" />
 			</div>
+		) : (
+			<Loader />
 		);
 	}
 }

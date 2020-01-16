@@ -5,13 +5,14 @@ const TableBody = ({ data, columns, useLinks }) => {
 	return (
 		<div className="TableBody">
 			{data
-				? data.map(data =>
+				? data.map((data, index) =>
 						useLinks ? (
 							<Link
 								to={`/employee/${data.id}`}
-								key={data.id}
+								key={index}
 								className="TableRow"
 							>
+								{console.log(index)}
 								{columns.map(column => (
 									<div className="TableCol" key={`${column.key} + ${data.id}`}>
 										<p>{data[column.key]}</p>
@@ -20,7 +21,7 @@ const TableBody = ({ data, columns, useLinks }) => {
 								))}
 							</Link>
 						) : (
-							<div key={data.id} className="TableRow">
+							<div key={index} className="TableRow">
 								{columns.map(column => (
 									<div className="TableCol" key={`${column.key} + ${data.id}`}>
 										<p>{data[column.key]}</p>

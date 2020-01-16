@@ -1,24 +1,23 @@
 import React, { Component } from "react";
-import axios from "axios";
+import http from "../../../services/httpService";
 import EmployeeInfoBlock from "../EmployeeInfoBlock/EmployeeInfoBlock";
+import Loader from "../../../components/Loader/Loader";
 
 export default class EmployeeBasicInfo extends Component {
 	state = {
-		basicInformation: [],
-		otherInformation: []
+		basicInformation: null,
+		otherInformation: null
 	};
 
-	componentDidMount() {
-		axios
-			.get(`/employee/${this.props.ippisNo}`)
-			.then(({ status, data }) => {
-				console.log(data.data);
-				const basicInformation = this.mapToBasicView(data.data);
-				const otherInformation = this.mapToOtherView(data.data);
+	async componentDidMount() {
+		const res = await http.get(`/employee/${this.props.ippisNo}`);
 
-				this.setState({ basicInformation, otherInformation });
-			})
-			.catch(e => console.log(e));
+		if (res) {
+			const basicInformation = this.mapToBasicView(res.data.data);
+			const otherInformation = this.mapToOtherView(res.data.data);
+
+			this.setState({ basicInformation, otherInformation });
+		}
 	}
 
 	mapToBasicView(data) {
@@ -39,8 +38,14 @@ export default class EmployeeBasicInfo extends Component {
 			{ label: "blood group", value: data.bloodGroup.type },
 			{ label: "gpz", value: data.gpz.name },
 			{ label: "lga", value: data.lga.lga },
-			{ label: "marital status", value: data.maritalStatus.status },
-			{ label: "senatorial district", value: data.senatorialDistrict.name },
+			{
+				label: "marital status",
+				value: data.maritalStatus.status
+			},
+			{
+				label: "senatorial district",
+				value: data.senatorialDistrict.name
+			},
 			{ label: "state", value: data.state.state }
 		];
 	}
@@ -63,11 +68,13 @@ export default class EmployeeBasicInfo extends Component {
 	render() {
 		const { basicInformation, otherInformation } = this.state;
 
-		return (
+		return basicInformation ? (
 			<div>
 				<EmployeeInfoBlock data={basicInformation} title="" />
 				<EmployeeInfoBlock data={otherInformation} title="" />
 			</div>
+		) : (
+			<Loader />
 		);
 	}
 }

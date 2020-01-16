@@ -1,37 +1,24 @@
 import React, { Component } from "react";
+import http from "../../../services/httpService";
 import EmployeeInfoBlock from "../EmployeeInfoBlock/EmployeeInfoBlock";
-import axios from "axios";
+import Loader from "../../../components/Loader/Loader";
 
 export default class EmployeeBasicInfo extends Component {
 	state = {
-		basicInformation: []
+		appointmentInformation: null
 	};
 
-	componentDidMount() {
-		axios
-			.get(`/employee/${this.props.ippisNo}/appointment`)
-			.then(({ data }) => {
-				const basicInformation = this.mapToBasicView(data.data);
+	async componentDidMount() {
+		const res = await http.get(`/employee/${this.props.ippisNo}/appointment`);
 
-				this.setState({ basicInformation });
-			})
-			.catch(e => console.log(e));
+		if (res) {
+			const appointmentInformation = this.mapToViewModel(res.data.data);
+
+			this.setState({ appointmentInformation });
+		}
 	}
 
-	mapToBasicView(data) {
-		// const d = {
-		// 	firstAppointmentDate: "2020-01-01",
-		// 	resumptionDate: "2000-01-07",
-		// 	confirmationDate: "2000-01-30",
-		// 	expectedRetirementDate: "2020-01-01",
-		// 	presentAppointmentDate: "2015-01-01",
-		// 	firstJobType: { type: "permanent" },
-		// 	firstJobTitle: { description: "Managing Director" },
-		// 	firstJobGrade: { con: 1, conpss: 1 },
-		// 	presentJobType: { type: "permanent" },
-		// 	presentJobTitle: { description: "Managing Director" },
-		// 	presentJobGrade: { con: 1, conpss: 1 }
-		// };
+	mapToViewModel(data) {
 		return [
 			{ label: "first appointment date", value: data.firstAppointmentDate },
 			{ label: "resumption date", value: data.resumptionDate },
@@ -50,12 +37,14 @@ export default class EmployeeBasicInfo extends Component {
 	}
 
 	render() {
-		const { basicInformation } = this.state;
+		const { appointmentInformation } = this.state;
 
-		return (
+		return appointmentInformation ? (
 			<div>
-				<EmployeeInfoBlock data={basicInformation} />
+				<EmployeeInfoBlock data={appointmentInformation} />
 			</div>
+		) : (
+			<Loader />
 		);
 	}
 }

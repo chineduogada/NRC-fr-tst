@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import http from "../../services/httpService";
 import TableView from "../../components/TableView/TableView";
 
 export default class AllEmployees extends Component {
@@ -20,21 +20,17 @@ export default class AllEmployees extends Component {
 		currentPage: 1
 	};
 
-	componentDidMount() {
-		axios
-			.get("/employee")
-			.then(({ data }) => {
-				console.log(data);
-
-				data.data.rows.forEach(employee => {
-					employees.push(this.mapToViewModel(employee));
-				});
-
-				this.setState({ employees });
-			})
-			.catch(e => console.log(e));
-
+	async componentDidMount() {
 		const employees = [];
+		const res = await http.get("/employee/");
+
+		if (res) {
+			res.data.data.rows.forEach(employee => {
+				employees.push(this.mapToViewModel(employee));
+			});
+
+			this.setState({ employees });
+		}
 	}
 
 	mapToViewModel(employee) {
@@ -53,10 +49,6 @@ export default class AllEmployees extends Component {
 		};
 	}
 
-	renderAllEmp() {
-		console.log(this.state.employees);
-	}
-
 	handlePageChange = page => {
 		if (page) {
 			this.setState({ currentPage: page });
@@ -65,8 +57,6 @@ export default class AllEmployees extends Component {
 
 	render() {
 		const { employees, currentPage, columns } = this.state;
-
-		this.renderAllEmp();
 
 		return (
 			<TableView

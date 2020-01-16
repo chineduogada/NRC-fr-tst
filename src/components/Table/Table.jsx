@@ -4,7 +4,6 @@ import TableHeader from "./TableHeader/TableHeader";
 import TableBody from "./TableBody/TableBody";
 
 const Table = ({ columns, data, useLinks }) => {
-	console.log(useLinks);
 	return (
 		<div className="Table">
 			<TableHeader columns={columns} />

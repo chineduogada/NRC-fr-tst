@@ -3,4 +3,11 @@
 	flex: 1 0 65vh;
 	// height: 100px;
 	overflow-y: scroll;
+
+	.Center {
+		max-width: 1000px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+	}
 }
