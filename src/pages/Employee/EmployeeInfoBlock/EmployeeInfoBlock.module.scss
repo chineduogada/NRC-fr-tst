@@ -1,26 +1,14 @@
-.InfoBlock {
-	min-height: 100px;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.InfoCol {
+	// @extend %bordered;
 
-	.Title {
-		grid-column: 1/-1;
-		text-transform: uppercase;
+	.Label {
+		text-transform: capitalize;
 		font-weight: bold;
-		margin-bottom: 0.75rem;
+		font-size: 80%;
+		margin: 0;
 	}
-	.InfoCol {
-		// @extend %bordered;
-
-		.Label {
-			text-transform: capitalize;
-			font-weight: bold;
-			font-size: 80%;
-			margin: 0;
-		}
-		.Value {
-			margin-left: 0.37rem;
-			text-transform: capitalize;
-		}
+	.Value {
+		margin-left: 0.37rem;
+		text-transform: capitalize;
 	}
 }

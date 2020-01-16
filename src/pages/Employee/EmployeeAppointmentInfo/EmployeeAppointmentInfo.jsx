@@ -29,8 +29,8 @@ export default class EmployeeBasicInfo extends Component {
 			{ label: "first job title", value: data.firstJobTitle.description },
 			{ label: "first job grade(con)", value: data.firstJobGrade.con },
 			{ label: "first job grade(conpss)", value: data.firstJobGrade.conpss },
-			{ label: "presentJobType", value: data.presentJobType.type },
-			{ label: "presentJobTitle", value: data.presentJobTitle.description },
+			{ label: "present job type", value: data.presentJobType.type },
+			{ label: "present job title", value: data.presentJobTitle.description },
 			{ label: "present job grade(con)", value: data.presentJobGrade.con },
 			{ label: "present job grade(conpss)", value: data.presentJobGrade.conpss }
 		];
