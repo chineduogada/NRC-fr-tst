@@ -46,14 +46,14 @@ export default {
 
   // APPOINTMENT INFO
   firstAppointmentDate: '2020-01-01',
-  firstAppointmentJobTypeId: 1,
-  firstAppointmentJobTitleId: 1,
-  firstAppointmentGradeId: 1,
-  firstAppointmentStepId: 1,
   resumptionDate: '2000-01-07',
   confirmationDate: '2000-01-30',
   expectedRetirementDate: '2020-01-01',
   presentAppointmentDate: '2015-01-01',
+  firstAppointmentJobTypeId: 1,
+  firstAppointmentJobTitleId: 1,
+  firstAppointmentGradeId: 1,
+  firstAppointmentStepId: 1,
   presentPositionJobTypeId: 1,
   presentPositionJobTitleId: 1,
   presentPositionGradeId: 1,
