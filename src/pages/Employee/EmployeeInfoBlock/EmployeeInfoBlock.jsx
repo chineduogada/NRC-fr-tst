@@ -1,5 +1,6 @@
 import React from "react";
 import classes from "./EmployeeInfoBlock.module.scss";
+import InformationBlock from "../../../components/InformationBlock/InformationBlock";
 
 const EmployeeInfoBlock = ({ data, title }) => {
 	const renderValue = value =>
@@ -9,18 +10,14 @@ const EmployeeInfoBlock = ({ data, title }) => {
 			<p className={classes.Value}>{value}</p>
 		);
 	return (
-		<section className="sect">
-			<div className={classes.InfoBlock}>
-				<h6 className={classes.Title}>{title}</h6>
-
-				{data.map(item => (
-					<div key={item.label} className={classes.InfoCol}>
-						<p className={classes.Label}>{item.label}</p>
-						{renderValue(item.value)}
-					</div>
-				))}
-			</div>
-		</section>
+		<InformationBlock title={title}>
+			{data.map(item => (
+				<div key={item.label} className={classes.InfoCol}>
+					<p className={classes.Label}>{item.label}</p>
+					{renderValue(item.value)}
+				</div>
+			))}
+		</InformationBlock>
 	);
 };
 

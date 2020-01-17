@@ -5,6 +5,7 @@ import Searchbox from "../Searchbox/Searchbox";
 import Filter from "../Filter/Filter";
 import Pagination from "../Pagination/Pagination";
 import Table from "../Table/Table";
+import { Link } from "react-router-dom";
 
 const TableView = ({
 	title,
@@ -22,7 +23,9 @@ const TableView = ({
 						<h2 className={classes.TableTitle}>{title}</h2>
 					</div>
 					<div className="buttons">
-						<Button label="add new" fill />
+						<Link to="/employee/new">
+							<Button label="add new" fill />
+						</Link>
 						<Button label="export" />
 					</div>
 				</div>

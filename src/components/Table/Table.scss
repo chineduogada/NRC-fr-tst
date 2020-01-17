@@ -3,10 +3,7 @@
 .Table {
 	overflow-x: auto;
 	min-width: 100%;
-
-	@include screen-1050 {
-		width: 70vw;
-	}
+	width: calc(100vw - 1000px);
 
 	.TableRow {
 		display: flex;

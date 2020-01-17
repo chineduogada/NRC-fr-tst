@@ -6,7 +6,7 @@ import Select from "../Select/Select";
 
 export default class Form extends Component {
 	state = {
-		data: {},
+		formData: {},
 		error: {}
 	};
 
@@ -17,13 +17,13 @@ export default class Form extends Component {
 		 * RETURN THE ERROR MSG
 		 */
 
-		const data = { [name]: value };
+		const formData = { [name]: value };
 		const schema = {
 			[name]: this.schema[name]
 		};
 		const options = { abortEarly: true };
 
-		const { error } = Joi.validate(data, schema, options);
+		const { error } = Joi.validate(formData, schema, options);
 		return error ? error.details[0].message : null;
 
 		// if (name === "title") if (value.trim() === "") return "Title is required!";
@@ -36,13 +36,13 @@ export default class Form extends Component {
 	}
 
 	handleChange = ({ currentTarget: input }) => {
-		const data = { ...this.state.data };
+		const formData = { ...this.state.formData };
 		const errors = { ...this.state.errors };
 
 		const errorMessage = this.validateField(input);
 		errors[input.name] = errorMessage;
-		data[input.name] = input.value;
-		this.setState({ data, errors });
+		formData[input.name] = input.value;
+		this.setState({ formData, errors });
 	};
 
 	validate() {
@@ -52,10 +52,10 @@ export default class Form extends Component {
 		 * RETURN AN "ERRORS OBJ" MAPPING TO THE "DATA OBJ" (containing the error properties only)
 		 * OTHERWISE RETURN "NULL"
 		 */
-		const { data } = this.state;
+		const { formData } = this.state;
 
 		const options = { abortEarly: false };
-		const { error } = Joi.validate(data, this.schema, options);
+		const { error } = Joi.validate(formData, this.schema, options);
 		if (!error) return;
 
 		const errors = {};
@@ -66,11 +66,11 @@ export default class Form extends Component {
 		return errors;
 
 		// const errors = {};
-		// if (data.title.trim() === "") errors.title = "Title is required!";
-		// if (data.genreID.trim() === "") errors.genreID = "Genre is required!";
-		// if (data.numberInStock.trim() === "")
+		// if (formData.title.trim() === "") errors.title = "Title is required!";
+		// if (formData.genreID.trim() === "") errors.genreID = "Genre is required!";
+		// if (formData.numberInStock.trim() === "")
 		// 	errors.numberInStock = "number In Stock is required!";
-		// if (data.dailyRentalRate.trim() === "")
+		// if (formData.dailyRentalRate.trim() === "")
 		// 	errors.dailyRentalRate = "Rate is required!";
 
 		// return Object.keys(errors).length ? errors : null;
@@ -83,11 +83,11 @@ export default class Form extends Component {
 		this.setState({ errors: errors || {} });
 		if (errors) return;
 
-		this.doSubmit();
+		this.doSubmit(event);
 	};
 
 	renderInput(label, name, placeholder, type = "text") {
-		const { data, errors } = this.state;
+		const { errors } = this.state;
 
 		return (
 			<Input
@@ -96,13 +96,12 @@ export default class Form extends Component {
 				placeholder={placeholder}
 				name={name}
 				error={errors[name]}
-				value={data[name]}
 				onChange={this.handleChange}
 			/>
 		);
 	}
 	renderSelect(label, name, options) {
-		const { data, errors } = this.state;
+		const { formData, errors } = this.state;
 
 		return (
 			<Select
@@ -111,7 +110,7 @@ export default class Form extends Component {
 				name={name}
 				error={errors[name]}
 				id={name}
-				value={data[name]}
+				value={formData[name]}
 				onChange={this.handleChange}
 			/>
 		);

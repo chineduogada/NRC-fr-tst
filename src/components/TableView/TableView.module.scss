@@ -1,20 +1,22 @@
 .TableView {
-  header {
-    .TableTitle {
-      margin-bottom: 0.5em;
-      // font-weight: 600;
-      color: var(--basic-color);
-      text-transform: capitalize;
-    }
-  }
+	width: 100%;
 
-  // main {
-  // 	// min-height: 100vh;
-  // }
+	header {
+		.TableTitle {
+			margin-bottom: 0.5em;
+			// font-weight: 600;
+			color: var(--basic-color);
+			text-transform: capitalize;
+		}
+	}
 
-  footer {
-    display: flex;
-    justify-content: flex-end;
-    // min-height: 100vh;
-  }
+	// main {
+	// 	// min-height: 100vh;
+	// }
+
+	footer {
+		display: flex;
+		justify-content: flex-end;
+		// min-height: 100vh;
+	}
 }

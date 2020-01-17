@@ -2,9 +2,9 @@ import React, { Component } from "react";
 // import axios from 'axios';
 import { withRouter, Redirect } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
-import { isUserSignedIn } from "../../services/Credentials";
-import Section from "../../hoc/Section/Section";
-import classes from "./Department.module.scss";
+// import { isUserSignedIn } from "../../services/Credentials";
+// import Section from "../../hoc/Section/Section";
+// import classes from "./Department.module.scss";
 import TableView from "../../components/TableView/TableView";
 
 class Department extends Component {
@@ -13,7 +13,6 @@ class Department extends Component {
 		this.isEditingPost = props.location.pathname.endsWith("edit");
 
 		this.id = this.props.match.params.id;
-		console.log(this.id);
 
 		this.state = {
 			departments: [

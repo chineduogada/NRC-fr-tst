@@ -4,7 +4,9 @@ import Form from "../../../components/Form/Form";
 import Table from "../../../components/Table/Table";
 import Joi from "joi-browser";
 import Button from "../../../components/Button/Button";
-import axios from "axios";
+import http from "../../../services/httpService";
+import Loader from "../../../components/Loader/Loader";
+
 export default class EmployeeRelationInfo extends Form {
 	state = {
 		columns: [
@@ -17,9 +19,13 @@ export default class EmployeeRelationInfo extends Form {
 			{ key: "addressLine2", label: "address line 2" },
 			{ key: "addressLine3", label: "address line 3" },
 			{ key: "addressLine4", label: "address line 4" },
-			{ key: "email", label: "email" }
+			{ key: "email", label: "email" },
+			{ key: "beneficiary", label: "beneficiary" },
+			{ key: "beneficiaryPercentage", label: "beneficiary percentage" },
+			{ key: "serialCode", label: "serial code" }
 		],
-		data: {
+
+		formData: {
 			relationshipTypeId: "",
 			surname: "",
 			otherNames: "",
@@ -31,10 +37,11 @@ export default class EmployeeRelationInfo extends Form {
 			addressLine4: "",
 			email: "",
 			beneficiary: "",
-			beneficiaryPercentage: ""
+			beneficiaryPercentage: "",
+			serialCode: ""
 		},
 		errors: {},
-		hasRelation: false,
+		hasRelation: null,
 		addRelation: false,
 		relations: []
 	};
@@ -51,13 +58,14 @@ export default class EmployeeRelationInfo extends Form {
 		addressLine4: Joi.string(),
 		email: Joi.string().email(),
 		beneficiary: Joi.string(),
-		beneficiaryPercentage: Joi.number()
+		beneficiaryPercentage: Joi.number(),
+		serialCode: Joi.number()
 	};
 
 	handleSlate = () => {
 		const hasRelation = !this.state.hasRelation;
 
-		this.setState({ hasRelation });
+		this.setState({ hasRelation, addRelation: true });
 	};
 
 	handleAddRelation = () => {
@@ -66,89 +74,129 @@ export default class EmployeeRelationInfo extends Form {
 		this.setState({ addRelation });
 	};
 
-	doSubmit() {
-		const addRelation = !this.state.addRelation;
+	async doSubmit(event) {
+		const relations = [this.state.formData, ...this.state.relations];
 
-		this.setState({ addRelation });
+		event.currentTarget.reset();
+
+		this.setState({ relations });
+
+		const obj = this.state.formData;
+
+		const res = await http.post(`/employee/${this.props.ippisNo}/relations`, [
+			{ ...obj, ippisNo: this.props.ippisNo }
+		]);
+
+		console.log(res);
 	}
 
-	componentDidMount() {
-		axios
-			.get(`/employee/${this.props.ippisNo}/relation`)
-			.then(res => {
-				// const relations = [];
+	async componentDidMount() {
+		const relations = [];
+		const res = await http.get(`/employee/${this.props.ippisNo}/relations`);
 
-				console.log(res);
-			})
-			.catch(e => console.log(e));
+		if (res) {
+			res.data.data.forEach(relation => {
+				relations.push(this.mapToViewModel(relation));
+			});
+
+			this.setState({ hasRelation: res.data.data.length, relations });
+		}
 	}
+
+	mapToViewModel = relation => {
+		return {
+			relationshipTypeId: relation.relationshipType.type,
+			surname: relation.surname,
+			otherNames: relation.otherNames,
+			dateOfBirth: relation.dateOfBirth,
+			mobileNumber: relation.mobileNumber,
+			addressLine1: relation.addressLine1,
+			addressLine2: relation.addressLine2,
+			addressLine3: relation.addressLine3,
+			addressLine4: relation.addressLine4,
+			email: relation.email,
+			beneficiary: relation.beneficiary,
+			beneficiaryPercentage: relation.beneficiaryPercentage,
+			serialCode: relation.serialCode
+		};
+	};
 
 	render() {
-		const { columns, hasRelation, addRelation } = this.state;
+		const { columns, relations, hasRelation, addRelation } = this.state;
 
-		return hasRelation ? (
-			<section>
-				<header className="sect">
+		return hasRelation !== null ? (
+			hasRelation ? (
+				<section>
 					<Button
 						highlight
 						label="add relation"
 						onClick={this.handleAddRelation}
 					/>
-					<Table columns={columns} />
-				</header>
+					{addRelation ? (
+						<header>
+							<div className="sect">
+								<form onSubmit={this.handleSubmit}>
+									<div>
+										{this.renderSelect(
+											"relationship type",
+											"relationshipTypeId",
+											[
+												{ id: "1", name: "father" },
+												{ id: "2", name: "mother" }
+											]
+										)}
+										{this.renderInput("surname", "surname", "")}
+										{this.renderInput("other names", "otherNames", "")}
+										{this.renderInput(
+											"date of birth",
+											"dateOfBirth",
+											"",
+											"date"
+										)}
+										{this.renderInput(
+											"mobile number",
+											"mobileNumber",
+											"",
+											"number"
+										)}
+										{this.renderInput("address line 1", "addressLine1", "")}
+										{this.renderInput("address line 2", "addressLine2", "")}
+										{this.renderInput("address line 3", "addressLine3", "")}
+										{this.renderInput("address line 4", "addressLine4", "")}
+										{this.renderInput("email", "email", "", "email")}
+										{this.renderSelect("beneficiary", "beneficiary", [
+											{ id: "Y", name: "yes" },
+											{ id: "N", name: "no" }
+										])}
+										{this.state.formData.beneficiary === "Y"
+											? this.renderInput(
+													"beneficiary percentage",
+													"beneficiaryPercentage",
+													"eg: 20",
+													"number"
+											  )
+											: null}
+										{this.renderInput("serialCode", "serialCode", "", "number")}
+									</div>
+									{this.renderButton("save")}
+								</form>
+							</div>
+						</header>
+					) : null}
 
-				{addRelation ? (
-					<main>
-						<div className="sect">
-							<form onSubmit={this.handleSubmit}>
-								<div>
-									{this.renderSelect(
-										"relationship type",
-										"relationshipTypeId",
-										[
-											{ id: "12", name: "father" },
-											{ id: "1234", name: "mother" }
-										]
-									)}
-									{this.renderInput("surname", "surname", "")}
-									{this.renderInput("other names", "otherNames", "")}
-									{this.renderInput("date of birth", "dateOfBirth", "", "date")}
-									{this.renderInput(
-										"mobile number",
-										"mobileNumber",
-										"",
-										"number"
-									)}
-									{this.renderInput("address line 1", "addressLine1", "")}
-									{this.renderInput("address line 2", "addressLine2", "")}
-									{this.renderInput("address line 3", "addressLine3", "")}
-									{this.renderInput("address line 4", "addressLine4", "")}
-									{this.renderInput("email", "email", "", "email")}
-									{this.renderSelect("beneficiary", "beneficiary", [
-										{ id: "Y", name: "yes" },
-										{ id: "N", name: "no" }
-									])}
-									{this.state.data.beneficiary === "Y"
-										? this.renderInput(
-												"beneficiary percentage",
-												"beneficiaryPercentage",
-												"eg: 20",
-												"number"
-										  )
-										: null}
-								</div>
-								{this.renderButton("save")}
-							</form>
-						</div>
+					<main className="sect">
+						<Table columns={columns} data={relations} />
 					</main>
-				) : null}
-			</section>
+				</section>
+			) : (
+				<CleanSlate
+					onControlSlate={this.handleSlate}
+					msg="no relation has been registered for this employee"
+					buttonLabel="add relation"
+				/>
+			)
 		) : (
-			<CleanSlate
-				onControlSlate={this.handleSlate}
-				msg="no relation has been registered for this employee"
-				buttonLabel="add relation"
-			/>
+			<Loader />
 		);
 	}
 }
