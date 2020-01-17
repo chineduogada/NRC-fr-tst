@@ -3,6 +3,7 @@ import Section from "../../hoc/Section/Section";
 import Joi from "joi-browser";
 import Form from "../../components/Form/Form";
 import InformationBlock from "../../components/InformationBlock/InformationBlock";
+import http from "../../services/httpService";
 
 export default class AddNewEmployee extends Form {
 	state = {
@@ -107,7 +108,7 @@ export default class AddNewEmployee extends Form {
 		districtId: Joi.number(),
 		section: Joi.string(),
 		location: Joi.string(),
-		reportTo: Joi.string(),
+		reportTo: Joi.number(),
 		employeeStatus: Joi.string(),
 		pensionable: Joi.string(),
 
@@ -127,8 +128,9 @@ export default class AddNewEmployee extends Form {
 		presentPositionStepId: Joi.number()
 	};
 
-	doSubmit(event) {
-		console.log("new employee created successfully");
+	async doSubmit(event) {
+		http.post("/employee", this.state.formData);
+		console.log("new employee created successfully", this.state.formData);
 	}
 
 	render() {
@@ -149,39 +151,35 @@ export default class AddNewEmployee extends Form {
 						{this.renderInput("email", "email", "", "email")}
 						{this.renderInput("pfa number", "pfaNumber", "", "number")}
 
-						{this.renderSelect("pfa type", "pfaId", [
+						{this.renderSelect("pfa", "pfaId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect("gender type", "genderId", [
+						{this.renderSelect("gender", "genderId", [
+							{ id: 1, name: "male" },
+							{ id: 2, name: "female" }
+						])}
+						{this.renderSelect("blood group", "bloodGroupId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect("blood group type", "bloodGroupId", [
+						{this.renderSelect("gpz", "gpzId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect("gpz type", "gpzId", [
+						{this.renderSelect("lga", "lgaId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect("lga type", "lgaId", [
+						{this.renderSelect("marital status", "maritalStatusId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect("marital status type", "maritalStatusId", [
+						{this.renderSelect("senatorial district", "senatorialDistrictId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect(
-							"senatorial district type",
-							"senatorialDistrictId",
-							[
-								{ id: 1, name: "Y" },
-								{ id: 2, name: "N" }
-							]
-						)}
-						{this.renderSelect("state type", "stateId", [
+						{this.renderSelect("state", "stateId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
@@ -202,14 +200,25 @@ export default class AddNewEmployee extends Form {
 					<InformationBlock title="job information">
 						{this.renderInput("section", "section", "")}
 						{this.renderInput("location", "location", "")}
-						{this.renderInput("reportTo", "reportTo", "")}
-						{this.renderInput("employeeStatus", "employeeStatus", "")}
-						{this.renderInput("pensionable", "pensionable", "")}
-						{this.renderSelect("department type", "departmentId", [
+						{this.renderInput(
+							"report to",
+							"reportTo",
+							"enter ippiNo...",
+							"number"
+						)}
+						{this.renderSelect("employee status", "employeeStatus", [
+							{ id: 1, name: "A" },
+							{ id: 2, name: "R" }
+						])}
+						{this.renderSelect("pensionable", "pensionable", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
-						{this.renderSelect("district type", "districtId", [
+						{this.renderSelect("department", "departmentId", [
+							{ id: 1, name: "Y" },
+							{ id: 2, name: "N" }
+						])}
+						{this.renderSelect("district", "districtId", [
 							{ id: 1, name: "Y" },
 							{ id: 2, name: "N" }
 						])}
@@ -243,7 +252,7 @@ export default class AddNewEmployee extends Form {
 						)}
 
 						{this.renderSelect(
-							"first appointment job type type",
+							"first appointment job type",
 							"firstAppointmentJobTypeId",
 							[
 								{ id: 1, name: "Y" },
@@ -251,7 +260,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"first appointment job title type",
+							"first appointment job title",
 							"firstAppointmentJobTitleId",
 							[
 								{ id: 1, name: "Y" },
@@ -259,7 +268,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"first appointment grade type",
+							"first appointment grade",
 							"firstAppointmentGradeId",
 							[
 								{ id: 1, name: "Y" },
@@ -267,7 +276,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"first appointment step type",
+							"first appointment step",
 							"firstAppointmentStepId",
 							[
 								{ id: 1, name: "Y" },
@@ -275,7 +284,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"present position job type type",
+							"present position job type",
 							"presentPositionJobTypeId",
 							[
 								{ id: 1, name: "Y" },
@@ -283,7 +292,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"present position job title type",
+							"present position job title",
 							"presentPositionJobTitleId",
 							[
 								{ id: 1, name: "Y" },
@@ -291,7 +300,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"present position grade type",
+							"present position grade",
 							"presentPositionGradeId",
 							[
 								{ id: 1, name: "Y" },
@@ -299,7 +308,7 @@ export default class AddNewEmployee extends Form {
 							]
 						)}
 						{this.renderSelect(
-							"present position step type",
+							"present position step",
 							"presentPositionStepId",
 							[
 								{ id: 1, name: "Y" },

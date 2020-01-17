@@ -2,10 +2,9 @@
 	min-height: 100px;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	justify-items: center;
 
 	.Title {
-		grid-column: 1/-1;
+		grid-column: 1 / -1;
 		text-transform: uppercase;
 		font-weight: bold;
 		margin-bottom: 0.75rem;
