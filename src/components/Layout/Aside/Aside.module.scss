@@ -56,10 +56,13 @@
 					}
 				}
 
+				&.Active a {
+					background-color: var(--basic-color-light);
+				}
+
 				&.Active a,
 				&:hover a {
 					color: var(--basic-color);
-					background-color: var(--basic-color-light);
 					border-left: 5px solid;
 				}
 

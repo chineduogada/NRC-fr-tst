@@ -1,7 +1,8 @@
 import React from "react";
 import CleanSlate from "../../../components/CleanSlate/CleanSlate";
 import Form from "../../../components/Form/Form";
-import Table from "../../../components/Table/Table";
+// import Table from "../../../components/Table/Table";
+import Table from '../../../components/ReactTable/Table';
 import Joi from "joi-browser";
 import Button from "../../../components/Button/Button";
 import http from "../../../services/httpService";
@@ -10,19 +11,19 @@ import Loader from "../../../components/Loader/Loader";
 export default class EmployeeRelationInfo extends Form {
 	state = {
 		columns: [
-			{ key: "relationshipTypeId", label: "relationship type" },
-			{ key: "surname", label: "surname" },
-			{ key: "otherNames", label: "other names" },
-			{ key: "dateOfBirth", label: "date of birth" },
-			{ key: "mobileNumber", label: "mobile number" },
-			{ key: "addressLine1", label: "address line 1" },
-			{ key: "addressLine2", label: "address line 2" },
-			{ key: "addressLine3", label: "address line 3" },
-			{ key: "addressLine4", label: "address line 4" },
-			{ key: "email", label: "email" },
-			{ key: "beneficiary", label: "beneficiary" },
-			{ key: "beneficiaryPercentage", label: "beneficiary percentage" },
-			{ key: "serialCode", label: "serial code" }
+			{ accessor: "serialCode", Header: "Serial Code" },
+			{ accessor: "relationshipTypeId", Header: "Relationship Type" },
+			{ accessor: "surname", Header: "Surname" },
+			{ accessor: "otherNames", Header: "Other Names" },
+			{ accessor: "dateOfBirth", Header: "DOB" },
+			{ accessor: "mobileNumber", Header: "Mobile Number" },
+			{ accessor: "addressLine1", Header: "Address Line 1" },
+			{ accessor: "addressLine2", Header: "Address Line 2" },
+			{ accessor: "addressLine3", Header: "Address Line 3" },
+			{ accessor: "addressLine4", Header: "Address Line 4" },
+			{ accessor: "email", Header: "Email" },
+			{ accessor: "beneficiary", Header: "Beneficiary" },
+			{ accessor: "beneficiaryPercentage", Header: "Beneficiary Percentage" }
 		],
 
 		formData: {
@@ -105,6 +106,7 @@ export default class EmployeeRelationInfo extends Form {
 
 	mapToViewModel = relation => {
 		return {
+			serialCode: relation.serialCode,
 			relationshipTypeId: relation.relationshipType.type,
 			surname: relation.surname,
 			otherNames: relation.otherNames,
@@ -116,8 +118,7 @@ export default class EmployeeRelationInfo extends Form {
 			addressLine4: relation.addressLine4,
 			email: relation.email,
 			beneficiary: relation.beneficiary,
-			beneficiaryPercentage: relation.beneficiaryPercentage,
-			serialCode: relation.serialCode
+			beneficiaryPercentage: relation.beneficiaryPercentage
 		};
 	};
 
