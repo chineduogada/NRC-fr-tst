@@ -83,6 +83,7 @@ class AllEmployees extends Component {
           columns={columns}
           data={employees}
           clickHandler={this.handleRowClick}
+          currentPage={currentPage}
         />
       </Section>
     );
