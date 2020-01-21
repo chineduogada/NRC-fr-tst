@@ -6,6 +6,7 @@ import Loader from "../../components/Loader/Loader";
 // import Section from "../../hoc/Section/Section";
 // import classes from "./Department.module.scss";
 import TableView from "../../components/TableView/TableView";
+import httpService from "../../services/httpService"
 
 class Department extends Component {
 	constructor(props) {
@@ -15,16 +16,7 @@ class Department extends Component {
 		this.id = this.props.match.params.id;
 
 		this.state = {
-			departments: [
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" },
-				{ code: "rich coding", desc: "he likes coding than himself" }
-			],
+			departments: [],
 
 			columns: [
 				{ key: "code", label: "code" },
@@ -36,6 +28,27 @@ class Department extends Component {
 
 			redirect: false
 		};
+	}
+
+	async componentDidMount() {
+		const departments = [];
+
+		const res = await httpService.get("/departments")
+
+		if(res){
+			res.data.data.forEach(department => {
+				departments.push(this.mapToViewModel(department))
+			})
+		}
+
+		this.setState({departments})
+	}
+
+	mapToViewModel(department){
+		return {
+			code: department.code,
+			desc: department.description
+		}
 	}
 
 	/**
