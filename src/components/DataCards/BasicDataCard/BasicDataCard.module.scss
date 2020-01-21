@@ -1,0 +1,84 @@
+.BasicSummary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2em;
+}
+
+@media screen and (min-width: 768px) {
+  .BasicSummary {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.BasicDataCard {
+  height: 250px;
+  background-color: #fff;
+  border-radius: 10px;
+  display: grid;
+  grid-template-rows: auto 30%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s ease-out;
+  position: relative;
+
+  .Loader {
+    color: var(inverse-text);
+  }
+
+  .LinkIcon {
+    background-color: #fff !important;
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    font-size: 1.2em;
+    color: var(--gray);
+
+    a {
+      color: var(--dogwood-rose);
+    }
+  }
+
+  .Body {
+    height: 100%;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+
+    h4 {
+      font-size: 4rem;
+      color: var(--basic-color);
+    }
+  }
+
+  .Footer {
+    background-color: var(--basic-color);
+    color: var(--inverse-text);
+    border-radius: 5px;
+
+    a {
+      display: flex;
+      color: var(--inverse-text);
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .Body,
+  .Footer {
+    margin: 1em;
+  }
+
+  &:hover {
+    box-shadow: 0 5px 50px rgba(0, 0, 0, 0.15);
+
+    .LinkIcon a {
+      color: var(--dogwood-rose);
+    }
+  }
+}

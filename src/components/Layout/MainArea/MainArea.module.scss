@@ -1,13 +1,13 @@
 .MainArea {
-	padding: 1.75rem 0.75rem 3rem;
-	flex: 1 0 65vh;
-	// height: 100px;
-	overflow-y: scroll;
+  padding: 1.75rem 0.75rem 3rem;
+  flex: 1 0 65vh;
+  // height: 100px;
+  overflow-y: scroll;
 
-	.Center {
-		max-width: 1700px;
-		margin: 0 auto;
-		display: flex;
-		justify-content: center;
-	}
+  .Center {
+    max-width: 1700px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
 }

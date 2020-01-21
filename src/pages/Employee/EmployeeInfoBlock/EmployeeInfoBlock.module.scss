@@ -1,14 +1,13 @@
 .InfoCol {
-	// @extend %bordered;
+  // @extend %bordered;
 
-	.Label {
-		text-transform: capitalize;
-		font-weight: bold;
-		font-size: 80%;
-		margin: 0;
-	}
-	.Value {
-		margin-left: 0.37rem;
-		text-transform: capitalize;
-	}
+  .Label {
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0;
+  }
+  .Value {
+    text-transform: capitalize;
+  }
 }

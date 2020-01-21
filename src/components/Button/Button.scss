@@ -1,53 +1,54 @@
 .button.fill,
 .button.highlight {
-	border: 2px solid;
+  // border: 2px solid;
 }
 .button {
-	cursor: pointer;
-	transition: opacity 0.3s ease 0.15s;
-	font-weight: bold;
-	text-transform: uppercase;
-	text-decoration: none;
-	position: relative;
-	z-index: 1;
-	transition: all 500ms;
-	font-size: 80%;
-	letter-spacing: 1px;
+  cursor: pointer;
+  // font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  transition: all 500ms;
+  font-size: 80%;
+  letter-spacing: 1px;
+  border: none;
+  padding: 0.7em 1em;
 }
 .button:hover,
 .button:focus {
-	transform: scale(1.05);
+  opacity: 0.85;
 }
 
 .button.highlight,
 .button.fill {
-	color: var(--inverse-text) !important;
+  color: var(--inverse-text) !important;
 }
 
 .button.fill {
-	background: var(--basic-gradient);
+  background: var(--basic-color);
 }
 
 .button.highlight {
-	background: var(--assent);
-	outline-color: var(--assent);
+  background: var(--assent);
+  outline-color: var(--assent);
 }
 .button.fill:hover {
-	color: var(--basic-color);
+  color: var(--basic-color);
 }
 .button.fill:hover::before,
 .button.highlight:hover::before {
-	background: var(--inverse-text);
+  background: var(--inverse-text);
 }
 .button.highlight:hover {
-	color: var(--assent);
+  color: var(--assent);
 }
 
 .button.disabled {
-	opacity: 0.5;
-	cursor: no-drop;
+  opacity: 0.5;
+  cursor: no-drop;
 }
 .button.disabled.fill:hover,
 .button.disabled.highlight:hover {
-	color: var(--inverse-text);
+  color: var(--inverse-text);
 }

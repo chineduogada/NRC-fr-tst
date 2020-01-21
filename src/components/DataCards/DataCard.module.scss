@@ -1,0 +1,91 @@
+.BasicSummary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2em;
+}
+
+@media screen and (min-width: 768px) {
+  .BasicSummary {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.DataCard {
+  height: 250px;
+  background-color: #fff;
+  border-radius: 10px;
+  display: grid;
+  grid-template-rows: auto 30%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s ease-out;
+  position: relative;
+
+  .Loader {
+    color: var(inverse-text);
+  }
+
+  .LinkIcon {
+    background-color: #fff !important;
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    font-size: 1.2em;
+    color: var(--gray);
+  }
+
+  .DataCardBody {
+    height: 100%;
+    color: var(--gray);
+
+    h4 {
+      font-size: 4rem;
+      color: var(--basic-color);
+    }
+  }
+
+  .DataCardFooter {
+    background-color: var(--basic-color);
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: var(--inverse-text);
+    border-radius: 5px;
+  }
+
+  .DataCardTitle,
+  .DataCardFooter {
+    display: flex;
+    // flex-direction: column;
+    align-items: center;
+    margin: 1em;
+  }
+
+  &:hover {
+    box-shadow: 0 5px 40px rgba(0, 0, 0, 0.2);
+
+    .LinkIcon {
+      color: var(--dogwood-rose);
+    }
+  }
+
+  // &:nth-child(1) {
+  //   .Title {
+  //     background-color: var(--dogwood-rose);
+  //   }
+  // }
+  // &:nth-child(2) {
+  //   .Title {
+  //     background-color: var(--basic-color-light);
+  //   }
+  // }
+  // &:nth-child(3) {
+  //   .Title {
+  //     background-color: var(--magic-mint);
+  //   }
+  // }
+  // &:nth-child(4) {
+  //   .Title {
+  //     background-color: var(--sky-blue);
+  //   }
+  // }
+}

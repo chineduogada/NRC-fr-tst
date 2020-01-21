@@ -1,13 +1,14 @@
 .InfoBlock {
-	min-height: 100px;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  min-height: 100px;
+  display: grid;
+  background-color: var(--inverse-text);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
-	.Title {
-		grid-column: 1 / -1;
-		text-transform: uppercase;
-		font-weight: bold;
-		margin-bottom: 0.75rem;
-		justify-self: start;
-	}
+  .Title {
+    grid-column: 1 / -1;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    justify-self: start;
+  }
 }
