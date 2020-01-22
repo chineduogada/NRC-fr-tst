@@ -15,7 +15,8 @@ const TableView = ({
   currentPage,
   clickHandler,
   columns,
-  useLinks
+  useLinks,
+  addNewButtonHandler
 }) => {
   return (
     <section className={classes.TableView}>
@@ -25,9 +26,7 @@ const TableView = ({
             <h2 className={classes.TableTitle}>{title}</h2>
           </div>
           <div className='buttons'>
-            <Link to='/employee/new'>
-              <Button label='add new' fill />
-            </Link>
+            <Button label='add new' fill onClick={addNewButtonHandler} />
             <Button label='export' />
           </div>
         </div>

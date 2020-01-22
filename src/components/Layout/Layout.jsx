@@ -41,6 +41,7 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path='/employee/new' exact component={AddNewEmployee} />
             <Route path='/employee/:ippisNo' exact component={Employee} />
             <Route path='/departments' exact component={Department} />
+            <Route path='/departments/new' exact component={Department} />
             <Route path='/departments/([0-9]+)' exact component={Department} />
           </Switch>
         </MainArea>

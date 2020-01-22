@@ -1,0 +1,39 @@
+.SideDraw {
+  position: fixed;
+  bottom: 2em;
+  right: 1em;
+  z-index: 3;
+  background-color: #fff;
+  width: 70%;
+  max-width: 600px;
+  min-height: 500px;
+  box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s 0.1s ease;
+
+  .Title {
+    background: var(--basic-color);
+    color: var(--inverse-text);
+    text-transform: capitalize;
+    line-height: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .CloseIcon {
+      cursor: pointer;
+    }
+  }
+
+  .Title,
+  .Body {
+    padding: 1em;
+  }
+
+  &.Show {
+    transform: translateX(0%);
+  }
+
+  &.Hide {
+    transform: translateX(110%);
+  }
+}

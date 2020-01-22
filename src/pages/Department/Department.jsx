@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import Joi from 'joi-browser';
+import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
-import Table from '../../components/TableView/TableView';
+import TableView from '../../components/TableView/TableView';
+import SideDraw from '../../components/SideDraw/SideDraw';
+import Form from '../../components/Form/Form';
 
-class Department extends Component {
+class Department extends Form {
   constructor(props) {
     super(props);
 
@@ -17,21 +21,41 @@ class Department extends Component {
       columns: [
         { accessor: 'id', Header: 'ID' },
         { accessor: 'code', Header: 'Code' },
-        { accessor: 'desc', Header: 'Description' }
+        { accessor: 'description', Header: 'Description' }
       ],
 
       pageSize: 20,
       currentPage: 1,
 
-      redirect: false
+      showForm: false,
+
+      formData: {
+        code: '',
+        description: ''
+      },
+
+      errors: {}
     };
+
+    this.handleAddNew = this.handleAddNew.bind(this);
+    this.closeSideDraw = this.closeSideDraw.bind(this);
+  }
+
+  schema = {
+    code: Joi.string(),
+    description: Joi.string()
+  };
+
+  async componentWillMount() {
+    if (/new$/.test(this.props.match.path)) {
+      this.setState({ showForm: true });
+    }
   }
 
   async componentDidMount() {
     const departments = [];
 
     const res = await httpService.get('/departments');
-    console.log(res);
 
     if (res) {
       res.data.data.forEach(department => {
@@ -42,21 +66,20 @@ class Department extends Component {
     this.setState({ departments });
   }
 
+  handleAddNew(e) {
+    this.setState({ showForm: true });
+  }
+
+  closeSideDraw(e) {
+    this.setState({ showForm: false });
+  }
+
   mapToViewModel(department) {
     return {
       id: department.id,
       code: department.code,
-      desc: department.description
+      description: department.description
     };
-  }
-
-  /**
-   * This redirects to the hompage once a post is successfully created/updated
-   */
-  renderRedirect() {
-    if (this.state.redirect) {
-      return <Redirect to='/' />;
-    }
   }
 
   handlePageChange = page => {
@@ -65,19 +88,60 @@ class Department extends Component {
     }
   };
 
+  updateDepartmentList(res) {
+    const newDept = res.data.data;
+
+    this.setState({ departments: [...this.state.departments, newDept] });
+  }
+
+  async doSubmit(event, stopProcessing) {
+    console.log('submitting', this.state.formData);
+    const res = await httpService.post('/departments', this.state.formData);
+
+    stopProcessing();
+
+    if (res) {
+      toast.success('Department successfully added!');
+      this.updateDepartmentList(res);
+      this.Form.reset();
+      this.closeSideDraw();
+    }
+  }
+
+  renderDepartmentForm() {
+    return (
+      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+        {this.renderInput('code', 'code')}
+        {this.renderInput('department', 'description')}
+
+        {this.renderButton('save')}
+      </form>
+    );
+  }
+
   render() {
-    const { departments, columns, currentPage } = this.state;
+    const { departments, columns } = this.state;
 
     return (
       <React.Fragment>
         {this.state.departments ? (
           <Section>
-            <Table
+            <TableView
               title='departments'
               columns={columns}
               data={departments}
               clickHandler={this.handleRowClick}
-            ></Table>
+              addNewButtonHandler={this.handleAddNew}
+            ></TableView>
+
+            <SideDraw
+              title='new department'
+              openDraw={this.state.showForm}
+              onClose={this.closeSideDraw}
+            >
+              <p>Add a new department</p>
+              {this.renderDepartmentForm()}
+            </SideDraw>
           </Section>
         ) : (
           <Loader />

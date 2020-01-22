@@ -1,0 +1,24 @@
+.Notice {
+  font-size: 1rem;
+  background-color: var(--basic-color-light);
+  width: fit-content;
+  max-width: 900px;
+  // color: var(--inverse-text);
+  border-radius: 5px;
+  position: relative;
+  margin-top: 1em;
+
+  p {
+    padding: 1.2em 1em;
+  }
+}
+
+.CloseBtn {
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(20%, -20%);
+  font-size: 1rem;
+  // color: var(--inverse-text);
+}

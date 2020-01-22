@@ -1,18 +1,24 @@
 .Section {
-	margin-bottom: 2em;
-	width: 100%;
+  margin-bottom: 2em;
+  width: 100%;
 }
 
 .Titles {
-	margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .SubTitle {
-	font-size: 0.875rem;
+  font-size: 0.875rem;
+  background-color: var(--magic-mint);
+  width: fit-content;
+  max-width: 900px;
+  /* color: var(--inverse-text); */
+  padding: 0.8em 1em;
+  border-radius: 25px;
 }
 
 .SectionTitle {
-	margin-bottom: 0.25em;
-	color: var(--basic-color);
-	text-transform: capitalize;
+  margin-bottom: 0.25em;
+  color: var(--basic-color);
+  text-transform: capitalize;
 }

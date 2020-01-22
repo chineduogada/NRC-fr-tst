@@ -116,10 +116,12 @@ export default class Dashboard extends Component {
       this.fetchJobIncidence()
     ]);
 
-    this.setNumEmployee(employees);
-    this.setNumDept(dept);
-    this.setNumTrainingSchedules(trainingSch);
-    this.setNumJobIncidence(incidence);
+    if (employees) {
+      this.setNumEmployee(employees);
+      this.setNumDept(dept);
+      this.setNumTrainingSchedules(trainingSch);
+      this.setNumJobIncidence(incidence);
+    }
   }
 
   render() {

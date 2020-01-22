@@ -31,6 +31,7 @@ class AllEmployees extends Component {
     };
 
     this.handleRowClick = this.handleRowClick.bind(this);
+    this.handleAddNew = this.handleAddNew.bind(this);
   }
 
   async componentDidMount() {
@@ -62,6 +63,10 @@ class AllEmployees extends Component {
     };
   }
 
+  handleAddNew() {
+    this.props.history.push('/employee/new');
+  }
+
   handlePageChange = page => {
     if (page) {
       this.setState({ currentPage: page });
@@ -84,6 +89,7 @@ class AllEmployees extends Component {
           data={employees}
           clickHandler={this.handleRowClick}
           currentPage={currentPage}
+          addNewButtonHandler={this.handleAddNew}
         />
       </Section>
     );
