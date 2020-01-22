@@ -1,12 +1,13 @@
 import React from 'react';
-// import credentials from "../../services/Credentials";
+import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
+import { MdApps } from 'react-icons/md';
+import getCredentials from '../../services/Credentials';
 import { Link } from 'react-router-dom';
-// import InputField from "../InputField/InputField";
 import './Nav.scss';
 
 // Navigation
 const Nav = props => {
-  const { jobRole, firstName } = { firstName: null };
+  const { role, firstName, lastName } = getCredentials();
 
   return (
     <nav id='main-nav'>
@@ -14,29 +15,27 @@ const Nav = props => {
       <Link to='/'>{/* <h1 id="logo">Teamwork</h1> */}</Link>
 
       {/* Main Menu */}
-      <div className='search-area'>
-        <form>
-          {/* <InputField type='text' placeholder='search posts, teammates' /> */}
-          {/* <button type='submit' style={{transform: 'scale(1)'}}></button> */}
-        </form>
-      </div>
       <div className='menu main-menu'>
         {/* Hamburger */}
-        <p className='hamburger'>MENU</p>
+        <p className='hamburger'>{<MdApps className='icon' size='15px' />}</p>
         {/* Menu Items */}
         <ul>
           <li>
             <Link to='/' className='active'></Link>
           </li>
           <li>
-            <Link to='/post/new'>Welcome, {firstName}</Link>
+            {lastName} {firstName}
           </li>
           <li className='btn'>
-            <Link to='/import'>Import data</Link>
+            <Link to='/import'>
+              <IoMdCloudUpload className='icon' size='15px' /> Import data
+            </Link>
           </li>
-          {jobRole === 'admin' ? (
+          {role === 'admin' ? (
             <li>
-              <Link to='/members'>All Users</Link>
+              <Link to='/users'>
+                {<IoMdPerson className='icon' size='15px' />} All Users
+              </Link>
             </li>
           ) : null}
           <li className='user'>

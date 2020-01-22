@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosAdd } from 'react-icons/io';
+import getCredentials from '../../services/Credentials';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import BasicDataCard from '../../components/DataCards/BasicDataCard/BasicDataCard';
@@ -126,8 +127,9 @@ export default class Dashboard extends Component {
 
   render() {
     const { basicSummary } = this.state;
+    const { firstName } = getCredentials();
     return (
-      <Section id='post' title='dashboard' subTitle={'Welcome, superadmin'}>
+      <Section id='post' title='dashboard' subTitle={`Welcome, ${firstName}`}>
         <Section>
           <div className={classes.News}>{<SimpleLineChart />}</div>
         </Section>
