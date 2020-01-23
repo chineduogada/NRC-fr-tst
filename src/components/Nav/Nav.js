@@ -12,7 +12,7 @@ const Nav = props => {
   return (
     <nav id='main-nav'>
       {/* Logo */}
-      <Link to='/'>{/* <h1 id="logo">Teamwork</h1> */}</Link>
+      {/* <Link to='/'><h1 id="logo">Teamwork</h1></Link> */}
 
       {/* Main Menu */}
       <div className='menu main-menu'>

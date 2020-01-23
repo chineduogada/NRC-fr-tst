@@ -103,7 +103,7 @@ export default class Form extends Component {
         error={errors[name]}
         onChange={this.handleChange}
         defaultValue={defaultValue}
-        autofocus={autofocus}
+        autoFocus={autofocus}
       />
     );
   }
@@ -142,7 +142,7 @@ export default class Form extends Component {
         error={errors[name]}
         onChange={this.handleChange}
         defaultValue={defaultValue}
-        autofocus={autofocus}
+        autoFocus={autofocus}
       />
     );
   }
@@ -154,11 +154,11 @@ export default class Form extends Component {
         <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
-            as="span"
-            animation="grow"
-            size="sm"
-            role="status"
-            aria-hidden="true"
+            as='span'
+            animation='grow'
+            size='sm'
+            role='status'
+            aria-hidden='true'
           />
         ) : null}
       </>
