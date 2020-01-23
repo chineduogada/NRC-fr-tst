@@ -215,23 +215,35 @@ export default class AddNewEmployee extends Form {
 
   render() {
     return this.state.departmentOptions.length ? (
-      <Section title='add new employee'>
+      <Section title="add new employee">
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title='basic information'>
-            {this.renderInput('ippisNo', 'ippisNo', '', 'number')}
+          <InformationBlock title="basic information">
+            {this.renderInput('ippisNo', 'ippisNo', null, null, 'number')}
             {this.renderInput('first Name', 'firstName')}
             {this.renderInput('last Name', 'lastName')}
             {this.renderInput('middle Names', 'middleNames')}
             {this.renderInput('initials', 'initials')}
-            {this.renderInput('nrc number', 'nrcNo', '', 'number')}
-            {this.renderInput('date of birth', 'dateOfBirth', '', 'date')}
-            {this.renderInput('phone number', 'phoneNumber', '', 'number')}
-            {this.renderInput('email', 'email', '', 'email')}
+            {this.renderInput('nrc number', 'nrcNo', null, null, 'number')}
+            {this.renderInput(
+              'date of birth',
+              'dateOfBirth',
+              null,
+              null,
+              'date'
+            )}
+            {this.renderInput(
+              'phone number',
+              'phoneNumber',
+              null,
+              null,
+              'number'
+            )}
+            {this.renderInput('email', 'email', null, null, 'email')}
 
             {this.renderSelect(
               'pension fund administrator',
@@ -239,7 +251,7 @@ export default class AddNewEmployee extends Form {
               this.state.pfaOptions
             )}
 
-            {this.renderInput('pfa number', 'pfaNumber', '', 'number')}
+            {this.renderInput('pfa number', 'pfaNumber', null, null, 'number')}
 
             {this.renderSelect('gender', 'genderId', [
               { id: 1, name: 'male' },
@@ -287,17 +299,18 @@ export default class AddNewEmployee extends Form {
             {this.renderInput('ef9f02', 'ef9f02')}
             {this.renderInput('ef9f03', 'ef9f03')}
             {this.renderInput('ef9f04', 'ef9f04')}
-            {this.renderInput('efdf01', 'efdf01', '', 'date')}
-            {this.renderInput('efdf02', 'efdf02', '', 'date')}
+            {this.renderInput('efdf01', 'efdf01', null, null, 'date')}
+            {this.renderInput('efdf02', 'efdf02', null, null, 'date')}
           </InformationBlock>
 
-          <InformationBlock title='job information'>
-            {this.renderInput('section', 'section', '')}
+          <InformationBlock title="job information">
+            {this.renderInput('section', 'section', null, null, 'number')}
             {this.renderInput('location', 'location', '')}
             {this.renderInput(
               'report to',
               'reportTo',
               'enter ippiNo...',
+              null,
               'number'
             )}
             {this.renderSelect('employee status', 'employeeStatus', [
@@ -321,30 +334,40 @@ export default class AddNewEmployee extends Form {
             )}
           </InformationBlock>
 
-          <InformationBlock title='appointment information'>
+          <InformationBlock title="appointment information">
             {this.renderInput(
               'first appointment date',
               'firstAppointmentDate',
-              '',
+              null,
+              null,
               'date'
             )}
-            {this.renderInput('resumption date', 'resumptionDate', '', 'date')}
+            {this.renderInput(
+              'resumption date',
+              'resumptionDate',
+              null,
+              null,
+              'date'
+            )}
             {this.renderInput(
               'confirmation date',
               'confirmationDate',
-              '',
+              null,
+              null,
               'date'
             )}
             {this.renderInput(
               'expected retirement date',
               'expectedRetirementDate',
-              '',
+              null,
+              null,
               'date'
             )}
             {this.renderInput(
               'present appointment date',
               'presentAppointmentDate',
-              '',
+              null,
+              null,
               'date'
             )}
 
@@ -395,7 +418,7 @@ export default class AddNewEmployee extends Form {
         </form>
       </Section>
     ) : (
-      <Loader message='please wait...' />
+      <Loader message="please wait..." />
     );
   }
 }

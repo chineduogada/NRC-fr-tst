@@ -16,6 +16,7 @@
     "jest": "^24.9.0",
     "jest-enzyme": "^7.1.2",
     "joi-browser": "^13.4.0",
+    "lodash": "^4.17.15",
     "match-sorter": "^4.0.2",
     "node-sass": "^4.13.0",
     "proptypes": "^1.1.0",

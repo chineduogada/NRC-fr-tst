@@ -15,13 +15,19 @@
   border: none;
   padding: 0.7em 1em;
 }
+
+.button:not(:first-of-type) {
+  margin-left: 0.5em;
+}
+
 .button:hover,
 .button:focus {
   opacity: 0.85;
 }
 
 .button.highlight,
-.button.fill {
+.button.fill,
+.button.danger {
   color: var(--inverse-text) !important;
 }
 
@@ -51,4 +57,23 @@
 .button.disabled.fill:hover,
 .button.disabled.highlight:hover {
   color: var(--inverse-text);
+}
+
+.button.danger {
+  background: var(--dogwood-rose);
+}
+
+.button.plain {
+  background-color: var(--light-gray);
+  color: var(--text);
+}
+
+.button.block {
+  margin: 0.8em 0;
+  display: block;
+  width: 100%;
+}
+
+.button.fullwidth {
+  width: 100%;
 }

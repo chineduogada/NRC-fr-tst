@@ -1,14 +1,16 @@
 .SideDraw {
   position: fixed;
-  bottom: 2em;
-  right: 1em;
+  // bottom: 2em;
+  // right: 1em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 3;
   background-color: #fff;
   width: 70%;
   max-width: 600px;
-  min-height: 500px;
   box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s 0.1s ease;
+  transition: all 0.1s 0.1s ease;
 
   .Title {
     background: var(--basic-color);
@@ -24,16 +26,30 @@
     }
   }
 
-  .Title,
   .Body {
     padding: 1em;
   }
 
+  .Title {
+    padding: 0.5em 1em;
+  }
+
+  .Body {
+    min-height: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
   &.Show {
-    transform: translateX(0%);
+    // transform: translateX(0%);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
 
   &.Hide {
-    transform: translateX(110%);
+    // transform: translateX(110%);
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+    visibility: hidden;
   }
 }

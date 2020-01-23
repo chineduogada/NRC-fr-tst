@@ -4,6 +4,7 @@ import { Spinner } from 'react-bootstrap';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import Select from '../Select/Select';
+import TextArea from '../TextArea/TextArea';
 
 export default class Form extends Component {
   constructor(props) {
@@ -33,14 +34,6 @@ export default class Form extends Component {
 
     const { error } = Joi.validate(formData, schema, options);
     return error ? error.details[0].message : null;
-
-    // if (name === "title") if (value.trim() === "") return "Title is required!";
-    // if (name === "genreID")
-    // 	if (value.trim() === "") return "Genre is required!";
-    // if (name === "numberInStock")
-    // 	if (value.trim() === "") return "Number In Stock is required!";
-    // if (name === "dailyRentalRate")
-    // 	if (value.trim() === "") return "Rate is required!";
   }
 
   handleChange = ({ currentTarget: input }) => {
@@ -81,8 +74,8 @@ export default class Form extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-
     const errors = this.validate();
+    console.log(this.state.formData, errors);
     this.setState({ errors: errors || {} });
     if (errors) return;
 
@@ -91,7 +84,14 @@ export default class Form extends Component {
     this.doSubmit(event, this.stopProcessing);
   };
 
-  renderInput(label, name, placeholder, type = 'text') {
+  renderInput(
+    label,
+    name,
+    placeholder,
+    defaultValue = '',
+    type = 'text',
+    autofocus
+  ) {
     const { errors } = this.state;
 
     return (
@@ -102,6 +102,8 @@ export default class Form extends Component {
         name={name}
         error={errors[name]}
         onChange={this.handleChange}
+        defaultValue={defaultValue}
+        autofocus={autofocus}
       />
     );
   }
@@ -121,6 +123,30 @@ export default class Form extends Component {
     );
   }
 
+  renderTextArea(
+    label,
+    name,
+    placeholder,
+    defaultValue = '',
+    type = 'text',
+    autofocus
+  ) {
+    const { errors } = this.state;
+
+    return (
+      <TextArea
+        label={label}
+        type={type}
+        placeholder={placeholder}
+        name={name}
+        error={errors[name]}
+        onChange={this.handleChange}
+        defaultValue={defaultValue}
+        autofocus={autofocus}
+      />
+    );
+  }
+
   renderButton(label) {
     const disabled = this.state.isProcessing;
     return (
@@ -128,11 +154,11 @@ export default class Form extends Component {
         <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
-            as='span'
-            animation='grow'
-            size='sm'
-            role='status'
-            aria-hidden='true'
+            as="span"
+            animation="grow"
+            size="sm"
+            role="status"
+            aria-hidden="true"
           />
         ) : null}
       </>

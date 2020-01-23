@@ -10,7 +10,7 @@ import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
-import classes from './Department.module.scss';
+import classes from './TrainingRecord.module.scss';
 
 class Department extends Form {
   constructor(props) {
@@ -22,6 +22,7 @@ class Department extends Form {
       departments: [],
 
       columns: [
+        { accessor: 'id', Header: 'ID' },
         { accessor: 'code', Header: 'Code' },
         { accessor: 'description', Header: 'Description' }
       ],
@@ -59,7 +60,7 @@ class Department extends Form {
   };
 
   async componentWillMount() {
-    if (/new$/.test(this.props.location.pathname)) {
+    if (/new$/.test(this.props.match.path)) {
       this.setState({ showForm: true });
     }
   }
@@ -163,21 +164,18 @@ class Department extends Form {
   }
 
   async handleDelete(event) {
-    if (!this.state.isDeleteting) {
-      this.setState({ isDeleteting: true });
+    this.setState({ isDeleteting: true });
 
-      const res = await httpService.delete(
-        `/departments/${this.state.rowToPreview.id}`
-      );
+    const res = await httpService.delete(
+      `/departments/${this.state.rowToPreview.id}`
+    );
 
-      if (res) {
-        toast.success('Department successfully deleted!');
-        this.removeTableRow();
-        this.updateForm.reset();
-        this.resetFormData();
-        this.closeSideDraw();
-        this.setState({ isDeleteting: false });
-      }
+    if (res) {
+      toast.success('Department successfully deleted!');
+      this.removeTableRow();
+      this.updateForm.reset();
+      this.resetFormData();
+      this.closeSideDraw();
     }
   }
 
@@ -250,7 +248,7 @@ class Department extends Form {
 
     return (
       <React.Fragment>
-        {this.state.departments.length ? (
+        {this.state.departments ? (
           <Section>
             <TableView
               title="departments"

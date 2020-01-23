@@ -14,12 +14,6 @@ export default class SideDraw extends Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  // componentWillMount() {
-  //   if (this.props.openDraw) {
-  //     this.openDraw();
-  //   }
-  // }
-
   handleClose(e) {
     this.setState({ open: false });
     this.props.onClose();
@@ -35,7 +29,7 @@ export default class SideDraw extends Component {
           }`}
         >
           <div className={classes.Title}>
-            <h4>{this.props.title}</h4>
+            <h5>{this.props.title}</h5>
             <IoMdClose
               className={classes.CloseIcon}
               onClick={this.handleClose}

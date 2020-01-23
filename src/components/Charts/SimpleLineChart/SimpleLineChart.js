@@ -13,52 +13,46 @@ import {
 const data = [
   {
     name: 'Finance',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400
+    active: 400,
+    retired: 240,
+    suspended: 24
   },
   {
     name: 'Public Relations',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210
+    active: 300,
+    retired: 139,
+    suspended: 41
   },
   {
     name: 'Accounts',
-    uv: 2000,
-    pv: 9800,
-    amt: 2290
+    active: 573,
+    retired: 98,
+    suspended: 14
   },
   {
     name: 'Admin',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000
+    active: 278,
+    retired: 39,
+    suspended: 14
   },
   {
     name: 'Customer Service',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181
+    active: 389,
+    retired: 48,
+    suspended: 18
   },
   {
     name: 'Engineering',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500
-  },
-  {
-    name: 'Management',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100
+    active: 239,
+    retired: 380,
+    suspended: 20
   }
 ];
 
 export default class SimpleLineChart extends PureComponent {
   render() {
     return (
-      <ResponsiveContainer width='100%' height={300}>
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={data}
           margin={{
@@ -68,18 +62,19 @@ export default class SimpleLineChart extends PureComponent {
             bottom: 5
           }}
         >
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='name' />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Legend />
           <Line
-            type='monotone'
-            dataKey='pv'
-            stroke='#8884d8'
+            type="monotone"
+            dataKey="active"
+            stroke="#8884d8"
             activeDot={{ r: 8 }}
           />
-          <Line type='monotone' dataKey='uv' stroke='#82ca9d' />
+          <Line type="monotone" dataKey="retired" stroke="#82ca9d" />
+          <Line type="monotone" dataKey="suspended" stroke="#d81e5b" />
         </LineChart>
       </ResponsiveContainer>
     );
