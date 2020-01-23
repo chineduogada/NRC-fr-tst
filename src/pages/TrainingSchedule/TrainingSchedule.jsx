@@ -8,6 +8,7 @@ import currency from '../../helpers/currency';
 import Section from '../../hoc/Section/Section';
 import InformationBlock from '../../components/InformationBlock/InformationBlock';
 import SideDraw from '../../components/SideDraw/SideDraw';
+import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import classes from './TrainingSchedule.module.scss';
@@ -24,6 +25,7 @@ class TrainingSchedule extends Form {
       authorisors: null,
 
       showForm: false,
+      showModal: false,
 
       formData: {
         lYear: '',
@@ -62,6 +64,11 @@ class TrainingSchedule extends Form {
     this.updateDatabase = this.updateDatabase.bind(this);
     this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleProceedDelete = this.handleProceedDelete.bind(this);
+    this.deleteObject = this.deleteObject.bind(this);
+    this.approveSchedule = this.approveSchedule.bind(this);
+    this.handleViewEmployee = this.handleViewEmployee.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   schema = {
@@ -106,6 +113,10 @@ class TrainingSchedule extends Form {
 
   closeSideDraw(e) {
     this.setState({ showForm: false, rowToPreview: null });
+  }
+
+  closeModal() {
+    this.setState({ showModal: false });
   }
 
   mapAuthorisors(data) {
@@ -227,19 +238,38 @@ class TrainingSchedule extends Form {
     }
   }
 
-  async handleDelete(event) {
+  async deleteObject() {
     this.setState({ isDeleteting: true });
-
-    const res = await httpService.delete(
-      `/training-schedules/${this.state.rowToPreview.id}`
-    );
+    const res = await httpService.delete(`/training-schedules/${this.id}`);
 
     if (res) {
-      toast.success('TrainingSchedule successfully deleted!');
-      this.updateForm.reset();
-      this.resetFormData();
+      toast.success('Training schedule successfully deleted!');
+      this.props.history.push('/training-schedules');
       this.closeSideDraw();
     }
+  }
+
+  handleProceedDelete() {
+    this.deleteObject();
+  }
+
+  async handleDelete(event) {
+    this.setState({ showModal: true });
+  }
+
+  async approveSchedule() {
+    if (!this.isApproved()) {
+      await this.setState({
+        formData: { ...this.state.actualData, approved: 'Y' }
+      });
+
+      console.log(this.state.formData);
+      await this.updateDatabase();
+    }
+  }
+
+  handleViewEmployee({ currentTarget }) {
+    this.props.history.push(`/employee/${currentTarget.id}`);
   }
 
   async doSubmit(event, stopProcessing) {
@@ -302,6 +332,34 @@ class TrainingSchedule extends Form {
             'number'
           )}
           {this.renderInput(
+            'actual start date',
+            'actualStartDate',
+            null,
+            actualData.actualStartDate,
+            'date'
+          )}
+          {this.renderInput(
+            'actual end date',
+            'actualEndDate',
+            null,
+            actualData.actualEndDate,
+            'date'
+          )}
+          {this.renderInput(
+            'actual cost',
+            'actualCost',
+            null,
+            actualData.actualCost,
+            'number'
+          )}
+          {this.renderInput(
+            'actual attendee no',
+            'actualAttendeeNo',
+            null,
+            actualData.actualAttendeeNo,
+            'number'
+          )}
+          {this.renderInput(
             'resource organisation',
             'resourceOrg',
             null,
@@ -332,10 +390,22 @@ class TrainingSchedule extends Form {
             { id: 'Y', name: 'Y' },
             { id: 'N', name: 'N' }
           ])}
+          {this.renderSelect('report submitted', 'reportSubmitted', [
+            { id: 'Y', name: 'Y' },
+            { id: 'N', name: 'N' }
+          ])}
+          {this.renderSelect('objective met', 'objectiveMet', [
+            { id: 'Y', name: 'Y' },
+            { id: 'N', name: 'N' }
+          ])}
           {this.renderButton('update')}
         </form>
       </div>
     );
+  }
+
+  isApproved() {
+    return this.state.actualData.approved.toLowerCase() === 'y';
   }
 
   displayInfo(data) {
@@ -350,36 +420,88 @@ class TrainingSchedule extends Form {
   }
 
   render() {
-    const { showForm, actualData, dataForView } = this.state;
+    const {
+      showForm,
+      showModal,
+      actualData,
+      dataForView,
+      authorisors
+    } = this.state;
+
     return (
       <React.Fragment>
         {actualData ? (
-          <Section title='training schedule'>
+          <Section title="training schedule">
             <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button label='mark as complete' highlight />
-              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
-              <Button label='delete' danger />
-              <Button label='view authorizor 1' plain />
+              <Button
+                label={this.isApproved() ? 'approved' : 'approve'}
+                highlight
+                disabled={this.isApproved()}
+                onClick={this.approveSchedule}
+              />
+              <Button label="update" fill onClick={this.handleUpdateBtnClick} />
+              <Button label="delete" danger onClick={this.handleDelete} />
+              <Button
+                label="view employee"
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.ippisNo}
+              />
             </div>
 
-            <InformationBlock title='basic'>
+            <InformationBlock title="basic">
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
-            <InformationBlock title='objective'>
+            <div className={`${classes.Actions} ${classes.Right}`}>
+              <Button
+                label="view authorisor 1"
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.authorisor1Id}
+              />
+              <Button
+                label="view authorisor 2"
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.authorisor2Id}
+              />
+            </div>
+
+            <InformationBlock title="authorisors">
+              {this.displayInfo(authorisors)}
+            </InformationBlock>
+
+            <InformationBlock title="objective">
               {actualData.objective}
             </InformationBlock>
 
             <SideDraw
-              title='schedule'
+              title="schedule"
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
               {this.renderUpdateForm()}
             </SideDraw>
+
+            <Modal
+              title="delete schedule"
+              openModal={showModal}
+              onClose={this.closeModal}
+            >
+              <p>This operation can not be reversed. Proceed?</p>
+              <div className={`${classes.Actions} ${classes.Right}`}>
+                <Button
+                  label="proceed"
+                  danger
+                  onClick={this.handleProceedDelete}
+                  disabled={this.state.isDeleteting}
+                />
+              </div>
+            </Modal>
           </Section>
         ) : (
-          <Loader message='please wait' />
+          <Loader message="please wait" />
         )}
       </React.Fragment>
     );

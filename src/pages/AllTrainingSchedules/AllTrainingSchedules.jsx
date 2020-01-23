@@ -100,22 +100,26 @@ class AllTrainingSchedules extends Form {
     }
   }
 
-  async componentDidMount() {
+  async fetchData() {
     const actualData = [];
 
     const res = await httpService.get('/training-schedules');
 
-    const { rows } = res.data.data;
+    if (res) {
+      const { rows } = res.data.data;
 
-    if (rows && rows.length) {
-      rows.forEach(row => {
-        actualData.push(this.mapToViewModel(row));
-      });
+      if (rows && rows.length) {
+        rows.forEach(row => {
+          actualData.push(this.mapToViewModel(row));
+        });
+      }
+
+      this.setState({ actualData });
     }
+  }
 
-    console.log(actualData);
-
-    this.setState({ actualData });
+  async componentDidMount() {
+    await this.fetchData();
   }
 
   handleAddNew(e) {
@@ -162,13 +166,14 @@ class AllTrainingSchedules extends Form {
   };
 
   handleRowClick({ currentTarget }) {
+    console.log(this.props);
     this.props.history.push(`training-schedules/${currentTarget.id}`);
   }
 
   updateTableRows(res) {
-    const newDept = res.data.data;
-
-    this.setState({ actualData: [...this.state.actualData, newDept] });
+    // const newDept = res.data.data;
+    this.props.history.go();
+    // this.setState({ actualData: [...this.state.actualData, newDept] });
   }
 
   resetFormData() {
@@ -185,8 +190,8 @@ class AllTrainingSchedules extends Form {
     stopProcessing();
 
     if (res) {
+      await this.fetchData();
       toast.success('Training has been scheduled successfully!');
-      this.updateTableRows(res);
       this.Form.reset();
       this.resetFormData();
       this.closeSideDraw();
@@ -194,7 +199,6 @@ class AllTrainingSchedules extends Form {
   }
 
   async doSubmit(event, stopProcessing) {
-    console.log('submitting');
     this.postNewData(stopProcessing);
   }
 
