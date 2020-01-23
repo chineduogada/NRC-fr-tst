@@ -4,9 +4,11 @@ import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
+import currency from '../../helpers/currency';
 import Section from '../../hoc/Section/Section';
 import InformationBlock from '../../components/InformationBlock/InformationBlock';
 import SideDraw from '../../components/SideDraw/SideDraw';
+import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import classes from './TrainingSchedule.module.scss';
@@ -23,6 +25,7 @@ class TrainingSchedule extends Form {
       authorisors: null,
 
       showForm: false,
+      showModal: false,
 
       formData: {
         lYear: '',
@@ -58,9 +61,14 @@ class TrainingSchedule extends Form {
     this.initialFormState = { ...this.state.formData };
 
     this.closeSideDraw = this.closeSideDraw.bind(this);
-    this.handleRowClick = this.handleRowClick.bind(this);
-    this.updateTrainingSchedule = this.updateTrainingSchedule.bind(this);
+    this.updateDatabase = this.updateDatabase.bind(this);
+    this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleProceedDelete = this.handleProceedDelete.bind(this);
+    this.deleteObject = this.deleteObject.bind(this);
+    this.approveSchedule = this.approveSchedule.bind(this);
+    this.handleViewEmployee = this.handleViewEmployee.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   schema = {
@@ -87,7 +95,7 @@ class TrainingSchedule extends Form {
     objectiveMet: Joi.string()
   };
 
-  async componentDidMount() {
+  async fetchTraining() {
     const res = await httpService.get(`/training-schedules/${this.id}`);
 
     if (res) {
@@ -99,21 +107,29 @@ class TrainingSchedule extends Form {
     }
   }
 
+  async componentDidMount() {
+    await this.fetchTraining();
+  }
+
   closeSideDraw(e) {
     this.setState({ showForm: false, rowToPreview: null });
+  }
+
+  closeModal() {
+    this.setState({ showModal: false });
   }
 
   mapAuthorisors(data) {
     return [
       {
-        name: 'authorisor 2',
+        name: 'authorisor 1',
         value: `${data.employee.firstName} ${data.authorisor1.lastName}`
       },
       {
         name: 'authorisor 2',
         value: `${data.employee.firstName} ${data.authorisor2.lastName}`
-      },
-    ]
+      }
+    ];
   }
 
   mapDataForView(data) {
@@ -134,7 +150,7 @@ class TrainingSchedule extends Form {
         name: 'expected end date',
         value: data.expectedEndDate
       },
-      { name: 'expected cost', value: data.expectedCost },
+      { name: 'expected cost', value: currency(data.expectedCost) },
       {
         name: 'expected attendee no',
         value: data.expectedAttendeeNo
@@ -147,7 +163,7 @@ class TrainingSchedule extends Form {
         name: 'actual start date',
         value: data.actualEndDate || null
       },
-      { name: 'actual cost', value: data.actualCost || null },
+      { name: 'actual cost', value: currency(data.actualCost) || null },
       {
         name: 'actual attendee no',
         value: data.actualAttendeeNo || null
@@ -169,13 +185,10 @@ class TrainingSchedule extends Form {
 
   filterReturnedData(data) {
     return {
-      id: data.id,
       lYear: data.lYear,
       ippisNo: data.ippisNo,
-      employee: `${data.employee.firstName} ${data.employee.lastName}`,
-      trainingType: data.trainingType.type,
       resourceOrg: data.resourceOrg,
-      trainingTypeId: data.trainingTypeId,
+      trainingTypeId: data.trainingType.id,
       objective: data.objective,
       expectedStartDate: data.expectedStartDate,
       expectedEndDate: data.expectedEndDate,
@@ -202,152 +215,178 @@ class TrainingSchedule extends Form {
     }
   };
 
-  handleRowClick(event) {
-    if (event.detail > 1) {
-      const rowToPreview = this.state.actualData.filter(
-        row => row.id === event.currentTarget.id * 1
-      )[0];
-
-      this.setState({
-        rowToPreview,
-        showForm: true,
-        formData: rowToPreview
-      });
-    }
-  }
-
   resetFormData() {
     this.setState({ formData: this.initialFormState });
   }
 
-  async updateTrainingSchedule(stopProcessing) {
+  handleUpdateBtnClick(event) {
+    this.setState({ showForm: true, formData: this.state.actualData });
+  }
+
+  async updateDatabase(stopProcessing) {
     const res = await httpService.put(
-      `/TrainingSchedules/${this.state.rowToPreview.id}`,
+      `/training-schedules/${this.id}`,
       this.state.formData
     );
 
-    stopProcessing();
-
     if (res) {
+      await this.fetchTraining();
       toast.success('TrainingSchedule successfully updated!');
+      this.stopProcessing();
       this.closeSideDraw();
       this.resetFormData();
     }
+  }
+
+  async deleteObject() {
+    this.setState({ isDeleteting: true });
+    const res = await httpService.delete(`/training-schedules/${this.id}`);
+
+    if (res) {
+      toast.success('Training schedule successfully deleted!');
+      this.props.history.push('/training-schedules');
+      this.closeSideDraw();
+    }
+  }
+
+  handleProceedDelete() {
+    this.deleteObject();
   }
 
   async handleDelete(event) {
-    this.setState({ isDeleteting: true });
+    this.setState({ showModal: true });
+  }
 
-    const res = await httpService.delete(
-      `/training-schedules/${this.state.rowToPreview.id}`
-    );
+  async approveSchedule() {
+    if (!this.isApproved()) {
+      await this.setState({
+        formData: { ...this.state.actualData, approved: 'Y' }
+      });
 
-    if (res) {
-      toast.success('TrainingSchedule successfully deleted!');
-      this.updateForm.reset();
-      this.resetFormData();
-      this.closeSideDraw();
+      console.log(this.state.formData);
+      await this.updateDatabase();
     }
   }
 
+  handleViewEmployee({ currentTarget }) {
+    this.props.history.push(`/employee/${currentTarget.id}`);
+  }
+
   async doSubmit(event, stopProcessing) {
-    return this.updateTrainingSchedule(stopProcessing);
+    return this.updateDatabase(stopProcessing);
   }
 
   renderUpdateForm() {
+    const { actualData } = this.state;
+
     return (
       <div className={classes.Preview}>
-        <div className={classes.Actions}>
-          <Button
-            label="delete"
-            danger
-            onClick={this.handleDelete}
-            disabled={this.state.isDeleteting}
-          />
-        </div>
         <form
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('l year', 'lYear', null, null, 'date')}
+          {this.renderInput('l year', 'lYear', null, actualData.lYear, 'date')}
           {this.renderSelect('training type', 'trainingTypeId', [
             { id: 1, name: 'corporate' },
             { id: 2, name: 'community' }
           ])}
-          {this.renderInput('ippis no', 'ippisNo', null, null, 'number')}
-          {this.renderTextArea('objective', 'objective')}
+          {this.renderInput(
+            'ippis no',
+            'ippisNo',
+            null,
+            actualData.ippisNo,
+            'number'
+          )}
+          {this.renderTextArea(
+            'objective',
+            'objective',
+            null,
+            actualData.objective
+          )}
           {this.renderInput(
             'expected start date',
             'expectedStartDate',
             null,
-            null,
+            actualData.expectedStartDate,
             'date'
           )}
           {this.renderInput(
             'expected end date',
             'expectedEndDate',
             null,
-            null,
+            actualData.expectedEndDate,
             'date'
           )}
           {this.renderInput(
             'expected cost',
             'expectedCost',
             null,
-            null,
+            actualData.expectedCost,
             'number'
           )}
           {this.renderInput(
             'expected attendee no',
             'expectedAttendeeNo',
             null,
-            null,
+            actualData.expectedAttendeeNo,
             'number'
           )}
           {this.renderInput(
             'actual start date',
             'actualStartDate',
             null,
-            null,
+            actualData.actualStartDate,
             'date'
           )}
           {this.renderInput(
             'actual end date',
             'actualEndDate',
             null,
-            null,
+            actualData.actualEndDate,
             'date'
           )}
-          {this.renderInput('actual cost', 'actualCost', null, null, 'number')}
+          {this.renderInput(
+            'actual cost',
+            'actualCost',
+            null,
+            actualData.actualCost,
+            'number'
+          )}
           {this.renderInput(
             'actual attendee no',
             'actualAttendeeNo',
             null,
-            null,
+            actualData.actualAttendeeNo,
             'number'
           )}
-          {this.renderInput('resource organisation', 'resourceOrg')}
-          {this.renderInput('email', 'email', null, null, 'email')}
-          {this.renderInput('main resource person', 'mainResourcePerson')}
+          {this.renderInput(
+            'resource organisation',
+            'resourceOrg',
+            null,
+            actualData.resourceOrg
+          )}
+          {this.renderInput('email', 'email', null, actualData.email, 'email')}
+          {this.renderInput(
+            'main resource person',
+            'mainResourcePerson',
+            null,
+            actualData.mainResourcePerson
+          )}
           {this.renderInput(
             'authorisor 1',
             'authorisorId1',
             'enter ippis..',
-            null,
+            actualData.authorisor1Id,
             'number'
           )}
           {this.renderInput(
             'authorisor 2',
             'authorisorId2',
             'enter ippis..',
-            null,
+            actualData.authorisor2Id,
             'number'
           )}
           {this.renderSelect('residential', 'residential', [
-            { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
-          ])}
-          {this.renderSelect('approved', 'approved', [
             { id: 'Y', name: 'Y' },
             { id: 'N', name: 'N' }
           ])}
@@ -365,6 +404,10 @@ class TrainingSchedule extends Form {
     );
   }
 
+  isApproved() {
+    return this.state.actualData.approved.toLowerCase() === 'y';
+  }
+
   displayInfo(data) {
     return data.map((d, i) => {
       return (
@@ -377,36 +420,88 @@ class TrainingSchedule extends Form {
   }
 
   render() {
-    const { showForm, actualData, dataForView } = this.state;
+    const {
+      showForm,
+      showModal,
+      actualData,
+      dataForView,
+      authorisors
+    } = this.state;
+
     return (
       <React.Fragment>
         {actualData ? (
-          <Section title="training schedule">
+          <Section title='training schedule'>
             <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button label="mark as complete" highlight />
-              <Button label="update" fill />
-              <Button label="delete" danger />
-              <Button label="view authorizor 1" plain />
+              <Button
+                label={this.isApproved() ? 'approved' : 'approve'}
+                highlight
+                disabled={this.isApproved()}
+                onClick={this.approveSchedule}
+              />
+              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
+              <Button label='delete' danger onClick={this.handleDelete} />
+              <Button
+                label='view employee'
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.ippisNo}
+              />
             </div>
 
-            <InformationBlock title="basic">
+            <InformationBlock title='basic'>
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
-            <InformationBlock title="objective">
+            <div className={`${classes.Actions} ${classes.Right}`}>
+              <Button
+                label='view authorisor 1'
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.authorisor1Id}
+              />
+              <Button
+                label='view authorisor 2'
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.authorisor2Id}
+              />
+            </div>
+
+            <InformationBlock title='authorisors'>
+              {this.displayInfo(authorisors)}
+            </InformationBlock>
+
+            <InformationBlock title='objective'>
               {actualData.objective}
             </InformationBlock>
 
             <SideDraw
-              title="schedule"
+              title='schedule'
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
               {this.renderUpdateForm()}
             </SideDraw>
+
+            <Modal
+              title='delete schedule'
+              openModal={showModal}
+              onClose={this.closeModal}
+            >
+              <p>This operation can not be reversed. Proceed?</p>
+              <div className={`${classes.Actions} ${classes.Right}`}>
+                <Button
+                  label='proceed'
+                  danger
+                  onClick={this.handleProceedDelete}
+                  disabled={this.state.isDeleteting}
+                />
+              </div>
+            </Modal>
           </Section>
         ) : (
-          <Loader message="please wait" />
+          <Loader message='please wait' />
         )}
       </React.Fragment>
     );
