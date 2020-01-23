@@ -122,7 +122,7 @@ class TrainingSchedule extends Form {
   mapAuthorisors(data) {
     return [
       {
-        name: 'authorisor 2',
+        name: 'authorisor 1',
         value: `${data.employee.firstName} ${data.authorisor1.lastName}`
       },
       {
@@ -431,7 +431,7 @@ class TrainingSchedule extends Form {
     return (
       <React.Fragment>
         {actualData ? (
-          <Section title="training schedule">
+          <Section title='training schedule'>
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button
                 label={this.isApproved() ? 'approved' : 'approve'}
@@ -439,45 +439,45 @@ class TrainingSchedule extends Form {
                 disabled={this.isApproved()}
                 onClick={this.approveSchedule}
               />
-              <Button label="update" fill onClick={this.handleUpdateBtnClick} />
-              <Button label="delete" danger onClick={this.handleDelete} />
+              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
+              <Button label='delete' danger onClick={this.handleDelete} />
               <Button
-                label="view employee"
+                label='view employee'
                 plain
                 onClick={this.handleViewEmployee}
                 id={actualData.ippisNo}
               />
             </div>
 
-            <InformationBlock title="basic">
+            <InformationBlock title='basic'>
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button
-                label="view authorisor 1"
+                label='view authorisor 1'
                 plain
                 onClick={this.handleViewEmployee}
                 id={actualData.authorisor1Id}
               />
               <Button
-                label="view authorisor 2"
+                label='view authorisor 2'
                 plain
                 onClick={this.handleViewEmployee}
                 id={actualData.authorisor2Id}
               />
             </div>
 
-            <InformationBlock title="authorisors">
+            <InformationBlock title='authorisors'>
               {this.displayInfo(authorisors)}
             </InformationBlock>
 
-            <InformationBlock title="objective">
+            <InformationBlock title='objective'>
               {actualData.objective}
             </InformationBlock>
 
             <SideDraw
-              title="schedule"
+              title='schedule'
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -485,14 +485,14 @@ class TrainingSchedule extends Form {
             </SideDraw>
 
             <Modal
-              title="delete schedule"
+              title='delete schedule'
               openModal={showModal}
               onClose={this.closeModal}
             >
               <p>This operation can not be reversed. Proceed?</p>
               <div className={`${classes.Actions} ${classes.Right}`}>
                 <Button
-                  label="proceed"
+                  label='proceed'
                   danger
                   onClick={this.handleProceedDelete}
                   disabled={this.state.isDeleteting}
@@ -501,7 +501,7 @@ class TrainingSchedule extends Form {
             </Modal>
           </Section>
         ) : (
-          <Loader message="please wait" />
+          <Loader message='please wait' />
         )}
       </React.Fragment>
     );
