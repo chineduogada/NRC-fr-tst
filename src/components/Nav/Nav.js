@@ -1,54 +1,53 @@
-import React from "react";
-// import credentials from "../../services/Credentials";
-import { Link } from "react-router-dom";
-// import InputField from "../InputField/InputField";
-import "./Nav.scss";
+import React from 'react';
+import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
+import { MdApps } from 'react-icons/md';
+import getCredentials from '../../services/Credentials';
+import { Link } from 'react-router-dom';
+import './Nav.scss';
 
 // Navigation
 const Nav = props => {
-	const { jobRole, firstName } = { firstName: null };
+  const { role, firstName, lastName } = getCredentials();
 
-	return (
-		<nav id="main-nav">
-			{/* Logo */}
-			<Link to="/">{/* <h1 id="logo">Teamwork</h1> */}</Link>
+  return (
+    <nav id='main-nav'>
+      {/* Logo */}
+      {/* <Link to='/'><h1 id="logo">Teamwork</h1></Link> */}
 
-			{/* Main Menu */}
-			<div className="search-area">
-				<form>
-					{/* <InputField type='text' placeholder='search posts, teammates' /> */}
-					{/* <button type='submit' style={{transform: 'scale(1)'}}></button> */}
-				</form>
-			</div>
-			<div className="menu main-menu">
-				{/* Hamburger */}
-				<p className="hamburger">MENU</p>
-				{/* Menu Items */}
-				<ul>
-					<li>
-						<Link to="/" className="active"></Link>
-					</li>
-					<li>
-						<Link to="/post/new">Welcome, {firstName}</Link>
-					</li>
-					<li>
-						<Link to="/post/new">Import data</Link>
-					</li>
-					{jobRole === "admin" ? (
-						<li>
-							<Link to="/members">All Users</Link>
-						</li>
-					) : null}
-					<li className="user">
-						<Link onClick={props.triggerSignOut} to="/">
-							{/* Logout */}
-						</Link>
-					</li>
-					{/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
-				</ul>
-			</div>
-		</nav>
-	);
+      {/* Main Menu */}
+      <div className='menu main-menu'>
+        {/* Hamburger */}
+        <p className='hamburger'>{<MdApps className='icon' size='15px' />}</p>
+        {/* Menu Items */}
+        <ul>
+          <li>
+            <Link to='/' className='active'></Link>
+          </li>
+          <li>
+            {lastName} {firstName}
+          </li>
+          <li className='btn'>
+            <Link to='/import'>
+              <IoMdCloudUpload className='icon' size='15px' /> Import data
+            </Link>
+          </li>
+          {role === 'admin' ? (
+            <li>
+              <Link to='/users'>
+                {<IoMdPerson className='icon' size='15px' />} All Users
+              </Link>
+            </li>
+          ) : null}
+          <li className='user'>
+            <Link onClick={props.triggerSignOut} to='/'>
+              {/* Logout */}
+            </Link>
+          </li>
+          {/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
+        </ul>
+      </div>
+    </nav>
+  );
 };
 
 export default Nav;

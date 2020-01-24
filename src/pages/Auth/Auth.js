@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import Login from './Login/Login';
-import SignUp from './SignUp/SignUp';
 import Layout from '../../components/Layout/Layout';
 
 class Auth extends Component {
@@ -12,21 +10,14 @@ class Auth extends Component {
 
     // state
     this.state = {
-      isLoginScreenActive: true,
-      userIsLoggedIn: true,
+      userLoggedIn: false,
       errorFeedback: ''
     };
 
     // bindings
     this.getInputValueHandler = this.getInputValueHandler.bind(this);
     this.loginHandler = this.loginHandler.bind(this);
-    this.signUpHandler = this.signUpHandler.bind(this);
     this.signOutHandler = this.signOutHandler.bind(this);
-    this.toggleLoginAndSignUpScreen = this.toggleLoginAndSignUpScreen.bind(
-      this
-    );
-
-    // this.checkCredentials();
   }
 
   // Login form input element values
@@ -35,34 +26,21 @@ class Auth extends Component {
     password: ''
   };
 
-  signUpDetails = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    gender: '',
-    jobRole: '',
-    department: '',
-    address: ''
-  };
-
-  // componentDidMount() {
-  //   // check if the user is logged in
-  //   this.checkCredentials();
-  // }
+  componentWillMount() {
+    // check if the user is logged in
+    this.checkCredentials();
+    console.log(this.state);
+  }
 
   // Checks if the Client (User) already has credentials in it's localStorage
-  checkCredentials() {
+  async checkCredentials() {
     if (this.getCredentials()) {
-      // set the user's login state to true
-      this.setState({ isUserLoggedIn: true });
+      this.setState({ userLoggedIn: true });
     }
   }
 
   // Stores User Credentials from server in the local storage
   storeCredentials(userData) {
-    // 'curUser' = Current User
     localStorage.setItem('curUser', JSON.stringify(userData));
   }
 
@@ -87,16 +65,23 @@ class Auth extends Component {
 
     // Attempt Login
     try {
-      const res = await axios.post('/auth/signin', this.loginDetails);
+      // const res = await axios.post('/auth/signin', this.loginDetails);
 
-      console.log(res.data.data);
+      // console.log(res.data.data);
 
       // store user credentials in local storage
-      this.storeCredentials(res.data.data);
+      this.storeCredentials({
+        firstName: 'Steve',
+        lastName: 'Nwakasi',
+        role: 'admin',
+        token: 'hello boss'
+      });
+
+      console.log(this.state);
 
       // update user sign in state and reset the errorFeedback
       this.setState({
-        isUserLoggedIn: true,
+        userLoggedIn: true,
         errorFeedback: ''
       });
     } catch ({ response }) {
@@ -104,63 +89,20 @@ class Auth extends Component {
     }
   }
 
-  async signUpHandler(event) {
-    event.preventDefault();
-
-    // Validate the sign up details
-
-    // Attempt signUp
-    try {
-      console.log(this.signUpDetails);
-      const res = await axios.post('/auth/create-user', this.signUpDetails);
-
-      // store user credentials in local storage
-      this.storeCredentials(res.data.data);
-
-      // update user sign in state and reset the errorFeedback
-      this.setState({
-        isUserLoggedIn: true,
-        errorFeedback: ''
-      });
-    } catch (error) {
-      if (error.response) {
-        this.setState({ errorFeedback: error.response.data.error });
-      } else {
-        this.setState({ errorFeedback: 'Looks like you are offline' });
-      }
-    }
-
-    // Scroll to the top of the form so that the user call see the feed back
-    window.scrollTo(0, 0);
-  }
-
   // Handles sign out
   signOutHandler() {
     // clear stored credentials
     this.clearCredentials();
 
+    console.log('Logged out');
+
     // set the user's login state to false
-    this.setState({ isUserLoggedIn: false });
-  }
-
-  // Toggles between login and signup screens based by iniverting the boolean `this.state.isLoginScreenActive`
-  toggleLoginAndSignUpScreen() {
-    const oldState = this.state.isLoginScreenActive;
-    this.setState({
-      errorFeedback: '', // remove any error feedback on the previous form
-      isLoginScreenActive: !oldState
-    });
-  }
-
-  // Returns either the login or signup screen based on the value of `this.state.isLoginScreenActive` above
-  renderLoginOrSignUpScreen() {
-    return this.state.isLoginScreenActive
-      ? this.renderLoginScreen()
-      : this.renderSignUpScreen();
+    this.setState({ userLoggedIn: false });
   }
 
   // returns the Login Screen
   renderLoginScreen() {
+    console.log('sdfss');
     return (
       <Login
         errorFeedback={this.state.errorFeedback}
@@ -171,23 +113,14 @@ class Auth extends Component {
     );
   }
 
-  // returns the Login Screen
-  renderSignUpScreen() {
-    return (
-      <SignUp
-        errorFeedback={this.state.errorFeedback}
-        changed={event => this.getInputValueHandler(event, this.signUpDetails)}
-        submitted={this.signUpHandler}
-        toggleScreen={this.toggleLoginAndSignUpScreen}
-      />
-    );
-  }
-
   // Returns the main app. This will only be accessible when the user is loggged in
   renderAppCore() {
     return (
       <Aux>
-        <Layout isUserLoggedIn={true} signOutHandler={this.signOutHandler} />
+        <Layout
+          userLoggedIn={this.state.userLoggedIn}
+          signOutHandler={this.signOutHandler}
+        />
       </Aux>
     );
   }
@@ -196,7 +129,10 @@ class Auth extends Component {
   render() {
     return (
       <Aux>
-        {true ? <Redirect to="/" /> : this.renderLoginOrSignUpScreen()};
+        {this.state.userLoggedIn
+          ? this.renderAppCore()
+          : this.renderLoginScreen()}
+        ;
       </Aux>
     );
   }

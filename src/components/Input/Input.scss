@@ -1,30 +1,42 @@
 .form-group {
-	.formControl {
-		width: 200px;
+  .formControl {
+    width: 200px;
 
-		&.noBorder {
-			border: none;
-		}
-	}
-	label {
-		margin: 0;
-		text-transform: capitalize;
-		font-weight: bold;
-		font-size: 0.875rem;
-		display: block;
-	}
-	input,
-	select {
-		outline: none;
-		font-size: 0.875rem;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		padding: 0.5em;
-	}
-	input:focus,
-	select:focus {
-		outline: none;
-		border: 1px solid var(--basic-color);
-		box-shadow: 0 0 7px var(--basic-color);
-	}
-	margin-bottom: 0.75rem !important;
+    &.noBorder {
+      border: none;
+    }
+  }
+  label {
+    margin: 0;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 0.875rem;
+    display: block;
+  }
+  input,
+  select,
+  textarea {
+    outline: none;
+    font-size: 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 0.5em;
+    width: 100% !important;
+  }
+
+  select {
+    text-transform: capitalize;
+  }
+
+  textarea {
+    min-height: 150px;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border: 1px solid var(--basic-color);
+    box-shadow: 0 0 7px var(--basic-color);
+  }
+  margin-bottom: 0.75rem !important;
 }

@@ -1,122 +1,167 @@
-import React, { Component } from "react";
-import Joi from "joi-browser";
-import Button from "../Button/Button";
-import Input from "../Input/Input";
-import Select from "../Select/Select";
+import React, { Component } from 'react';
+import Joi from 'joi-browser';
+import { Spinner } from 'react-bootstrap';
+import Button from '../Button/Button';
+import Input from '../Input/Input';
+import Select from '../Select/Select';
+import TextArea from '../TextArea/TextArea';
 
 export default class Form extends Component {
-	state = {
-		formData: {},
-		error: {}
-	};
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: {},
+      error: {},
 
-	validateField({ name, value }) {
-		/**
-		 * ACCEPTS AN INPUT
-		 * CHECK IF IT'S VALUE IS EMPTY AFTER CHECK FOR WHICH INPUT IT IS
-		 * RETURN THE ERROR MSG
-		 */
+      isProcessing: false
+    };
 
-		const formData = { [name]: value };
-		const schema = {
-			[name]: this.schema[name]
-		};
-		const options = { abortEarly: true };
+    this.stopProcessing = this.stopProcessing.bind(this);
+  }
 
-		const { error } = Joi.validate(formData, schema, options);
-		return error ? error.details[0].message : null;
+  validateField({ name, value }) {
+    /**
+     * ACCEPTS AN INPUT
+     * CHECK IF IT'S VALUE IS EMPTY AFTER CHECK FOR WHICH INPUT IT IS
+     * RETURN THE ERROR MSG
+     */
 
-		// if (name === "title") if (value.trim() === "") return "Title is required!";
-		// if (name === "genreID")
-		// 	if (value.trim() === "") return "Genre is required!";
-		// if (name === "numberInStock")
-		// 	if (value.trim() === "") return "Number In Stock is required!";
-		// if (name === "dailyRentalRate")
-		// 	if (value.trim() === "") return "Rate is required!";
-	}
+    const formData = { [name]: value };
+    const schema = {
+      [name]: this.schema[name]
+    };
+    const options = { abortEarly: true };
 
-	handleChange = ({ currentTarget: input }) => {
-		const formData = { ...this.state.formData };
-		const errors = { ...this.state.errors };
+    const { error } = Joi.validate(formData, schema, options);
+    return error ? error.details[0].message : null;
+  }
 
-		const errorMessage = this.validateField(input);
-		errors[input.name] = errorMessage;
-		formData[input.name] = input.value;
-		this.setState({ formData, errors });
-	};
+  handleChange = ({ currentTarget: input }) => {
+    const formData = { ...this.state.formData };
+    const errors = { ...this.state.errors };
 
-	validate() {
-		/**
-		 * CHECKS FOR ALL DATA PROPS
-		 * SEE IF ANY IS EMPTY
-		 * RETURN AN "ERRORS OBJ" MAPPING TO THE "DATA OBJ" (containing the error properties only)
-		 * OTHERWISE RETURN "NULL"
-		 */
-		const { formData } = this.state;
+    const errorMessage = this.validateField(input);
+    errors[input.name] = errorMessage;
+    formData[input.name] = input.value;
+    this.setState({ formData, errors });
+  };
 
-		const options = { abortEarly: false };
-		const { error } = Joi.validate(formData, this.schema, options);
-		if (!error) return;
+  validate() {
+    /**
+     * CHECKS FOR ALL DATA PROPS
+     * SEE IF ANY IS EMPTY
+     * RETURN AN "ERRORS OBJ" MAPPING TO THE "DATA OBJ" (containing the error properties only)
+     * OTHERWISE RETURN "NULL"
+     */
+    const { formData } = this.state;
 
-		const errors = {};
-		// for (const value of error.details) {
-		// 	console.log(value.context.key, value.message);
-		// }
-		error.details.map(value => (errors[value.path[0]] = value.message));
-		return errors;
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(formData, this.schema, options);
+    if (!error) return;
 
-		// const errors = {};
-		// if (formData.title.trim() === "") errors.title = "Title is required!";
-		// if (formData.genreID.trim() === "") errors.genreID = "Genre is required!";
-		// if (formData.numberInStock.trim() === "")
-		// 	errors.numberInStock = "number In Stock is required!";
-		// if (formData.dailyRentalRate.trim() === "")
-		// 	errors.dailyRentalRate = "Rate is required!";
+    const errors = {};
+    error.details.map(value => (errors[value.path[0]] = value.message));
+    return errors;
+  }
 
-		// return Object.keys(errors).length ? errors : null;
-	}
+  startProcessing() {
+    this.setState({ isProcessing: true });
+  }
 
-	handleSubmit = event => {
-		event.preventDefault();
+  stopProcessing() {
+    this.setState({ isProcessing: false });
+  }
 
-		const errors = this.validate();
-		this.setState({ errors: errors || {} });
-		if (errors) return;
+  handleSubmit = event => {
+    event.preventDefault();
+    const errors = this.validate();
+    console.log(this.state.formData, errors);
+    this.setState({ errors: errors || {} });
+    if (errors) return;
 
-		this.doSubmit(event);
-	};
+    this.startProcessing();
 
-	renderInput(label, name, placeholder, type = "text") {
-		const { errors } = this.state;
+    this.doSubmit(event, this.stopProcessing);
+  };
 
-		return (
-			<Input
-				label={label}
-				type={type}
-				placeholder={placeholder}
-				name={name}
-				error={errors[name]}
-				onChange={this.handleChange}
-			/>
-		);
-	}
-	renderSelect(label, name, options) {
-		const { formData, errors } = this.state;
+  renderInput(
+    label,
+    name,
+    placeholder,
+    defaultValue = '',
+    type = 'text',
+    autofocus
+  ) {
+    const { errors } = this.state;
 
-		return (
-			<Select
-				options={options}
-				label={label}
-				name={name}
-				error={errors[name]}
-				id={name}
-				value={formData[name]}
-				onChange={this.handleChange}
-			/>
-		);
-	}
+    return (
+      <Input
+        label={label}
+        type={type}
+        placeholder={placeholder}
+        name={name}
+        error={errors[name]}
+        onChange={this.handleChange}
+        defaultValue={defaultValue}
+        autoFocus={autofocus}
+      />
+    );
+  }
+  renderSelect(label, name, options) {
+    const { formData, errors } = this.state;
 
-	renderButton(label) {
-		return <Button label={label} fill />;
-	}
+    return (
+      <Select
+        options={options}
+        label={label}
+        name={name}
+        error={errors[name]}
+        id={name}
+        value={formData[name]}
+        onChange={this.handleChange}
+      />
+    );
+  }
+
+  renderTextArea(
+    label,
+    name,
+    placeholder,
+    defaultValue = '',
+    type = 'text',
+    autofocus
+  ) {
+    const { errors } = this.state;
+
+    return (
+      <TextArea
+        label={label}
+        type={type}
+        placeholder={placeholder}
+        name={name}
+        error={errors[name]}
+        onChange={this.handleChange}
+        defaultValue={defaultValue}
+        autoFocus={autofocus}
+      />
+    );
+  }
+
+  renderButton(label) {
+    const disabled = this.state.isProcessing;
+    return (
+      <>
+        <Button label={label} fill disabled={disabled} />
+        {disabled ? (
+          <Spinner
+            as='span'
+            animation='grow'
+            size='sm'
+            role='status'
+            aria-hidden='true'
+          />
+        ) : null}
+      </>
+    );
+  }
 }

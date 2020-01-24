@@ -1,0 +1,123 @@
+.TableWrapper {
+  width: calc(100vw - 290px);
+  min-width: 100px;
+  // margin: auto;
+  overflow-x: scroll;
+}
+.Table {
+  table {
+    table-layout: auto;
+    width: 100%;
+    border-collapse: separate;
+    overflow-x: scroll;
+  }
+  /* Zebra striping */
+  // tr:nth-of-type(odd) {
+  //   background: #eee;
+  // }
+  th {
+    // background: #333;
+    background: rgb(77, 77, 77);
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.875rem;
+  }
+
+  td,
+  th {
+    padding: 1em 0.75em;
+    // border: 1px solid #ccc;
+    text-align: left;
+    min-width: 200px;
+  }
+
+  tbody,
+  thead {
+    width: 100%;
+  }
+
+  tbody tr {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  tbody tr td {
+    font-size: 0.8rem;
+    background-color: #fff;
+    border-top: 10px solid;
+    border-bottom: 10px solid;
+    border-color: #f7f8f8;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .Filter {
+    background-color: rgb(247, 247, 247);
+    padding: 0.2em;
+  }
+
+  .Filter input {
+    border: none;
+    border-radius: 5px;
+    padding: 0.3em;
+    box-sizing: border-box;
+    border: 1px solid none;
+  }
+
+  .Filter input:focus {
+    outline: none;
+    border-color: var(--basic-color);
+  }
+
+  .Clickable {
+    cursor: pointer;
+    // transition: all 0.9s ease;
+  }
+
+  .Clickable:hover {
+    background: var(--basic-color);
+    font-weight: bold;
+  }
+
+  @media only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px) {
+    /* Force table to not be like tables anymore */
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      // border: 1px solid #ccc;
+    }
+
+    td {
+      /* Behave  like a "row" */
+      border: none;
+      // border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+    }
+
+    td:before {
+      /* Now like a table header */
+      position: absolute;
+      /* Top/left values mimic padding */
+      top: 6px;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+  }
+}

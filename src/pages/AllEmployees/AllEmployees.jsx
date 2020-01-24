@@ -1,73 +1,99 @@
-import React, { Component } from "react";
-import http from "../../services/httpService";
-import TableView from "../../components/TableView/TableView";
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import http from '../../services/httpService';
+import Section from '../../hoc/Section/Section';
+// import ReactTable from '../../components/ReactTable/Table';
+import Table from '../../components/TableView/TableView';
 
-export default class AllEmployees extends Component {
-	state = {
-		employees: [],
-		columns: [
-			{ key: "name", label: "Name" },
-			{ key: "department", label: "Department" },
-			{ key: "district", label: "District" },
-			{ key: "employeeStatus", label: "Employee Status" },
-			{ key: "pensionable", label: "Pensionable" },
-			{ key: "firstAppointmentDate", label: "First Appointment Date" },
-			{ key: "presentAppointmentDate", label: "Present Appointment Date" },
-			{ key: "presentJobType", label: "present job type" },
-			{ key: "presentJobTitle", label: "present job title" }
-		],
-		pageSize: 20,
-		currentPage: 1
-	};
+class AllEmployees extends Component {
+  constructor(props) {
+    super(props);
 
-	async componentDidMount() {
-		const employees = [];
-		const res = await http.get("/employee/");
+    this.state = {
+      employees: [],
+      columns: [
+        { accessor: 'id', Header: 'IPPIS No' },
+        { accessor: 'name', Header: 'Name' },
+        { accessor: 'department', Header: 'Department' },
+        { accessor: 'district', Header: 'District' },
+        { accessor: 'employeeStatus', Header: 'Employee Status' },
+        { accessor: 'pensionable', Header: 'Pensionable' },
+        { accessor: 'firstAppointmentDate', Header: 'First Appointment Date' },
+        {
+          accessor: 'presentAppointmentDate',
+          Header: 'Present Appointment Date'
+        },
+        { accessor: 'presentJobType', Header: 'present job type' },
+        { accessor: 'presentJobTitle', Header: 'present job title' }
+      ],
+      pageSize: 20,
+      currentPage: 1
+    };
 
-		if (res) {
-			res.data.data.rows.forEach(employee => {
-				employees.push(this.mapToViewModel(employee));
-			});
+    this.handleRowClick = this.handleRowClick.bind(this);
+    this.handleAddNew = this.handleAddNew.bind(this);
+  }
 
-			this.setState({ employees });
-		}
-	}
+  async componentDidMount() {
+    const employees = [];
+    const res = await http.get('/employee/');
 
-	mapToViewModel(employee) {
-		return {
-			id: employee.ippisNo,
-			name: `${employee.firstName} ${employee.lastName}`,
-			department: employee.employeeJob.department.description,
-			district: employee.employeeJob.district.siteName,
-			employeeStatus: employee.employeeJob.employeeStatus,
-			pensionable: employee.employeeJob.pensionable,
-			firstAppointmentDate: employee.employeeAppointment.firstAppointmentDate,
-			presentAppointmentDate:
-				employee.employeeAppointment.presentAppointmentDate,
-			presentJobType: employee.employeeAppointment.presentJobType.type,
-			presentJobTitle: employee.employeeAppointment.presentJobTitle.description
-		};
-	}
+    if (res) {
+      res.data.data.rows.forEach(employee => {
+        employees.push(this.mapToViewModel(employee));
+      });
 
-	handlePageChange = page => {
-		if (page) {
-			this.setState({ currentPage: page });
-		}
-	};
+      this.setState({ employees });
+    }
+  }
 
-	render() {
-		const { employees, currentPage, columns } = this.state;
+  mapToViewModel(employee) {
+    return {
+      id: employee.ippisNo,
+      name: `${employee.firstName} ${employee.lastName}`,
+      department: employee.employeeJob.department.description,
+      district: employee.employeeJob.district.siteName,
+      employeeStatus: employee.employeeJob.employeeStatus,
+      pensionable: employee.employeeJob.pensionable,
+      firstAppointmentDate: employee.employeeAppointment.firstAppointmentDate,
+      presentAppointmentDate:
+        employee.employeeAppointment.presentAppointmentDate,
+      presentJobType: employee.employeeAppointment.presentJobType.type,
+      presentJobTitle: employee.employeeAppointment.presentJobTitle.description
+    };
+  }
 
-		return (
-			<TableView
-				data={employees}
-				useLinks={true}
-				
-				columns={columns}
-				currentPage={currentPage}
-				onPageChange={this.handlePageChange}
-				title="employees"
-			/>
-		);
-	}
+  handleAddNew() {
+    this.props.history.push('/employee/new');
+  }
+
+  handlePageChange = page => {
+    if (page) {
+      this.setState({ currentPage: page });
+    }
+  };
+
+  handleRowClick({ currentTarget }) {
+    console.log(currentTarget);
+    this.props.history.push(`employee/${currentTarget.id}`);
+  }
+
+  render() {
+    const { employees, currentPage, columns } = this.state;
+
+    return (
+      <Section>
+        <Table
+          title='employees'
+          columns={columns}
+          data={employees}
+          clickHandler={this.handleRowClick}
+          currentPage={currentPage}
+          addNewButtonHandler={this.handleAddNew}
+        />
+      </Section>
+    );
+  }
 }
+
+export default withRouter(AllEmployees);

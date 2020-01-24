@@ -1,0 +1,23 @@
+.Loader {
+  display: grid;
+  height: fit-content;
+  // justify-content: center;
+  // align-items: center;
+  // flex-direction: columns;
+  position: relative;
+  background-color: #fff;
+
+  padding: 1.5rem;
+  .Spinner {
+    background-color: red;
+  }
+  .Brand {
+    text-transform: capitalize;
+  }
+}
+
+.LoaderMessage {
+  position: absolute;
+  top: 0;
+  line-height: 23;
+}

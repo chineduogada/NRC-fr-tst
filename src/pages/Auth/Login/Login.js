@@ -6,8 +6,10 @@ import classes from './Login.module.css';
 const login = props => {
   const errorFeedback =
     props.errorFeedback !== '' ? (
-      <p className="error">{props.errorFeedback}</p>
+      <p className='error'>{props.errorFeedback}</p>
     ) : null;
+
+  console.log('hi');
 
   return (
     <div className={classes.LoginWrapper}>
@@ -19,24 +21,22 @@ const login = props => {
             </h1>
           </div>
 
-          {/* <h2>Find out what your teammates have been up to</h2> */}
-
           <form onSubmit={props.submitted}>
             {/* Show error feedback if any */}
             {errorFeedback}
             <InputField
               changed={props.changed}
-              id="email"
-              type="text"
-              name="username *"
+              id='email'
+              type='text'
+              name='username *'
             />
             <InputField
               changed={props.changed}
-              id="password"
-              type="password"
-              name="password *"
+              id='password'
+              type='password'
+              name='password *'
             />
-            <Button label="sign in" size="full-width">
+            <Button label='sign in' size='full-width'>
               sign in
             </Button>
 

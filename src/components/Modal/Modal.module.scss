@@ -1,0 +1,53 @@
+.Modal {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -20%);
+  z-index: 3;
+  background-color: #fff;
+  width: 70%;
+  max-width: 600px;
+  box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s 0.1s ease;
+
+  .Title {
+    background: var(--light-gray);
+    color: var(--text);
+    text-transform: capitalize;
+    line-height: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+
+    .CloseIcon {
+      cursor: pointer;
+    }
+  }
+
+  .Body {
+    padding: 1em;
+    font-size: 0.875rem;
+  }
+
+  .Title {
+    padding: 0.5em 1em;
+  }
+
+  .Body {
+    min-height: 100px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  &.Show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  &.Hide {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    visibility: hidden;
+  }
+}

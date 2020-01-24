@@ -1,0 +1,34 @@
+.Section {
+  margin-bottom: 2em;
+  width: 100%;
+}
+
+.Titles {
+  margin-bottom: 0.5em;
+}
+
+.SubTitle {
+  font-size: 0.875rem;
+}
+
+.SectionTitle {
+  margin-bottom: 0.25em;
+  color: var(--basic-color);
+  text-transform: capitalize;
+}
+
+.TableView {
+  width: 100%;
+  header {
+    .TableTitle {
+      margin-bottom: 0.5em;
+      color: var(--basic-color);
+      text-transform: capitalize;
+    }
+  }
+
+  footer {
+    display: flex;
+    justify-content: flex-end; // min-height: 100vh;
+  }
+}
