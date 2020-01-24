@@ -54,7 +54,7 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               exact
               component={TrainingSchedule}
             />
-            <Route path='/training-records' component={AllTrainingRecords} />
+            <Route path='/training-records' exact component={AllTrainingRecords} />
             <Route
               path='/training-records/:id'
               exact

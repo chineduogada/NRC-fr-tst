@@ -290,13 +290,6 @@ class TrainingSchedule extends Form {
             { id: 1, name: 'corporate' },
             { id: 2, name: 'community' }
           ])}
-          {this.renderInput(
-            'ippis no',
-            'ippisNo',
-            null,
-            actualData.ippisNo,
-            'number'
-          )}
           {this.renderTextArea(
             'objective',
             'objective',
