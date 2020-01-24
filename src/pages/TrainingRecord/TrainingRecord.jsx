@@ -2,9 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import currency from '../../helpers/currency';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
-import currency from '../../helpers/currency';
 import Section from '../../hoc/Section/Section';
 import InformationBlock from '../../components/InformationBlock/InformationBlock';
 import SideDraw from '../../components/SideDraw/SideDraw';
@@ -20,38 +20,26 @@ class TrainingRecord extends Form {
     this.id = this.props.match.params.id;
 
     this.state = {
-      actualData: null,
+      dataFilteredForView: null,
       dataForView: null,
-      authorisors: null,
+      dataForForm: null,
 
       showForm: false,
       showModal: false,
 
       formData: {
-        lYear: '',
+        tYear: '',
         trainingTypeId: '',
         ippisNo: '',
-        objective: '',
-        expectedStartDate: '',
-        expectedEndDate: '',
-        expectedCost: '',
-        expectedAttendeeNo: '',
-        actualStartDate: '',
-        actualEndDate: '',
-        actualCost: '',
-        actualAttendeeNo: '',
-        resourceOrg: '',
-        email: '',
-        mainResourcePerson: '',
+        serialCount: '',
+        startDate: '',
+        endDate: '',
+        numDays: '',
+        individualActualCost: '',
+        trainingLocation: '',
         residential: '',
-        approved: '',
-        authorisor1Id: '',
-        authorisor2Id: '',
-        reportSubmitted: '',
-        objectiveMet: ''
+        employeeComment: ''
       },
-
-      rowToPreview: null,
 
       isDeleteting: false,
 
@@ -66,43 +54,32 @@ class TrainingRecord extends Form {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleProceedDelete = this.handleProceedDelete.bind(this);
     this.deleteObject = this.deleteObject.bind(this);
-    this.approveSchedule = this.approveSchedule.bind(this);
     this.handleViewEmployee = this.handleViewEmployee.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
   schema = {
-    lYear: Joi.string(),
+    tYear: Joi.string().allow('').optional(),
     trainingTypeId: Joi.number(),
     ippisNo: Joi.number(),
-    objective: Joi.string(),
-    expectedStartDate: Joi.string(),
-    expectedEndDate: Joi.string(),
-    expectedCost: Joi.number(),
-    expectedAttendeeNo: Joi.number(),
-    actualStartDate: Joi.string(),
-    actualEndDate: Joi.string(),
-    actualCost: Joi.number(),
-    actualAttendeeNo: Joi.number(),
-    resourceOrg: Joi.string(),
-    email: Joi.string(),
-    mainResourcePerson: Joi.string(),
+    serialCount: Joi.number(),
+    startDate: Joi.string(),
+    endDate: Joi.string(),
+    numDays: Joi.number(),
+    individualActualCost: Joi.number(),
+    trainingLocation: Joi.string(),
     residential: Joi.string(),
-    approved: Joi.string(),
-    authorisor1Id: Joi.number(),
-    authorisor2Id: Joi.number(),
-    reportSubmitted: Joi.string(),
-    objectiveMet: Joi.string()
+    employeeComment: Joi.string().allow('').optional()
   };
 
   async fetchTraining() {
-    const res = await httpService.get(`/training-schedules/${this.id}`);
+    const res = await httpService.get(`/training-records/${this.id}`);
 
     if (res) {
       this.setState({
-        actualData: this.filterReturnedData(res.data.data),
+        dataFilteredForView: this.filterDataForView(res.data.data),
         dataForView: this.mapDataForView(res.data.data),
-        authorisors: this.mapAuthorisors(res.data.data)
+        dataForForm: this.filterForForm(res.data.data)
       });
     }
   }
@@ -112,100 +89,65 @@ class TrainingRecord extends Form {
   }
 
   closeSideDraw(e) {
-    this.setState({ showForm: false, rowToPreview: null });
+    this.setState({ showForm: false });
   }
 
   closeModal() {
     this.setState({ showModal: false });
   }
 
-  mapAuthorisors(data) {
-    return [
-      {
-        name: 'authorisor 1',
-        value: `${data.employee.firstName} ${data.authorisor1.lastName}`
-      },
-      {
-        name: 'authorisor 2',
-        value: `${data.employee.firstName} ${data.authorisor2.lastName}`
-      }
-    ];
-  }
-
   mapDataForView(data) {
     return [
-      { name: 'l year', value: data.lYear },
+      { name: 'l year', value: data.tYear },
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
         value: `${data.employee.firstName} ${data.employee.lastName}`
       },
       { name: 'training type', value: data.trainingType.type },
-      { name: 'resource organisation', value: data.resourceOrg },
       {
-        name: 'expected start date',
-        value: data.expectedStartDate
+        name: 'start date',
+        value: data.startDate
       },
       {
-        name: 'expected end date',
-        value: data.expectedEndDate
+        name: 'end date',
+        value: data.endDate
       },
-      { name: 'expected cost', value: currency(data.expectedCost) },
-      {
-        name: 'expected attendee no',
-        value: data.expectedAttendeeNo
-      },
-      {
-        name: 'actual start date',
-        value: data.actualStartDate || null
-      },
-      {
-        name: 'actual start date',
-        value: data.actualEndDate || null
-      },
-      { name: 'actual cost', value: currency(data.actualCost) || null },
-      {
-        name: 'actual attendee no',
-        value: data.actualAttendeeNo || null
-      },
-      { name: 'email', value: data.email },
-      {
-        name: 'main resource person',
-        value: data.mainResourcePerson
-      },
-      {
-        name: 'report submitted',
-        value: data.reportSubmitted
-      },
+      { name: 'individual actual cost', value: currency(data.individualActualCost) || null },
       { name: 'residential', value: data.residential },
-      { name: 'approved', value: data.approved },
-      { name: 'objective met', value: data.objectiveMet }
     ];
   }
 
-  filterReturnedData(data) {
+  filterForForm(record) {
+      return {
+        tYear: record.tYear,
+        ippisNo: record.ippisNo,
+        trainingTypeId: record.trainingType.id,
+        serialCount: record.serialCount,
+        startDate: record.startDate,
+        endDate: record.endDate,
+        numDays: record.numDays,
+        individualActualCost: record.individualActualCost,
+        trainingLocation: record.trainingLocation,
+        residential: record.residential,
+        employeeComment: record.employeeComment
+    }
+  }
+
+  filterDataForView(record) {
     return {
-      lYear: data.lYear,
-      ippisNo: data.ippisNo,
-      resourceOrg: data.resourceOrg,
-      trainingTypeId: data.trainingType.id,
-      objective: data.objective,
-      expectedStartDate: data.expectedStartDate,
-      expectedEndDate: data.expectedEndDate,
-      expectedCost: data.expectedCost,
-      expectedAttendeeNo: data.expectedAttendeeNo,
-      actualStartDate: data.actualStartDate,
-      actualEndDate: data.actualEndDate,
-      actualCost: data.actualCost,
-      actualAttendeeNo: data.actualAttendeeNo,
-      email: data.email,
-      mainResourcePerson: data.mainResourcePerson,
-      authorisor1Id: data.authorisor1.ippisNo,
-      authorisor2Id: data.authorisor2.ippisNo,
-      reportSubmitted: data.reportSubmitted,
-      residential: data.residential,
-      approved: data.approved,
-      objectiveMet: data.objectiveMet
+      tYear: record.tYear,
+      ippisNo: record.ippisNo,
+      employee: `${record.employee.firstName} ${record.employee.lastName}`,
+      trainingType: record.trainingType.type,
+      serialCount: record.serialCount,
+      startDate: record.startDate,
+      endDate: record.endDate,
+      numDays: record.numDays,
+      individualActualCost: record.individualActualCost,
+      trainingLocation: record.trainingLocation,
+      residential: record.residential,
+      employeeComment: record.employeeComment
     };
   }
 
@@ -220,18 +162,18 @@ class TrainingRecord extends Form {
   }
 
   handleUpdateBtnClick(event) {
-    this.setState({ showForm: true, formData: this.state.actualData });
+    this.setState({ showForm: true, formData: this.state.dataForForm });
   }
 
-  async updateDatabase(stopProcessing) {
+  async updateDatabase() {
     const res = await httpService.put(
-      `/training-schedules/${this.id}`,
+      `/training-records/${this.id}`,
       this.state.formData
     );
 
     if (res) {
       await this.fetchTraining();
-      toast.success('TrainingRecord successfully updated!');
+      toast.success('Training record successfully updated!');
       this.stopProcessing();
       this.closeSideDraw();
       this.resetFormData();
@@ -240,11 +182,11 @@ class TrainingRecord extends Form {
 
   async deleteObject() {
     this.setState({ isDeleteting: true });
-    const res = await httpService.delete(`/training-schedules/${this.id}`);
+    const res = await httpService.delete(`/training-records/${this.id}`);
 
     if (res) {
-      toast.success('Training schedule successfully deleted!');
-      this.props.history.push('/training-schedules');
+      toast.success('Training record successfully deleted!');
+      this.props.history.push('/training-records');
       this.closeSideDraw();
     }
   }
@@ -257,155 +199,47 @@ class TrainingRecord extends Form {
     this.setState({ showModal: true });
   }
 
-  async approveSchedule() {
-    if (!this.isApproved()) {
-      await this.setState({
-        formData: { ...this.state.actualData, approved: 'Y' }
-      });
-
-      console.log(this.state.formData);
-      await this.updateDatabase();
-    }
-  }
-
   handleViewEmployee({ currentTarget }) {
     this.props.history.push(`/employee/${currentTarget.id}`);
   }
 
-  async doSubmit(event, stopProcessing) {
-    return this.updateDatabase(stopProcessing);
+  async doSubmit(event) {
+    console.log('updating')
+    return this.updateDatabase();
   }
 
   renderUpdateForm() {
-    const { actualData } = this.state;
+    const { dataForForm } = this.state;
 
     return (
-      <div className={classes.Preview}>
-        <form
-          ref={form => (this.updateForm = form)}
-          onSubmit={this.handleSubmit}
-        >
-          {this.renderInput('l year', 'lYear', null, actualData.lYear, 'date')}
-          {this.renderSelect('training type', 'trainingTypeId', [
-            { id: 1, name: 'corporate' },
-            { id: 2, name: 'community' }
-          ])}
-          {this.renderInput(
-            'ippis no',
-            'ippisNo',
-            null,
-            actualData.ippisNo,
-            'number'
-          )}
-          {this.renderTextArea(
-            'objective',
-            'objective',
-            null,
-            actualData.objective
-          )}
-          {this.renderInput(
-            'expected start date',
-            'expectedStartDate',
-            null,
-            actualData.expectedStartDate,
-            'date'
-          )}
-          {this.renderInput(
-            'expected end date',
-            'expectedEndDate',
-            null,
-            actualData.expectedEndDate,
-            'date'
-          )}
-          {this.renderInput(
-            'expected cost',
-            'expectedCost',
-            null,
-            actualData.expectedCost,
-            'number'
-          )}
-          {this.renderInput(
-            'expected attendee no',
-            'expectedAttendeeNo',
-            null,
-            actualData.expectedAttendeeNo,
-            'number'
-          )}
-          {this.renderInput(
-            'actual start date',
-            'actualStartDate',
-            null,
-            actualData.actualStartDate,
-            'date'
-          )}
-          {this.renderInput(
-            'actual end date',
-            'actualEndDate',
-            null,
-            actualData.actualEndDate,
-            'date'
-          )}
-          {this.renderInput(
-            'actual cost',
-            'actualCost',
-            null,
-            actualData.actualCost,
-            'number'
-          )}
-          {this.renderInput(
-            'actual attendee no',
-            'actualAttendeeNo',
-            null,
-            actualData.actualAttendeeNo,
-            'number'
-          )}
-          {this.renderInput(
-            'resource organisation',
-            'resourceOrg',
-            null,
-            actualData.resourceOrg
-          )}
-          {this.renderInput('email', 'email', null, actualData.email, 'email')}
-          {this.renderInput(
-            'main resource person',
-            'mainResourcePerson',
-            null,
-            actualData.mainResourcePerson
-          )}
-          {this.renderInput(
-            'authorisor 1',
-            'authorisorId1',
-            'enter ippis..',
-            actualData.authorisor1Id,
-            'number'
-          )}
-          {this.renderInput(
-            'authorisor 2',
-            'authorisorId2',
-            'enter ippis..',
-            actualData.authorisor2Id,
-            'number'
-          )}
-          {this.renderSelect('residential', 'residential', [
-            { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
-          ])}
-          {this.renderSelect('report submitted', 'reportSubmitted', [
-            { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
-          ])}
-          {this.renderSelect('objective met', 'objectiveMet', [
-            { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
-          ])}
-          {this.renderButton('update')}
-        </form>
-      </div>
-    );
-  }
+      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+        {this.renderInput('t year', 'tYear', null, dataForForm.tYear, 'date')}
+        {this.renderSelect('training type', 'trainingTypeId', [
+          { id: 1, name: 'corporate' },
+          { id: 2, name: 'community' }
+        ])}
+        {this.renderInput('ippis no', 'ippisNo', null, dataForForm.ippisNo, 'number')}
+        {this.renderInput('serial count', 'serialCount', dataForForm.serialCount, null, 'number')}
+        {this.renderInput('start date', 'startDate', null, dataForForm.startDate, 'date')}
+        {this.renderInput('end date', 'endDate', null, dataForForm.endDate, 'date')}
+        {this.renderInput('number of days', 'numDays', null, dataForForm.numDays, 'number')}
+        {this.renderInput(
+          'individual actual cost',
+          'individualActualCost',
+          null,
+          dataForForm.individualActualCost,
+          'number'
+        )}
+        {this.renderInput('training location', 'trainingLocation', null, dataForForm.trainingLocation)}
+        {this.renderSelect('residential', 'residential', [
+          { id: 'Y', name: 'Y' },
+          { id: 'N', name: 'N' }
+        ])}
+        {this.renderTextArea('employee comment', 'employeeComment', null, dataForForm.employeeComment)}
 
-  isApproved() {
-    return this.state.actualData.approved.toLowerCase() === 'y';
+        {this.renderButton('save')}
+      </form>
+    );
   }
 
   displayInfo(data) {
@@ -423,29 +257,22 @@ class TrainingRecord extends Form {
     const {
       showForm,
       showModal,
-      actualData,
       dataForView,
-      authorisors
+      dataForForm
     } = this.state;
 
     return (
       <React.Fragment>
-        {actualData ? (
+        {dataForView ? (
           <Section title='training record'>
             <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button
-                label={this.isApproved() ? 'approved' : 'approve'}
-                highlight
-                disabled={this.isApproved()}
-                onClick={this.approveSchedule}
-              />
               <Button label='update' fill onClick={this.handleUpdateBtnClick} />
               <Button label='delete' danger onClick={this.handleDelete} />
               <Button
                 label='view employee'
                 plain
                 onClick={this.handleViewEmployee}
-                id={actualData.ippisNo}
+                id={dataForForm.ippisNo}
               />
             </div>
 
@@ -453,31 +280,12 @@ class TrainingRecord extends Form {
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
-            <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button
-                label='view authorisor 1'
-                plain
-                onClick={this.handleViewEmployee}
-                id={actualData.authorisor1Id}
-              />
-              <Button
-                label='view authorisor 2'
-                plain
-                onClick={this.handleViewEmployee}
-                id={actualData.authorisor2Id}
-              />
-            </div>
-
-            <InformationBlock title='authorisors'>
-              {this.displayInfo(authorisors)}
-            </InformationBlock>
-
-            <InformationBlock title='objective'>
-              {actualData.objective}
+            <InformationBlock title='employee comment'>
+              {dataForForm.employeeComment}
             </InformationBlock>
 
             <SideDraw
-              title='schedule'
+              title='Record'
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -485,7 +293,7 @@ class TrainingRecord extends Form {
             </SideDraw>
 
             <Modal
-              title='delete schedule'
+              title='delete record'
               openModal={showModal}
               onClose={this.closeModal}
             >

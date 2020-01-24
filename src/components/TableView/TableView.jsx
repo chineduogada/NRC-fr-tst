@@ -27,7 +27,7 @@ const TableView = ({
           </div>
           <div className="buttons">
             <Button label="add new" fill onClick={addNewButtonHandler} />
-            <Button label="export" />
+            <Button label="export" plain/>
           </div>
         </div>
       </header>

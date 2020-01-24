@@ -36,7 +36,7 @@ const login = props => {
               type='password'
               name='password *'
             />
-            <Button label='sign in' size='full-width'>
+            <Button label='sign in' fullwidth fill>
               sign in
             </Button>
 

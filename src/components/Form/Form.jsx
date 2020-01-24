@@ -117,7 +117,7 @@ export default class Form extends Component {
         name={name}
         error={errors[name]}
         id={name}
-        value={formData[name]}
+        value={`${formData[name]}`}
         onChange={this.handleChange}
       />
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 // import Joi from '@hapi/joi';
-import yup from 'yup';
+// import yup from 'yup';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
@@ -25,10 +25,12 @@ class AllTrainingRecords extends Form {
         { accessor: 'ippisNo', Header: 'IPPSI No' },
         { accessor: 'employee', Header: 'Employee Name' },
         { accessor: 'trainingType', Header: 'Training Type' },
-        { accessor: 'resourceOrg', Header: 'Resource Org' },
+        { accessor: 'numDays', Header: 'Number of Days' },
+        { accessor: 'startDate', Header: 'Start Date' },
+        { accessor: 'endDate', Header: 'End Date' },
         { accessor: 'residential', Header: 'Residential' },
-        { accessor: 'approved', Header: 'Approved' },
-        { accessor: 'objectiveMet', Header: 'Objective Met' }
+        { accessor: 'individualActualCost', Header: 'Individual Actual Cost' },
+        { accessor: 'trainingLocation', Header: 'Training Location' }
       ],
 
       pageSize: 20,
@@ -61,19 +63,19 @@ class AllTrainingRecords extends Form {
     this.postNewData = this.postNewData.bind(this);
   }
 
-  schema = yup.object({
-    tYear: yup.string().optional(),
-    trainingTypeId: yup.number(),
-    ippisNo: yup.number(),
-    serialCount: yup.number(),
-    startDate: yup.string(),
-    endDate: yup.string(),
-    numDays: yup.number(),
-    individualActualCost: yup.number(),
-    trainingLocation: yup.string(),
-    residential: yup.string(),
-    employeeComment: yup.string().notRequired()
-  });
+  schema = {
+    tYear: Joi.string().allow('').optional(),
+    trainingTypeId: Joi.number(),
+    ippisNo: Joi.number(),
+    serialCount: Joi.number(),
+    startDate: Joi.string(),
+    endDate: Joi.string(),
+    numDays: Joi.number(),
+    individualActualCost: Joi.number(),
+    trainingLocation: Joi.string(),
+    residential: Joi.string(),
+    employeeComment: Joi.string().allow('').optional()
+  };
 
   async componentWillMount() {
     console.log(this.props);
@@ -112,32 +114,28 @@ class AllTrainingRecords extends Form {
     this.setState({ showDraw: false, rowToPreview: null });
   }
 
+  /**
+   * Destructures each object in the array of training records returned from the server
+   * This destructuring is meant for the view (ie. the table on this page) and will not be used to map the values of input fields
+   * when the user attempts to update a row (well, if updating is also allowed on this page)
+   * @param {Object} record a returned training record 
+   */
   mapToViewModel(record) {
     return {
       id: record.id,
-      lYear: record.lYear,
+      lYear: record.tYear,
       ippisNo: record.ippisNo,
       employee: `${record.employee.firstName} ${record.employee.lastName}`,
       trainingType: record.trainingType.type,
-      resourceOrg: record.resourceOrg,
-      trainingTypeId: record.trainingTypeId,
-      objective: record.objective,
-      expectedStartDate: record.expectedStartDate,
-      expectedEndDate: record.expectedEndDate,
-      expectedCost: record.expectedCost,
-      expectedAttendeeNo: record.expectedAttendeeNo,
-      actualStartDate: record.actualStartDate,
-      actualEndDate: record.actualEndDate,
-      actualCost: record.actualCost,
-      actualAttendeeNo: record.actualAttendeeNo,
-      email: record.email,
-      mainResourcePerson: record.mainResourcePerson,
-      authorisor1Id: record.authorisor1.ippisNo,
-      authorisor2Id: record.authorisor2.ippisNo,
-      reportSubmitted: record.reportSubmitted,
+      trainingTypeId: record.trainingType.id,
+      serialCount: record.serialCount,
+      startDate: record.startDate,
+      endDate: record.endDate,
+      numDays: record.numDays,
+      individualActualCost: record.individualActualCost,
+      trainingLocation: record.trainingLocation,
       residential: record.residential,
-      approved: record.approved,
-      objectiveMet: record.objectiveMet
+      employeeComment: record.employeeComment
     };
   }
 
@@ -187,7 +185,7 @@ class AllTrainingRecords extends Form {
   renderForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>record a training</p>
+        <p>Add a training record</p>
         {this.renderInput('t year', 'tYear', null, null, 'date')}
         {this.renderSelect('training type', 'trainingTypeId', [
           { id: 1, name: 'corporate' },
@@ -210,7 +208,7 @@ class AllTrainingRecords extends Form {
           { id: 'Y', name: 'Y' },
           { id: 'N', name: 'N' }
         ])}
-        {this.renderTextArea('emplooyee comment', 'employeeComment')}
+        {this.renderTextArea('employee comment', 'employeeComment')}
 
         {this.renderButton('save')}
       </form>

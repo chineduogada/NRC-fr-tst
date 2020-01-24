@@ -56,7 +56,7 @@
 }
 
 .Banner h2 {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
 }
 
 .Banner ul {
@@ -64,7 +64,7 @@
 }
 
 .Banner ul li {
-  font-size: 1rem;
+  font-size: 0.875rem;
   padding: 0.2em;
 }
 
@@ -98,7 +98,7 @@
 .Brand h1 {
   color: rgb(48, 26, 146);
   font-weight: 600;
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 .Brand h1 span {
