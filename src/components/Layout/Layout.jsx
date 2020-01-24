@@ -14,6 +14,7 @@ import Employee from '../../pages/Employee/Employee';
 import AddNewEmployee from '../../pages/AddNewEmployee/AddNewEmployee';
 import AllTrainingSchedules from '../../pages/AllTrainingSchedules/AllTrainingSchedules';
 import TrainingSchedule from '../../pages/TrainingSchedule/TrainingSchedule';
+import AllTrainingRecords from '../../pages/AllTrainingRecords/AllTrainingRecords';
 import TrainingRecord from '../../pages/TrainingRecord/TrainingRecord';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
@@ -31,40 +32,45 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
       {/* Aside */}
       <Aside />
       {/* Main Section */}
-      <div className="d-flex flex-column">
+      <div className='d-flex flex-column'>
         {/* Navigation */}
         <Nav triggerSignOut={signOutHandler} />
         <MainArea>
           {/* <AllEmployees /> */}
           <Switch>
-            <Route path="/" exact component={Dashboard} />
+            <Route path='/' exact component={Dashboard} />
             <Route
-              path="/training-schedules"
+              path='/training-schedules'
               exact
               component={AllTrainingSchedules}
             />
             <Route
-              path="/training-schedules/new"
+              path='/training-schedules/new'
               exact
               component={AllTrainingSchedules}
             />
             <Route
-              path="/training-schedules/:id"
+              path='/training-schedules/:id'
               exact
               component={TrainingSchedule}
             />
-            <Route path="/training-records" component={TrainingRecord} />
-            <Route path="/employee/" exact component={AllEmployees} />
-            <Route path="/employee/new" exact component={AddNewEmployee} />
-            <Route path="/employee/:ippisNo" exact component={Employee} />
-            <Route path="/departments" component={Department} />
+            <Route path='/training-records' component={AllTrainingRecords} />
+            <Route
+              path='/training-records/:id'
+              exact
+              component={TrainingRecord}
+            />
+            <Route path='/employee/' exact component={AllEmployees} />
+            <Route path='/employee/new' exact component={AddNewEmployee} />
+            <Route path='/employee/:ippisNo' exact component={Employee} />
+            <Route path='/departments' component={Department} />
           </Switch>
         </MainArea>
       </div>
     </div>
   );
   console.log(userLoggedIn);
-  return userLoggedIn ? renderLayout() : <Redirect to="/" />;
+  return userLoggedIn ? renderLayout() : <Redirect to='/' />;
 };
 
 export default Layout;

@@ -2,39 +2,53 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
-import _ from 'lodash';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
+import currency from '../../helpers/currency';
 import Section from '../../hoc/Section/Section';
-import TableView from '../../components/TableView/TableView';
+import InformationBlock from '../../components/InformationBlock/InformationBlock';
 import SideDraw from '../../components/SideDraw/SideDraw';
+import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import classes from './TrainingRecord.module.scss';
 
-class Department extends Form {
+class TrainingRecord extends Form {
   constructor(props) {
     super(props);
 
     this.id = this.props.match.params.id;
 
     this.state = {
-      departments: [],
-
-      columns: [
-        { accessor: 'id', Header: 'ID' },
-        { accessor: 'code', Header: 'Code' },
-        { accessor: 'description', Header: 'Description' }
-      ],
-
-      pageSize: 20,
-      currentPage: 1,
+      actualData: null,
+      dataForView: null,
+      authorisors: null,
 
       showForm: false,
+      showModal: false,
 
       formData: {
-        code: '',
-        description: ''
+        lYear: '',
+        trainingTypeId: '',
+        ippisNo: '',
+        objective: '',
+        expectedStartDate: '',
+        expectedEndDate: '',
+        expectedCost: '',
+        expectedAttendeeNo: '',
+        actualStartDate: '',
+        actualEndDate: '',
+        actualCost: '',
+        actualAttendeeNo: '',
+        resourceOrg: '',
+        email: '',
+        mainResourcePerson: '',
+        residential: '',
+        approved: '',
+        authorisor1Id: '',
+        authorisor2Id: '',
+        reportSubmitted: '',
+        objectiveMet: ''
       },
 
       rowToPreview: null,
@@ -46,52 +60,152 @@ class Department extends Form {
 
     this.initialFormState = { ...this.state.formData };
 
-    this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
-    this.handleRowClick = this.handleRowClick.bind(this);
-    this.addDepartment = this.addDepartment.bind(this);
-    this.updateDepartment = this.updateDepartment.bind(this);
+    this.updateDatabase = this.updateDatabase.bind(this);
+    this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleProceedDelete = this.handleProceedDelete.bind(this);
+    this.deleteObject = this.deleteObject.bind(this);
+    this.approveSchedule = this.approveSchedule.bind(this);
+    this.handleViewEmployee = this.handleViewEmployee.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   schema = {
-    code: Joi.string(),
-    description: Joi.string()
+    lYear: Joi.string(),
+    trainingTypeId: Joi.number(),
+    ippisNo: Joi.number(),
+    objective: Joi.string(),
+    expectedStartDate: Joi.string(),
+    expectedEndDate: Joi.string(),
+    expectedCost: Joi.number(),
+    expectedAttendeeNo: Joi.number(),
+    actualStartDate: Joi.string(),
+    actualEndDate: Joi.string(),
+    actualCost: Joi.number(),
+    actualAttendeeNo: Joi.number(),
+    resourceOrg: Joi.string(),
+    email: Joi.string(),
+    mainResourcePerson: Joi.string(),
+    residential: Joi.string(),
+    approved: Joi.string(),
+    authorisor1Id: Joi.number(),
+    authorisor2Id: Joi.number(),
+    reportSubmitted: Joi.string(),
+    objectiveMet: Joi.string()
   };
 
-  async componentWillMount() {
-    if (/new$/.test(this.props.match.path)) {
-      this.setState({ showForm: true });
+  async fetchTraining() {
+    const res = await httpService.get(`/training-schedules/${this.id}`);
+
+    if (res) {
+      this.setState({
+        actualData: this.filterReturnedData(res.data.data),
+        dataForView: this.mapDataForView(res.data.data),
+        authorisors: this.mapAuthorisors(res.data.data)
+      });
     }
   }
 
   async componentDidMount() {
-    const departments = [];
-
-    const res = await httpService.get('/departments');
-
-    if (res) {
-      res.data.data.forEach(department => {
-        departments.push(this.mapToViewModel(department));
-      });
-    }
-
-    this.setState({ departments });
-  }
-
-  handleAddNew(e) {
-    this.setState({ showForm: true, rowToPreview: null });
+    await this.fetchTraining();
   }
 
   closeSideDraw(e) {
     this.setState({ showForm: false, rowToPreview: null });
   }
 
-  mapToViewModel(department) {
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  mapAuthorisors(data) {
+    return [
+      {
+        name: 'authorisor 1',
+        value: `${data.employee.firstName} ${data.authorisor1.lastName}`
+      },
+      {
+        name: 'authorisor 2',
+        value: `${data.employee.firstName} ${data.authorisor2.lastName}`
+      }
+    ];
+  }
+
+  mapDataForView(data) {
+    return [
+      { name: 'l year', value: data.lYear },
+      { name: 'ippisNo', value: data.ippisNo },
+      {
+        name: 'full name',
+        value: `${data.employee.firstName} ${data.employee.lastName}`
+      },
+      { name: 'training type', value: data.trainingType.type },
+      { name: 'resource organisation', value: data.resourceOrg },
+      {
+        name: 'expected start date',
+        value: data.expectedStartDate
+      },
+      {
+        name: 'expected end date',
+        value: data.expectedEndDate
+      },
+      { name: 'expected cost', value: currency(data.expectedCost) },
+      {
+        name: 'expected attendee no',
+        value: data.expectedAttendeeNo
+      },
+      {
+        name: 'actual start date',
+        value: data.actualStartDate || null
+      },
+      {
+        name: 'actual start date',
+        value: data.actualEndDate || null
+      },
+      { name: 'actual cost', value: currency(data.actualCost) || null },
+      {
+        name: 'actual attendee no',
+        value: data.actualAttendeeNo || null
+      },
+      { name: 'email', value: data.email },
+      {
+        name: 'main resource person',
+        value: data.mainResourcePerson
+      },
+      {
+        name: 'report submitted',
+        value: data.reportSubmitted
+      },
+      { name: 'residential', value: data.residential },
+      { name: 'approved', value: data.approved },
+      { name: 'objective met', value: data.objectiveMet }
+    ];
+  }
+
+  filterReturnedData(data) {
     return {
-      id: department.id,
-      code: department.code,
-      description: department.description
+      lYear: data.lYear,
+      ippisNo: data.ippisNo,
+      resourceOrg: data.resourceOrg,
+      trainingTypeId: data.trainingType.id,
+      objective: data.objective,
+      expectedStartDate: data.expectedStartDate,
+      expectedEndDate: data.expectedEndDate,
+      expectedCost: data.expectedCost,
+      expectedAttendeeNo: data.expectedAttendeeNo,
+      actualStartDate: data.actualStartDate,
+      actualEndDate: data.actualEndDate,
+      actualCost: data.actualCost,
+      actualAttendeeNo: data.actualAttendeeNo,
+      email: data.email,
+      mainResourcePerson: data.mainResourcePerson,
+      authorisor1Id: data.authorisor1.ippisNo,
+      authorisor2Id: data.authorisor2.ippisNo,
+      reportSubmitted: data.reportSubmitted,
+      residential: data.residential,
+      approved: data.approved,
+      objectiveMet: data.objectiveMet
     };
   }
 
@@ -101,180 +215,297 @@ class Department extends Form {
     }
   };
 
-  handleRowClick(event) {
-    if (event.detail > 1) {
-      const rowToPreview = this.state.departments.filter(
-        department => department.id === event.currentTarget.id * 1
-      )[0];
-
-      this.setState({
-        rowToPreview,
-        showForm: true,
-        formData: _.pick(rowToPreview, ['code', 'description'])
-      });
-    }
-  }
-
-  updateDepartmentList(res) {
-    const newDept = res.data.data;
-
-    this.setState({ departments: [...this.state.departments, newDept] });
-  }
-
   resetFormData() {
     this.setState({ formData: this.initialFormState });
   }
 
-  updateTableRow() {
-    const oldState = [...this.state.departments];
-    const id = this.state.rowToPreview.id;
-    const formData = this.state.formData;
-    const rowIndex = oldState.findIndex(row => row.id === id);
-
-    oldState[rowIndex] = { ...formData, id };
-
-    this.setState({ departments: oldState });
+  handleUpdateBtnClick(event) {
+    this.setState({ showForm: true, formData: this.state.actualData });
   }
 
-  async updateDepartment(stopProcessing) {
+  async updateDatabase(stopProcessing) {
     const res = await httpService.put(
-      `/departments/${this.state.rowToPreview.id}`,
+      `/training-schedules/${this.id}`,
       this.state.formData
     );
 
-    stopProcessing();
-
     if (res) {
-      toast.success('Department successfully updated!');
-      this.updateTableRow();
+      await this.fetchTraining();
+      toast.success('TrainingRecord successfully updated!');
+      this.stopProcessing();
       this.closeSideDraw();
       this.resetFormData();
     }
   }
 
-  removeTableRow() {
-    const oldState = [...this.state.departments];
-    let rowIndex = oldState.findIndex(
-      row => row.id === this.state.rowToPreview.id
-    );
+  async deleteObject() {
+    this.setState({ isDeleteting: true });
+    const res = await httpService.delete(`/training-schedules/${this.id}`);
 
-    oldState.splice(rowIndex, 1);
+    if (res) {
+      toast.success('Training schedule successfully deleted!');
+      this.props.history.push('/training-schedules');
+      this.closeSideDraw();
+    }
+  }
 
-    this.setState({ departments: oldState });
+  handleProceedDelete() {
+    this.deleteObject();
   }
 
   async handleDelete(event) {
-    this.setState({ isDeleteting: true });
+    this.setState({ showModal: true });
+  }
 
-    const res = await httpService.delete(
-      `/departments/${this.state.rowToPreview.id}`
-    );
+  async approveSchedule() {
+    if (!this.isApproved()) {
+      await this.setState({
+        formData: { ...this.state.actualData, approved: 'Y' }
+      });
 
-    if (res) {
-      toast.success('Department successfully deleted!');
-      this.removeTableRow();
-      this.updateForm.reset();
-      this.resetFormData();
-      this.closeSideDraw();
+      console.log(this.state.formData);
+      await this.updateDatabase();
     }
   }
 
-  async addDepartment(stopProcessing) {
-    const res = await httpService.post('/departments', this.state.formData);
-
-    stopProcessing();
-
-    if (res) {
-      toast.success('Department successfully added!');
-      this.updateDepartmentList(res);
-      this.Form.reset();
-      this.resetFormData();
-      this.closeSideDraw();
-    }
+  handleViewEmployee({ currentTarget }) {
+    this.props.history.push(`/employee/${currentTarget.id}`);
   }
 
   async doSubmit(event, stopProcessing) {
-    if (this.state.rowToPreview) {
-      return this.updateDepartment(stopProcessing);
-    }
-
-    this.addDepartment(stopProcessing);
+    return this.updateDatabase(stopProcessing);
   }
 
   renderUpdateForm() {
+    const { actualData } = this.state;
+
     return (
       <div className={classes.Preview}>
-        <div className={classes.Actions}>
-          <Button
-            label="delete"
-            danger
-            onClick={this.handleDelete}
-            disabled={this.state.isDeleteting}
-          />
-        </div>
         <form
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('code', 'code', null, this.state.rowToPreview.code)}
+          {this.renderInput('l year', 'lYear', null, actualData.lYear, 'date')}
+          {this.renderSelect('training type', 'trainingTypeId', [
+            { id: 1, name: 'corporate' },
+            { id: 2, name: 'community' }
+          ])}
           {this.renderInput(
-            'description',
-            'description',
+            'ippis no',
+            'ippisNo',
             null,
-            this.state.rowToPreview.description
+            actualData.ippisNo,
+            'number'
           )}
-
+          {this.renderTextArea(
+            'objective',
+            'objective',
+            null,
+            actualData.objective
+          )}
+          {this.renderInput(
+            'expected start date',
+            'expectedStartDate',
+            null,
+            actualData.expectedStartDate,
+            'date'
+          )}
+          {this.renderInput(
+            'expected end date',
+            'expectedEndDate',
+            null,
+            actualData.expectedEndDate,
+            'date'
+          )}
+          {this.renderInput(
+            'expected cost',
+            'expectedCost',
+            null,
+            actualData.expectedCost,
+            'number'
+          )}
+          {this.renderInput(
+            'expected attendee no',
+            'expectedAttendeeNo',
+            null,
+            actualData.expectedAttendeeNo,
+            'number'
+          )}
+          {this.renderInput(
+            'actual start date',
+            'actualStartDate',
+            null,
+            actualData.actualStartDate,
+            'date'
+          )}
+          {this.renderInput(
+            'actual end date',
+            'actualEndDate',
+            null,
+            actualData.actualEndDate,
+            'date'
+          )}
+          {this.renderInput(
+            'actual cost',
+            'actualCost',
+            null,
+            actualData.actualCost,
+            'number'
+          )}
+          {this.renderInput(
+            'actual attendee no',
+            'actualAttendeeNo',
+            null,
+            actualData.actualAttendeeNo,
+            'number'
+          )}
+          {this.renderInput(
+            'resource organisation',
+            'resourceOrg',
+            null,
+            actualData.resourceOrg
+          )}
+          {this.renderInput('email', 'email', null, actualData.email, 'email')}
+          {this.renderInput(
+            'main resource person',
+            'mainResourcePerson',
+            null,
+            actualData.mainResourcePerson
+          )}
+          {this.renderInput(
+            'authorisor 1',
+            'authorisorId1',
+            'enter ippis..',
+            actualData.authorisor1Id,
+            'number'
+          )}
+          {this.renderInput(
+            'authorisor 2',
+            'authorisorId2',
+            'enter ippis..',
+            actualData.authorisor2Id,
+            'number'
+          )}
+          {this.renderSelect('residential', 'residential', [
+            { id: 'Y', name: 'Y' },
+            { id: 'N', name: 'N' }
+          ])}
+          {this.renderSelect('report submitted', 'reportSubmitted', [
+            { id: 'Y', name: 'Y' },
+            { id: 'N', name: 'N' }
+          ])}
+          {this.renderSelect('objective met', 'objectiveMet', [
+            { id: 'Y', name: 'Y' },
+            { id: 'N', name: 'N' }
+          ])}
           {this.renderButton('update')}
         </form>
       </div>
     );
   }
 
-  renderDepartmentForm() {
-    return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new department</p>
+  isApproved() {
+    return this.state.actualData.approved.toLowerCase() === 'y';
+  }
 
-        {this.renderInput('code', 'code')}
-        {this.renderInput('description', 'description')}
-
-        {this.renderButton('save')}
-      </form>
-    );
+  displayInfo(data) {
+    return data.map((d, i) => {
+      return (
+        <div className={classes.DisplayInfo} key={i}>
+          <p>{d.name}:</p>
+          <span>{d.value}</span>
+        </div>
+      );
+    });
   }
 
   render() {
-    const { departments, columns } = this.state;
+    const {
+      showForm,
+      showModal,
+      actualData,
+      dataForView,
+      authorisors
+    } = this.state;
 
     return (
       <React.Fragment>
-        {this.state.departments ? (
-          <Section>
-            <TableView
-              title="departments"
-              message="Double click a row to preview"
-              columns={columns}
-              data={departments}
-              clickHandler={this.handleRowClick}
-              addNewButtonHandler={this.handleAddNew}
-            ></TableView>
+        {actualData ? (
+          <Section title='training record'>
+            <div className={`${classes.Actions} ${classes.Right}`}>
+              <Button
+                label={this.isApproved() ? 'approved' : 'approve'}
+                highlight
+                disabled={this.isApproved()}
+                onClick={this.approveSchedule}
+              />
+              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
+              <Button label='delete' danger onClick={this.handleDelete} />
+              <Button
+                label='view employee'
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.ippisNo}
+              />
+            </div>
+
+            <InformationBlock title='basic'>
+              {this.displayInfo(dataForView)}
+            </InformationBlock>
+
+            <div className={`${classes.Actions} ${classes.Right}`}>
+              <Button
+                label='view authorisor 1'
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.authorisor1Id}
+              />
+              <Button
+                label='view authorisor 2'
+                plain
+                onClick={this.handleViewEmployee}
+                id={actualData.authorisor2Id}
+              />
+            </div>
+
+            <InformationBlock title='authorisors'>
+              {this.displayInfo(authorisors)}
+            </InformationBlock>
+
+            <InformationBlock title='objective'>
+              {actualData.objective}
+            </InformationBlock>
 
             <SideDraw
-              title="department"
-              openDraw={this.state.showForm}
+              title='schedule'
+              openDraw={showForm}
               onClose={this.closeSideDraw}
             >
-              {this.state.rowToPreview
-                ? this.renderUpdateForm()
-                : this.renderDepartmentForm()}
+              {this.renderUpdateForm()}
             </SideDraw>
+
+            <Modal
+              title='delete schedule'
+              openModal={showModal}
+              onClose={this.closeModal}
+            >
+              <p>This operation can not be reversed. Proceed?</p>
+              <div className={`${classes.Actions} ${classes.Right}`}>
+                <Button
+                  label='proceed'
+                  danger
+                  onClick={this.handleProceedDelete}
+                  disabled={this.state.isDeleteting}
+                />
+              </div>
+            </Modal>
           </Section>
         ) : (
-          <Loader />
+          <Loader message='please wait' />
         )}
       </React.Fragment>
     );
   }
 }
 
-export default withRouter(Department);
+export default withRouter(TrainingRecord);
