@@ -1,41 +1,47 @@
-import React from 'react';
-import { Alert } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import './Input.scss';
+import React from "react";
+import { Alert } from "react-bootstrap";
+import PropTypes from "prop-types";
+import "./Input.scss";
 
-const Input = ({
-  name,
-  label,
-  error,
-  noBorder,
-  placeholder,
-  disabled,
-  defaultValue,
-  ...rest
-}) => {
-  const getClass = () => {
-    let _class = 'formControl';
+const Input = React.forwardRef(
+  (
+    {
+      name,
+      label,
+      error,
+      noBorder,
+      placeholder,
+      disabled,
+      defaultValue,
+      ...rest
+    },
+    ref
+  ) => {
+    const getClass = () => {
+      let _class = "formControl";
 
-    return (_class += noBorder ? ' noBorder' : '');
-  };
+      return (_class += noBorder ? " noBorder" : "");
+    };
 
-  return (
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
-      <input
-        className={getClass()}
-        {...rest}
-        disabled={disabled}
-        placeholder={placeholder}
-        defaultValue={defaultValue}
-        id={name}
-        name={name}
-        autoComplete="true"
-      />
-      {error && <Alert variant="danger">{error}</Alert>}
-    </div>
-  );
-};
+    return (
+      <div className="form-group">
+        <label htmlFor={name}>{label}</label>
+        <input
+          className={getClass()}
+          {...rest}
+          ref={ref}
+          disabled={disabled}
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          id={name}
+          name={name}
+          autoComplete="true"
+        />
+        {error && <Alert variant="danger">{error}</Alert>}
+      </div>
+    );
+  }
+);
 
 Input.propTypes = {
   name: PropTypes.string,
