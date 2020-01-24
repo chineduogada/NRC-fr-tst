@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import Joi from 'joi-browser';
-import { Spinner } from 'react-bootstrap';
-import Button from '../Button/Button';
-import Input from '../Input/Input';
-import Select from '../Select/Select';
-import TextArea from '../TextArea/TextArea';
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import { Spinner } from "react-bootstrap";
+import Button from "../Button/Button";
+import Input from "../Input/Input";
+import Select from "../Select/Select";
+import TextArea from "../TextArea/TextArea";
 
 export default class Form extends Component {
   constructor(props) {
@@ -59,8 +59,10 @@ export default class Form extends Component {
     const { error } = Joi.validate(formData, this.schema, options);
     if (!error) return;
 
+    this[error.details[0].path[0]].focus();
+
     const errors = {};
-    error.details.map(value => (errors[value.path[0]] = value.message));
+    error.details.map(detail => (errors[detail.path[0]] = detail.message));
     return errors;
   }
 
@@ -88,8 +90,8 @@ export default class Form extends Component {
     label,
     name,
     placeholder,
-    defaultValue = '',
-    type = 'text',
+    defaultValue = "",
+    type = "text",
     autofocus
   ) {
     const { errors } = this.state;
@@ -104,6 +106,7 @@ export default class Form extends Component {
         onChange={this.handleChange}
         defaultValue={defaultValue}
         autoFocus={autofocus}
+        ref={input => (this[name] = input)}
       />
     );
   }
@@ -119,6 +122,7 @@ export default class Form extends Component {
         id={name}
         value={`${formData[name]}`}
         onChange={this.handleChange}
+        ref={input => (this[name] = input)}
       />
     );
   }
@@ -127,8 +131,8 @@ export default class Form extends Component {
     label,
     name,
     placeholder,
-    defaultValue = '',
-    type = 'text',
+    defaultValue = "",
+    type = "text",
     autofocus
   ) {
     const { errors } = this.state;
@@ -143,6 +147,7 @@ export default class Form extends Component {
         onChange={this.handleChange}
         defaultValue={defaultValue}
         autoFocus={autofocus}
+        ref={input => (this[name] = input)}
       />
     );
   }
@@ -150,18 +155,18 @@ export default class Form extends Component {
   renderButton(label) {
     const disabled = this.state.isProcessing;
     return (
-      <>
+      <React.Fragment>
         <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
-            as='span'
-            animation='grow'
-            size='sm'
-            role='status'
-            aria-hidden='true'
+            as="span"
+            animation="grow"
+            size="sm"
+            role="status"
+            aria-hidden="true"
           />
         ) : null}
-      </>
+      </React.Fragment>
     );
   }
 }
