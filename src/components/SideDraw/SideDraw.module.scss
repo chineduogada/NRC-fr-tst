@@ -8,6 +8,8 @@
   max-width: 600px;
   box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.1s 0.1s ease;
+  border-radius: 6px;
+  overflow: hidden;
 
   .Title {
     background: var(--basic-color);
@@ -38,12 +40,35 @@
   }
 
   &.Show {
-    transform: translateX(0%);
+    transform: translateX(-0%);
     opacity: 1;
+    animation: shake 0.25s 0.2s linear
   }
 
   &.Hide {
     transform: translateX(110%);
     opacity: 0;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-8%);
+  }
+  
+  // 25% {
+  //   transform: translateX(-4%);
+  // }
+
+  50% {
+    transform: translateX(3%);
+  }
+
+  75% {
+    transform: translateX(-1%);
+  }
+
+  100% {
+    transform: translateX(0%);
   }
 }

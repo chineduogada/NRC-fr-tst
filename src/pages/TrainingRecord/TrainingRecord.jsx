@@ -218,7 +218,6 @@ class TrainingRecord extends Form {
           { id: 1, name: 'corporate' },
           { id: 2, name: 'community' }
         ])}
-        {this.renderInput('ippis no', 'ippisNo', null, dataForForm.ippisNo, 'number')}
         {this.renderInput('serial count', 'serialCount', dataForForm.serialCount, null, 'number')}
         {this.renderInput('start date', 'startDate', null, dataForForm.startDate, 'date')}
         {this.renderInput('end date', 'endDate', null, dataForForm.endDate, 'date')}
