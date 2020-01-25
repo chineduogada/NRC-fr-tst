@@ -1,8 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
-// import Joi from '@hapi/joi';
-// import yup from 'yup';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
@@ -11,7 +9,7 @@ import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 
-class AllTrainingRecords extends Form {
+class AllCareers extends Form {
   constructor(props) {
     super(props);
 
@@ -21,16 +19,12 @@ class AllTrainingRecords extends Form {
       actualData: null,
 
       columns: [
-        { accessor: 'tYear', Header: 'TYear' },
-        { accessor: 'ippisNo', Header: 'IPPSI No' },
-        { accessor: 'employee', Header: 'Employee Name' },
-        { accessor: 'trainingType', Header: 'Training Type' },
-        { accessor: 'numDays', Header: 'Number of Days' },
-        { accessor: 'startDate', Header: 'Start Date' },
-        { accessor: 'endDate', Header: 'End Date' },
-        { accessor: 'residential', Header: 'Residential' },
-        { accessor: 'individualActualCost', Header: 'Individual Actual Cost' },
-        { accessor: 'trainingLocation', Header: 'Training Location' }
+        { accessor: 'transactionDate', Header: 'Transaction Date' },
+        { accessor: 'employee', Header: 'Employee' },
+        { accessor: 'memoReference', Header: 'Memo Reference' },
+        { accessor: 'reasonCode', Header: 'Reason Code' },
+        { accessor: 'oldJobTitle', Header: 'Old Job Title' },
+        { accessor: 'newJobTitle', Header: 'New Job Title' }
       ],
 
       pageSize: 20,
@@ -39,18 +33,17 @@ class AllTrainingRecords extends Form {
       showDraw: false,
 
       formData: {
-        tYear: '',
-        trainingTypeId: '',
+        transactionDate: '',
         ippisNo: '',
-        serialCount: '',
-        startDate: '',
-        endDate: '',
-        numDays: '',
-        individualActualCost: '',
-        trainingLocation: '',
-        residential: '',
-        employeeComment: ''
+        memoReference: '',
+        reasonCodeId: '',
+        newJobTitleId: '',
+        attachedDoc: '',
+        remarks: ''
       },
+
+      jobTitleOptions: [],
+      reasonCodeOptions: [],
 
       errors: {}
     };
@@ -64,34 +57,23 @@ class AllTrainingRecords extends Form {
   }
 
   schema = {
-    tYear: Joi.string()
+    ippisNo: Joi.number(),
+    transactionDate: Joi.string(),
+    memoReference: Joi.string(),
+    reasonCodeId: Joi.number(),
+    newJobTitleId: Joi.number(),
+    attachedDoc: Joi.string()
       .allow('')
       .optional(),
-    trainingTypeId: Joi.number(),
-    ippisNo: Joi.number(),
-    serialCount: Joi.number(),
-    startDate: Joi.string(),
-    endDate: Joi.string(),
-    numDays: Joi.number(),
-    individualActualCost: Joi.number(),
-    trainingLocation: Joi.string(),
-    residential: Joi.string(),
-    employeeComment: Joi.string()
+    remarks: Joi.string()
       .allow('')
       .optional()
   };
 
-  async componentWillMount() {
-    console.log(this.props);
-    if (/\/new$/.test(this.props.location.pathname)) {
-      this.setState({ showDraw: true });
-    }
-  }
-
   async fetchData() {
     const actualData = [];
 
-    const res = await httpService.get('/training-records');
+    const res = await httpService.get('/careers');
 
     if (res) {
       const { rows } = res.data.data;
@@ -127,19 +109,14 @@ class AllTrainingRecords extends Form {
   mapToViewModel(record) {
     return {
       id: record.id,
-      lYear: record.tYear,
       ippisNo: record.ippisNo,
       employee: `${record.employee.firstName} ${record.employee.lastName}`,
-      trainingType: record.trainingType.type,
-      trainingTypeId: record.trainingType.id,
-      serialCount: record.serialCount,
-      startDate: record.startDate,
-      endDate: record.endDate,
-      numDays: record.numDays,
-      individualActualCost: record.individualActualCost,
-      trainingLocation: record.trainingLocation,
-      residential: record.residential,
-      employeeComment: record.employeeComment
+      transactionDate: record.transactionDate,
+      memoReference: record.memoReference,
+      reasonCode: record.reasonCode.code,
+      newJobTitle: record.newJobTitle,
+      oldJobTitle: record.oldJobTitle,
+      remarks: record.remarks
     };
   }
 
@@ -150,7 +127,8 @@ class AllTrainingRecords extends Form {
   };
 
   handleRowClick({ currentTarget }) {
-    this.props.history.push(`training-records/${currentTarget.id}`);
+    console.log(this.props);
+    this.props.history.push(`careers/${currentTarget.id}`);
   }
 
   updateTableRows(res) {
@@ -165,10 +143,7 @@ class AllTrainingRecords extends Form {
 
   async postNewData(stopProcessing) {
     console.log('still submitting');
-    const res = await httpService.post(
-      '/training-records',
-      this.state.formData
-    );
+    const res = await httpService.post('/careers', this.state.formData);
 
     stopProcessing();
 
@@ -188,31 +163,32 @@ class AllTrainingRecords extends Form {
   renderForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a training record</p>
-        {this.renderInput('t year', 'tYear', null, null, 'date')}
-        {this.renderSelect('training type', 'trainingTypeId', [
-          { id: 1, name: 'corporate' },
-          { id: 2, name: 'community' }
-        ])}
-        {this.renderInput('ippis no', 'ippisNo', null, null, 'number')}
-        {this.renderInput('serial count', 'serialCount', null, null, 'number')}
-        {this.renderInput('start date', 'startDate', null, null, 'date')}
-        {this.renderInput('end date', 'endDate', null, null, 'date')}
-        {this.renderInput('number of days', 'numDays', null, null, 'number')}
+        <p>New career record</p>
         {this.renderInput(
-          'individual actual cost',
-          'individualActualCost',
+          'transaction date',
+          'transactionDate',
           null,
           null,
-          'number'
+          'date'
         )}
-        {this.renderInput('training location', 'trainingLocation')}
-        {this.renderSelect('residential', 'residential', [
-          { id: 'Y', name: 'Y' },
-          { id: 'N', name: 'N' }
+        {this.renderInput('ippis no', 'ippisNo', null, null, 'number')}
+        {this.renderInput('memo reference', 'memoReference')}
+        {this.renderSelect('reason code', 'reasonCodeId', [
+          { id: 1, name: 'promotion' },
+          { id: 2, name: 'demotion' }
         ])}
-        {this.renderTextArea('employee comment', 'employeeComment')}
-
+        {this.renderSelect('new job title', 'newJobTitleId', [
+          { id: 1, name: 'managing director' },
+          { id: 1, name: 'some other title' }
+        ])}
+        {this.renderInput(
+          'attached document',
+          'attachedDoc',
+          null,
+          null,
+          'file'
+        )}
+        {this.renderTextArea('remarks', 'remarks')}
         {this.renderButton('save')}
       </form>
     );
@@ -226,7 +202,7 @@ class AllTrainingRecords extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title="all records"
+              title="careers"
               message="Click a row to preview"
               columns={columns}
               data={actualData}
@@ -250,4 +226,4 @@ class AllTrainingRecords extends Form {
   }
 }
 
-export default withRouter(AllTrainingRecords);
+export default withRouter(AllCareers);
