@@ -16,11 +16,12 @@ import AllTrainingSchedules from '../../pages/AllTrainingSchedules/AllTrainingSc
 import TrainingSchedule from '../../pages/TrainingSchedule/TrainingSchedule';
 import AllTrainingRecords from '../../pages/AllTrainingRecords/AllTrainingRecords';
 import TrainingRecord from '../../pages/TrainingRecord/TrainingRecord';
+import AllCareers from '../../pages/AllCareers/AllCareers';
+import Career from '../../pages/Career/Career';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
   const token = getToken();
-  console.log(token);
   if (token) {
     axios.defaults.headers = {
       token
@@ -32,45 +33,45 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
       {/* Aside */}
       <Aside />
       {/* Main Section */}
-      <div className='d-flex flex-column'>
+      <div className="d-flex flex-column">
         {/* Navigation */}
         <Nav triggerSignOut={signOutHandler} />
         <MainArea>
           {/* <AllEmployees /> */}
           <Switch>
-            <Route path='/' exact component={Dashboard} />
+            <Route path="/" exact component={Dashboard} />
             <Route
-              path='/training-schedules'
+              path="/training-schedules"
               exact
               component={AllTrainingSchedules}
             />
             <Route
-              path='/training-schedules/new'
-              exact
-              component={AllTrainingSchedules}
-            />
-            <Route
-              path='/training-schedules/:id'
+              path="/training-schedules/:id"
               exact
               component={TrainingSchedule}
             />
-            <Route path='/training-records' exact component={AllTrainingRecords} />
             <Route
-              path='/training-records/:id'
+              path="/training-records"
+              exact
+              component={AllTrainingRecords}
+            />
+            <Route
+              path="/training-records/:id"
               exact
               component={TrainingRecord}
             />
-            <Route path='/employee/' exact component={AllEmployees} />
-            <Route path='/employee/new' exact component={AddNewEmployee} />
-            <Route path='/employee/:ippisNo' exact component={Employee} />
-            <Route path='/departments' component={Department} />
+            <Route path="/employee/" exact component={AllEmployees} />
+            <Route path="/employee/new" exact component={AddNewEmployee} />
+            <Route path="/employee/:ippisNo" exact component={Employee} />
+            <Route path="/departments" component={Department} />
+            <Route path="/careers" exact component={AllCareers} />
+            <Route path="/careers/:id" exact component={Career} />
           </Switch>
         </MainArea>
       </div>
     </div>
   );
-  console.log(userLoggedIn);
-  return userLoggedIn ? renderLayout() : <Redirect to='/' />;
+  return userLoggedIn ? renderLayout() : <Redirect to="/" />;
 };
 
 export default Layout;

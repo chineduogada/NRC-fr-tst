@@ -23,19 +23,19 @@ export default class Dashboard extends Component {
           data: null,
           text: 'Departments',
           url: '/departments',
-          addNew: '/departments/new'
+          addNew: '/departments?new'
         },
         numTrainingSchedules: {
           data: null,
           text: 'Training Schedules',
           url: '/training-schedules',
-          addNew: '/training-schedules/new'
+          addNew: '/training-schedules?new'
         },
         numJobIncidence: {
           data: null,
           text: 'Job Incidence',
           url: '/job-incidence',
-          addNew: '/job-incidence/new'
+          addNew: '/job-incidence?new'
         }
       },
 
@@ -129,7 +129,7 @@ export default class Dashboard extends Component {
     const { basicSummary } = this.state;
     const { firstName } = getCredentials();
     return (
-      <Section id='post' title='dashboard' subTitle={`Welcome, ${firstName}`}>
+      <Section id="post" title="dashboard" subTitle={`Welcome, ${firstName}`}>
         <Section>
           <div className={classes.News}>{<SimpleLineChart />}</div>
         </Section>

@@ -59,7 +59,7 @@ class Department extends Form {
   };
 
   async componentWillMount() {
-    if (/new$/.test(this.props.location.pathname)) {
+    if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showForm: true });
     }
   }

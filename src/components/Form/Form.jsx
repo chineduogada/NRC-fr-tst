@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import Joi from "joi-browser";
-import { Spinner } from "react-bootstrap";
-import Button from "../Button/Button";
-import Input from "../Input/Input";
-import Select from "../Select/Select";
-import TextArea from "../TextArea/TextArea";
+import React, { Component } from 'react';
+import Joi from 'joi-browser';
+import { Spinner } from 'react-bootstrap';
+import Button from '../Button/Button';
+import Input from '../Input/Input';
+import Select from '../Select/Select';
+import TextArea from '../TextArea/TextArea';
 
 export default class Form extends Component {
   constructor(props) {
@@ -90,8 +90,8 @@ export default class Form extends Component {
     label,
     name,
     placeholder,
-    defaultValue = "",
-    type = "text",
+    defaultValue = '',
+    type = 'text',
     autofocus
   ) {
     const { errors } = this.state;
@@ -131,8 +131,8 @@ export default class Form extends Component {
     label,
     name,
     placeholder,
-    defaultValue = "",
-    type = "text",
+    defaultValue = '',
+    type = 'text',
     autofocus
   ) {
     const { errors } = this.state;
@@ -156,7 +156,7 @@ export default class Form extends Component {
     const disabled = this.state.isProcessing;
     return (
       <React.Fragment>
-        <Button label={label} fill disabled={disabled} />
+        <Button label={label} highlight disabled={disabled} />
         {disabled ? (
           <Spinner
             as="span"
