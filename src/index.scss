@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Poppins&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
 %bordered {
   border: 2px solid var(--line-color);
@@ -11,7 +11,7 @@
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  font-family: "Poppins", "Open Sans", sans-serif;
+  font-family: 'Poppins', 'Open Sans', sans-serif;
   letter-spacing: 1.2px;
 
   &::-webkit-scrollbar {
@@ -128,4 +128,9 @@ ul {
 }
 .Toastify__toast.Toastify__toast--success {
   background: var(--assent);
+}
+
+/// Displayed Data Grid
+.data-item-value {
+  font-size: 0.875rem;
 }

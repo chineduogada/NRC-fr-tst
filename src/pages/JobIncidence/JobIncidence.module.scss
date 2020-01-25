@@ -1,0 +1,22 @@
+.Actions {
+  display: flex;
+
+  &.Right {
+    justify-content: flex-end;
+  }
+}
+
+.DisplayInfo {
+  display: grid;
+  // flex-wrap: wrap;
+  p {
+    font-weight: bold;
+    text-transform: capitalize;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  span {
+    font-size: 0.8rem;
+  }
+}

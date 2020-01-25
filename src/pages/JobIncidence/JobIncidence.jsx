@@ -10,9 +10,9 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
-import classes from './Career.module.scss';
+import classes from './JobIncidence.module.scss';
 
-class Career extends Form {
+class JobIncidence extends Form {
   constructor(props) {
     super(props);
 
@@ -58,7 +58,21 @@ class Career extends Form {
     transactionDate: Joi.string(),
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
-    newJobTitleId: Joi.number(),
+    incidenceLine1: Joi.string()
+      .allow('')
+      .optional(),
+    incidenceLine2: Joi.string()
+      .allow('')
+      .optional(),
+    incidenceLine3: Joi.string()
+      .allow('')
+      .optional(),
+    incidenceLine4: Joi.string()
+      .allow('')
+      .optional(),
+    incidenceLine5: Joi.string()
+      .allow('')
+      .optional(),
     attachedDoc: Joi.string()
       .allow('')
       .optional(),
@@ -67,8 +81,8 @@ class Career extends Form {
       .optional()
   };
 
-  async fetchCareer() {
-    const res = await httpService.get(`/careers/${this.id}`);
+  async fetchJobIncidence() {
+    const res = await httpService.get(`/job-incidence/${this.id}`);
 
     if (res) {
       this.setState({
@@ -80,7 +94,7 @@ class Career extends Form {
   }
 
   async componentDidMount() {
-    await this.fetchCareer();
+    await this.fetchJobIncidence();
   }
 
   closeSideDraw(e) {
@@ -103,14 +117,40 @@ class Career extends Form {
       {
         name: 'reason code',
         value: data.reasonCode.code
+      }
+    ];
+  }
+
+  mapDataForIncidenceLines(data) {
+    return [
+      {
+        name: 'incidence line 1',
+        value: data.incidenceLine1
       },
       {
-        name: 'old job title',
-        value: data.oldJobTitleId
+        name: 'incidence line 2',
+        value: data.incidenceLine2
       },
       {
-        name: 'new job title',
-        value: data.newJobTitleId
+        name: 'incidence line 3',
+        value: data.incidenceLine3
+      },
+      {
+        name: 'incidence line 4',
+        value: data.incidenceLine4
+      },
+      {
+        name: 'incidence line 5',
+        value: data.incidenceLine5
+      }
+    ];
+  }
+
+  mapDataRemarks(data) {
+    return [
+      {
+        name: 'remarks',
+        value: data.remarks
       }
     ];
   }
@@ -121,7 +161,11 @@ class Career extends Form {
       ippisNo: data.ippisNo,
       memoReference: data.memoReference,
       reasonCodeId: data.reasonCodeId,
-      newJobTitleId: data.newJobTitleId,
+      incidenceLine1: data.incidenceLine1,
+      incidenceLine2: data.incidenceLine2,
+      incidenceLine3: data.incidenceLine3,
+      incidenceLine4: data.incidenceLine4,
+      incidenceLine5: data.incidenceLine5,
       attachedDoc: data.attachedDoc,
       remarks: data.remarks
     };
@@ -134,7 +178,11 @@ class Career extends Form {
       ippisNo: data.ippisNo,
       memoReference: data.memoReference,
       reasonCodeId: data.reasonCodeId,
-      newJobTitleId: data.newJobTitleId,
+      incidenceLine1: data.incidenceLine1,
+      incidenceLine2: data.incidenceLine2,
+      incidenceLine3: data.incidenceLine3,
+      incidenceLine4: data.incidenceLine4,
+      incidenceLine5: data.incidenceLine5,
       attachedDoc: data.attachedDoc,
       remarks: data.remarks
     };
@@ -156,14 +204,15 @@ class Career extends Form {
 
   async updateDatabase() {
     const res = await httpService.put(
-      `/careers/${this.id}`,
+      `/job-incidence/${this.id}`,
       this.state.formData
     );
 
+    this.stopProcessing();
+
     if (res) {
-      await this.fetchCareer();
-      toast.success('Career record successfully updated!');
-      this.stopProcessing();
+      await this.fetchJobIncidence();
+      toast.success('Job incidence successfully updated!');
       this.closeSideDraw();
       this.resetFormData();
     }
@@ -171,11 +220,11 @@ class Career extends Form {
 
   async deleteObject() {
     this.setState({ isDeleteting: true });
-    const res = await httpService.delete(`/careers/${this.id}`);
+    const res = await httpService.delete(`/job-incidence/${this.id}`);
 
     if (res) {
-      toast.success('Career record successfully deleted!');
-      this.props.history.push('/careers');
+      toast.success('Job incidence successfully deleted!');
+      this.props.history.push('/job-incidence');
       this.closeSideDraw();
     }
   }
@@ -216,13 +265,46 @@ class Career extends Form {
           dataForForm.memoReference
         )}
         {this.renderSelect('reason code', 'reasonCodeId', [
-          { id: 1, name: 'promotion' },
-          { id: 2, name: 'demotion' }
+          { id: 1, name: 'fighting' },
+          { id: 2, name: 'stealing' }
         ])}
-        {this.renderSelect('new job title', 'newJobTitleId', [
-          { id: 1, name: 'managing director' },
-          { id: 2, name: 'some other title' }
-        ])}
+        {this.renderInput(
+          'transaction date',
+          'transactionDate',
+          null,
+          null,
+          'date'
+        )}
+        {this.renderInput(
+          'incindence line 1',
+          'incidenceLine1',
+          null,
+          dataForForm.incidenceLine1
+        )}
+        {this.renderInput(
+          'incindence line 2',
+          'incidenceLine2',
+          null,
+          dataForForm.incidenceLine2
+        )}
+        {this.renderInput(
+          'incindence line 3',
+          'incidenceLine3',
+          null,
+          dataForForm.incidenceLine3
+        )}
+        {this.renderInput(
+          'incindence line 4',
+          'incidenceLine4',
+          null,
+          dataForForm.incidenceLine4
+        )}
+        {this.renderInput(
+          'incindence line 5',
+          'incidenceLine5',
+          null,
+          dataForForm.incidenceLine5
+        )}
         {this.renderTextArea('remarks', 'remarks', null, dataForForm.remarks)}
 
         {this.renderButton('save')}
@@ -234,8 +316,8 @@ class Career extends Form {
     return data.map((d, i) => {
       return (
         <div className={classes.DisplayInfo} key={i}>
-          <p>{d.name}:</p>
-          <span>{d.value}</span>
+          <p className="data-item-label">{d.name}:</p>
+          <span className="data-item-value">{d.value}</span>
         </div>
       );
     });
@@ -247,7 +329,7 @@ class Career extends Form {
     return (
       <React.Fragment>
         {dataForView ? (
-          <Section title="career">
+          <Section title="job incidence">
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button label="update" fill onClick={this.handleUpdateBtnClick} />
               <Button label="delete" danger onClick={this.handleDelete} />
@@ -263,12 +345,18 @@ class Career extends Form {
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
+            <InformationBlock title="incidence lines">
+              {this.displayInfo(
+                this.mapDataForIncidenceLines(this.state.dataFilteredForView)
+              )}
+            </InformationBlock>
+
             <InformationBlock title="remark">
-              {dataForForm.remarks}
+              <p className="data-item-value">{dataForForm.remarks}</p>
             </InformationBlock>
 
             <SideDraw
-              title="Career"
+              title="job incidence"
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -276,7 +364,7 @@ class Career extends Form {
             </SideDraw>
 
             <Modal
-              title="delete career record"
+              title="delete job incidence"
               openModal={showModal}
               onClose={this.closeModal}
             >
@@ -299,4 +387,4 @@ class Career extends Form {
   }
 }
 
-export default withRouter(Career);
+export default withRouter(JobIncidence);

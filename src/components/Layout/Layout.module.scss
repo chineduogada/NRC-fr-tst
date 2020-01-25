@@ -1,6 +1,8 @@
-.Layout {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 250px auto;
-  overflow: hidden;
+@media screen and (min-width: 768px) {
+  .Layout {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 250px auto;
+    overflow: hidden;
+  }
 }
