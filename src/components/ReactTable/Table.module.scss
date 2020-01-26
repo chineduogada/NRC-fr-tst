@@ -1,7 +1,6 @@
 .TableWrapper {
   width: 100%;
   min-width: 100px;
-  // margin: auto;
   overflow-x: auto;
   @media screen and (min-width: 768px) {
     width: calc(100vw - 280px);
@@ -17,6 +16,9 @@
   /* Zebra striping */
   tr:nth-of-type(odd) {
     background: #eee;
+  }
+  tr:nth-of-type(even) {
+    background: #fff;
   }
   th {
     // background: #333;
@@ -46,11 +48,10 @@
 
   tbody tr td {
     font-size: 0.8rem;
-    // background-color: #fff;
-    border-top: 10px solid;
-    border-bottom: 10px solid;
-    border-color: #f7f8f8;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    // border-top: 10px solid;
+    // border-bottom: 10px solid;
+    // border-color: #f7f8f8;
+    // border-right: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .Filter {
@@ -125,23 +126,7 @@
   //   }
 }
 
-header,
-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin: 0.1em;
-
-  .Pagination {
-    font-size: 0.8rem;
-  }
-}
-
-header {
-  display: flex;
-  justify-content: flex-end;
-  margin: 0.1em;
-
-  .Pagination {
-    font-size: 0.8rem;
-  }
+.Pagination {
+  margin: 0.3em 0;
+  font-size: 0.8rem;
 }
