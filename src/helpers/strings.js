@@ -1,5 +1,8 @@
 export const truncate = (str, maxLength = 20) => {
-  const s = 'michael is such an amazing child and we love him so much';
+  console.log(str);
+  return str.length > maxLength ? `${str.substring(0, maxLength)}...` : str;
+};
 
-  return `${s.substring(0, maxLength)}...`;
+export const truncateCellValue = cell => {
+  return truncate(cell.props.cell.value);
 };

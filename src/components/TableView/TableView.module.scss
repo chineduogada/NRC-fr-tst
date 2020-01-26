@@ -3,6 +3,9 @@
 
   header {
     margin-bottom: 1em;
+    & > div {
+      flex-wrap: wrap;
+    }
     .TableTitle {
       margin-bottom: 0.5em;
       color: var(--basic-color);

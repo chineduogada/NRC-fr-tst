@@ -1,17 +1,5 @@
-.BasicSummary {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 2em;
-}
-
-@media screen and (min-width: 768px) {
-  .BasicSummary {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 .BasicDataCard {
-  height: 250px;
+  height: 200px;
   background-color: #fff;
   border-radius: 10px;
   display: grid;
@@ -20,6 +8,7 @@
   cursor: pointer;
   transition: all 0.5s ease-out;
   position: relative;
+  box-shadow: 0 7px 30px #550fb144;
 
   .Loader {
     color: var(inverse-text);
