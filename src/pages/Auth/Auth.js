@@ -132,7 +132,6 @@ class Auth extends Component {
         {this.state.userLoggedIn
           ? this.renderAppCore()
           : this.renderLoginScreen()}
-        ;
       </Aux>
     );
   }

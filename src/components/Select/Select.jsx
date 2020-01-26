@@ -1,26 +1,26 @@
-import React from "react";
-import { Alert } from "react-bootstrap";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Alert } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 const Select = React.forwardRef(
   ({ name, error, label, options, ...rest }, ref) => {
     return (
-      <div className="form-group">
+      <div className='form-group'>
         <label htmlFor={name}>{label}</label>
         <select
           {...rest}
           ref={ref}
           id={name}
           name={name}
-          className="formControl"
+          className='formControl'
         >
-          <option value="">-- select --</option>
+          <option value=''>-- select --</option>
           {options.map(option => (
             <option key={option.id} value={option.id}>
               {option.name}
             </option>
           ))}
         </select>
-        {error && <Alert variant="danger">{error}</Alert>}
+        {error && <Alert variant='danger'>{error}</Alert>}
       </div>
     );
   }
