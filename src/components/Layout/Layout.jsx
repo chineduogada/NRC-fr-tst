@@ -18,6 +18,8 @@ import AllTrainingRecords from '../../pages/AllTrainingRecords/AllTrainingRecord
 import TrainingRecord from '../../pages/TrainingRecord/TrainingRecord';
 import AllCareers from '../../pages/AllCareers/AllCareers';
 import Career from '../../pages/Career/Career';
+import AllJobIncidence from '../../pages/AllJobIncidence/AllJobIncidence';
+import JobIncidence from '../../pages/JobIncidence/JobIncidence';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -66,6 +68,8 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path="/departments" component={Department} />
             <Route path="/careers" exact component={AllCareers} />
             <Route path="/careers/:id" exact component={Career} />
+            <Route path="/job-incidence" exact component={AllJobIncidence} />
+            <Route path="/job-incidence/:id" exact component={JobIncidence} />
           </Switch>
         </MainArea>
       </div>

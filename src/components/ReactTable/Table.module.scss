@@ -1,8 +1,11 @@
 .TableWrapper {
-  width: calc(100vw - 290px);
+  width: 100%;
   min-width: 100px;
   // margin: auto;
-  overflow-x: scroll;
+  overflow-x: auto;
+  @media screen and (min-width: 768px) {
+    width: calc(100vw - 280px);
+  }
 }
 .Table {
   table {
@@ -120,4 +123,25 @@
   //       white-space: nowrap;
   //     }
   //   }
+}
+
+header,
+footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.1em;
+
+  .Pagination {
+    font-size: 0.8rem;
+  }
+}
+
+header {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.1em;
+
+  .Pagination {
+    font-size: 0.8rem;
+  }
 }

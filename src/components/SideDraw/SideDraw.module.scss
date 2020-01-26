@@ -26,11 +26,15 @@
   }
 
   .Body {
-    padding: 1em;
+    padding: 1.5em 1em;
   }
 
   .Title {
     padding: 0.5em 1em;
+
+    h5 {
+      margin: 0;
+    }
   }
 
   .Body {
@@ -42,7 +46,7 @@
   &.Show {
     transform: translateX(-0%);
     opacity: 1;
-    animation: shake 0.25s 0.2s linear
+    animation: shake 0.25s 0.2s linear;
   }
 
   &.Hide {
@@ -55,7 +59,7 @@
   0% {
     transform: translateX(-8%);
   }
-  
+
   // 25% {
   //   transform: translateX(-4%);
   // }

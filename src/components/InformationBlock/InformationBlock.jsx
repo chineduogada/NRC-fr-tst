@@ -3,9 +3,9 @@ import classes from './InformationBlock.module.scss';
 
 export default function InformationBlock({ title, children }) {
   return (
-    <section className='sect'>
+    <section className="sect">
       <div className={classes.InfoBlock}>
-        <h6 className={classes.Title}>{title}</h6>
+        {title ? <h6 className={classes.Title}>{title}</h6> : null}
 
         {children}
       </div>

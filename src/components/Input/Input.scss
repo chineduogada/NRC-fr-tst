@@ -25,6 +25,10 @@
 
   select {
     text-transform: capitalize;
+
+    option {
+      background: var(--basic-color);
+    }
   }
 
   textarea {

@@ -1,7 +1,13 @@
 import React from 'react';
-import { useTable, useSortBy, useFilters, useGlobalFilter } from 'react-table';
+import {
+  useTable,
+  useSortBy,
+  useFilters,
+  useGlobalFilter,
+  usePagination
+} from 'react-table';
 import matchSorter from 'match-sorter';
-import { Link } from 'react-router-dom';
+import { truncateCellValue } from '../../helpers/strings';
 import classes from './Table.module.scss';
 
 function GlobalFilter({
@@ -219,89 +225,210 @@ function Table({ columns, data, clickHandler }) {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page, // Instead of using 'rows', we'll use page,
     prepareRow,
     state,
     flatColumns,
     preGlobalFilteredRows,
-    setGlobalFilter
+    setGlobalFilter,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize }
   } = useTable(
     {
       columns,
       data,
       defaultColumn,
-      filterTypes
+      filterTypes,
+      initialState: { pageIndex: 0, pageSize: 5 }
     },
     useFilters,
     useGlobalFilter,
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   // Render the UI for your table
   return (
-    <div className={classes.TableWrapper}>
-      <table className={classes.Table} {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup, i) => (
-            <>
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Header')}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? ' 🔽'
-                          : ' 🔼'
-                        : ''}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, i) => (
-                  <th
-                    key={i}
-                    className={classes.Filter}
-                    {...column.getHeaderProps()}
-                  >
-                    {null}
-                    {/* Render the columns filter UI */}
-                    <div>
-                      {column.canFilter ? column.render('Filter') : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
-            prepareRow(row);
+    <>
+      <div className={classes.TableWrapper}>
+        <header>
+          <div className={classes.Pagination}>
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+              {'<<'}
+            </button>{' '}
+            <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+              {'<'}
+            </button>{' '}
+            <button onClick={() => nextPage()} disabled={!canNextPage}>
+              {'>'}
+            </button>{' '}
+            <button
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            >
+              {'>>'}
+            </button>{' '}
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+            <span>
+              | Go to page:{' '}
+              <input
+                type="number"
+                defaultValue={pageIndex + 1}
+                onChange={e => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                }}
+                style={{ width: '100px' }}
+              />
+            </span>{' '}
+            <select
+              value={pageSize}
+              onChange={e => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[5, 10, 20, 30, 40, 50].map(pageSize => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+        </header>
+        <table className={classes.Table} {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup, i) => (
+              <>
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map(column => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
+                      {column.render('Header')}
+                      {/* Add a sort direction indicator */}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? ' 🔽'
+                            : ' 🔼'
+                          : ''}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column, i) => (
+                    <th
+                      key={i}
+                      className={classes.Filter}
+                      {...column.getHeaderProps()}
+                    >
+                      {null}
+                      {/* Render the columns filter UI */}
+                      <div>
+                        {column.canFilter ? column.render('Filter') : null}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row, i) => {
+              prepareRow(row);
 
-            // Check if the rows have a click listener
-            const clickable = clickHandler ? classes.Clickable : null;
-            return (
-              <tr
-                className={clickable}
-                {...row.getRowProps()}
-                id={row.original.id}
-                key={i}
-                onClick={clickHandler}
-              >
-                {row.cells.map(cell => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+              // Check if the rows have a click listener
+              const clickable = clickHandler ? classes.Clickable : null;
+              return (
+                <tr
+                  className={clickable}
+                  {...row.getRowProps()}
+                  id={row.original.id}
+                  key={i}
+                  onClick={clickHandler}
+                >
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>
+                        {truncateCellValue(cell.render('Cell'))}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+          <footer></footer>
+        </table>
+      </div>
+
+      {/* 
+        Pagination can be built however you'd like. 
+        This is just a very basic UI implementation:
+      */}
+      <footer>
+        <div className={classes.Pagination}>
+          <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            {'<<'}
+          </button>{' '}
+          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'<'}
+          </button>{' '}
+          <button onClick={() => nextPage()} disabled={!canNextPage}>
+            {'>'}
+          </button>{' '}
+          <button
+            onClick={() => gotoPage(pageCount - 1)}
+            disabled={!canNextPage}
+          >
+            {'>>'}
+          </button>{' '}
+          <span>
+            Page{' '}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{' '}
+          </span>
+          <span>
+            | Go to page:{' '}
+            <input
+              type="number"
+              defaultValue={pageIndex + 1}
+              onChange={e => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                gotoPage(page);
+              }}
+              style={{ width: '100px' }}
+            />
+          </span>{' '}
+          <select
+            value={pageSize}
+            onChange={e => {
+              setPageSize(Number(e.target.value));
+            }}
+          >
+            {[5, 10, 20, 30, 40, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+      </footer>
+    </>
   );
 }
 

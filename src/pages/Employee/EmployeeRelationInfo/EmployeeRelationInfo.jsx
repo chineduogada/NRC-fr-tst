@@ -1,12 +1,12 @@
 import React from 'react';
 import CleanSlate from '../../../components/CleanSlate/CleanSlate';
 import Form from '../../../components/Form/Form';
-// import Table from "../../../components/Table/Table";
 import Table from '../../../components/ReactTable/Table';
 import Joi from 'joi-browser';
 import Button from '../../../components/Button/Button';
 import http from '../../../services/httpService';
 import Loader from '../../../components/Loader/Loader';
+import Section from '../../../hoc/Section/Section';
 
 export default class EmployeeRelationInfo extends Form {
   state = {
@@ -126,8 +126,9 @@ export default class EmployeeRelationInfo extends Form {
 
     return hasRelation !== null ? (
       hasRelation ? (
-        <section>
+        <Section>
           <Button
+            style={{ marginLeft: '0.5em' }}
             highlight
             label="add relation"
             onClick={this.handleAddRelation}
@@ -196,7 +197,7 @@ export default class EmployeeRelationInfo extends Form {
           <main className="sect">
             <Table columns={columns} data={relations} />
           </main>
-        </section>
+        </Section>
       ) : (
         <CleanSlate
           onControlSlate={this.handleSlate}

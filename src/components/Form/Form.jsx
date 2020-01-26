@@ -156,7 +156,7 @@ export default class Form extends Component {
     const disabled = this.state.isProcessing;
     return (
       <React.Fragment>
-        <Button label={label} highlight disabled={disabled} />
+        <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
             as="span"
