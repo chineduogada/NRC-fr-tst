@@ -1,19 +1,17 @@
-// .Summary {
-//   color: var(--inverse-text);
-// }
-
 .News {
   width: 100%;
   min-height: 300px;
-  overflow-x: auto;
+  // overflow-x: auto;
   background-color: rgb(255, 255, 255);
   border-radius: 15px;
   box-shadow: 0 2px 30px rgba(0, 0, 0, 0.06);
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 0.75rem;
 
   @media screen and (min-width: 768px) {
+    font-size: 0.875rem;
     min-height: 400px;
     width: calc(100vw - 280px);
   }

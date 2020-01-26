@@ -45,11 +45,10 @@
 
   tbody tr td {
     font-size: 0.8rem;
-    // background-color: #fff;
-    border-top: 10px solid;
-    border-bottom: 10px solid;
-    border-color: #f7f8f8;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    // border-top: 10px solid;
+    // border-bottom: 10px solid;
+    // border-color: #f7f8f8;
+    // border-right: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .Filter {
@@ -124,10 +123,7 @@
   //   }
 }
 
-footer {
-  margin: 0.1em;
-
-  .Pagination {
-    font-size: 0.8rem;
-  }
+.Pagination {
+  margin: 0.3em 0;
+  font-size: 0.8rem;
 }
