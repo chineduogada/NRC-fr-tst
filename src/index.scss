@@ -111,6 +111,10 @@ ul {
   list-style: none;
 }
 
+ol {
+  margin-left: 2em;
+}
+
 .sect {
   @extend %bordered;
   background-color: #fff;

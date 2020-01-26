@@ -17,6 +17,9 @@
   tr:nth-of-type(odd) {
     background: #eee;
   }
+  tr:nth-of-type(even) {
+    background: #fff;
+  }
   th {
     // background: #333;
     background: rgb(77, 77, 77);

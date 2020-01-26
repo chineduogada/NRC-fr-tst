@@ -77,7 +77,7 @@ export default class Form extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const errors = this.validate();
-    console.log(this.state.formData, errors);
+    // console.log(this.state.formData, errors);
     this.setState({ errors: errors || {} });
     if (errors) return;
 
@@ -110,7 +110,7 @@ export default class Form extends Component {
       />
     );
   }
-  renderSelect(label, name, options) {
+  renderSelect(label, name, options, callback) {
     const { formData, errors } = this.state;
 
     return (
@@ -121,7 +121,10 @@ export default class Form extends Component {
         error={errors[name]}
         id={name}
         value={`${formData[name]}`}
-        onChange={this.handleChange}
+        onChange={event => {
+          this.handleChange(event);
+          callback(this);
+        }}
         ref={input => (this[name] = input)}
       />
     );
@@ -159,11 +162,11 @@ export default class Form extends Component {
         <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
-            as="span"
-            animation="grow"
-            size="sm"
-            role="status"
-            aria-hidden="true"
+            as='span'
+            animation='grow'
+            size='sm'
+            role='status'
+            aria-hidden='true'
           />
         ) : null}
       </React.Fragment>

@@ -1,0 +1,33 @@
+.Documentation {
+  background: var(--basic-color);
+  margin: 2em 0;
+
+  @media screen and (min-width: 768px) {
+    margin: none;
+  }
+
+  .Name {
+    color: var(--inverse-text);
+    text-transform: capitalize;
+  }
+
+  .Notes {
+    background: var(--magic-mint);
+  }
+
+  .Code {
+    background-color: var(--inverse-text);
+    color: var(--text);
+
+    &:not(:last-child) {
+      margin-bottom: 1em;
+    }
+  }
+
+  &,
+  .Notes,
+  .Code {
+    border-radius: 10px;
+    padding: 1em;
+  }
+}
