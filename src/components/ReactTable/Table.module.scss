@@ -1,8 +1,9 @@
 .TableWrapper {
-  width: calc(100vw - 290px);
+  width: calc(100vw - 280px);
   min-width: 100px;
   // margin: auto;
-  overflow-x: scroll;
+  overflow-x: auto;
+  position: relative;
 }
 .Table {
   table {
@@ -21,6 +22,12 @@
     color: #fff;
     font-weight: bold;
     font-size: 0.875rem;
+  }
+
+  thead {
+    // position: absolute;
+    // top: 0;
+    // width: 100%;
   }
 
   td,
@@ -120,4 +127,9 @@
   //       white-space: nowrap;
   //     }
   //   }
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
 }
