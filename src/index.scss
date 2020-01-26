@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
 %bordered {
-  border: 2px solid var(--line-color);
+  border: 1px solid var(--line-color);
   border-radius: 5px;
 }
 
@@ -115,8 +115,8 @@ ul {
 .sect {
   @extend %bordered;
   background-color: #fff;
-  margin: 1.5rem 0.375rem;
-  padding: 0.5rem 1em;
+  margin: 1.5rem 0;
+  padding: 1em;
 }
 
 .no-data {
