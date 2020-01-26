@@ -99,7 +99,6 @@ a {
 .alert {
   padding: 0.375rem !important;
   width: fit-content;
-  font-size: 75%;
 
   &.alert-danger {
     background-color: transparent;
@@ -121,6 +120,11 @@ ul {
 
 .no-data {
   opacity: 0.65;
+}
+
+.Toastify__toast.Toastify__toast--error,
+.Toastify__toast.Toastify__toast--success {
+  font-size: 0.875rem;
 }
 
 .Toastify__toast.Toastify__toast--error {
