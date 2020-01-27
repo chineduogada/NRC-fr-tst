@@ -110,7 +110,7 @@ export default class Form extends Component {
       />
     );
   }
-  renderSelect(label, name, options, callback) {
+  renderSelect(label, name, options, callback = () => null) {
     const { formData, errors } = this.state;
 
     return (
