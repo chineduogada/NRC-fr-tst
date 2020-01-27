@@ -1,26 +1,51 @@
-.User {
+.UserProfile {
   background-color: var(--inverse-text);
   width: 100%;
-  max-width: 700px;
+  max-width: 600px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
-  padding: 0.5em;
+  padding: 1em 0.5em;
 
-  .UserImageAndName {
+  .Header {
+    display:flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    .UserImage {
+    text-align: center;
+    margin-bottom: 1em;
+
+    .UserProfilePic {
       display: inline-block;
-      background-color: var(--assent);
-      border-radius: 50%;
-      height: 50px;
-      width: 50px;
-      margin-right: 2em;
+      background-color: var(--light-gray);
+      border-radius: 5px;
+      height: 100px;
+      width: 100px;
+      margin-bottom: 0.5em;
     }
 
-    .UserName {
+    p {
+      margin: 0;
+    }
+
+    .UserInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .UserFullName {
       text-transform: capitalize;
+      font-size: 0.95rem;
+    }
+    .UserRole {
+      font-size: 0.75rem;
+      padding: 0.3em 0.7em;
+      background: var(--magic-mint);
+      width: fit-content;
     }
   }
+}
+
+.ChangePassword {
+  max-width: 600px;
 }

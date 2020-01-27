@@ -40,8 +40,6 @@ const Nav = props => {
               </Link>
             </li>
           ) : null}
-
-          {/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
         </ul>
         <Dropdown trigger={<li className="nav-user"></li>}>
             <ul>

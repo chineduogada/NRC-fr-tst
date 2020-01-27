@@ -16,8 +16,12 @@ class Dropdown extends Component {
     this.hideDropdown = this.hideDropdown.bind(this);
   }
 
+  runDelay(newState, delay=100) {
+    setTimeout(() => this.setState(newState), delay);
+  }
+
   hideDropdown(event) {
-    this.setState({ drop: false });
+    this.runDelay({ drop: false });
   }
 
   handleClick(event) {
@@ -36,7 +40,7 @@ class Dropdown extends Component {
         </button>
 
         {/* Dropdown Items */}
-        <div className={`${classes.Items} ${drop ? classes.Drop : null}`} onClick={this.hideDropdown}>
+        <div className={`${classes.Items} ${drop ? classes.Drop : null}`} onClick={this.hideDropdow}>
           {this.props.children}
         </div>
       </div>
