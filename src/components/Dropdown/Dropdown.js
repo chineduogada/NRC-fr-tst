@@ -12,40 +12,26 @@ class Dropdown extends Component {
       parent: null
     };
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleParentClick = this.handleParentClick.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
-  componentDidMount() {
-    this.DropDown.parentElement.onclick = this.handleParentClick;
-    this.setState({ parent: this.DropDown.parentElement });
-  }
-
-  handleParentClick(event) {
-    event.stopPropagation();
-    this.setState({ drop: false });
-  }
-
-  handleClick(event) {
-    event.stopPropagation();
+  toggleDropdown(event) {
     this.setState({ drop: !this.state.drop });
   }
 
   render() {
     const { drop } = this.state;
-    console.log(drop);
     return (
       <div
         className={classes.Dropdown}
-        ref={dropdown => (this.DropDown = dropdown)}
       >
-        <button className={classes.Trigger} onClick={this.handleClick}>
+        <button className={classes.Trigger} onFocus={this.toggleDropdown} onBlur={this.toggleDropdown}>
           {this.props.trigger}
           <IoIosArrowDown className={classes.TriggerIcon} />
         </button>
 
         {/* Dropdown Items */}
-        <div className={`${classes.Items} ${drop ? classes.Drop : null}`}>
+        <div className={`${classes.Items} ${drop ? classes.Drop : null}`} onClick={this.toggleDropdown}>
           {this.props.children}
         </div>
       </div>

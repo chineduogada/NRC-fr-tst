@@ -14,6 +14,7 @@ const Nav = props => {
     <nav id="main-nav">
       {/* Logo */}
       {/* <Link to='/'><h1 id="logo">Teamwork</h1></Link> */}
+      <div></div>
 
       {/* Main Menu */}
       <div className="menu main-menu">
@@ -39,7 +40,10 @@ const Nav = props => {
               </Link>
             </li>
           ) : null}
-          <Dropdown trigger={<li className="user"></li>}>
+
+          {/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
+        </ul>
+        <Dropdown trigger={<li className="user"></li>}>
             <ul>
               <li>
                 <Link to="/profile">Profile</Link>
@@ -51,9 +55,6 @@ const Nav = props => {
               </li>
             </ul>
           </Dropdown>
-
-          {/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
-        </ul>
       </div>
     </nav>
   );

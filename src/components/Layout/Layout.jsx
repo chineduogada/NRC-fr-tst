@@ -37,7 +37,7 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
       {/* Aside */}
       <Aside />
       {/* Main Section */}
-      <div className='d-flex flex-column'>
+      <div className='d-flex flex-column' style={{ position: 'relative' }}>
         {/* Navigation */}
         <Nav triggerSignOut={signOutHandler} />
         <MainArea>
