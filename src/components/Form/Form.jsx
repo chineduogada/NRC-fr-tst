@@ -5,6 +5,7 @@ import Button from '../Button/Button';
 import Input from '../Input/Input';
 import Select from '../Select/Select';
 import TextArea from '../TextArea/TextArea';
+import './Form.scss';
 
 export default class Form extends Component {
   constructor(props) {

@@ -12,10 +12,19 @@ class Dropdown extends Component {
       parent: null
     };
 
-    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.hideDropdown = this.hideDropdown.bind(this);
   }
 
-  toggleDropdown(event) {
+  runDelay(newState, delay=100) {
+    setTimeout(() => this.setState(newState), delay);
+  }
+
+  hideDropdown(event) {
+    this.runDelay({ drop: false });
+  }
+
+  handleClick(event) {
     this.setState({ drop: !this.state.drop });
   }
 
@@ -25,13 +34,13 @@ class Dropdown extends Component {
       <div
         className={classes.Dropdown}
       >
-        <button className={classes.Trigger} onFocus={this.toggleDropdown} onBlur={this.toggleDropdown}>
+        <button className={classes.Trigger} onClick={this.handleClick} onBlur={this.hideDropdown}>
           {this.props.trigger}
           <IoIosArrowDown className={classes.TriggerIcon} />
         </button>
 
         {/* Dropdown Items */}
-        <div className={`${classes.Items} ${drop ? classes.Drop : null}`} onClick={this.toggleDropdown}>
+        <div className={`${classes.Items} ${drop ? classes.Drop : null}`} onClick={this.hideDropdow}>
           {this.props.children}
         </div>
       </div>

@@ -24,7 +24,7 @@ class Users extends Form {
 
       columns: [
         { accessor: 'fullName', Header: 'Name' },
-        { accessor: 'email', Header: 'Email' },
+        { accessor: 'userName', Header: 'Username' },
         { accessor: 'role', Header: 'Role' },
         { accessor: 'status', Header: 'Status' }
       ],
@@ -95,7 +95,7 @@ class Users extends Form {
     return {
       id: data.id,
       fullName: data.fullName,
-      email: data.email,
+      userName: data.userName,
       role: data.role,
       status: data.status
     };
@@ -217,14 +217,6 @@ class Users extends Form {
   renderUpdateForm() {
     return (
       <div className={classes.Preview}>
-        <div className={classes.Actions}>
-          <Button
-            label='delete'
-            danger
-            onClick={this.handleDelete}
-            disabled={this.state.isDeleteting}
-          />
-        </div>
         <form
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
@@ -294,7 +286,7 @@ class Users extends Form {
             ></TableView>
 
             <Modal
-              title='department'
+              title='user'
               openModal={this.state.showForm}
               onClose={this.closeSideDraw}
             >
