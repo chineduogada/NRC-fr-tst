@@ -29,7 +29,7 @@ nav .main-menu ul li {
   cursor: pointer;
   border: 1px solid transparent;
   transition: all 0.5s ease;
-  color: #222;
+  color: var(--text);
 }
 
 nav .main-menu ul li a {
@@ -70,9 +70,11 @@ nav .main-menu ul li:not(:last-child) {
   margin: 0 1em;
 }
 
-.user {
+.nav-user {
+  margin-left: 1em;
   height: 2em;
   width: 2em;
   background-color: var(--assent);
   border-radius: 50%;
+  list-style-type: none;
 }

@@ -11,26 +11,20 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
-import classes from './Users.module.scss';
+import classes from './UserProfile.module.scss';
 
-class Users extends Form {
+class UserProfile extends Form {
   constructor(props) {
     super(props);
 
     this.id = this.props.match.params.id;
 
+    console.log(props)
+
     this.state = {
       users: [],
 
-      columns: [
-        { accessor: 'fullName', Header: 'Name' },
-        { accessor: 'userName', Header: 'Username' },
-        { accessor: 'role', Header: 'Role' },
-        { accessor: 'status', Header: 'Status' }
-      ],
-
-      pageSize: 20,
-      currentPage: 1,
+      user: null,
 
       showForm: false,
 
@@ -43,10 +37,6 @@ class Users extends Form {
         cPassword: ''
       },
 
-      rowToPreview: null,
-
-      isDeleteting: false,
-
       errors: {}
     };
 
@@ -54,10 +44,7 @@ class Users extends Form {
 
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
-    this.handleRowClick = this.handleRowClick.bind(this);
     this.addUser = this.addUser.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
   schema = {
@@ -69,7 +56,7 @@ class Users extends Form {
     cPassword: Joi.string()
   };
 
-  async componentDidMount() {
+  async fetchUserViaAPI() {
     const users = [];
 
     const res = await httpService.get('/user');
@@ -81,6 +68,10 @@ class Users extends Form {
     }
 
     this.setState({ users });
+  }
+
+  async componentDidMount() {
+    this.fetchUserViaAPI()
   }
 
   handleAddNew(e) {
@@ -95,17 +86,11 @@ class Users extends Form {
     return {
       id: data.id,
       fullName: data.fullName,
-      userName: data.userName,
+      email: data.email,
       role: data.role,
       status: data.status
     };
   }
-
-  handlePageChange = page => {
-    if (page) {
-      this.setState({ currentPage: page });
-    }
-  };
 
   handleRowClick(event) {
     if (event.detail > 1) {
@@ -119,12 +104,6 @@ class Users extends Form {
         formData: _.pick(rowToPreview, ['fullName', 'role', 'email', 'status'])
       });
     }
-  }
-
-  updateUserList(res) {
-    const newDept = res.data.data;
-
-    this.setState({ users: [...this.state.users, newDept] });
   }
 
   resetFormData() {
@@ -158,36 +137,6 @@ class Users extends Form {
     }
   }
 
-  removeTableRow() {
-    const oldState = [...this.state.users];
-    let rowIndex = oldState.findIndex(
-      row => row.id === this.state.rowToPreview.id
-    );
-
-    oldState.splice(rowIndex, 1);
-
-    this.setState({ users: oldState });
-  }
-
-  async handleDelete(event) {
-    if (!this.state.isDeleteting) {
-      this.setState({ isDeleteting: true });
-
-      const res = await httpService.delete(
-        `/user/${this.state.rowToPreview.id}`
-      );
-
-      if (res) {
-        toast.success('User successfully deleted!');
-        this.removeTableRow();
-        this.updateForm.reset();
-        this.resetFormData();
-        this.closeSideDraw();
-        this.setState({ isDeleteting: false });
-      }
-    }
-  }
-
   async addUser(stopProcessing) {
     // const res = await httpService.post('/user', this.state.formData);
 
@@ -199,7 +148,6 @@ class Users extends Form {
 
     if (res) {
       toast.success('Working in progress. Please, kindly check back.');
-      // this.updateUserList(res);
       this.Form.reset();
       this.resetFormData();
       this.closeSideDraw();
@@ -212,32 +160,6 @@ class Users extends Form {
     }
 
     this.addUser(stopProcessing);
-  }
-
-  renderUpdateForm() {
-    return (
-      <div className={classes.Preview}>
-        <form
-          ref={form => (this.updateForm = form)}
-          onSubmit={this.handleSubmit}
-        >
-          {this.renderInput(
-            'full name',
-            'fullName',
-            null,
-            this.state.rowToPreview.fullName
-          )}
-          {this.renderInput(
-            'description',
-            'description',
-            null,
-            this.state.rowToPreview.description
-          )}
-
-          {this.renderButton('update')}
-        </form>
-      </div>
-    );
   }
 
   renderDepartmentForm() {
@@ -275,18 +197,15 @@ class Users extends Form {
     return (
       <React.Fragment>
         {this.state.users ? (
-          <Section>
-            <TableView
-              title='manage users'
-              message='Double click a row to preview'
-              columns={columns}
-              data={users}
-              clickHandler={this.handleRowClick}
-              addNewButtonHandler={this.handleAddNew}
-            ></TableView>
-
+          <Section title='profile'>
+            <div className={classes.UserProfile}>
+              <div className={classes.UserProfilePic}>
+                <img src='' alt='user-profile-picture' />
+              </div>
+              <p className={classes.UserFullName}>full name here</p>
+            </div>
             <Modal
-              title='user'
+              title=''
               openModal={this.state.showForm}
               onClose={this.closeSideDraw}
             >
@@ -303,4 +222,4 @@ class Users extends Form {
   }
 }
 
-export default withRouter(Users);
+export default withRouter(UserProfile);
