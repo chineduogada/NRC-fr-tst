@@ -5,7 +5,7 @@ const propFinder = (obj, props) => {
 };
 
 const mapper = (obj, keys) => {
-  const props = keys.split('.');
+  const props = keys.split(".");
   let prop;
 
   if (props.length > 1) {

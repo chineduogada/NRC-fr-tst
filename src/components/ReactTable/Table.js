@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   useTable,
   useSortBy,
   useFilters,
   useGlobalFilter,
   usePagination
-} from 'react-table';
-import matchSorter from 'match-sorter';
-import { truncateCellValue } from '../../helpers/strings';
-import classes from './Table.module.scss';
+} from "react-table";
+import matchSorter from "match-sorter";
+import { truncateCellValue } from "../../helpers/strings";
+import classes from "./Table.module.scss";
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -19,9 +19,9 @@ function GlobalFilter({
 
   return (
     <span>
-      Search:{' '}
+      Search:{" "}
       <input
-        value={globalFilter || ''}
+        value={globalFilter || ""}
         onChange={e => {
           e.stopPropagation();
           e.bubbles = false;
@@ -29,7 +29,7 @@ function GlobalFilter({
         }}
         placeholder={`${count} records...`}
         style={{
-          border: '0'
+          border: "0"
         }}
       />
     </span>
@@ -44,7 +44,7 @@ function DefaultColumnFilter({
 
   return (
     <input
-      value={filterValue || ''}
+      value={filterValue || ""}
       onChange={e => {
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
       }}
@@ -142,11 +142,11 @@ function NumberRangeColumnFilter({
   return (
     <div
       style={{
-        display: 'flex'
+        display: "flex"
       }}
     >
       <input
-        value={filterValue[0] || ''}
+        value={filterValue[0] || ""}
         type="number"
         onChange={e => {
           e.stopPropagation();
@@ -158,13 +158,13 @@ function NumberRangeColumnFilter({
         }}
         placeholder={`Min (${min})`}
         style={{
-          width: '70px',
-          marginRight: '0.5rem'
+          width: "70px",
+          marginRight: "0.5rem"
         }}
       />
       to
       <input
-        value={filterValue[1] || ''}
+        value={filterValue[1] || ""}
         type="number"
         onChange={e => {
           e.stopPropagation();
@@ -176,8 +176,8 @@ function NumberRangeColumnFilter({
         }}
         placeholder={`Max (${max})`}
         style={{
-          width: '70px',
-          marginLeft: '0.5rem'
+          width: "70px",
+          marginLeft: "0.5rem"
         }}
       />
     </div>
@@ -258,28 +258,25 @@ function Table({ columns, data, clickHandler }) {
     return (
       <div className={classes.Pagination}>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
+          {"<<"}
+        </button>{" "}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
+          {"<"}
+        </button>{" "}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-        >
-          {'>>'}
-        </button>{' '}
+          {">"}
+        </button>{" "}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {">>"}
+        </button>{" "}
         <span>
-          Page{' '}
+          Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          </strong>{" "}
         </span>
         <span>
-          | Go to page:{' '}
+          | Go to page:{" "}
           <input
             type="number"
             defaultValue={pageIndex + 1}
@@ -287,9 +284,9 @@ function Table({ columns, data, clickHandler }) {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
               gotoPage(page);
             }}
-            style={{ width: '100px' }}
+            style={{ width: "100px" }}
           />
-        </span>{' '}
+        </span>{" "}
         <select
           value={pageSize}
           onChange={e => {
@@ -302,14 +299,15 @@ function Table({ columns, data, clickHandler }) {
             </option>
           ))}
         </select>
-      </div>);
-  }
+      </div>
+    );
+  };
 
   // Render the UI for your table
   return (
     <>
-       {renderPagination()}
-        <div className={classes.TableWrapper}>
+      {renderPagination()}
+      <div className={classes.TableWrapper}>
         <table className={classes.Table} {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup, i) => (
@@ -319,14 +317,14 @@ function Table({ columns, data, clickHandler }) {
                     <th
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                     >
-                      {column.render('Header')}
+                      {column.render("Header")}
                       {/* Add a sort direction indicator */}
                       <span>
                         {column.isSorted
                           ? column.isSortedDesc
-                            ? ' 🔽'
-                            : ' 🔼'
-                          : ''}
+                            ? " 🔽"
+                            : " 🔼"
+                          : ""}
                       </span>
                     </th>
                   ))}
@@ -341,7 +339,7 @@ function Table({ columns, data, clickHandler }) {
                       {null}
                       {/* Render the columns filter UI */}
                       <div>
-                        {column.canFilter ? column.render('Filter') : null}
+                        {column.canFilter ? column.render("Filter") : null}
                       </div>
                     </th>
                   ))}
@@ -366,7 +364,7 @@ function Table({ columns, data, clickHandler }) {
                   {row.cells.map(cell => {
                     return (
                       <td {...cell.getCellProps()}>
-                        {truncateCellValue(cell.render('Cell'))}
+                        {truncateCellValue(cell.render("Cell"))}
                       </td>
                     );
                   })}

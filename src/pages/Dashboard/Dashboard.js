@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { IoIosAdd } from 'react-icons/io';
-import getCredentials from '../../services/Credentials';
-import httpService from '../../services/httpService';
-import Section from '../../hoc/Section/Section';
-import BasicDataCard from '../../components/DataCards/BasicDataCard/BasicDataCard';
-import SimpleLineChart from '../../components/Charts/SimpleLineChart/SimpleLineChart';
-import classes from './Dashboard.module.scss';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { IoIosAdd } from "react-icons/io";
+import getCredentials from "../../services/Credentials";
+import httpService from "../../services/httpService";
+import Section from "../../hoc/Section/Section";
+import BasicDataCard from "../../components/DataCards/BasicDataCard/BasicDataCard";
+import SimpleLineChart from "../../components/Charts/SimpleLineChart/SimpleLineChart";
+import classes from "./Dashboard.module.scss";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -15,53 +15,53 @@ export default class Dashboard extends Component {
       basicSummary: {
         numEmployees: {
           data: null,
-          text: 'Employees',
-          url: '/employee',
-          addNew: '/employee/new'
+          text: "Employees",
+          url: "/employee",
+          addNew: "/employee/new"
         },
         numDepartments: {
           data: null,
-          text: 'Departments',
-          url: '/departments',
-          addNew: '/departments?new'
+          text: "Departments",
+          url: "/departments",
+          addNew: "/departments?new"
         },
         numTrainingSchedules: {
           data: null,
-          text: 'Training Schedules',
-          url: '/training-schedules',
-          addNew: '/training-schedules?new'
+          text: "Training Schedules",
+          url: "/training-schedules",
+          addNew: "/training-schedules?new"
         },
         numJobIncidence: {
           data: null,
-          text: 'Job Incidence',
-          url: '/job-incidence',
-          addNew: '/job-incidence?new'
+          text: "Job Incidence",
+          url: "/job-incidence",
+          addNew: "/job-incidence?new"
         }
       },
 
-      chart: '',
+      chart: "",
 
       data: [
-        { name: 'Page A', uv: 400, pv: 2400, amt: 2400 },
-        { name: 'Page A', uv: 400, pv: 2400, amt: 2400 }
+        { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
+        { name: "Page A", uv: 400, pv: 2400, amt: 2400 }
       ]
     };
   }
 
   fetchEmployees() {
-    return httpService.get('/employee');
+    return httpService.get("/employee");
   }
 
   fetchDepartments() {
-    return httpService.get('/departments');
+    return httpService.get("/departments");
   }
 
   fetchTrainingSchedules() {
-    return httpService.get('/job-types');
+    return httpService.get("/job-types");
   }
 
   fetchJobIncidence() {
-    return httpService.get('/blood-groups');
+    return httpService.get("/blood-groups");
   }
 
   async setNumEmployee({ data }) {
@@ -110,14 +110,15 @@ export default class Dashboard extends Component {
   }
 
   async componentDidMount() {
-    const [employees, dept, trainingSch, incidence] = await httpService.all([
-      this.fetchEmployees(),
-      this.fetchDepartments(),
-      this.fetchTrainingSchedules(),
-      this.fetchJobIncidence()
-    ]);
+    const employees = await this.fetchEmployees();
 
     if (employees) {
+      const [dept, trainingSch, incidence] = await httpService.all([
+        this.fetchDepartments(),
+        this.fetchTrainingSchedules(),
+        this.fetchJobIncidence()
+      ]);
+
       this.setNumEmployee(employees);
       this.setNumDept(dept);
       this.setNumTrainingSchedules(trainingSch);
