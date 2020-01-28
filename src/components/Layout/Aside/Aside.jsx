@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 import {
   IoMdHome,
   IoIosMan,
@@ -7,114 +7,90 @@ import {
   IoIosSchool,
   IoMdMedal,
   IoIosCalendar
-} from 'react-icons/io';
-import classes from './Aside.module.scss';
+} from "react-icons/io";
+import classes from "./Aside.module.scss";
 
-const Aside = props => (
-  <aside className={classes.Aside}>
-    <div className={classes.Brand}>
-      <h1>
-        <span>N R C</span> - HR
-      </h1>
-    </div>
+const Aside = ({ currentTab, onAsideTabChange }) => {
+  const tabs = [
+    {
+      path: "/",
+      label: "dashboard",
+      icon: <IoMdHome className="icon" />
+    },
+    {
+      path: "/employee",
+      label: "employees",
+      icon: <IoIosMan className="icon" />
+    },
+    {
+      path: "/departments",
+      label: "departments",
+      icon: <IoIosContacts className="icon" />
+    },
+    {
+      path: "/training-schedules",
+      label: "training schedules",
+      icon: <IoIosCalendar className="icon" />
+    },
+    {
+      path: "/training-records",
+      label: "training records",
+      icon: <IoMdHome className="icon" />
+    },
+    {
+      path: "/successions",
+      label: "successions",
+      icon: <IoMdMedal className="icon" />
+    },
+    {
+      path: "/career",
+      label: "career",
+      icon: <IoIosSchool className="icon" />
+    },
+    { key: 1 },
+    {
+      path: "/job-incidence",
+      label: "job incidence",
+      icon: <IoMdHome className="icon" />
+    },
+    { path: "/reports", label: "reports", icon: <IoMdHome className="icon" /> }
+  ];
+  const getClass = tab => (currentTab === tab ? classes.Active : null);
 
-    <div className={classes.Menu}>
-      <ul>
-        <li className={classes.Active}>
-          <Link to='/'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
-            </span>
-            <span>Dashboard</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/employee'>
-            <span className='icon'>
-              <IoIosMan className='icon' />
-            </span>
-            <span>Employee</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/departments'>
-            <span className='icon'>
-              <IoIosContacts className='icon' />
-            </span>
-            <span>department</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/training-schedules'>
-            <span className='icon'>
-              <IoIosCalendar className='icon' />
-            </span>
-            <span>Training Schedules</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/training-records'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
-            </span>
-            <span>Training Records</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/successions'>
-            <span className='icon'>
-              <IoMdMedal className='icon' />
-            </span>
-            <span>Successions</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/careers'>
-            <span className='icon'>
-              <IoIosSchool className='icon' />
-            </span>
-            <span>Careers</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/job-incidence'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
-            </span>
-            <span>Job Incedence</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/reports'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
-            </span>
-            <span>Reports</span>
-          </Link>
-        </li>
+  return (
+    <aside className={classes.Aside}>
+      <div className={classes.Brand}>
+        <h1>
+          <span>N R C</span> - HR
+        </h1>
+      </div>
 
-        <br />
-        <br />
-
-        <li className={classes}>
-          <Link to='/job-incidence'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
-            </span>
-            <span>preferences</span>
-          </Link>
-        </li>
-        <li className={classes}>
-          <Link to='/reports'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
-            </span>
-            <span>support</span>
-          </Link>
-        </li>
-      </ul>
-    </div>
-  </aside>
-);
+      <div className={classes.Menu}>
+        <ul>
+          {tabs.map(tab => {
+            return tab.path ? (
+              <li
+                key={tab.path + tab.label}
+                className={getClass(tab.label)}
+                onClick={onAsideTabChange.bind(null, tab.label)}
+              >
+                <Link to={tab.path}>
+                  <span className="icon">{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </Link>
+              </li>
+            ) : (
+              <React.Fragment key={tab.key}>
+                <br />
+                <br />
+              </React.Fragment>
+            );
+          })}
+          
+        </ul>
+      </div>
+    </aside>
+  );
+};
 
 export default Aside;

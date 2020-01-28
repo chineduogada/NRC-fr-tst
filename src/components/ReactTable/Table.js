@@ -1,8 +1,8 @@
-import React from 'react';
-import { useTable, useSortBy, useFilters, useGlobalFilter } from 'react-table';
-import matchSorter from 'match-sorter';
-import { Link } from 'react-router-dom';
-import classes from './Table.module.scss';
+import React from "react";
+import { useTable, useSortBy, useFilters, useGlobalFilter } from "react-table";
+import matchSorter from "match-sorter";
+import { Link } from "react-router-dom";
+import classes from "./Table.module.scss";
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -13,9 +13,9 @@ function GlobalFilter({
 
   return (
     <span>
-      Search:{' '}
+      Search:{" "}
       <input
-        value={globalFilter || ''}
+        value={globalFilter || ""}
         onChange={e => {
           e.stopPropagation();
           e.bubbles = false;
@@ -23,7 +23,7 @@ function GlobalFilter({
         }}
         placeholder={`${count} records...`}
         style={{
-          border: '0'
+          border: "0"
         }}
       />
     </span>
@@ -38,7 +38,7 @@ function DefaultColumnFilter({
 
   return (
     <input
-      value={filterValue || ''}
+      value={filterValue || ""}
       onChange={e => {
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
       }}
@@ -136,11 +136,11 @@ function NumberRangeColumnFilter({
   return (
     <div
       style={{
-        display: 'flex'
+        display: "flex"
       }}
     >
       <input
-        value={filterValue[0] || ''}
+        value={filterValue[0] || ""}
         type="number"
         onChange={e => {
           e.stopPropagation();
@@ -152,13 +152,13 @@ function NumberRangeColumnFilter({
         }}
         placeholder={`Min (${min})`}
         style={{
-          width: '70px',
-          marginRight: '0.5rem'
+          width: "70px",
+          marginRight: "0.5rem"
         }}
       />
       to
       <input
-        value={filterValue[1] || ''}
+        value={filterValue[1] || ""}
         type="number"
         onChange={e => {
           e.stopPropagation();
@@ -170,8 +170,8 @@ function NumberRangeColumnFilter({
         }}
         placeholder={`Max (${max})`}
         style={{
-          width: '70px',
-          marginLeft: '0.5rem'
+          width: "70px",
+          marginLeft: "0.5rem"
         }}
       />
     </div>
@@ -247,14 +247,14 @@ function Table({ columns, data, clickHandler }) {
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Header')}
+                    {column.render("Header")}
                     {/* Add a sort direction indicator */}
                     <span>
                       {column.isSorted
                         ? column.isSortedDesc
-                          ? ' 🔽'
-                          : ' 🔼'
-                        : ''}
+                          ? " 🔽"
+                          : " 🔼"
+                        : ""}
                     </span>
                   </th>
                 ))}
@@ -269,7 +269,7 @@ function Table({ columns, data, clickHandler }) {
                     {null}
                     {/* Render the columns filter UI */}
                     <div>
-                      {column.canFilter ? column.render('Filter') : null}
+                      {column.canFilter ? column.render("Filter") : null}
                     </div>
                   </th>
                 ))}
@@ -293,7 +293,7 @@ function Table({ columns, data, clickHandler }) {
               >
                 {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   );
                 })}
               </tr>

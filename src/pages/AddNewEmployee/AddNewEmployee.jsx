@@ -87,59 +87,6 @@ export default class AddNewEmployee extends Form {
     countryOptions: []
   };
 
-  async componentDidMount() {
-    const [
-      departments,
-      districts,
-      bloodGroups,
-      jobTypes,
-      jobTitles,
-      jobGrades,
-      pfa,
-      gpz,
-      maritalStatuses,
-      senatorialDistricts,
-      states,
-      lga,
-      countries
-    ] = await httpService.all([
-      httpService.get("/departments"),
-      httpService.get("/districts"),
-      httpService.get("/blood-groups"),
-      httpService.get("/job-types"),
-      httpService.get("/job-titles"),
-      httpService.get("/job-grades"),
-      httpService.get("/pfa"),
-      httpService.get("/gpz"),
-      httpService.get("/marital-statuses"),
-      httpService.get("/senatorial-districts"),
-      httpService.get("/states"),
-      httpService.get("/lga"),
-      httpService.get("/countries")
-    ]);
-
-    if (departments) {
-      this.setState({
-        departmentOptions: nameMapper(departments.data.data, "description"),
-        districtOptions: nameMapper(districts.data.data, "siteName"),
-        bloodGroupOptions: nameMapper(bloodGroups.data.data, "type"),
-        jobTypeOptions: nameMapper(jobTypes.data.data, "type"),
-        jobTitleOptions: nameMapper(jobTitles.data.data, "description"),
-        jobGradeOptions: nameMapper(jobGrades.data.data, "conpss"),
-        pfaOptions: nameMapper(pfa.data.data, "name"),
-        gpzOptions: nameMapper(gpz.data.data, "name"),
-        lgaOptions: nameMapper(lga.data.data, "lga"),
-        maritalStatusOptions: nameMapper(maritalStatuses.data.data, "status"),
-        senatorialDistrictOptions: nameMapper(
-          senatorialDistricts.data.data,
-          "name"
-        ),
-        stateOptions: nameMapper(states.data.data, "state"),
-        countryOptions: nameMapper(countries.data.data, "country")
-      });
-    }
-  }
-
   schema = {
     // BASIC INFORMATION SCHEMA
     ippisNo: Joi.number(),
@@ -209,6 +156,59 @@ export default class AddNewEmployee extends Form {
     if (res) {
       toast.success("Employee successfully registered!");
       this.Form.reset();
+    }
+  }
+
+  async componentDidMount() {
+    const departments = await httpService.get("/departments");
+
+    if (departments) {
+      const [
+        districts,
+        bloodGroups,
+        jobTypes,
+        jobTitles,
+        jobGrades,
+        pfa,
+        gpz,
+        maritalStatuses,
+        senatorialDistricts,
+        states,
+        lga,
+        countries
+      ] = await httpService.all([
+        httpService.get("/districts"),
+        httpService.get("/blood-groups"),
+        httpService.get("/job-types"),
+        httpService.get("/job-titles"),
+        httpService.get("/job-grades"),
+        httpService.get("/pfa"),
+        httpService.get("/gpz"),
+        httpService.get("/marital-statuses"),
+        httpService.get("/senatorial-districts"),
+        httpService.get("/states"),
+        httpService.get("/lga"),
+        httpService.get("/countries")
+      ]);
+
+      this.setState({
+        departmentOptions: nameMapper(departments.data.data, "description"),
+        districtOptions: nameMapper(districts.data.data, "siteName"),
+        bloodGroupOptions: nameMapper(bloodGroups.data.data, "type"),
+        jobTypeOptions: nameMapper(jobTypes.data.data, "type"),
+        jobTitleOptions: nameMapper(jobTitles.data.data, "description"),
+        jobGradeOptions: nameMapper(jobGrades.data.data, "conpss"),
+        pfaOptions: nameMapper(pfa.data.data, "name"),
+        gpzOptions: nameMapper(gpz.data.data, "name"),
+        lgaOptions: nameMapper(lga.data.data, "lga"),
+        maritalStatusOptions: nameMapper(maritalStatuses.data.data, "status"),
+        senatorialDistrictOptions: nameMapper(
+          senatorialDistricts.data.data,
+          "name"
+        ),
+        stateOptions: nameMapper(states.data.data, "state"),
+        countryOptions: nameMapper(countries.data.data, "country")
+      });
     }
   }
 

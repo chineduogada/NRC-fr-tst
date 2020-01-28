@@ -5,7 +5,7 @@ const propFinder = (obj, props) => {
 };
 
 const mapper = (obj, keys) => {
-  const props = keys.split('.');
+  const props = keys.split(".");
   let prop;
 
   if (props.length > 1) {
@@ -25,34 +25,3 @@ const nameMapper = (array, key) => {
 };
 
 export default nameMapper;
-
-// Array of departments fetched from the API
-const departments = [
-  {
-    id: 5,
-    description: {
-      type: 'finance'
-    },
-    code: 'FIN'
-  },
-  {
-    id: 4,
-    description: {
-      type: 'support'
-    },
-    code: 'CS'
-  }
-];
-
-// A mock of your "renderSelect method"
-const renderSelect = (label, name, options) => {
-  console.log(options);
-};
-
-// EXAMPLES: (Utilizing the "nameMapper" helper function)
-renderSelect('label', 'sjdsk', nameMapper(departments, 'description.type'));
-renderSelect('label', 'sjdsk', nameMapper(departments, 'description.type'));
-
-// **** Console logs from the "renderSelect" function **** //
-// [ { id: 5, name: 'finance' }, { id: 4, name: 'support' } ]
-// [ { id: 5, name: 'finance' }, { id: 4, name: 'support' } ]
