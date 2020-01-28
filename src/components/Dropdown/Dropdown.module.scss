@@ -15,37 +15,69 @@
 .Items {
   position: absolute;
   top: 100%;
-  left: 0;
-  transform: translate(0%, 100%);
-  min-width: 200px;
+  right: 0;
+  transform: translate(0%, 50%);
+  min-width: 150px;
   padding: 0.5em 0;
-  background-color: #fff;
+  background-color: var(--inverse-text);
+  box-shadow: -3px 5px 20px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: all 0.3s ease;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+
+  &, &::before {
+    border-radius: 2px;
+  }
+
+  &::before {
+    content: '';
+    height: 10px;
+    width: 10px;
+    background-color: var(--inverse-text);
+    position: absolute;
+    top: -5%;
+    right: 5%;
+    transform: rotate(45deg);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.2);
+    border-left: 0.5px solid rgba(0, 0, 0, 0.2);
+  }
+
+  > ul {
+    display: block !important;
+
+    li {
+      margin-right: 0 !important;
+    }
+
+  a {
+      display: block;
+      font-weight: 100 !important;
+    }
+
+    li:hover, a:hover {
+      color: var(--inverse-text) !important;
+      background: var(--basic-color);
+    }
+
+  }
+
+  &.Drop {
+    opacity: 1;
+    transform: translate(0%, 20%);
+    visibility: visible;
+  }
 }
 
-/* .MenuIcon {
-  position: relative;
-}
+.Trigger {
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 
-.MenuIcon, .MenuIcon::before, .MenuIcon::after {
-  height: 5px;
-  width: 5px;
-  background-color: #444;
-  border-radius: 50%;
+  &:focus {
+    border: none;
+    outline: none;
+  }
 }
-
-.MenuIcon:hover, .MenuIcon:hover::before, .MenuIcon:hover::after {
-  background-color: rgb(4, 184, 207);
-}
-
-.MenuIcon::before, .MenuIcon::after {
-  content: '';
-  position: absolute;
-}
-
-.MenuIcon::before {
-  transform: translateX(120%);
-}
-
-.MenuIcon::after {
-  transform: translateX(240%);
-} */
