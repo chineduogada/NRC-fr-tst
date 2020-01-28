@@ -12,7 +12,17 @@
   transform: scale(1);
 }
 
-.MenuIcon {
+.Items {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: translate(0%, 100%);
+  min-width: 200px;
+  padding: 0.5em 0;
+  background-color: #fff;
+}
+
+/* .MenuIcon {
   position: relative;
 }
 
@@ -38,4 +48,4 @@
 
 .MenuIcon::after {
   transform: translateX(240%);
-}
+} */

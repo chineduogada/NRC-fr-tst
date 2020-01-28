@@ -155,7 +155,7 @@ class Career extends Form {
   }
 
   async updateDatabase() {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/careers/${this.id}`,
       this.state.formData
     );
@@ -247,28 +247,28 @@ class Career extends Form {
     return (
       <React.Fragment>
         {dataForView ? (
-          <Section title="career">
+          <Section title='career'>
             <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button label="update" fill onClick={this.handleUpdateBtnClick} />
-              <Button label="delete" danger onClick={this.handleDelete} />
+              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
+              <Button label='delete' danger onClick={this.handleDelete} />
               <Button
-                label="view employee"
+                label='view employee'
                 plain
                 onClick={this.handleViewEmployee}
                 id={dataForForm.ippisNo}
               />
             </div>
 
-            <InformationBlock title="basic">
+            <InformationBlock title='basic'>
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
-            <InformationBlock title="remark">
+            <InformationBlock title='remark'>
               {dataForForm.remarks}
             </InformationBlock>
 
             <SideDraw
-              title="Career"
+              title='Career'
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -276,14 +276,14 @@ class Career extends Form {
             </SideDraw>
 
             <Modal
-              title="delete career record"
+              title='delete career record'
               openModal={showModal}
               onClose={this.closeModal}
             >
               <p>This operation can not be reversed. Proceed?</p>
               <div className={`${classes.Actions} ${classes.Right}`}>
                 <Button
-                  label="proceed"
+                  label='proceed'
                   danger
                   onClick={this.handleProceedDelete}
                   disabled={this.state.isDeleteting}
@@ -292,7 +292,7 @@ class Career extends Form {
             </Modal>
           </Section>
         ) : (
-          <Loader message="please wait" />
+          <Loader message='please wait' />
         )}
       </React.Fragment>
     );

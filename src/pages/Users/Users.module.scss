@@ -1,0 +1,26 @@
+.User {
+  background-color: var(--inverse-text);
+  width: 100%;
+  max-width: 700px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0.5em;
+
+  .UserImageAndName {
+    justify-content: center;
+    align-items: center;
+    .UserImage {
+      display: inline-block;
+      background-color: var(--assent);
+      border-radius: 50%;
+      height: 50px;
+      width: 50px;
+      margin-right: 2em;
+    }
+
+    .UserName {
+      text-transform: capitalize;
+    }
+  }
+}

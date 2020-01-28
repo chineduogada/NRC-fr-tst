@@ -1,15 +1,17 @@
 import React from 'react';
-import classes from './Dropdown.module.css';
-import DropdownItems from './DropdownItems/DropdownItems';
+import classes from './Dropdown.module.scss';
+// import DropdownItems from './DropdownItems/DropdownItems';
+import { IoIosArrowDropdown } from 'react-icons/io';
 
-const dropdown = (props) => {
-
+const dropdown = props => {
   return (
     <div className={classes.Dropdown}>
-      <div className={classes.MenuIcon}></div>
+      <div className={classes.MenuIcon}>
+        {props.trigger} <IoIosArrowDropdown />
+      </div>
 
       {/* Dropdown Items */}
-      <DropdownItems augmentedClassName={classes.MenuItems} items={props.items} />
+      <div className={classes.Items}>{props.children}</div>
     </div>
   );
 };

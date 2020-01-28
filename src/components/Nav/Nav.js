@@ -3,6 +3,7 @@ import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
 import { MdApps } from 'react-icons/md';
 import getCredentials from '../../services/Credentials';
 import { Link } from 'react-router-dom';
+import Dropdown from '../Dropdown/Dropdown';
 import './Nav.scss';
 
 // Navigation
@@ -38,11 +39,21 @@ const Nav = props => {
               </Link>
             </li>
           ) : null}
-          <li className='user'>
-            <Link onClick={props.triggerSignOut} to='/'>
-              {/* Logout */}
-            </Link>
-          </li>
+          <Dropdown trigger={<li className='user'></li>}>
+            <ul>
+              <li>
+                <Link onClick={props.triggerSignOut} to='/'>
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <Link onClick={props.triggerSignOut} to='/'>
+                  Logout
+                </Link>
+              </li>
+            </ul>
+          </Dropdown>
+
           {/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
         </ul>
       </div>
