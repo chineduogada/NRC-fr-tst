@@ -1,3 +1,5 @@
+@import "../../../partials/animations/animation";
+
 .BasicDataCard {
   height: 200px;
   background-color: #fff;
@@ -5,7 +7,6 @@
   display: grid;
   grid-template-rows: auto 30%;
   overflow: hidden;
-  cursor: pointer;
   transition: all 0.5s ease-out;
   position: relative;
   box-shadow: 0 7px 30px #550fb144;
@@ -15,15 +16,24 @@
   }
 
   .LinkIcon {
-    background-color: #fff !important;
+    background-color: var(--line-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
     position: absolute;
     right: 1em;
     top: 1em;
     font-size: 1.2em;
-    color: var(--gray);
 
     a {
       color: var(--dogwood-rose);
+      animation: shake 3s ease infinite;
+    }
+
+    &:hover {
+      animation-duration: 5s;
     }
   }
 

@@ -9,6 +9,7 @@ import {
   IoIosCalendar
 } from "react-icons/io";
 import classes from "./Aside.module.scss";
+import { Tooltip } from "@material-ui/core";
 
 const Aside = ({ currentTab, onAsideTabChange }) => {
   const tabs = [
@@ -69,16 +70,17 @@ const Aside = ({ currentTab, onAsideTabChange }) => {
         <ul>
           {tabs.map(tab => {
             return tab.path ? (
-              <li
-                key={tab.path + tab.label}
-                className={getClass(tab.label)}
-                onClick={onAsideTabChange.bind(null, tab.label)}
-              >
-                <Link to={tab.path}>
-                  <span className="icon">{tab.icon}</span>
-                  <span>{tab.label}</span>
-                </Link>
-              </li>
+              <Tooltip title={tab.label} key={tab.path + tab.label}>
+                <li
+                  className={getClass(tab.label)}
+                  onClick={onAsideTabChange.bind(null, tab.label)}
+                >
+                  <Link to={tab.path}>
+                    <span className="icon">{tab.icon}</span>
+                    <span>{tab.label}</span>
+                  </Link>
+                </li>
+              </Tooltip>
             ) : (
               <React.Fragment key={tab.key}>
                 <br />

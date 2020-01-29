@@ -1,8 +1,9 @@
-import React from 'react';
-import { IoIosLink } from 'react-icons/io';
-import { Link } from 'react-router-dom';
-import Loader from '../../../components/Loader/Loader';
-import classes from './BasicDataCard.module.scss';
+import React from "react";
+import { IoIosLink } from "react-icons/io";
+import { Link } from "react-router-dom";
+import Loader from "../../../components/Loader/Loader";
+import classes from "./BasicDataCard.module.scss";
+import { Tooltip } from "@material-ui/core";
 
 const BasicDataCard = ({ data, text, url, footer }) => {
   return (
@@ -20,9 +21,11 @@ const BasicDataCard = ({ data, text, url, footer }) => {
       <div className={classes.Footer}>{footer}</div>
 
       <span className={classes.LinkIcon}>
-        <Link to={url}>
-          <IoIosLink />
-        </Link>
+        <Tooltip title={`go to ${text}`}>
+          <Link to={url}>
+            <IoIosLink />
+          </Link>
+        </Tooltip>
       </span>
     </div>
   );

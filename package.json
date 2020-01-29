@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@hapi/joi": "^17.1.0",
-    "@material-ui/core": "^4.8.3",
+    "@material-ui/core": "^4.9.0",
     "@material/data-table": "^4.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
