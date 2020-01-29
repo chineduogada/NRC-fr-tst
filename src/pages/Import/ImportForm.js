@@ -1,7 +1,8 @@
 import React from 'react';
+import { toast } from 'react-toastify';
+import httpService from '../../services/httpService';
 import Form from '../../components/Form/Form';
 import Schema from './JoiSchema';
-import { toast } from 'react-toastify';
 
 export default class ImportForm extends Form {
   constructor(props) {
@@ -19,10 +20,16 @@ export default class ImportForm extends Form {
   schema = Schema;
 
   async doSubmit(event) {
-    setTimeout(() => {
-      toast.success('Work in progress. Kindly check back. Thanks');
+    const formData = new FormData();
+    formData.append('resource', this.state.formData.resource);
+    formData.append('file', this.state.formData.file);
+    const res = await httpService.post('/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    if (res) {
+      toast.success('Import successful');
       this.stopProcessing();
-    }, 2000);
+    }
   }
 
   render() {
