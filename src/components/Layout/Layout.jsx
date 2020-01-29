@@ -21,6 +21,8 @@ import Career from '../../pages/Career/Career';
 import AllJobIncidence from '../../pages/AllJobIncidence/AllJobIncidence';
 import JobIncidence from '../../pages/JobIncidence/JobIncidence';
 import Import from '../../pages/Import/Import';
+import Users from '../../pages/Users/Users';
+import UserProfile from '../../pages/UserProfile/UserProfile';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -36,7 +38,7 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
       {/* Aside */}
       <Aside />
       {/* Main Section */}
-      <div className='d-flex flex-column'>
+      <div className='d-flex flex-column' style={{ position: 'relative' }}>
         {/* Navigation */}
         <Nav triggerSignOut={signOutHandler} />
         <MainArea>
@@ -72,6 +74,8 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path='/job-incidence' exact component={AllJobIncidence} />
             <Route path='/job-incidence/:id' exact component={JobIncidence} />
             <Route path='/import' exact component={Import} />
+            <Route path='/users' exact component={Users} />
+            <Route path='/profile' exact component={UserProfile} />
           </Switch>
         </MainArea>
       </div>

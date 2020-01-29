@@ -155,7 +155,7 @@ class Career extends Form {
   }
 
   async updateDatabase() {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/careers/${this.id}`,
       this.state.formData
     );

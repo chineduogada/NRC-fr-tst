@@ -5,6 +5,7 @@ import Button from '../Button/Button';
 import Input from '../Input/Input';
 import Select from '../Select/Select';
 import TextArea from '../TextArea/TextArea';
+import './Form.scss';
 
 export default class Form extends Component {
   constructor(props) {
@@ -110,7 +111,7 @@ export default class Form extends Component {
       />
     );
   }
-  renderSelect(label, name, options, callback) {
+  renderSelect(label, name, options, callback = () => null) {
     const { formData, errors } = this.state;
 
     return (

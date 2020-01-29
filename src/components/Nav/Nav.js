@@ -3,6 +3,7 @@ import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
 import { MdApps } from 'react-icons/md';
 import getCredentials from '../../services/Credentials';
 import { Link } from 'react-router-dom';
+import Dropdown from '../Dropdown/Dropdown';
 import './Nav.scss';
 
 // Navigation
@@ -10,41 +11,48 @@ const Nav = props => {
   const { role, firstName, lastName } = getCredentials();
 
   return (
-    <nav id='main-nav'>
+    <nav id="main-nav">
       {/* Logo */}
       {/* <Link to='/'><h1 id="logo">Teamwork</h1></Link> */}
+      <div></div>
 
       {/* Main Menu */}
-      <div className='menu main-menu'>
+      <div className="menu main-menu">
         {/* Hamburger */}
-        <p className='hamburger'>{<MdApps className='icon' size='15px' />}</p>
+        <p className="hamburger">{<MdApps className="icon" size="15px" />}</p>
         {/* Menu Items */}
         <ul>
           <li>
-            <Link to='/' className='active'></Link>
+            <Link to="/" className="active"></Link>
           </li>
           <li>
             {lastName} {firstName}
           </li>
-          <li className='btn'>
-            <Link to='/import'>
-              <IoMdCloudUpload className='icon' size='15px' /> Import data
+          <li className="btn">
+            <Link to="/import">
+              <IoMdCloudUpload className="icon" size="15px" /> Import data
             </Link>
           </li>
           {role === 'admin' ? (
             <li>
-              <Link to='/users'>
-                {<IoMdPerson className='icon' size='15px' />} All Users
+              <Link to="/users">
+                {<IoMdPerson className="icon" size="15px" />} All Users
               </Link>
             </li>
           ) : null}
-          <li className='user'>
-            <Link onClick={props.triggerSignOut} to='/'>
-              {/* Logout */}
-            </Link>
-          </li>
-          {/* <li><Link to={`users/${userId}`}>Me</Link></li> */}
         </ul>
+        <Dropdown trigger={<li className="nav-user"></li>}>
+            <ul>
+              <li>
+                <Link to="/profile">Profile</Link>
+              </li>
+              <li>
+                <Link onClick={props.triggerSignOut} to="/">
+                  Log out
+                </Link>
+              </li>
+            </ul>
+          </Dropdown>
       </div>
     </nav>
   );
