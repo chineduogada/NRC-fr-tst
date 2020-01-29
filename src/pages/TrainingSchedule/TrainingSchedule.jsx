@@ -224,7 +224,7 @@ class TrainingSchedule extends Form {
   }
 
   async updateDatabase(stopProcessing) {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/training-schedules/${this.id}`,
       this.state.formData
     );

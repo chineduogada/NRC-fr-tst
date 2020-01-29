@@ -20,9 +20,10 @@ export default class ImportForm extends Form {
   schema = Schema;
 
   async doSubmit(event) {
+    const file = this.file.files[0];
     const formData = new FormData();
     formData.append('resource', this.state.formData.resource);
-    formData.append('file', this.state.formData.file);
+    formData.append('file', file);
     const res = await httpService.post('/import', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
