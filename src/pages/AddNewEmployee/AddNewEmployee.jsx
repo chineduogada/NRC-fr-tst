@@ -1,77 +1,68 @@
-import React from "react";
-import Section from "../../hoc/Section/Section";
-import Joi from "joi-browser";
-import { toast } from "react-toastify";
-import Form from "../../components/Form/Form";
-import InformationBlock from "../../components/InformationBlock/InformationBlock";
-import http from "../../services/httpService";
-import httpService from "../../services/httpService";
-import nameMapper from "./../../helpers/nameMapper";
-import PageNotice from "../../components/PageNotice/PageNotice";
-import Loader from "../../components/Loader/Loader";
+import React from 'react';
+import Section from '../../hoc/Section/Section';
+import Joi from 'joi-browser';
+import { toast } from 'react-toastify';
+import Form from '../../components/Form/Form';
+import InformationBlock from '../../components/InformationBlock/InformationBlock';
+import http from '../../services/httpService';
+import httpService from '../../services/httpService';
+import nameMapper from './../../helpers/nameMapper';
+import PageNotice from '../../components/PageNotice/PageNotice';
+import Loader from '../../components/Loader/Loader';
 
 export default class AddNewEmployee extends Form {
   state = {
     formData: {
       // BASIC INFORMATION FORM DATA
-      ippisNo: "",
-      firstName: "",
-      lastName: "",
-      middleNames: "",
-      initials: "",
-      nrcNo: "",
-      dateOfBirth: "",
-      phoneNumber: "",
-      countryOfBirth: "",
-      nationality: "",
-      email: "",
-      pfaNumber: "",
-      pfaId: "",
-      genderId: "",
-      bloodGroupId: "",
-      gpzId: "",
-      lgaId: "",
-      maritalStatusId: "",
-      senatorialDistrictId: "",
-      professional: "",
-      stateId: "",
-      efxf01: "",
-      efxf02: "",
-      efxf03: "",
-      efxf04: "",
-      efxf05: "",
-      ef9f01: "",
-      ef9f02: "",
-      ef9f03: "",
-      ef9f04: "",
-      efdf01: "",
-      efdf02: "",
+      ippisNo: '',
+      firstName: '',
+      lastName: '',
+      middleNames: '',
+      initials: '',
+      nrcNo: '',
+      dateOfBirth: '',
+      phoneNumber: '',
+      countryOfBirth: '',
+      nationality: '',
+      email: '',
+      pfaNumber: '',
+      pfaId: '',
+      genderId: '',
+      bloodGroupId: '',
+      gpzId: '',
+      lgaId: '',
+      maritalStatusId: '',
+      senatorialDistrictId: '',
+      professional: '',
+      stateId: '',
 
       // JOB INFORMATION FORM DATA
-      departmentId: "",
-      section: "",
-      districtId: "",
-      location: "",
-      reportTo: "",
-      employeeStatus: "",
-      pensionable: "",
+      departmentId: '',
+      section: '',
+      districtId: '',
+      location: '',
+      reportTo: '',
+      employeeStatus: '',
+      pensionable: '',
 
       // APPOINTMENT INFORMATION FORM DATA
-      firstAppointmentDate: "",
-      resumptionDate: "",
-      confirmationDate: "",
-      expectedRetirementDate: "",
-      presentAppointmentDate: "",
-      firstAppointmentJobTypeId: "",
-      firstAppointmentJobTitleId: "",
-      firstAppointmentGradeId: "",
-      firstAppointmentStepId: "",
-      presentPositionJobTypeId: "",
-      presentPositionJobTitleId: "",
-      presentPositionGradeId: "",
-      presentPositionStepId: ""
+      firstAppointmentDate: '',
+      resumptionDate: '',
+      confirmationDate: '',
+      expectedRetirementDate: '',
+      presentAppointmentDate: '',
+      firstAppointmentJobTypeId: '',
+      firstAppointmentJobTitleId: '',
+      firstAppointmentGradeId: '',
+      firstAppointmentStepId: '',
+      presentPositionJobTypeId: '',
+      presentPositionJobTitleId: '',
+      presentPositionGradeId: '',
+      presentPositionStepId: ''
     },
+
     errors: {},
+
     departmentOptions: [],
     districtOptions: [],
     bloodGroupOptions: [],
@@ -103,39 +94,39 @@ export default class AddNewEmployee extends Form {
       lga,
       countries
     ] = await httpService.all([
-      httpService.get("/departments"),
-      httpService.get("/districts"),
-      httpService.get("/blood-groups"),
-      httpService.get("/job-types"),
-      httpService.get("/job-titles"),
-      httpService.get("/job-grades"),
-      httpService.get("/pfa"),
-      httpService.get("/gpz"),
-      httpService.get("/marital-statuses"),
-      httpService.get("/senatorial-districts"),
-      httpService.get("/states"),
-      httpService.get("/lga"),
-      httpService.get("/countries")
+      httpService.get('/departments'),
+      httpService.get('/districts'),
+      httpService.get('/blood-groups'),
+      httpService.get('/job-types'),
+      httpService.get('/job-titles'),
+      httpService.get('/job-grades'),
+      httpService.get('/pfa'),
+      httpService.get('/gpz'),
+      httpService.get('/marital-statuses'),
+      httpService.get('/senatorial-districts'),
+      httpService.get('/states'),
+      httpService.get('/lga'),
+      httpService.get('/countries')
     ]);
 
     if (departments) {
       this.setState({
-        departmentOptions: nameMapper(departments.data.data, "description"),
-        districtOptions: nameMapper(districts.data.data, "siteName"),
-        bloodGroupOptions: nameMapper(bloodGroups.data.data, "type"),
-        jobTypeOptions: nameMapper(jobTypes.data.data, "type"),
-        jobTitleOptions: nameMapper(jobTitles.data.data, "description"),
-        jobGradeOptions: nameMapper(jobGrades.data.data, "conpss"),
-        pfaOptions: nameMapper(pfa.data.data, "name"),
-        gpzOptions: nameMapper(gpz.data.data, "name"),
-        lgaOptions: nameMapper(lga.data.data, "lga"),
-        maritalStatusOptions: nameMapper(maritalStatuses.data.data, "status"),
+        departmentOptions: nameMapper(departments.data.data, 'description'),
+        districtOptions: nameMapper(districts.data.data, 'siteName'),
+        bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
+        jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
+        jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
+        jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
+        pfaOptions: nameMapper(pfa.data.data, 'name'),
+        gpzOptions: nameMapper(gpz.data.data, 'name'),
+        lgaOptions: nameMapper(lga.data.data, 'lga'),
+        maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
         senatorialDistrictOptions: nameMapper(
           senatorialDistricts.data.data,
-          "name"
+          'name'
         ),
-        stateOptions: nameMapper(states.data.data, "state"),
-        countryOptions: nameMapper(countries.data.data, "country")
+        stateOptions: nameMapper(states.data.data, 'state'),
+        countryOptions: nameMapper(countries.data.data, 'country')
       });
     }
   }
@@ -163,17 +154,6 @@ export default class AddNewEmployee extends Form {
     senatorialDistrictId: Joi.number(),
     stateId: Joi.number(),
     professional: Joi.string(),
-    efxf01: Joi.string(),
-    efxf02: Joi.string(),
-    efxf03: Joi.string(),
-    efxf04: Joi.string(),
-    efxf05: Joi.string(),
-    ef9f01: Joi.string(),
-    ef9f02: Joi.string(),
-    ef9f03: Joi.string(),
-    ef9f04: Joi.string(),
-    efdf01: Joi.string(),
-    efdf02: Joi.string(),
 
     // JOB INFORMATION SCHEMA
 
@@ -202,222 +182,210 @@ export default class AddNewEmployee extends Form {
   };
 
   async doSubmit(event, stopProcessing) {
-    const res = await http.post("/employee", this.state.formData);
+    const res = await http.post('/employee', this.state.formData);
     stopProcessing();
 
     console.log(res);
     if (res) {
-      toast.success("Employee successfully registered!");
+      toast.success('Employee successfully registered!');
       this.Form.reset();
     }
   }
 
   render() {
     return this.state.departmentOptions.length ? (
-      <Section title="add new employee">
+      <Section title='add new employee'>
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title="basic information">
-            {this.renderInput("IPPISNO", "ippisNo", null, null, "number")}
-            {this.renderInput("first Name", "firstName")}
-            {this.renderInput("last Name", "lastName")}
-            {this.renderInput("middle Names", "middleNames")}
-            {this.renderInput("initials", "initials")}
-            {this.renderInput("NRC number", "nrcNo", null, null, "number")}
+          <InformationBlock title='basic information'>
+            {this.renderInput('IPPISNO', 'ippisNo', null, null, 'number')}
+            {this.renderInput('first Name', 'firstName')}
+            {this.renderInput('last Name', 'lastName')}
+            {this.renderInput('middle Names', 'middleNames')}
+            {this.renderInput('initials', 'initials')}
+            {this.renderInput('NRC number', 'nrcNo', null, null, 'number')}
             {this.renderInput(
-              "date of birth",
-              "dateOfBirth",
+              'date of birth',
+              'dateOfBirth',
               null,
               null,
-              "date"
+              'date'
             )}
             {this.renderInput(
-              "phone number",
-              "phoneNumber",
+              'phone number',
+              'phoneNumber',
               null,
               null,
-              "number"
+              'number'
             )}
-            {this.renderInput("email", "email", null, null, "email")}
+            {this.renderInput('email', 'email', null, null, 'email')}
 
             {this.renderSelect(
-              "pension fund administrator",
-              "pfaId",
+              'pension fund administrator',
+              'pfaId',
               this.state.pfaOptions
             )}
 
-            {this.renderInput("PFA number", "pfaNumber", null, null, "number")}
+            {this.renderInput('PFA number', 'pfaNumber', null, null, 'number')}
 
-            {this.renderSelect("gender", "genderId", [
-              { id: 1, name: "male" },
-              { id: 2, name: "female" }
+            {this.renderSelect('gender', 'genderId', [
+              { id: 1, name: 'male' },
+              { id: 2, name: 'female' }
             ])}
             {this.renderSelect(
-              "blood group",
-              "bloodGroupId",
+              'blood group',
+              'bloodGroupId',
               this.state.bloodGroupOptions
             )}
             {this.renderSelect(
-              "marital status",
-              "maritalStatusId",
+              'marital status',
+              'maritalStatusId',
               this.state.maritalStatusOptions
             )}
             {this.renderSelect(
-              "country of birth",
-              "countryOfBirth",
+              'country of birth',
+              'countryOfBirth',
               this.state.countryOptions
             )}
             {this.renderSelect(
-              "nationality",
-              "nationality",
+              'nationality',
+              'nationality',
               this.state.countryOptions
             )}
-            {this.renderSelect("GPZ", "gpzId", this.state.gpzOptions)}
-            {this.renderSelect("state", "stateId", this.state.stateOptions)}
+            {this.renderSelect('GPZ', 'gpzId', this.state.gpzOptions)}
+            {this.renderSelect('state', 'stateId', this.state.stateOptions)}
             {this.renderSelect(
-              "senatorial district",
-              "senatorialDistrictId",
+              'senatorial district',
+              'senatorialDistrictId',
               this.state.senatorialDistrictOptions
             )}
-            {this.renderSelect("LGA", "lgaId", this.state.lgaOptions)}
-            {this.renderSelect("professional", "professional", [
-              { id: "Y", name: "Y" },
-              { id: "N", name: "N" }
+            {this.renderSelect('LGA', 'lgaId', this.state.lgaOptions)}
+            {this.renderSelect('professional', 'professional', [
+              { id: 'Y', name: 'Y' },
+              { id: 'N', name: 'N' }
             ])}
-
-            {this.renderInput("EFXF01", "efxf01")}
-            {this.renderInput("EFXF02", "efxf02")}
-            {this.renderInput("EFXF03", "efxf03")}
-            {this.renderInput("EFXF04", "efxf04")}
-            {this.renderInput("EFXF05", "efxf05")}
-            {this.renderInput("EF9F01", "ef9f01")}
-            {this.renderInput("EF9F02", "ef9f02")}
-            {this.renderInput("EF9F03", "ef9f03")}
-            {this.renderInput("EF9F04", "ef9f04")}
-            {this.renderInput("EFDF01", "efdf01", null, null, "date")}
-            {this.renderInput("EFDF02", "efdf02", null, null, "date")}
           </InformationBlock>
 
-          <InformationBlock title="job information">
-            {this.renderInput("section", "section", null, null, "number")}
-            {this.renderInput("location", "location", "")}
+          <InformationBlock title='job information'>
+            {this.renderInput('section', 'section', null, null, 'number')}
+            {this.renderInput('location', 'location', '')}
             {this.renderInput(
-              "report to",
-              "reportTo",
-              "enter ippiNo...",
+              'report to',
+              'reportTo',
+              'enter ippiNo...',
               null,
-              "number"
+              'number'
             )}
-            {this.renderSelect("employee status", "employeeStatus", [
-              { id: "A", name: "Active" },
-              { id: "R", name: "Retired" },
-              { id: "S", name: "Suspended" }
+            {this.renderSelect('employee status', 'employeeStatus', [
+              { id: 'A', name: 'Active' },
+              { id: 'R', name: 'Retired' },
+              { id: 'S', name: 'Suspended' }
             ])}
-            {this.renderSelect("pensionable", "pensionable", [
-              { id: "Y", name: "Y" },
-              { id: "N", name: "N" }
+            {this.renderSelect('pensionable', 'pensionable', [
+              { id: 'Y', name: 'Y' },
+              { id: 'N', name: 'N' }
             ])}
             {this.renderSelect(
-              "department",
-              "departmentId",
+              'department',
+              'departmentId',
               this.state.departmentOptions
             )}
             {this.renderSelect(
-              "district",
-              "districtId",
+              'district',
+              'districtId',
               this.state.districtOptions
             )}
           </InformationBlock>
 
-          <InformationBlock title="appointment information">
+          <InformationBlock title='appointment information'>
             {this.renderInput(
-              "first appointment date",
-              "firstAppointmentDate",
+              'first appointment date',
+              'firstAppointmentDate',
               null,
               null,
-              "date"
+              'date'
             )}
             {this.renderInput(
-              "resumption date",
-              "resumptionDate",
+              'resumption date',
+              'resumptionDate',
               null,
               null,
-              "date"
+              'date'
             )}
             {this.renderInput(
-              "confirmation date",
-              "confirmationDate",
+              'confirmation date',
+              'confirmationDate',
               null,
               null,
-              "date"
+              'date'
             )}
             {this.renderInput(
-              "expected retirement date",
-              "expectedRetirementDate",
+              'expected retirement date',
+              'expectedRetirementDate',
               null,
               null,
-              "date"
+              'date'
             )}
             {this.renderInput(
-              "present appointment date",
-              "presentAppointmentDate",
+              'present appointment date',
+              'presentAppointmentDate',
               null,
               null,
-              "date"
+              'date'
             )}
 
             {this.renderSelect(
-              "first appointment job type",
-              "firstAppointmentJobTypeId",
+              'first appointment job type',
+              'firstAppointmentJobTypeId',
               this.state.jobTypeOptions
             )}
             {this.renderSelect(
-              "first appointment job title",
-              "firstAppointmentJobTitleId",
+              'first appointment job title',
+              'firstAppointmentJobTitleId',
               this.state.jobTitleOptions
             )}
             {this.renderSelect(
-              "first appointment grade",
-              "firstAppointmentGradeId",
+              'first appointment grade',
+              'firstAppointmentGradeId',
               this.state.jobGradeOptions
             )}
             {this.renderSelect(
-              "first appointment step",
-              "firstAppointmentStepId",
+              'first appointment step',
+              'firstAppointmentStepId',
               this.state.jobGradeOptions
             )}
             {this.renderSelect(
-              "present position job type",
-              "presentPositionJobTypeId",
+              'present position job type',
+              'presentPositionJobTypeId',
               this.state.jobTypeOptions
             )}
             {this.renderSelect(
-              "present position job title",
-              "presentPositionJobTitleId",
+              'present position job title',
+              'presentPositionJobTitleId',
               this.state.jobTitleOptions
             )}
             {this.renderSelect(
-              "present position grade",
-              "presentPositionGradeId",
+              'present position grade',
+              'presentPositionGradeId',
               this.state.jobGradeOptions
             )}
             {this.renderSelect(
-              "present position step",
-              "presentPositionStepId",
+              'present position step',
+              'presentPositionStepId',
               this.state.jobGradeOptions
             )}
           </InformationBlock>
 
-          {this.renderButton("save")}
-          {this.renderButton("proceed to profile")}
+          {this.renderButton('save')}
+          {this.renderButton('proceed to profile')}
         </form>
       </Section>
     ) : (
-      <Loader message="please wait..." />
+      <Loader message='please wait...' />
     );
   }
 }

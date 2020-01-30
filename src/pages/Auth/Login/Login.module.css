@@ -46,7 +46,8 @@
 }
 
 .Banner {
-  background: linear-gradient(rgb(48, 26, 146), rgb(95, 33, 175));
+  /* background: linear-gradient(rgb(48, 26, 146), rgb(95, 33, 175)); */
+  background: var(--basic-color-dark);
   display: flex;
   flex-flow: column;
   justify-content: center;

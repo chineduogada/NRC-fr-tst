@@ -23,6 +23,7 @@ import JobIncidence from '../../pages/JobIncidence/JobIncidence';
 import Import from '../../pages/Import/Import';
 import Users from '../../pages/Users/Users';
 import UserProfile from '../../pages/UserProfile/UserProfile';
+import Settings from '../../pages/Settings/Settings';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -76,6 +77,8 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path='/import' exact component={Import} />
             <Route path='/users' exact component={Users} />
             <Route path='/profile' exact component={UserProfile} />
+            <Route path='/settings' exact component={Settings} />
+            <Route path='/settings/static-models' exact component={Settings} />
           </Switch>
         </MainArea>
       </div>

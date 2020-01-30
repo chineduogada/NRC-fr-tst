@@ -1,0 +1,36 @@
+.TabSystem {
+  width: 100%;
+  .TabControls {
+    display: flex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0 1em;
+
+    .TabControl {
+      font-size: 0.875rem;
+      padding: 0.5em 0;
+      cursor: pointer;
+      opacity: 0.7;
+
+      &:not(:last-child) {
+        margin-right: 1em;
+      }
+
+      &.Active {
+        border-bottom: 1px solid var(--basic-color);
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .Tabs {
+    overflow-y: hidden;
+  }
+
+  .Tab {
+    background-color: #fff;
+    min-height: 100vh;
+    &.Active {
+      display: block;
+    }
+  }
+}
