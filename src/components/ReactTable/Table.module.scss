@@ -22,7 +22,8 @@
   }
   th {
     // background: #333;
-    background: rgb(77, 77, 77);
+    // background: rgb(77, 77, 77);
+    background: var(--basic-color);
     color: #fff;
     font-weight: bold;
     font-size: 0.875rem;

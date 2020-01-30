@@ -208,7 +208,7 @@ class Department extends Form {
       <div className={classes.Preview}>
         <div className={classes.Actions}>
           <Button
-            label="delete"
+            label='delete'
             danger
             onClick={this.handleDelete}
             disabled={this.state.isDeleteting}
@@ -253,8 +253,8 @@ class Department extends Form {
         {this.state.departments.length ? (
           <Section>
             <TableView
-              title="departments"
-              message="Double click a row to preview"
+              title='departments'
+              message='Double click a row to preview'
               columns={columns}
               data={departments}
               clickHandler={this.handleRowClick}
@@ -262,7 +262,7 @@ class Department extends Form {
             ></TableView>
 
             <SideDraw
-              title="department"
+              title='department'
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >

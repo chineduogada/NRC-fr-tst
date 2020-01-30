@@ -8,6 +8,14 @@ import {
   IoMdMedal,
   IoIosCalendar
 } from 'react-icons/io';
+import {
+  MdSettings,
+  MdBuild,
+  MdHelp,
+  MdPieChart,
+  MdBook,
+  MdFlag
+} from 'react-icons/md';
 import classes from './Aside.module.scss';
 
 const Aside = props => (
@@ -55,7 +63,7 @@ const Aside = props => (
         <li className={classes}>
           <Link to='/training-records'>
             <span className='icon'>
-              <IoMdHome className='icon' />
+              <MdBook className='icon' />
             </span>
             <span>Training Records</span>
           </Link>
@@ -79,7 +87,7 @@ const Aside = props => (
         <li className={classes}>
           <Link to='/job-incidence'>
             <span className='icon'>
-              <IoMdHome className='icon' />
+              <MdFlag className='icon' />
             </span>
             <span>Job Incedence</span>
           </Link>
@@ -87,7 +95,7 @@ const Aside = props => (
         <li className={classes}>
           <Link to='/reports'>
             <span className='icon'>
-              <IoMdHome className='icon' />
+              <MdPieChart className='icon' />
             </span>
             <span>Reports</span>
           </Link>
@@ -97,9 +105,9 @@ const Aside = props => (
         <br />
 
         <li className={classes}>
-          <Link to='/job-incidence'>
+          <Link to='/preferences'>
             <span className='icon'>
-              <IoMdHome className='icon' />
+              <MdBuild className='icon' />
             </span>
             <span>preferences</span>
           </Link>
@@ -107,9 +115,17 @@ const Aside = props => (
         <li className={classes}>
           <Link to='/reports'>
             <span className='icon'>
-              <IoMdHome className='icon' />
+              <MdHelp className='icon' />
             </span>
             <span>support</span>
+          </Link>
+        </li>
+        <li className={classes}>
+          <Link to='/settings'>
+            <span className='icon'>
+              <MdSettings className='icon' />
+            </span>
+            <span>settings</span>
           </Link>
         </li>
       </ul>
