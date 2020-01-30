@@ -136,7 +136,7 @@ class Department extends Form {
   }
 
   async updateDepartment(stopProcessing) {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/departments/${this.state.rowToPreview.id}`,
       this.state.formData
     );

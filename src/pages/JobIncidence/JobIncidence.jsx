@@ -203,7 +203,7 @@ class JobIncidence extends Form {
   }
 
   async updateDatabase() {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/job-incidence/${this.id}`,
       this.state.formData
     );

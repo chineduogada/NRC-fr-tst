@@ -33,7 +33,7 @@ const Aside = props => (
             <span className='icon'>
               <IoIosMan className='icon' />
             </span>
-            <span>Employee</span>
+            <span>Employee25</span>
           </Link>
         </li>
         <li className={classes}>

@@ -166,7 +166,7 @@ class TrainingRecord extends Form {
   }
 
   async updateDatabase() {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/training-records/${this.id}`,
       this.state.formData
     );
