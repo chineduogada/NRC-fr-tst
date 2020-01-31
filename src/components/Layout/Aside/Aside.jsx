@@ -44,17 +44,23 @@ const Aside = ({ currentTab, onAsideTabChange }) => {
       icon: <IoMdMedal className="icon" />
     },
     {
-      path: "/career",
-      label: "career",
+      path: "/careers",
+      label: "careers",
       icon: <IoIosSchool className="icon" />
     },
-    { key: 1 },
     {
       path: "/job-incidence",
       label: "job incidence",
       icon: <IoMdHome className="icon" />
     },
-    { path: "/reports", label: "reports", icon: <IoMdHome className="icon" /> }
+    { path: "/reports", label: "reports", icon: <IoMdHome className="icon" /> },
+    { key: 1 },
+    {
+      path: "/preferences",
+      label: "preferences",
+      icon: <IoMdHome className="icon" />
+    },
+    { path: "/support", label: "support", icon: <IoMdHome className="icon" /> }
   ];
   const getClass = tab => (currentTab === tab ? classes.Active : null);
 
