@@ -76,14 +76,21 @@ a {
 
 .icon {
   margin: 0 0.2em;
-  font-size: 1.2em;
+  font-size: 1em;
   opacity: 0.85;
 }
 
-a.link.secondary > .icon {
-  color: var(--assent);
+a.link.secondary {
+  color: var(--text-light);
   font-weight: 100;
-  font-size: 1em;
+
+  .icon {
+    font-size: large;
+  }
+  
+  &:hover {
+    color: var(--assent);
+  }
 }
 
 .button:focus {

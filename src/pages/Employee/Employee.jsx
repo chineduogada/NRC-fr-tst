@@ -7,7 +7,7 @@ import EmployeeJobInfo from './EmployeeJobInfo/EmployeeJobInfo';
 import EmployeeAppointmentInfo from './EmployeeAppointmentInfo/EmployeeAppointmentInfo';
 import EmployeeRelationInfo from './EmployeeRelationInfo/EmployeeRelationInfo';
 import EmployeeCareerInfo from './EmployeeCareerInfo/EmployeeCareerInfo';
-import imgTemp from '../../assets/images/red-paper-airplane-fly-dark-blue-background_44481-304.jpg';
+import imgTemp from '../../assets/images/generic-avatar.jpg';
 
 export default class Employee extends Component {
   state = {

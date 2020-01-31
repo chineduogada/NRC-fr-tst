@@ -13,7 +13,15 @@ class StaticModels extends Component {
       isActive: false
     };
 
-    this.models = [{ name: 'districts', url: 'districts' }];
+    this.models = [
+      { name: 'districts', url: 'districts' },
+      { name: 'sections', url: 'sections' },
+      { name: 'pension fund administrators', url: 'pfa' },
+      { name: 'job types', url: 'job-types' },
+      { name: 'job titles', url: 'job-titles' },
+      { name: 'training types', url: 'training-types' },
+      { name: 'career reason codes', url: 'career-reason-codes' },
+    ];
   }
 
   renderModels() {
@@ -29,6 +37,8 @@ class StaticModels extends Component {
               <p className={classes.ModelDescription}>
                 Add and modify {model.name}
               </p>
+
+              {i < this.models.length - 1 ? <hr /> : null}
             </li>
           );
         })}
