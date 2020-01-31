@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { IoIosArrowBack, IoIosLink } from 'react-icons/io';
+import { IoMdArrowRoundBack, IoIosLink } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import SimpleTabs from '../../components/SimpleTabs/SimpleTabs';
 import Section from '../../hoc/Section/Section';
@@ -38,7 +38,20 @@ class StaticModels extends Component {
 
   render() {
     return (
-      <Section title={`${this.state.isActive} static models`}>
+      <Section
+        title={
+          <span>
+            <Link
+              style={{ marginRight: '0.5em' }}
+              className='link secondary'
+              to='/settings'
+            >
+              <IoMdArrowRoundBack className='icon' />
+            </Link>
+            <span>static models</span>
+          </span>
+        }
+      >
         <br />
         {this.renderModels()}
       </Section>
