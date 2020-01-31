@@ -238,7 +238,7 @@ class JobIncidence extends Form {
   }
 
   handleViewEmployee({ currentTarget }) {
-    this.props.history.push(`/employee/${currentTarget.id}`);
+    this.props.history.push(`/employees/${currentTarget.id}`);
   }
 
   async doSubmit(event) {
