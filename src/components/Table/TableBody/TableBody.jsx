@@ -8,7 +8,7 @@ const TableBody = ({ data, columns, useLinks }) => {
 				? data.map((data, index) =>
 						useLinks ? (
 							<Link
-								to={`/employee/${data.id}`}
+								to={`/employees/${data.id}`}
 								key={index}
 								className="TableRow"
 							>

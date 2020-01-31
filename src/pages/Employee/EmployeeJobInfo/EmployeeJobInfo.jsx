@@ -33,7 +33,7 @@ export default class EmployeeBasicInfo extends Component {
 			{
 				label: "report to",
 				value: (
-					<a href={`/employee/${data.reportToEmployee.ippisNo}`}>
+					<a href={`/employees/${data.reportToEmployee.ippisNo}`}>
 						{`${data.reportToEmployee.firstName} ${data.reportToEmployee.lastName}`}
 					</a>
 				)

@@ -64,7 +64,7 @@ class AllEmployees extends Component {
   }
 
   handleAddNew() {
-    this.props.history.push('/employee/new');
+    this.props.history.push('/employees/new');
   }
 
   handlePageChange = page => {
@@ -75,7 +75,7 @@ class AllEmployees extends Component {
 
   handleRowClick({ currentTarget }) {
     console.log(currentTarget);
-    this.props.history.push(`employee/${currentTarget.id}`);
+    this.props.history.push(`/employees/${currentTarget.id}`);
   }
 
   render() {

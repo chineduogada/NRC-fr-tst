@@ -16,8 +16,8 @@ export default class Dashboard extends Component {
         numEmployees: {
           data: null,
           text: 'Employees',
-          url: '/employee',
-          addNew: '/employee/new'
+          url: '/employees',
+          addNew: '/employees/new'
         },
         numDepartments: {
           data: null,

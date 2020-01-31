@@ -60,7 +60,11 @@ export default class Form extends Component {
     const { error } = Joi.validate(formData, this.schema, options);
     if (!error) return;
 
-    this[error.details[0].path[0]].focus();
+    const firsFieldWithError = this[error.details[0].path[0]];
+    // check that this flagged field is actually rendered
+    if (firsFieldWithError) {
+      firsFieldWithError.focus();
+    }
 
     const errors = {};
     error.details.map(detail => (errors[detail.path[0]] = detail.message));

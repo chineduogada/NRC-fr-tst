@@ -25,6 +25,7 @@ import Users from '../../pages/Users/Users';
 import UserProfile from '../../pages/UserProfile/UserProfile';
 import Settings from '../../pages/Settings/Settings';
 import Districts from '../../pages/Districts/Districts';
+import StaticModels from '../../pages/StaticModels/StaticModels';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -67,9 +68,9 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               exact
               component={TrainingRecord}
             />
-            <Route path='/employee/' exact component={AllEmployees} />
-            <Route path='/employee/new' exact component={AddNewEmployee} />
-            <Route path='/employee/:ippisNo' exact component={Employee} />
+            <Route path='/employees/' exact component={AllEmployees} />
+            <Route path='/employees/new' exact component={AddNewEmployee} />
+            <Route path='/employees/:ippisNo' exact component={Employee} />
             <Route path='/departments' component={Department} />
             <Route path='/careers' exact component={AllCareers} />
             <Route path='/careers/:id' exact component={Career} />
@@ -79,7 +80,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path='/users' exact component={Users} />
             <Route path='/profile' exact component={UserProfile} />
             <Route path='/settings' exact component={Settings} />
-            <Route path='/settings/static-models' exact component={Settings} />
+            <Route
+              path='/settings/static-models'
+              exact
+              component={StaticModels}
+            />
             <Route
               path='/settings/static-models/districts'
               exact

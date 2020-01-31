@@ -1,13 +1,14 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
-import classes from './Settings.module.scss';
+import classes from './SimpleTabs.module.scss';
 import Section from '../../hoc/Section/Section';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: 0
+      activeTab: 0,
+      tabsAndControls: []
     };
 
     this.tabsAndControls = [
@@ -17,6 +18,10 @@ export default class Settings extends Component {
     ];
 
     this.handleTabControlClick = this.handleTabControlClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ tabsAndControls: this.props.tabsAndControls })
   }
 
   switchActiveTab(activeTab) {

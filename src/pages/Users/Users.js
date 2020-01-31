@@ -143,7 +143,7 @@ class Users extends Form {
   }
 
   async updateUser(stopProcessing) {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/user/${this.state.rowToPreview.id}`,
       this.state.formData
     );

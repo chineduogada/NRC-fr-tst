@@ -166,7 +166,7 @@ class TrainingRecord extends Form {
   }
 
   async updateDatabase() {
-    const res = await httpService.put(
+    const res = await httpService.patch(
       `/training-records/${this.id}`,
       this.state.formData
     );
@@ -200,7 +200,7 @@ class TrainingRecord extends Form {
   }
 
   handleViewEmployee({ currentTarget }) {
-    this.props.history.push(`/employee/${currentTarget.id}`);
+    this.props.history.push(`/employees/${currentTarget.id}`);
   }
 
   async doSubmit(event) {
