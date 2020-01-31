@@ -80,6 +80,12 @@ a {
   opacity: 0.85;
 }
 
+a.link.secondary > .icon {
+  color: var(--assent);
+  font-weight: 100;
+  font-size: 1em;
+}
+
 .button:focus {
   outline: none;
   border: none;

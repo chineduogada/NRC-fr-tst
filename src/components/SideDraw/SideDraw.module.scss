@@ -7,7 +7,7 @@
   width: 70%;
   max-width: 600px;
   box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.1s 0.1s ease;
+  transition: all 0.3s 0.1s ease;
   border-radius: 6px;
   overflow: hidden;
 
@@ -46,7 +46,7 @@
   &.Show {
     transform: translateX(-0%);
     opacity: 1;
-    animation: shake 0.25s 0.2s linear;
+    animation: shake 0.45s 0.2s linear;
   }
 
   &.Hide {

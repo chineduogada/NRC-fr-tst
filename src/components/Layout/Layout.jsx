@@ -24,6 +24,7 @@ import Import from '../../pages/Import/Import';
 import Users from '../../pages/Users/Users';
 import UserProfile from '../../pages/UserProfile/UserProfile';
 import Settings from '../../pages/Settings/Settings';
+import Districts from '../../pages/Districts/Districts';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -79,6 +80,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path='/profile' exact component={UserProfile} />
             <Route path='/settings' exact component={Settings} />
             <Route path='/settings/static-models' exact component={Settings} />
+            <Route
+              path='/settings/static-models/districts'
+              exact
+              component={Districts}
+            />
           </Switch>
         </MainArea>
       </div>
