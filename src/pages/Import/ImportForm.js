@@ -23,16 +23,16 @@ export default class ImportForm extends Form {
     this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
     this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
   }
-  
+
   schema = Schema;
 
   handleEmployeeSelection() {
-    this.setState({ ippisNoVerified: true })
+    this.setState({ ippisNoVerified: true });
   }
 
   handleEmployeeInputChange(employee) {
     if (!employee) {
-        this.setState({ isEmployeeSelected: false })
+      this.setState({ ippisNoVerified: false });
     }
   }
 
@@ -55,8 +55,17 @@ export default class ImportForm extends Form {
 
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <EmployeeVerifier onEmployeeSelection={this.handleEmployeeSelection}>
-          {this.renderInput('Please enter a valid IPPIS number', 'ippisNo', 'Ex. 12345', null, 'number')}
+        <EmployeeVerifier
+          onEmployeeSelection={this.handleEmployeeSelection}
+          onInputChange={this.handleEmployeeInputChange}
+        >
+          {this.renderInput(
+            'Please enter a valid IPPIS number',
+            'ippisNo',
+            'Ex. 12345',
+            null,
+            'number'
+          )}
         </EmployeeVerifier>
         {ippisNoVerified ? (
           <span>
@@ -67,8 +76,9 @@ export default class ImportForm extends Form {
               this.props.getSelectedResource
             )}
             {this.renderInput('file', 'file', null, null, 'file')}
-          </span>) : null}
-          {this.renderButton('import')}
+          </span>
+        ) : null}
+        {this.renderButton('import')}
       </form>
     );
   }

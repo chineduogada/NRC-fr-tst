@@ -77,7 +77,7 @@ function SelectColumnFilter({
         setFilter(e.target.value || undefined);
       }}
     >
-      <option value="">All</option>
+      <option value=''>All</option>
       {options.map((option, i) => (
         <option key={i} value={option}>
           {option}
@@ -109,7 +109,7 @@ function SliderColumnFilter({
   return (
     <>
       <input
-        type="range"
+        type='range'
         min={min}
         max={max}
         value={filterValue || min}
@@ -147,7 +147,7 @@ function NumberRangeColumnFilter({
     >
       <input
         value={filterValue[0] || ''}
-        type="number"
+        type='number'
         onChange={e => {
           e.stopPropagation();
           const val = e.target.value;
@@ -165,7 +165,7 @@ function NumberRangeColumnFilter({
       to
       <input
         value={filterValue[1] || ''}
-        type="number"
+        type='number'
         onChange={e => {
           e.stopPropagation();
           const val = e.target.value;
@@ -266,10 +266,7 @@ function Table({ columns, data, clickHandler }) {
         <button onClick={() => nextPage()} disabled={!canNextPage}>
           {'>'}
         </button>{' '}
-        <button
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-        >
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
           {'>>'}
         </button>{' '}
         <span>
@@ -281,7 +278,7 @@ function Table({ columns, data, clickHandler }) {
         <span>
           | Go to page:{' '}
           <input
-            type="number"
+            type='number'
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
@@ -302,14 +299,15 @@ function Table({ columns, data, clickHandler }) {
             </option>
           ))}
         </select>
-      </div>);
-  }
+      </div>
+    );
+  };
 
   // Render the UI for your table
   return (
     <>
-       {renderPagination()}
-        <div className={classes.TableWrapper}>
+      {renderPagination()}
+      <div className={classes.TableWrapper}>
         <table className={classes.Table} {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup, i) => (
