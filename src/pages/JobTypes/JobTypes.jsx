@@ -239,7 +239,7 @@ class JobTypes extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new job title</p>
+        <p>Add a new job type</p>
 
         {this.renderInput('type', 'type')}
 

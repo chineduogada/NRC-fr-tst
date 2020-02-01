@@ -12,9 +12,9 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
-import classes from './TrainingTypes.module.scss';
+import classes from './Sections.module.scss';
 
-class TrainingTypes extends Form {
+class Sections extends Form {
   constructor(props) {
     super(props);
 
@@ -27,7 +27,7 @@ class TrainingTypes extends Form {
       filteredDataFromServer: [],
 
       columns: [
-        { accessor: 'type', Header: 'Type' },
+        { accessor: 'section', Header: 'Section' },
       ],
 
       pageSize: 20,
@@ -36,7 +36,7 @@ class TrainingTypes extends Form {
       showForm: false,
 
       formData: {
-        type: '',
+        section: '',
       },
 
       rowToPreview: null,
@@ -58,13 +58,13 @@ class TrainingTypes extends Form {
   }
 
   schema = {
-    type: Joi.string(),
+    section: Joi.string(),
   };
 
   async componentDidMount() {
     const filteredDataFromServer = [];
 
-    const res = await httpService.get('/training-types');
+    const res = await httpService.get('/sections');
 
     if (res) {
       res.data.data.forEach(row => {
@@ -86,7 +86,7 @@ class TrainingTypes extends Form {
   mapToViewModel(data) {
     return {
       id: data.id,
-      type: data.type,
+      section: data.section,
     };
   }
 
@@ -144,14 +144,14 @@ class TrainingTypes extends Form {
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
-      `/training-types/${this.state.rowToPreview.id}`,
+      `/sections/${this.state.rowToPreview.id}`,
       this.state.formData
     );
 
     stopProcessing();
 
     if (res) {
-      toast.success('Training type successfully updated!');
+      toast.success('Section successfully updated!');
       this.updateTableRow();
       this.closeSideDraw();
       this.resetFormData();
@@ -177,11 +177,11 @@ class TrainingTypes extends Form {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/training-types/${this.state.rowToPreview.id}`
+        `/sections/${this.state.rowToPreview.id}`
       );
 
       if (res) {
-        toast.success('Training type successfully deleted!');
+        toast.success('Section successfully deleted!');
         this.removeTableRow();
         this.updateForm.reset();
         this.resetFormData();
@@ -192,12 +192,12 @@ class TrainingTypes extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/training-types', this.state.formData);
+    const res = await httpService.post('/sections', this.state.formData);
 
     stopProcessing();
 
     if (res) {
-      toast.success('Training type successfully added!');
+      toast.success('Section successfully added!');
       this.updateObjectList(res);
       this.Form.reset();
       this.resetFormData();
@@ -228,7 +228,7 @@ class TrainingTypes extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-        {this.renderInput('type', 'type', null, this.state.rowToPreview.type)}
+        {this.renderInput('section', 'section', null, this.state.rowToPreview.section)}
 
           {this.renderButton('update')}
         </form>
@@ -239,9 +239,9 @@ class TrainingTypes extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new training type</p>
+        <p>Add a new section</p>
 
-        {this.renderInput('type', 'type')}
+        {this.renderInput('section', 'section')}
 
         {this.renderButton('save')}
       </form>
@@ -265,7 +265,7 @@ class TrainingTypes extends Form {
                   >
                     <IoMdArrowRoundBack className='icon' />
                   </Link>
-                  <span>training types</span>
+                  <span>sections</span>
                 </span>
               }
               message='Double click a row to previews'
@@ -278,7 +278,7 @@ class TrainingTypes extends Form {
             </TableView>
 
             <SideDraw
-              title='training types'
+              title='section'
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >
@@ -295,4 +295,4 @@ class TrainingTypes extends Form {
   }
 }
 
-export default withRouter(TrainingTypes);
+export default withRouter(Sections);
