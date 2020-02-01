@@ -2,23 +2,26 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 const Select = React.forwardRef(
-  ({ name, error, label, options, ...rest }, ref) => {
+  ({ name, error, label, options, augmentedClassName, defaultValue, ...rest }, ref) => {
     return (
       <div className='form-group'>
-        <label htmlFor={name}>{label}</label>
+        {label ? <label htmlFor={name}>{label}</label> : null}
         <select
           {...rest}
           ref={ref}
           id={name}
           name={name}
-          className='formControl'
+          className={`formControl ${augmentedClassName}`}
         >
           <option value=''>-- select --</option>
-          {options.map(option => (
-            <option key={option.id} value={option.id}>
-              {option.name}
-            </option>
-          ))}
+          {options.map(option => {
+              return `${option.id}`.toLowerCase() === `${defaultValue}`.toLowerCase() ? (<option key={option.id} value={option.id}>
+                {option.name}
+              </option>) : (<option key={option.id} value={option.id}>
+                {option.name}
+              </option>)
+            }
+          )}
         </select>
         {error && <Alert variant='danger'>{error}</Alert>}
       </div>

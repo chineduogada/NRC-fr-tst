@@ -11,6 +11,8 @@ const TableView = ({
   onPageChange,
   currentPage,
   clickHandler,
+  rowOptions,
+  onRowOptionChange,
   columns,
   useLinks,
   addNewButtonHandler
@@ -32,7 +34,7 @@ const TableView = ({
         </div>
       </header>
 
-      <ReactTable columns={columns} data={data} clickHandler={clickHandler} />
+      <ReactTable columns={columns} data={data} clickHandler={clickHandler} rowOptions={rowOptions} onRowOptionChange={onRowOptionChange} />
     </section>
   );
 };

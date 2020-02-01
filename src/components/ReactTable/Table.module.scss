@@ -80,7 +80,13 @@
   .Clickable:hover {
     background: var(--basic-color);
     // font-weight: bold;
-    color: var(--inverse-text);
+    &, .Status {
+      color: var(--inverse-text);
+    }
+
+    .Status {
+      border-color: var(--inverse-text);
+    }
   }
 
   //   @media only screen and (max-width: 760px),
@@ -125,6 +131,15 @@
   //       white-space: nowrap;
   //     }
   //   }
+}
+
+.Status {
+  background: transparent;
+  margin: 0 !important;
+
+  option {
+    color: var(--text);
+  }
 }
 
 .Pagination {

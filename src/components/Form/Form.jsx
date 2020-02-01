@@ -97,7 +97,8 @@ export default class Form extends Component {
     placeholder,
     defaultValue = '',
     type = 'text',
-    autofocus
+    autofocus,
+    disabled
   ) {
     const { errors } = this.state;
 
@@ -112,10 +113,11 @@ export default class Form extends Component {
         defaultValue={defaultValue}
         autoFocus={autofocus}
         ref={input => (this[name] = input)}
+        disabled={disabled}
       />
     );
   }
-  renderSelect(label, name, options, callback = () => null) {
+  renderSelect(label, name, options, callback = () => null, disabled) {
     const { formData, errors } = this.state;
 
     return (
@@ -131,6 +133,7 @@ export default class Form extends Component {
           callback(this);
         }}
         ref={input => (this[name] = input)}
+        disabled={disabled}
       />
     );
   }
@@ -141,7 +144,8 @@ export default class Form extends Component {
     placeholder,
     defaultValue = '',
     type = 'text',
-    autofocus
+    autofocus,
+    disabled
   ) {
     const { errors } = this.state;
 
@@ -156,6 +160,7 @@ export default class Form extends Component {
         defaultValue={defaultValue}
         autoFocus={autofocus}
         ref={input => (this[name] = input)}
+        disabled={disabled}
       />
     );
   }
