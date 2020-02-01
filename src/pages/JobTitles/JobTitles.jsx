@@ -12,8 +12,7 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
-import classes from './Districts.module.scss';
-import { curveNatural } from 'd3';
+import classes from './JobTitles.module.scss';
 
 class Districts extends Form {
   constructor(props) {
@@ -28,9 +27,8 @@ class Districts extends Form {
       filteredDataFromServer: [],
 
       columns: [
-        { accessor: 'siteCode', Header: 'Site Code' },
-        { accessor: 'siteName', Header: 'Site Name' },
-        { accessor: 'address', Header: 'Address' }
+        { accessor: 'code', Header: 'Code' },
+        { accessor: 'description', Header: 'Description' }
       ],
 
       pageSize: 20,
@@ -39,9 +37,8 @@ class Districts extends Form {
       showForm: false,
 
       formData: {
-        siteCode: '',
-        siteName: '',
-        address: '',
+        code: '',
+        description: ''
       },
 
       rowToPreview: null,
@@ -63,15 +60,14 @@ class Districts extends Form {
   }
 
   schema = {
-    siteCode: Joi.string(),
-    siteName: Joi.string(),
-    address: Joi.string(). allow('').optional(),
+    code: Joi.string(),
+    description: Joi.string()
   };
 
   async componentDidMount() {
     const filteredDataFromServer = [];
 
-    const res = await httpService.get('/districts');
+    const res = await httpService.get('/job-titles');
 
     if (res) {
       res.data.data.forEach(district => {
@@ -93,9 +89,8 @@ class Districts extends Form {
   mapToViewModel(data) {
     return {
       id: data.id,
-      siteCode: data.siteCode,
-      siteName: data.siteName,
-      address: data.address
+      code: data.code,
+      description: data.description,
     };
   }
 
@@ -153,14 +148,14 @@ class Districts extends Form {
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
-      `/districts/${this.state.rowToPreview.id}`,
+      `/job-titles/${this.state.rowToPreview.id}`,
       this.state.formData
     );
 
     stopProcessing();
 
     if (res) {
-      toast.success('District successfully updated!');
+      toast.success('Job title successfully updated!');
       this.updateTableRow();
       this.closeSideDraw();
       this.resetFormData();
@@ -186,11 +181,11 @@ class Districts extends Form {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/district/${this.state.rowToPreview.id}`
+        `/job-titles/${this.state.rowToPreview.id}`
       );
 
       if (res) {
-        toast.success('District successfully deleted!');
+        toast.success('Job title successfully deleted!');
         this.removeTableRow();
         this.updateForm.reset();
         this.resetFormData();
@@ -201,12 +196,12 @@ class Districts extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/districts', this.state.formData);
+    const res = await httpService.post('/job-titles', this.state.formData);
 
     stopProcessing();
 
     if (res) {
-      toast.success('District successfully added!');
+      toast.success('Job title successfully added!');
       this.updateObjectList(res);
       this.Form.reset();
       this.resetFormData();
@@ -237,23 +232,13 @@ class Districts extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('siteCode', 'siteCode', null, this.state.rowToPreview.siteCode)}
+          {this.renderInput('code', 'code', null, this.state.rowToPreview.code)}
           {this.renderInput(
-            'siteName',
-            'siteName',
+            'description',
+            'description',
             null,
-            this.state.rowToPreview.siteName,
-            null,
-            null,
-            true
+            this.state.rowToPreview.description
           )}
-          {this.renderInput(
-            'address',
-            'address',
-            null,
-            this.state.rowToPreview.address
-          )}
-
 
           {this.renderButton('update')}
         </form>
@@ -264,11 +249,10 @@ class Districts extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new department</p>
+        <p>Add a new job title</p>
 
-        {this.renderInput('siteCode', 'siteCode')}
-          {this.renderInput('siteName','siteName')}
-          {this.renderInput('address','address',)}
+        {this.renderInput('code', 'code')}
+        {this.renderInput('description', 'description')}
 
         {this.renderButton('save')}
       </form>
@@ -292,7 +276,7 @@ class Districts extends Form {
                   >
                     <IoMdArrowRoundBack className='icon' />
                   </Link>
-                  <span>districts</span>
+                  <span>job titles</span>
                 </span>
               }
               message='Double click a row to previews'
@@ -305,7 +289,7 @@ class Districts extends Form {
             </TableView>
 
             <SideDraw
-              title='districts'
+              title='job title'
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >

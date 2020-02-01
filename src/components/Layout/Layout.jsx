@@ -26,6 +26,8 @@ import UserProfile from '../../pages/UserProfile/UserProfile';
 import Settings from '../../pages/Settings/Settings';
 import Districts from '../../pages/Districts/Districts';
 import StaticModels from '../../pages/StaticModels/StaticModels';
+import PFA from '../../pages/PFA/PFA';
+import JobTitles from '../../pages/JobTitles/JobTitles';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -89,6 +91,16 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               path='/settings/static-models/districts'
               exact
               component={Districts}
+            />
+            <Route
+              path='/settings/static-models/pfa'
+              exact
+              component={PFA}
+            />
+            <Route
+              path='/settings/static-models/job-titles'
+              exact
+              component={JobTitles}
             />
           </Switch>
         </MainArea>

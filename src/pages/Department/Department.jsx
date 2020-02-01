@@ -207,12 +207,12 @@ class Department extends Form {
     return (
       <div className={classes.Preview}>
         <div className={classes.Actions}>
-          <Button
+          {/* <Button
             label='delete'
             danger
             onClick={this.handleDelete}
             disabled={this.state.isDeleteting}
-          />
+          /> */}
         </div>
         <form
           ref={form => (this.updateForm = form)}
