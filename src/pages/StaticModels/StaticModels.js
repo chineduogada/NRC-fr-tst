@@ -20,7 +20,10 @@ class StaticModels extends Component {
       { name: 'job types', url: 'job-types' },
       { name: 'job titles', url: 'job-titles' },
       { name: 'training types', url: 'training-types' },
+      { name: 'skills', url: 'skills' },
+      { name: 'qualifications', url: 'qualifications' },
       { name: 'career reason codes', url: 'career-reason-codes' },
+      { name: 'incidence reason codes', url: 'incidence-reason-codes' },
     ];
   }
 

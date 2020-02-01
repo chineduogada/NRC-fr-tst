@@ -12,9 +12,9 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
-import classes from './CareerReasonCodes.module.scss';
+import classes from './IncidenceReasonCodes.module.scss';
 
-class CareerReasonCodes extends Form {
+class IncidenceReasonCodes extends Form {
   constructor(props) {
     super(props);
 
@@ -64,7 +64,7 @@ class CareerReasonCodes extends Form {
   async componentDidMount() {
     const filteredDataFromServer = [];
 
-    const res = await httpService.get('/career-reason-codes');
+    const res = await httpService.get('/incidence-reason-codes');
 
     if (res) {
       res.data.data.forEach(row => {
@@ -144,7 +144,7 @@ class CareerReasonCodes extends Form {
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
-      `/career-reason-codes/${this.state.rowToPreview.id}`,
+      `/incidence-reason-codes/${this.state.rowToPreview.id}`,
       this.state.formData
     );
 
@@ -177,7 +177,7 @@ class CareerReasonCodes extends Form {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/career-reason-codes/${this.state.rowToPreview.id}`
+        `/incidence-reason-codes/${this.state.rowToPreview.id}`
       );
 
       if (res) {
@@ -192,7 +192,7 @@ class CareerReasonCodes extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/career-reason-codes', this.state.formData);
+    const res = await httpService.post('/incidence-reason-codes', this.state.formData);
 
     stopProcessing();
 
@@ -265,7 +265,7 @@ class CareerReasonCodes extends Form {
                   >
                     <IoMdArrowRoundBack className='icon' />
                   </Link>
-                  <span>career reason codes</span>
+                  <span>incidence reason codes</span>
                 </span>
               }
               message='Double click a row to previews'
@@ -295,4 +295,4 @@ class CareerReasonCodes extends Form {
   }
 }
 
-export default withRouter(CareerReasonCodes);
+export default withRouter(IncidenceReasonCodes);
