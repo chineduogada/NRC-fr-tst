@@ -31,6 +31,7 @@ import JobTitles from '../../pages/JobTitles/JobTitles';
 import JobTypes from '../../pages/JobTypes/JobTypes';
 import TrainingTypes from '../../pages/TrainingTypes/TrainingTypes';
 import Sections from '../../pages/Sections/Sections';
+import CareerReasonCodes from '../../pages/CareerReasonCodes/CareerReasonCodes';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -119,6 +120,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               path='/settings/static-models/sections'
               exact
               component={Sections}
+            />
+            <Route
+              path='/settings/static-models/career-reason-codes'
+              exact
+              component={CareerReasonCodes}
             />
           </Switch>
         </MainArea>
