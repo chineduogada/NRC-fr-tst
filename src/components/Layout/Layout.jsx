@@ -33,6 +33,7 @@ import TrainingTypes from '../../pages/TrainingTypes/TrainingTypes';
 import Sections from '../../pages/Sections/Sections';
 import CareerReasonCodes from '../../pages/CareerReasonCodes/CareerReasonCodes';
 import IncidenceReasonCodes from '../../pages/IncidenceReasonCodes/IncidenceReasonCodes';
+import Skills from '../../pages/Skills/Skills';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -131,6 +132,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               path='/settings/static-models/incidence-reason-codes'
               exact
               component={IncidenceReasonCodes}
+            />
+            <Route
+              path='/settings/static-models/skills'
+              exact
+              component={Skills}
             />
           </Switch>
         </MainArea>
