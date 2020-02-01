@@ -29,6 +29,7 @@ import StaticModels from '../../pages/StaticModels/StaticModels';
 import PFA from '../../pages/PFA/PFA';
 import JobTitles from '../../pages/JobTitles/JobTitles';
 import JobTypes from '../../pages/JobTypes/JobTypes';
+import TrainingTypes from '../../pages/TrainingTypes/TrainingTypes';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -107,6 +108,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               path='/settings/static-models/job-types'
               exact
               component={JobTypes}
+            />
+            <Route
+              path='/settings/static-models/training-types'
+              exact
+              component={TrainingTypes}
             />
           </Switch>
         </MainArea>
