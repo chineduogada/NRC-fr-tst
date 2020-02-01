@@ -34,6 +34,7 @@ import Sections from '../../pages/Sections/Sections';
 import CareerReasonCodes from '../../pages/CareerReasonCodes/CareerReasonCodes';
 import IncidenceReasonCodes from '../../pages/IncidenceReasonCodes/IncidenceReasonCodes';
 import Skills from '../../pages/Skills/Skills';
+import Qualifications from '../../pages/Qualifications/Qualifications';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -137,6 +138,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               path='/settings/static-models/skills'
               exact
               component={Skills}
+            />
+            <Route
+              path='/settings/static-models/qualifications'
+              exact
+              component={Qualifications}
             />
           </Switch>
         </MainArea>

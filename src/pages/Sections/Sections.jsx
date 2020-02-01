@@ -268,7 +268,7 @@ class Sections extends Form {
                   <span>sections</span>
                 </span>
               }
-              message='Double click a row to previews'
+              message='Double click a row to preview'
               columns={columns}
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}

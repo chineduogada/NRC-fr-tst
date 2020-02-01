@@ -12,10 +12,9 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
-import classes from './Districts.module.scss';
-import { curveNatural } from 'd3';
+import classes from './Qualifications.module.scss';
 
-class Districts extends Form {
+class Qualifications extends Form {
   constructor(props) {
     super(props);
 
@@ -28,9 +27,7 @@ class Districts extends Form {
       filteredDataFromServer: [],
 
       columns: [
-        { accessor: 'siteCode', Header: 'Site Code' },
-        { accessor: 'siteName', Header: 'Site Name' },
-        { accessor: 'address', Header: 'Address' }
+        { accessor: 'qualification', Header: 'Qualification' },
       ],
 
       pageSize: 20,
@@ -39,9 +36,7 @@ class Districts extends Form {
       showForm: false,
 
       formData: {
-        siteCode: '',
-        siteName: '',
-        address: '',
+        qualification: '',
       },
 
       rowToPreview: null,
@@ -63,19 +58,17 @@ class Districts extends Form {
   }
 
   schema = {
-    siteCode: Joi.string(),
-    siteName: Joi.string(),
-    address: Joi.string(). allow('').optional(),
+    qualification: Joi.string(),
   };
 
   async componentDidMount() {
     const filteredDataFromServer = [];
 
-    const res = await httpService.get('/districts');
+    const res = await httpService.get('/qualifications');
 
     if (res) {
-      res.data.data.forEach(district => {
-        filteredDataFromServer.push(this.mapToViewModel(district));
+      res.data.data.forEach(row => {
+        filteredDataFromServer.push(this.mapToViewModel(row));
       });
     }
 
@@ -93,9 +86,7 @@ class Districts extends Form {
   mapToViewModel(data) {
     return {
       id: data.id,
-      siteCode: data.siteCode,
-      siteName: data.siteName,
-      address: data.address
+      qualification: data.qualification,
     };
   }
 
@@ -153,14 +144,14 @@ class Districts extends Form {
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
-      `/districts/${this.state.rowToPreview.id}`,
+      `/qualifications/${this.state.rowToPreview.id}`,
       this.state.formData
     );
 
     stopProcessing();
 
     if (res) {
-      toast.success('District successfully updated!');
+      toast.success('Qualifications successfully updated!');
       this.updateTableRow();
       this.closeSideDraw();
       this.resetFormData();
@@ -186,11 +177,11 @@ class Districts extends Form {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/district/${this.state.rowToPreview.id}`
+        `/qualifications/${this.state.rowToPreview.id}`
       );
 
       if (res) {
-        toast.success('District successfully deleted!');
+        toast.success('Qualifications successfully deleted!');
         this.removeTableRow();
         this.updateForm.reset();
         this.resetFormData();
@@ -201,12 +192,12 @@ class Districts extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/districts', this.state.formData);
+    const res = await httpService.post('/qualifications', this.state.formData);
 
     stopProcessing();
 
     if (res) {
-      toast.success('District successfully added!');
+      toast.success('Qualifications successfully added!');
       this.updateObjectList(res);
       this.Form.reset();
       this.resetFormData();
@@ -237,23 +228,7 @@ class Districts extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('siteCode', 'siteCode', null, this.state.rowToPreview.siteCode)}
-          {this.renderInput(
-            'siteName',
-            'siteName',
-            null,
-            this.state.rowToPreview.siteName,
-            null,
-            null,
-            true
-          )}
-          {this.renderInput(
-            'address',
-            'address',
-            null,
-            this.state.rowToPreview.address
-          )}
-
+        {this.renderInput('qualification', 'qualification', null, this.state.rowToPreview.qualification)}
 
           {this.renderButton('update')}
         </form>
@@ -264,11 +239,9 @@ class Districts extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new department</p>
+        <p>Add a new qualification</p>
 
-        {this.renderInput('siteCode', 'siteCode')}
-          {this.renderInput('siteName','siteName')}
-          {this.renderInput('address','address',)}
+        {this.renderInput('qualification', 'qualification')}
 
         {this.renderButton('save')}
       </form>
@@ -292,7 +265,7 @@ class Districts extends Form {
                   >
                     <IoMdArrowRoundBack className='icon' />
                   </Link>
-                  <span>districts</span>
+                  <span>qualifications</span>
                 </span>
               }
               message='Double click a row to preview'
@@ -305,7 +278,7 @@ class Districts extends Form {
             </TableView>
 
             <SideDraw
-              title='districts'
+              title='qualification'
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >
@@ -322,4 +295,4 @@ class Districts extends Form {
   }
 }
 
-export default withRouter(Districts);
+export default withRouter(Qualifications);

@@ -279,7 +279,7 @@ class JobTitles extends Form {
                   <span>job titles</span>
                 </span>
               }
-              message='Double click a row to previews'
+              message='Double click a row to preview'
               columns={columns}
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}
