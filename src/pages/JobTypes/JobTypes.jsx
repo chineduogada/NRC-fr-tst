@@ -12,9 +12,9 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
-import classes from './JobTitles.module.scss';
+import classes from './JobTypes.module.scss';
 
-class JobTitles extends Form {
+class JobTypes extends Form {
   constructor(props) {
     super(props);
 
@@ -27,8 +27,7 @@ class JobTitles extends Form {
       filteredDataFromServer: [],
 
       columns: [
-        { accessor: 'code', Header: 'Code' },
-        { accessor: 'description', Header: 'Description' }
+        { accessor: 'type', Header: 'Type' },
       ],
 
       pageSize: 20,
@@ -37,8 +36,7 @@ class JobTitles extends Form {
       showForm: false,
 
       formData: {
-        code: '',
-        description: ''
+        type: '',
       },
 
       rowToPreview: null,
@@ -60,18 +58,17 @@ class JobTitles extends Form {
   }
 
   schema = {
-    code: Joi.string(),
-    description: Joi.string()
+    type: Joi.string(),
   };
 
   async componentDidMount() {
     const filteredDataFromServer = [];
 
-    const res = await httpService.get('/job-titles');
+    const res = await httpService.get('/job-types');
 
     if (res) {
-      res.data.data.forEach(district => {
-        filteredDataFromServer.push(this.mapToViewModel(district));
+      res.data.data.forEach(row => {
+        filteredDataFromServer.push(this.mapToViewModel(row));
       });
     }
 
@@ -89,8 +86,7 @@ class JobTitles extends Form {
   mapToViewModel(data) {
     return {
       id: data.id,
-      code: data.code,
-      description: data.description,
+      type: data.type,
     };
   }
 
@@ -148,14 +144,14 @@ class JobTitles extends Form {
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
-      `/job-titles/${this.state.rowToPreview.id}`,
+      `/job-types/${this.state.rowToPreview.id}`,
       this.state.formData
     );
 
     stopProcessing();
 
     if (res) {
-      toast.success('Job title successfully updated!');
+      toast.success('Job type successfully updated!');
       this.updateTableRow();
       this.closeSideDraw();
       this.resetFormData();
@@ -181,11 +177,11 @@ class JobTitles extends Form {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/job-titles/${this.state.rowToPreview.id}`
+        `/job-types/${this.state.rowToPreview.id}`
       );
 
       if (res) {
-        toast.success('Job title successfully deleted!');
+        toast.success('Job type successfully deleted!');
         this.removeTableRow();
         this.updateForm.reset();
         this.resetFormData();
@@ -196,12 +192,12 @@ class JobTitles extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/job-titles', this.state.formData);
+    const res = await httpService.post('/job-types', this.state.formData);
 
     stopProcessing();
 
     if (res) {
-      toast.success('Job title successfully added!');
+      toast.success('Job type successfully added!');
       this.updateObjectList(res);
       this.Form.reset();
       this.resetFormData();
@@ -232,13 +228,7 @@ class JobTitles extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('code', 'code', null, this.state.rowToPreview.code)}
-          {this.renderInput(
-            'description',
-            'description',
-            null,
-            this.state.rowToPreview.description
-          )}
+        {this.renderInput('type', 'type', null, this.state.rowToPreview.type)}
 
           {this.renderButton('update')}
         </form>
@@ -251,8 +241,7 @@ class JobTitles extends Form {
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Add a new job title</p>
 
-        {this.renderInput('code', 'code')}
-        {this.renderInput('description', 'description')}
+        {this.renderInput('type', 'type')}
 
         {this.renderButton('save')}
       </form>
@@ -276,7 +265,7 @@ class JobTitles extends Form {
                   >
                     <IoMdArrowRoundBack className='icon' />
                   </Link>
-                  <span>job titles</span>
+                  <span>job types</span>
                 </span>
               }
               message='Double click a row to previews'
@@ -289,7 +278,7 @@ class JobTitles extends Form {
             </TableView>
 
             <SideDraw
-              title='job title'
+              title='job types'
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >
@@ -306,4 +295,4 @@ class JobTitles extends Form {
   }
 }
 
-export default withRouter(JobTitles);
+export default withRouter(JobTypes);

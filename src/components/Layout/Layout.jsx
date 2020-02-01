@@ -28,6 +28,7 @@ import Districts from '../../pages/Districts/Districts';
 import StaticModels from '../../pages/StaticModels/StaticModels';
 import PFA from '../../pages/PFA/PFA';
 import JobTitles from '../../pages/JobTitles/JobTitles';
+import JobTypes from '../../pages/JobTypes/JobTypes';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -101,6 +102,11 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               path='/settings/static-models/job-titles'
               exact
               component={JobTitles}
+            />
+            <Route
+              path='/settings/static-models/job-types'
+              exact
+              component={JobTypes}
             />
           </Switch>
         </MainArea>
