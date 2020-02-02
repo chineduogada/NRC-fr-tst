@@ -49,7 +49,7 @@ export default class Dashboard extends Component {
   }
 
   fetchEmployees() {
-    return httpService.get('/employee');
+    return httpService.get('/employees');
   }
 
   fetchDepartments() {

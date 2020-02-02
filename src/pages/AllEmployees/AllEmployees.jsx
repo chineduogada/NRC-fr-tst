@@ -36,7 +36,7 @@ class AllEmployees extends Component {
 
   async componentDidMount() {
     const employees = [];
-    const res = await http.get('/employee/');
+    const res = await http.get('/employees/');
 
     if (res) {
       res.data.data.rows.forEach(employee => {
@@ -64,7 +64,7 @@ class AllEmployees extends Component {
   }
 
   handleAddNew() {
-    this.props.history.push('/employees/new');
+    this.props.history.push('/employeess/new');
   }
 
   handlePageChange = page => {

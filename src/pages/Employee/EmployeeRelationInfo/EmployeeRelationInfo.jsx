@@ -83,7 +83,7 @@ export default class EmployeeRelationInfo extends Form {
     this.setState({ relations });
 
     const obj = this.state.formData;
-    const res = await http.post(`/employee/${this.props.ippisNo}/relations`, [
+    const res = await http.post(`/employees/${this.props.ippisNo}/relations`, [
       { ...obj, ippisNo: this.props.ippisNo }
     ]);
 

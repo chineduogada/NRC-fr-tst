@@ -182,7 +182,7 @@ export default class AddNewEmployee extends Form {
   };
 
   async doSubmit(event, stopProcessing) {
-    const res = await http.post('/employee', this.state.formData);
+    const res = await http.post('/employees', this.state.formData);
     stopProcessing();
 
     console.log(res);

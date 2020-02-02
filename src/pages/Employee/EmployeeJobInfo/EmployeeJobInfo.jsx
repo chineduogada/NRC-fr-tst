@@ -10,7 +10,7 @@ export default class EmployeeBasicInfo extends Component {
 	};
 
 	async componentDidMount() {
-		const res = await http.get(`/employee/${this.props.ippisNo}/job`);
+		const res = await http.get(`/employees/${this.props.ippisNo}/job`);
 
 		if (res) {
 			const jobInformation = this.mapToViewModel(res.data.data);

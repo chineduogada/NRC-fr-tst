@@ -10,7 +10,7 @@ export default class EmployeeBasicInfo extends Component {
 	};
 
 	async componentDidMount() {
-		const res = await http.get(`/employee/${this.props.ippisNo}`);
+		const res = await http.get(`/employees/${this.props.ippisNo}`);
 
 		if (res) {
 			const basicInformation = this.mapToBasicView(res.data.data);
