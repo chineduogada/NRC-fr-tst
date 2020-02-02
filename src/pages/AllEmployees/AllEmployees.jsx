@@ -53,7 +53,7 @@ class AllEmployees extends Component {
       name: `${employee.firstName} ${employee.lastName}`,
       department: employee.employeeJob.department.description,
       district: employee.employeeJob.district.siteName,
-      employeeStatus: employee.employeeJob.employeeStatus,
+      employeeStatus: employee.employeeJob.employeeStatus.status,
       pensionable: employee.employeeJob.pensionable,
       firstAppointmentDate: employee.employeeAppointment.firstAppointmentDate,
       presentAppointmentDate:

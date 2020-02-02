@@ -31,7 +31,7 @@ html {
   --dogwood-rose: #d81e5b;
   --red-orange: #f0544f;
   --magic-mint: #a5f8d3;
-  --basic-gradient: linear-gradient(45deg, #550fb1, #270fb1cb);
+  --basic-gradient: linear-gradient(-180deg, #04af51, #038b41 70%, #067c3b);
   --basic-color-light: #0696472c;
   --basic-color-dark: #024621;
   --assent: #054caae5;
@@ -39,7 +39,7 @@ html {
   --text: #2a2a2a;
   --text-light: #6b6b6b;
   --line-color: #eee;
-  --light-gray: #e7e7e7;
+  --light-gray: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
   --gray: #2a2a2a;
   --inverse-text: #ffffff;
 }
@@ -47,6 +47,7 @@ html {
 body {
   min-height: 100vh;
   background: #fcfcfc !important;
+  background: #f8f8f8 !important;
   color: var(--text);
   overflow: hidden;
 }
@@ -87,7 +88,7 @@ a.link.secondary {
   .icon {
     font-size: large;
   }
-  
+
   &:hover {
     color: var(--assent);
   }

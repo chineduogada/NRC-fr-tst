@@ -92,7 +92,7 @@ export default class EmployeeRelationInfo extends Form {
 
   async componentDidMount() {
     const relations = [];
-    const res = await http.get(`/employee/${this.props.ippisNo}/relations`);
+    const res = await http.get(`/employees/${this.props.ippisNo}/relations`);
 
     if (res) {
       res.data.data.forEach(relation => {
