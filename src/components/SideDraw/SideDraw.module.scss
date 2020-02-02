@@ -12,29 +12,30 @@
   overflow: hidden;
 
   .Title {
-    background: var(--basic-color);
-    color: var(--inverse-text);
+    background: var(--light-gray);
+    color: var(--text);
     text-transform: capitalize;
     line-height: 0px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1em;
+
+    h5 {
+      margin: 0;
+    }
 
     .CloseIcon {
       cursor: pointer;
+
+      &:hover {
+        color: var(--assent);
+      }
     }
   }
 
   .Body {
     padding: 1.5em 1em;
-  }
-
-  .Title {
-    padding: 0.5em 1em;
-
-    h5 {
-      margin: 0;
-    }
   }
 
   .Body {

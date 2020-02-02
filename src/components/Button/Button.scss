@@ -9,20 +9,21 @@
   text-decoration: none;
   position: relative;
   z-index: 1;
-  transition: all 500ms;
+  transition: all 200ms;
   font-size: 80%;
   letter-spacing: 1px;
-  border: none;
-  padding: 0.4em 1em;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  padding: 0.7em 1em;
+  opacity: 0.9;
 }
 
 .button:not(:first-of-type) {
   margin-left: 0.5em;
 }
 
-.button:hover,
-.button:focus {
-  opacity: 0.85;
+.button:hover {
+  opacity: 1;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
 }
 
 .button.highlight,
@@ -32,7 +33,7 @@
 }
 
 .button.fill {
-  background: var(--basic-color);
+  background: var(--basic-gradient);
 }
 
 .button.highlight {
@@ -64,7 +65,7 @@
 }
 
 .button.plain {
-  background-color: var(--light-gray);
+  background: var(--light-gray);
   color: var(--text);
 }
 
