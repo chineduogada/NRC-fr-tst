@@ -80,15 +80,18 @@ export default class Form extends Component {
   }
 
   handleSubmit = event => {
-    event.preventDefault();
-    const errors = this.validate();
-    console.log(this.state.formData, errors);
-    this.setState({ errors: errors || {} });
-    if (errors) return;
+    // check that the form is not already being processed. Just incase the user attempts to submit the form twice before a first response is returned from the server
+    if (!this.state.isProcessing) {
+      event.preventDefault();
+      const errors = this.validate();
+      console.log(this.state.formData, errors);
+      this.setState({ errors: errors || {} });
+      if (errors) return;
 
-    this.startProcessing();
+      this.startProcessing();
 
-    this.doSubmit(event, this.stopProcessing);
+      this.doSubmit(event, this.stopProcessing);
+    }
   };
 
   renderInput(
