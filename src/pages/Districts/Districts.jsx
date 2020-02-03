@@ -14,7 +14,6 @@ import Button from '../../components/Button/Button';
 import nameMapper from '../../helpers/nameMapper';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
 import classes from './Districts.module.scss';
-import { curveNatural } from 'd3';
 
 class Districts extends Form {
   constructor(props) {
