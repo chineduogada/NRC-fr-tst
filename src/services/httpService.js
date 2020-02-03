@@ -26,7 +26,7 @@ export default {
   all: axios.all,
   get: axios.get,
   post: axios.post,
-  put: axios.patch,
+  put: axios.put,
   patch: axios.patch,
   delete: axios.delete
 };
