@@ -37,15 +37,18 @@
 }
 
 .button.highlight {
-  background: var(--assent);
-  outline-color: var(--assent);
+  background: transparent;
+  border-color: var(--basic-color) !important;
+  color: var(--basic-color) !important;
+}
+
+.button.highlight:hover {
+  background: var(--basic-color);
+  border-color: var(--basic-color) !important;
+  color: var(--inverse-text) !important;
 }
 .button.fill:hover {
   color: var(--basic-color);
-}
-.button.fill:hover::before,
-.button.highlight:hover::before {
-  background: var(--inverse-text);
 }
 .button.highlight:hover {
   color: var(--assent);
