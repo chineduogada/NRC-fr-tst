@@ -376,7 +376,7 @@ export default class AddNewEmployee extends Form {
             {this.renderSelect(
               'present position step',
               'presentPositionStepId',
-              this.state.jobGradeOptions
+              this.state.jobStepOptions
             )}
           </InformationBlock>
 

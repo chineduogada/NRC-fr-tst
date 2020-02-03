@@ -27,6 +27,7 @@ const Select = React.forwardRef(
         >
           <option value="">-- select --</option>
           {options.map(option => {
+            console.log(option)
             console.log(
               'in select',
               selectedOption,

@@ -1,22 +1,81 @@
 import React, { Component } from 'react';
 import EmployeeInfoBlock from '../EmployeeInfoBlock/EmployeeInfoBlock';
-import http from '../../../services/httpService';
+import httpService from '../../../services/httpService';
+import nameMapper from '../../../helpers/nameMapper';
 import Loader from '../../../components/Loader/Loader';
+import UpdateForm from './updateForm';
+import Button from '../../../components/Button/Button';
 // import { Link } from "react-router-dom";
 
 export default class EmployeeBasicInfo extends Component {
-  state = {
-    jobInformation: null
-  };
+  constructor(props) {
+    super(props);
 
-	async componentDidMount() {
-		const res = await http.get(`/employees/${this.props.ippisNo}/job`);
+    this.state = {
+      jobInformation: null,
+
+      originalData: {},
+
+      options: {
+        departmentOptions: [],
+        districtOptions: [],
+      },
+
+      showForm: false
+    };
+
+    this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
+    this.handleUpdateSuccess = this.handleUpdateSuccess.bind(this);
+  }
+
+  async fetchSelectComponentOptions() {
+    const [
+      departments,
+      districts,
+      bloodGroups,
+      jobTypes,
+      jobTitles,
+      jobGrades,
+      pfa,
+      gpz,
+      maritalStatuses,
+      senatorialDistricts,
+      states,
+      lga,
+      countries
+    ] = await httpService.all([
+      httpService.get('/departments?statusId=1'),
+      httpService.get('/districts?statusId=1')
+    ]);
+
+    const options = {
+      departmentOptions: nameMapper(departments.data.data, 'description'),
+      districtOptions: nameMapper(districts.data.data, 'siteName')
+    }
+
+    if (departments) {
+      this.setState({
+        options
+      });
+    }
+  }
+
+  async fetchEmployeeData() {
+    const res = await httpService.get(`/employees/${this.props.ippisNo}/job`);
 
     if (res) {
       const jobInformation = this.mapToViewModel(res.data.data);
 
-      this.setState({ jobInformation });
+      this.setState({
+        jobInformation,
+        originalData: res.data.data
+      });
     }
+  }
+
+  async componentDidMount() {
+    this.fetchEmployeeData();
+    this.fetchSelectComponentOptions();
   }
 
   mapToViewModel(data) {
@@ -41,12 +100,45 @@ export default class EmployeeBasicInfo extends Component {
     ];
   }
 
+  async handleUpdateSuccess() {
+    await this.fetchEmployeeData();
+    this.setState({ showForm: false })
+  }
+
+  handleUpdateButtonClick() {
+    this.setState({ showForm: !this.state.showForm });
+  }
+
+
   render() {
-    const { jobInformation } = this.state;
+    const { jobInformation, showForm } = this.state;
 
     return jobInformation ? (
       <div>
-        <EmployeeInfoBlock data={jobInformation} title='' />
+        <div className="Action">
+          {showForm ? (
+            <Button
+              label="cancel"
+              onClick={this.handleUpdateButtonClick}
+              plain
+            />
+          ) : (
+            <Button
+              label="update job details"
+              onClick={this.handleUpdateButtonClick}
+              highlight
+            />
+          )}
+        </div>
+        {showForm ? (
+          <div>
+            <UpdateForm options={this.state.options} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
+          </div>
+        ) : (
+          <React.Fragment>
+            <EmployeeInfoBlock data={jobInformation} title='' />
+          </React.Fragment>
+        )}
       </div>
     ) : (
       <Loader />

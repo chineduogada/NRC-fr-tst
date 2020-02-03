@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import http from '../../../services/httpService';
+import httpService from '../../../services/httpService';
+import nameMapper from '../../../helpers/nameMapper';
 import EmployeeInfoBlock from '../EmployeeInfoBlock/EmployeeInfoBlock';
 import Loader from '../../../components/Loader/Loader';
 import UpdateForm from './updateForm';
 import Button from '../../../components/Button/Button';
-import { toast } from 'react-toastify';
 
 export default class EmployeeBasicInfo extends Component {
   constructor(props) {
@@ -16,14 +16,73 @@ export default class EmployeeBasicInfo extends Component {
 
       originalData: {},
 
+      options: {
+        departmentOptions: [],
+        districtOptions: [],
+        bloodGroupOptions: [],
+        jobTypeOptions: [],
+        jobTitleOptions: [],
+        jobGradeOptions: [],
+        pfaOptions: [],
+        gpzOptions: [],
+        maritalStatusOptions: [],
+        senatorialDistrictOptions: [],
+        stateOptions: [],
+        lgaOptions: [],
+        countryOptions: [],
+      },
+
       showForm: false
     };
 
     this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
+    this.handleUpdateSuccess = this.handleUpdateSuccess.bind(this);
   }
 
-  async componentDidMount() {
-    const res = await http.get(`/employees/${this.props.ippisNo}`);
+  async fetchSelectComponentOptions() {
+    const [
+      bloodGroups,
+      pfa,
+      gpz,
+      maritalStatuses,
+      senatorialDistricts,
+      states,
+      lga,
+      countries
+    ] = await httpService.all([
+      httpService.get('/blood-groups'),
+      httpService.get('/pfa?statusId=1'),
+      httpService.get('/gpz'),
+      httpService.get('/marital-statuses'),
+      httpService.get('/senatorial-districts'),
+      httpService.get('/states'),
+      httpService.get('/lga'),
+      httpService.get('/countries')
+    ]);
+
+    const options = {
+      bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
+      pfaOptions: nameMapper(pfa.data.data, 'name'),
+      gpzOptions: nameMapper(gpz.data.data, 'name'),
+      lgaOptions: nameMapper(lga.data.data, 'lga'),
+      maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
+      senatorialDistrictOptions: nameMapper(
+        senatorialDistricts.data.data,
+        'name'
+      ),
+      stateOptions: nameMapper(states.data.data, 'state'),
+      countryOptions: nameMapper(countries.data.data, 'country')
+    }
+
+    if (bloodGroups) {
+      this.setState({
+        options
+      });
+    }
+  }
+
+  async fetchEmployeeData() {
+    const res = await httpService.get(`/employees/${this.props.ippisNo}`);
 
     if (res) {
       const basicInformation = this.mapToBasicView(res.data.data);
@@ -35,6 +94,11 @@ export default class EmployeeBasicInfo extends Component {
         originalData: res.data.data
       });
     }
+  }
+
+  async componentDidMount() {
+    this.fetchEmployeeData();
+    this.fetchSelectComponentOptions();
   }
 
   mapToBasicView(data) {
@@ -82,6 +146,11 @@ export default class EmployeeBasicInfo extends Component {
     ];
   }
 
+  async handleUpdateSuccess() {
+    await this.fetchEmployeeData();
+    this.setState({ showForm: false })
+  }
+
   handleUpdateButtonClick() {
     this.setState({ showForm: !this.state.showForm });
   }
@@ -107,12 +176,12 @@ export default class EmployeeBasicInfo extends Component {
         </div>
         {showForm ? (
           <div>
-            <UpdateForm defaultValues={this.state.originalData} />
+            <UpdateForm options={this.state.options} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
           </div>
         ) : (
           <React.Fragment>
             <EmployeeInfoBlock data={basicInformation} title="" />
-            <EmployeeInfoBlock data={otherInformation} title="" />
+            {/* <EmployeeInfoBlock data={otherInformation} title="" /> */}
           </React.Fragment>
         )}
       </div>
