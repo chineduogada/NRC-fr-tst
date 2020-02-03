@@ -42,5 +42,12 @@
     border: 1px solid var(--basic-color);
     box-shadow: 0 0 4px var(--basic-color);
   }
+  
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    border: 1px solid var(--basic-color);
+  }
+
   margin-bottom: 0.75rem !important;
 }

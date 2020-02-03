@@ -69,6 +69,7 @@ export default class AddNewEmployee extends Form {
     jobTypeOptions: [],
     jobTitleOptions: [],
     jobGradeOptions: [],
+    jobStepOptions: [],
     pfaOptions: [],
     gpzOptions: [],
     maritalStatusOptions: [],
@@ -117,6 +118,7 @@ export default class AddNewEmployee extends Form {
         jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
         jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
         jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
+        jobStepOptions: nameMapper(jobGrades.data.data, 'conpss'),
         pfaOptions: nameMapper(pfa.data.data, 'name'),
         gpzOptions: nameMapper(gpz.data.data, 'name'),
         lgaOptions: nameMapper(lga.data.data, 'lga'),
@@ -376,7 +378,7 @@ export default class AddNewEmployee extends Form {
             {this.renderSelect(
               'present position step',
               'presentPositionStepId',
-              this.state.jobGradeOptions
+              this.state.jobStepOptions
             )}
           </InformationBlock>
 

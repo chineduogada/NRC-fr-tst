@@ -39,19 +39,7 @@ export default class UpdateForm extends Form {
 
       errors: {},
 
-      departmentOptions: [],
-      districtOptions: [],
-      bloodGroupOptions: [],
-      jobTypeOptions: [],
-      jobTitleOptions: [],
-      jobGradeOptions: [],
-      pfaOptions: [],
-      gpzOptions: [],
-      maritalStatusOptions: [],
-      senatorialDistrictOptions: [],
-      stateOptions: [],
-      lgaOptions: [],
-      countryOptions: [],
+      options: null,
 
       defaultValues: null
     };
@@ -81,76 +69,69 @@ export default class UpdateForm extends Form {
     };
   }
 
-  async componentDidMount() {
-    const [
-      departments,
-      districts,
-      bloodGroups,
-      jobTypes,
-      jobTitles,
-      jobGrades,
-      pfa,
-      gpz,
-      maritalStatuses,
-      senatorialDistricts,
-      states,
-      lga,
-      countries
-    ] = await httpService.all([
-      httpService.get('/departments?statusId=1'),
-      httpService.get('/districts?statusId=1'),
-      httpService.get('/blood-groups'),
-      httpService.get('/job-types?statusId=1'),
-      httpService.get('/job-titles?statusId=1'),
-      httpService.get('/job-grades'),
-      httpService.get('/pfa?statusId=1'),
-      httpService.get('/gpz'),
-      httpService.get('/marital-statuses'),
-      httpService.get('/senatorial-districts'),
-      httpService.get('/states'),
-      httpService.get('/lga'),
-      httpService.get('/countries')
-    ]);
-
-    if (departments) {
-      this.setState({
-        departmentOptions: nameMapper(departments.data.data, 'description'),
-        districtOptions: nameMapper(districts.data.data, 'siteName'),
-        bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
-        jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
-        jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
-        jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
-        pfaOptions: nameMapper(pfa.data.data, 'name'),
-        gpzOptions: nameMapper(gpz.data.data, 'name'),
-        lgaOptions: nameMapper(lga.data.data, 'lga'),
-        maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
-        senatorialDistrictOptions: nameMapper(
-          senatorialDistricts.data.data,
-          'name'
-        ),
-        stateOptions: nameMapper(states.data.data, 'state'),
-        countryOptions: nameMapper(countries.data.data, 'country'),
-
-        // Store default values in formData
+  fillFormWithDefaultValues() {
+    this.setState({
         formData: obJectKeyEliminator(this.props.defaultValues, [
-          'gender',
-          'bloodGroup',
-          'countryOfBirth',
-          'nationality',
-          'gpz',
-          'lga',
-          'maritalStatus',
-          'senatorialDistrict',
-          'state',
-          'pfa'
+            'gender',
+            'bloodGroup',
+            'countryOfBirth',
+            'nationality',
+            'gpz',
+            'lga',
+            'maritalStatus',
+            'senatorialDistrict',
+            'state',
+            'pfa'
         ])
-      });
+    })
+  }
+
+  async componentDidMount() {
+    this.setState({
+        formData: obJectKeyEliminator(this.props.defaultValues, [
+            'gender',
+            'bloodGroup',
+            'countryOfBirth',
+            'nationality',
+            'gpz',
+            'lga',
+            'maritalStatus',
+            'senatorialDistrict',
+            'state',
+            'pfa',
+            'photo'
+        ]),
+        options: this.props.options
+    })
+  }
+
+  /**
+   * Runs a callback passed as prop as soon as the API request is successful
+   * and a response has been recieved
+   */
+  async onSuccess() {
+    const { onSuccess } = this.props;
+    
+    if (onSuccess) {
+        await onSuccess();
+    }
+  }
+  
+  async doSubmit() {
+    // const res = await httpService.patch(`/employees/${this.props.ippisNo}`, this.state.formData);
+
+    
+    if (true) {
+        // Run some external callback passed as prop
+        await this.onSuccess();
+        this.stopProcessing();
+        toast.success('Updated successful');
     }
   }
 
   render() {
-    const { formData, bloodGroupOptions } = this.state;
-    return bloodGroupOptions.length ? (
+    const { formData, options } = this.state;
+    return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
           <p className="form-header">Update Employee Basic Information</p>
@@ -182,14 +163,18 @@ export default class UpdateForm extends Form {
               'nrcNo',
               null,
               formData.nrcNo,
-              'number'
+              'number',
+              null,
+              true
             )}
             {this.renderInput(
               'date of birth',
               'dateOfBirth',
               null,
               formData.dateOfBirth,
-              'date'
+              'date',
+              null,
+              true
             )}
             {this.renderInput(
               'phone number',
@@ -203,7 +188,7 @@ export default class UpdateForm extends Form {
             {/* {this.renderSelect(
               'pension fund administrator',
               'pfaId',
-              this.state.pfaOptions,
+              this.state.options.pfaOptions,
               null,
               null,
               formData.pfaId
@@ -218,17 +203,17 @@ export default class UpdateForm extends Form {
             {/* {this.renderSelect(
               'country of birth',
               'countryOfBirthId',
-              this.state.countryOptions,
+              this.state.options.countryOptions,
               null,
-              null,
+              true,
               formData.countryOfBirthId
             )} */}
             {this.renderSelect(
               'nationality',
               'nationalityId',
-              this.state.countryOptions,
+              this.state.options.countryOptions,
               null,
-              null,
+              true,
               formData.nationalityId
             )}
             {this.renderSelect(
@@ -245,7 +230,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'blood group',
               'bloodGroupId',
-              this.state.bloodGroupOptions,
+              this.state.options.bloodGroupOptions,
               null,
               null,
               formData.bloodGroupId
@@ -253,7 +238,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'marital status',
               'maritalStatusId',
-              this.state.maritalStatusOptions,
+              this.state.options.maritalStatusOptions,
               null,
               null,
               formData.maritalStatusId
@@ -261,16 +246,16 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'GPZ',
               'gpzId',
-              this.state.gpzOptions,
+              this.state.options.gpzOptions,
               null,
               null,
               formData.stateId
             )}
-            {this.renderSelect('state', 'stateId', this.state.stateOptions)}
+            {this.renderSelect('state', 'stateId', this.state.options.stateOptions, null, null, formData.stateId)}
             {this.renderSelect(
               'senatorial district',
               'senatorialDistrictId',
-              this.state.senatorialDistrictOptions,
+              this.state.options.senatorialDistrictOptions,
               null,
               null,
               formData.senatorialDistrictId
@@ -278,7 +263,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'LGA',
               'lgaId',
-              this.state.lgaOptions,
+              this.state.options.lgaOptions,
               null,
               null,
               formData.lgaId
@@ -286,16 +271,14 @@ export default class UpdateForm extends Form {
             {this.renderSelect('professional', 'professional', [
               { id: 'Y', name: 'Y' },
               { id: 'N', name: 'N' },
-              null,
-              null,
-              formData.professional
-            ])}
+            ],
+            null,
+            null,
+            formData.professional)}
           </InformationBlock>
           {this.renderButton('update')}
         </form>
       </React.Fragment>
-    ) : (
-      <Loader />
-    );
+    ) : null;
   }
 }

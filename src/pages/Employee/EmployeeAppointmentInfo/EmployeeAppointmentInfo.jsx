@@ -1,22 +1,78 @@
 import React, { Component } from "react";
-import http from "../../../services/httpService";
+import httpService from '../../../services/httpService';
+import nameMapper from '../../../helpers/nameMapper';
 import EmployeeInfoBlock from "../EmployeeInfoBlock/EmployeeInfoBlock";
 import Loader from "../../../components/Loader/Loader";
+import UpdateForm from './updateForm';
+import Button from '../../../components/Button/Button';
 
 export default class EmployeeBasicInfo extends Component {
-	state = {
-		appointmentInformation: null
-	};
+	constructor(props) {
+		super(props);
+	
+		this.state = {
+			appointmentInformation: null,
+	
+			originalData: {},
+		
+			options: {
+				jobTypeOptions: [],
+				jobTitleOptions: [],
+				jobGradeOptions: [],
+				jobStepOptions: []
+		  	},
+	
+		  showForm: false
+		};
+	
+		this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
+		this.handleUpdateSuccess = this.handleUpdateSuccess.bind(this);
+	}
+	
+	async fetchSelectComponentOptions() {
+		const [
+			jobTypes,
+			jobTitles,
+			jobGrades
+		] = await httpService.all([
+			httpService.get('/job-types?statusId=1'),
+			httpService.get('/job-titles?statusId=1'),
+			httpService.get('/job-grades')
+		]);
 
-	async componentDidMount() {
-		const res = await http.get(`/employees/${this.props.ippisNo}/appointment`);
+		const options = {
+			jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
+			jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
+			jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
+			jobStepOptions: nameMapper(jobGrades.data.data, 'conpss'),
+		}
+
+		if (jobTypes) {
+			this.setState({
+			options
+			});
+		}
+	}
+
+	async fetchEmployeeData() {
+		const res = await httpService.get(`/employees/${this.props.ippisNo}/appointment`);
 
 		if (res) {
 			const appointmentInformation = this.mapToViewModel(res.data.data);
 
-			this.setState({ appointmentInformation });
+			this.setState({
+			appointmentInformation,
+			originalData: res.data.data
+			});
 		}
 	}
+
+	async componentDidMount() {
+		this.fetchEmployeeData();
+		this.fetchSelectComponentOptions();
+	}
+
+
 
 	mapToViewModel(data) {
 		return [
@@ -36,15 +92,47 @@ export default class EmployeeBasicInfo extends Component {
 		];
 	}
 
-	render() {
-		const { appointmentInformation } = this.state;
+	async handleUpdateSuccess() {
+		await this.fetchEmployeeData();
+		this.setState({ showForm: false })
+	}
 
+	handleUpdateButtonClick() {
+		this.setState({ showForm: !this.state.showForm });
+	}
+
+	render() {
+		const { basicInformation, appointmentInformation, showForm } = this.state;
 		return appointmentInformation ? (
 			<div>
-				<EmployeeInfoBlock data={appointmentInformation} />
+				<div className="Action">
+					{showForm ? (
+						<Button
+						label="cancel"
+						onClick={this.handleUpdateButtonClick}
+						plain
+						/>
+						) : (
+						<Button
+						label="update appointment details"
+						onClick={this.handleUpdateButtonClick}
+						highlight
+						/>
+					)}
+				</div>
+					{showForm ? (
+						<div>
+							<UpdateForm options={this.state.options} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
+						</div>
+						) : (
+						<React.Fragment>
+							<EmployeeInfoBlock data={appointmentInformation} />
+						</React.Fragment>
+					)}
 			</div>
-		) : (
+			) : (
 			<Loader />
 		);
+
 	}
 }

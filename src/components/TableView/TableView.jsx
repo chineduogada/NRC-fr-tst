@@ -19,7 +19,7 @@ const TableView = ({
 }) => {
   return (
     <section className={classes.TableView}>
-      <header>
+      {title ? (<header>
         <div className="d-flex justify-content-between">
           <div>
             <div className="title text-capitalize">
@@ -32,7 +32,7 @@ const TableView = ({
             <Button label="export" plain/>
           </div>
         </div>
-      </header>
+      </header>) : null}
 
       <ReactTable columns={columns} data={data} clickHandler={clickHandler} rowOptions={rowOptions} onRowOptionChange={onRowOptionChange} />
     </section>
