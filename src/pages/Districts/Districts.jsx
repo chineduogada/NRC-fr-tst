@@ -11,6 +11,7 @@ import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
+import nameMapper from '../../helpers/nameMapper';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
 import classes from './Districts.module.scss';
 import { curveNatural } from 'd3';
@@ -24,13 +25,19 @@ class Districts extends Form {
       {id: 0, name: 'active'},
     ]
 
+    this.statusOptions = [
+      { id: 1, status: 'active' },
+      { id: 2, status: 'inactive' }
+    ]
+
     this.state = {
       filteredDataFromServer: [],
 
       columns: [
         { accessor: 'siteCode', Header: 'Site Code' },
         { accessor: 'siteName', Header: 'Site Name' },
-        { accessor: 'address', Header: 'Address' }
+        { accessor: 'address', Header: 'Address' },
+        { accessor: 'status', Header: 'Status' }
       ],
 
       pageSize: 20,
@@ -42,14 +49,19 @@ class Districts extends Form {
         siteCode: '',
         siteName: '',
         address: '',
+        statusId: ''
       },
 
       rowToPreview: null,
+
+      indexOfRowToPreviewInFilteredData: null,
 
       isDeleteting: false,
 
       errors: {}
     };
+
+    this.originalDataFromServer = [];
 
     this.initialFormState = { ...this.state.formData };
 
@@ -65,7 +77,8 @@ class Districts extends Form {
   schema = {
     siteCode: Joi.string(),
     siteName: Joi.string(),
-    address: Joi.string(). allow('').optional(),
+    address: Joi.string().allow('').optional(),
+    statusId: Joi.number()
   };
 
   async componentDidMount() {
@@ -74,12 +87,12 @@ class Districts extends Form {
     const res = await httpService.get('/districts');
 
     if (res) {
-      res.data.data.forEach(district => {
-        filteredDataFromServer.push(this.mapToViewModel(district));
+      res.data.data.forEach(row => {
+        filteredDataFromServer.push(this.mapToViewModel(row));
       });
-    }
 
-    this.setState({ filteredDataFromServer });
+      this.setState({ originalDataFromServer: res.data.data, filteredDataFromServer  });
+    }
   }
 
   handleAddNew(e) {
@@ -90,12 +103,14 @@ class Districts extends Form {
     this.setState({ showForm: false, rowToPreview: null });
   }
 
-  mapToViewModel(data) {
+  mapToViewModel(row) {
     return {
-      id: data.id,
-      siteCode: data.siteCode,
-      siteName: data.siteName,
-      address: data.address
+      id: row.id,
+      siteCode: row.siteCode,
+      siteName: row.siteName,
+      address: row.address,
+      status: row.status.status,
+      statusId: row.statusId
     };
   }
 
@@ -112,13 +127,17 @@ class Districts extends Form {
   handleRowClick(event) {
     if (event.detail > 1) {
       const rowToPreview = this.state.filteredDataFromServer.filter(
-        row => row.id === event.currentTarget.id * 1
+        (row, index) => {
+          // store the index of the row to be previewed/updated
+          this.setState({ indexOfRowToPreviewInFilteredData: index });
+          return row.id === event.currentTarget.id * 1;
+        }
       )[0];
 
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: objectKeyEliminator(rowToPreview, ['id'])
+        formData: objectKeyEliminator(rowToPreview, ['id', 'status'])
       });
     }
   }
@@ -128,9 +147,10 @@ class Districts extends Form {
    * @param { Response } res Axios response object
    */
   updateObjectList(res) {
-    const newDept = res.data.data;
+    const newDataObject = res.data.data;
+    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
 
-    this.setState({ filteredDataFromServer: [...this.state.filteredDataFromServer, newDept] });
+    this.setState({ filteredDataFromServer: [filteredNewDataObject, ...this.state.filteredDataFromServer] });
   }
 
   resetFormData() {
@@ -138,15 +158,33 @@ class Districts extends Form {
   }
 
   /**
+   * Gets actual values of the options the user has updated
+   */
+  getOptionValues() {
+    const { statusId } = this.state.formData;
+    return {
+      status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
+    }
+  }
+
+  /**
    * Updates the table row each time a new data object is added
    */
   updateTableRow() {
+    // create a copy of the filtered data stored in the state
     const oldState = [...this.state.filteredDataFromServer];
+    // obtain the id or the row to be previewed
     const id = this.state.rowToPreview.id;
+    // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
+    // map every option to the current value the user may have selected and join them with the from data
+    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
-
-    oldState[rowIndex] = { ...formData, id };
+    // map the updated data to the desired view (Ex: for table display)
+    const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
+    // updating the copy of the filtered data from the server
+    oldState[rowIndex] = { ...filteredUpdatedRow, id };
 
     this.setState({ filteredDataFromServer: oldState });
   }
@@ -223,6 +261,7 @@ class Districts extends Form {
   }
 
   renderUpdateForm() {
+    console.log(this.state.rowToPreview.statusId);
     return (
       <div className={classes.Preview}>
         <div className={classes.Actions}>
@@ -253,6 +292,7 @@ class Districts extends Form {
             null,
             this.state.rowToPreview.address
           )}
+          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'), null, null, this.state.formData.statusId)}
 
 
           {this.renderButton('update')}
@@ -264,11 +304,12 @@ class Districts extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new department</p>
+        <p>Add a new district</p>
 
-        {this.renderInput('siteCode', 'siteCode')}
-          {this.renderInput('siteName','siteName')}
-          {this.renderInput('address','address',)}
+        {this.renderInput('site code', 'siteCode')}
+          {this.renderInput('site name','siteName')}
+          {this.renderInput('address','address')}
+          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'))}
 
         {this.renderButton('save')}
       </form>

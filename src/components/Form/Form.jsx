@@ -82,7 +82,7 @@ export default class Form extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const errors = this.validate();
-    // console.log(this.state.formData, errors);
+    console.log(this.state.formData, errors);
     this.setState({ errors: errors || {} });
     if (errors) return;
 
@@ -117,7 +117,7 @@ export default class Form extends Component {
       />
     );
   }
-  renderSelect(label, name, options, callback = () => null, disabled) {
+  renderSelect(label, name, options, callback = () => null, disabled, selectedOption) {
     const { formData, errors } = this.state;
 
     return (
@@ -130,10 +130,13 @@ export default class Form extends Component {
         value={`${formData[name]}`}
         onChange={event => {
           this.handleChange(event);
-          callback(this);
+          if (callback) {
+            callback(this);
+          }
         }}
         ref={input => (this[name] = input)}
         disabled={disabled}
+        selectedOption={selectedOption}
       />
     );
   }

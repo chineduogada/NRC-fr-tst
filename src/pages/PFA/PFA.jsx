@@ -4,6 +4,7 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
@@ -23,11 +24,17 @@ class PFA extends Form {
       {id: 0, name: 'active'},
     ]
 
+    this.statusOptions = [
+      { id: 1, status: 'active' },
+      { id: 2, status: 'inactive' }
+    ]
+
     this.state = {
       filteredDataFromServer: [],
 
       columns: [
         { accessor: 'name', Header: 'Pension Fund Admin' },
+        { accessor: 'status', Header: 'Status' }
       ],
 
       pageSize: 20,
@@ -37,6 +44,7 @@ class PFA extends Form {
 
       formData: {
         name: '',
+        statusId: ''
       },
 
       rowToPreview: null,
@@ -59,6 +67,7 @@ class PFA extends Form {
 
   schema = {
     name: Joi.string(),
+    statusId: Joi.number()
   };
 
   async componentDidMount() {
@@ -83,10 +92,12 @@ class PFA extends Form {
     this.setState({ showForm: false, rowToPreview: null });
   }
 
-  mapToViewModel(data) {
+  mapToViewModel(row) {
     return {
-      id: data.id,
-      name: data.name,
+      id: row.id,
+      name: row.name,
+      status: row.status.status,
+      statusId: row.statusId
     };
   }
 
@@ -109,7 +120,7 @@ class PFA extends Form {
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: objectKeyEliminator(rowToPreview, ['id'])
+        formData: objectKeyEliminator(rowToPreview, ['id', 'status'])
       });
     }
   }
@@ -119,9 +130,10 @@ class PFA extends Form {
    * @param { Response } res Axios response object
    */
   updateObjectList(res) {
-    const newDept = res.data.data;
+    const newDataObject = res.data.data;
+    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
 
-    this.setState({ filteredDataFromServer: [...this.state.filteredDataFromServer, newDept] });
+    this.setState({ filteredDataFromServer: [filteredNewDataObject, ...this.state.filteredDataFromServer] });
   }
 
   resetFormData() {
@@ -129,15 +141,33 @@ class PFA extends Form {
   }
 
   /**
+   * Gets actual values of the options the user has updated
+   */
+  getOptionValues() {
+    const { statusId } = this.state.formData;
+    return {
+      status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
+    }
+  }
+
+  /**
    * Updates the table row each time a new data object is added
    */
   updateTableRow() {
+    // create a copy of the filtered data stored in the state
     const oldState = [...this.state.filteredDataFromServer];
+    // obtain the id or the row to be previewed
     const id = this.state.rowToPreview.id;
+    // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
+    // map every option to the current value the user may have selected and join them with the from data
+    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
-
-    oldState[rowIndex] = { ...formData, id };
+    // map the updated data to the desired view (Ex: for table display)
+    const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
+    // updating the copy of the filtered data from the server
+    oldState[rowIndex] = { ...filteredUpdatedRow, id };
 
     this.setState({ filteredDataFromServer: oldState });
   }
@@ -229,6 +259,7 @@ class PFA extends Form {
           onSubmit={this.handleSubmit}
         >
           {this.renderInput('administrator name', 'name', null, this.state.rowToPreview.name)}
+          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'), null, null, this.state.formData.statusId)}
 
           {this.renderButton('update')}
         </form>
@@ -242,6 +273,7 @@ class PFA extends Form {
         <p>Add a new administrator</p>
 
         {this.renderInput('administrator name', 'name')}
+        {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'))}
 
         {this.renderButton('save')}
       </form>

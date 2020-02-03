@@ -64,7 +64,7 @@ class AllEmployees extends Component {
   }
 
   handleAddNew() {
-    this.props.history.push('/employeess/new');
+    this.props.history.push('/employees/new');
   }
 
   handlePageChange = page => {

@@ -104,14 +104,14 @@ const Aside = props => (
         <br />
         <br />
 
-        <li className={classes}>
+        {/* <li className={classes}>
           <Link to='/preferences'>
             <span className='icon'>
               <MdBuild className='icon' />
             </span>
             <span>preferences</span>
           </Link>
-        </li>
+        </li> */}
         <li className={classes}>
           <Link to='/reports'>
             <span className='icon'>

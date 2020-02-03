@@ -94,13 +94,13 @@ export default class AddNewEmployee extends Form {
       lga,
       countries
     ] = await httpService.all([
-      httpService.get('/departments'),
-      httpService.get('/districts'),
+      httpService.get('/departments?statusId=1'),
+      httpService.get('/districts?statusId=1'),
       httpService.get('/blood-groups'),
-      httpService.get('/job-types'),
-      httpService.get('/job-titles'),
+      httpService.get('/job-types?statusId=1'),
+      httpService.get('/job-titles?statusId=1'),
       httpService.get('/job-grades'),
-      httpService.get('/pfa'),
+      httpService.get('/pfa?statusId=1'),
       httpService.get('/gpz'),
       httpService.get('/marital-statuses'),
       httpService.get('/senatorial-districts'),

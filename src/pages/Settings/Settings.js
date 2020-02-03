@@ -19,7 +19,7 @@ export default class Settings extends Component {
         <Section>
           <div className={classes.Setting}>
             <h5 className={classes.SettingTitle}>
-              <Link to='settings/static-models'>Models</Link>
+              <Link to='settings/static-models'>Static Models</Link>
             </h5>
             <p className={classes.SettingDescription}>
               Allows users to add or update all table values

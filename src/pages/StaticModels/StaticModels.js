@@ -15,7 +15,7 @@ class StaticModels extends Component {
 
     this.models = [
       { name: 'districts', url: 'districts' },
-      { name: 'sections', url: 'sections' },
+      // { name: 'sections', url: 'sections' },
       { name: 'pension fund administrators', url: 'pfa' },
       { name: 'job types', url: 'job-types' },
       { name: 'job titles', url: 'job-titles' },
