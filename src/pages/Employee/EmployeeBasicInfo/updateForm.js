@@ -200,14 +200,14 @@ export default class UpdateForm extends Form {
             )}
             {this.renderInput('email', 'email', null, formData.email, 'email')}
 
-            {this.renderSelect(
+            {/* {this.renderSelect(
               'pension fund administrator',
               'pfaId',
               this.state.pfaOptions,
               null,
               null,
               formData.pfaId
-            )}
+            )} */}
             {this.renderInput(
               'PFA number',
               'pfaNumber',
@@ -215,14 +215,14 @@ export default class UpdateForm extends Form {
               formData.pfaNumber,
               'number'
             )}
-            {this.renderSelect(
+            {/* {this.renderSelect(
               'country of birth',
               'countryOfBirthId',
               this.state.countryOptions,
               null,
               null,
               formData.countryOfBirthId
-            )}
+            )} */}
             {this.renderSelect(
               'nationality',
               'nationalityId',
