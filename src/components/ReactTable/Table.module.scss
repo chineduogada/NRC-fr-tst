@@ -2,16 +2,15 @@
   width: 100%;
   min-width: 100px;
   overflow-x: auto;
-  @media screen and (min-width: 768px) {
-    width: calc(100vw - 280px);
-  }
+  // @media screen and (min-width: 768px) {
+  //   width: calc(100vw - 280px);
+  // }
 }
 .Table {
   table {
     table-layout: auto;
     width: 100%;
     border-collapse: separate;
-    overflow-x: scroll;
   }
   /* Zebra striping */
   tr:nth-of-type(odd) {

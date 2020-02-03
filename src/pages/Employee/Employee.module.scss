@@ -69,8 +69,10 @@
   main {
     margin: 0.75rem 0;
     @extend %bordered;
+    width: 100%;
     .EmployeeTabBody {
       padding: 0 0.5em;
+      width: 100%;
     }
     form {
       margin: 1em 0;

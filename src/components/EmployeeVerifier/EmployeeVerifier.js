@@ -181,7 +181,7 @@ export default class EmployeeVerifier extends Component {
       // });
 
       const results = await httpService.get(
-        `/employee?ippisNo=${this.inputValue}`
+        `/employees?ippisNo=${this.inputValue}`
       );
 
       console.log(results);

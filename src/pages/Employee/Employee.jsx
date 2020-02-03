@@ -7,6 +7,8 @@ import EmployeeJobInfo from './EmployeeJobInfo/EmployeeJobInfo';
 import EmployeeAppointmentInfo from './EmployeeAppointmentInfo/EmployeeAppointmentInfo';
 import EmployeeRelationInfo from './EmployeeRelationInfo/EmployeeRelationInfo';
 import EmployeeCareerInfo from './EmployeeCareerInfo/EmployeeCareerInfo';
+import EmployeeTrainingRecords from './EmployeeTrainingRecords/EmployeeTrainingRecords';
+import EmployeeCareer from './EmployeeCareer/EmployeeCareer';
 import imgTemp from '../../assets/images/generic-avatar.jpg';
 
 export default class Employee extends Component {
@@ -16,9 +18,11 @@ export default class Employee extends Component {
       { label: 'Basic Information', key: 'basicInformation' },
       { label: 'Job Information', key: 'jobInformation' },
       { label: 'Appointment', key: 'appointment' },
-      { label: 'Relation', key: 'relation' },
+      { label: 'Relations', key: 'relations' },
       { label: 'Career', key: 'career' },
-      { label: 'skills', key: 'skills' }
+      { label: 'Trainings', key: 'trainings' },
+      { label: 'Skills', key: 'skills' },
+      { label: 'Qualifications', key: 'qualifications' }
     ],
 
     activeTab: 'basicInformation'
@@ -48,9 +52,15 @@ export default class Employee extends Component {
           }
         />
       );
-    } else if (activeTab === 'relation') {
+    } else if (activeTab === 'relations') {
       return <EmployeeRelationInfo ippisNo={this.props.match.params.ippisNo} />;
     } else if (activeTab === 'career') {
+      return <EmployeeCareer ippisNo={this.props.match.params.ippisNo} />;
+    } else if (activeTab === 'trainings') {
+      return <EmployeeTrainingRecords ippisNo={this.props.match.params.ippisNo} />;
+    } else if (activeTab === 'skills') {
+      return <EmployeeCareerInfo ippisNo={this.props.match.params.ippisNo} />;
+    } else if (activeTab === 'qualifications') {
       return <EmployeeCareerInfo ippisNo={this.props.match.params.ippisNo} />;
     }
   }
