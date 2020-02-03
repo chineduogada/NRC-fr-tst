@@ -2,9 +2,20 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 const Select = React.forwardRef(
-  ({ name, error, label, options, augmentedClassName, selectedOption, ...rest }, ref) => {
+  (
+    {
+      name,
+      error,
+      label,
+      options,
+      augmentedClassName,
+      selectedOption,
+      ...rest
+    },
+    ref
+  ) => {
     return (
-      <div className='form-group'>
+      <div className="form-group">
         {label ? <label htmlFor={name}>{label}</label> : null}
         <select
           {...rest}
@@ -14,18 +25,27 @@ const Select = React.forwardRef(
           className={`formControl ${augmentedClassName}`}
           value={selectedOption}
         >
-          <option value=''>-- select --</option>
+          <option value="">-- select --</option>
           {options.map(option => {
-            console.log('in select', selectedOption, option.id, `${option.id}`.toLowerCase() === `${selectedOption}`.toLowerCase())
-              return `${option.id}`.toLowerCase() === `${selectedOption}`.toLowerCase() ? (<option className="annoying" key={option.id} value={option.id}>
+            console.log(
+              'in select',
+              selectedOption,
+              option.id,
+              `${option.id}`.toLowerCase() === `${selectedOption}`.toLowerCase()
+            );
+            return `${option.id}`.toLowerCase() ===
+              `${selectedOption}`.toLowerCase() ? (
+              <option className="annoying" key={option.id} value={option.id}>
                 {option.name}
-              </option>) : (<option key={option.id} value={option.id}>
+              </option>
+            ) : (
+              <option key={option.id} value={option.id}>
                 {option.name}
-              </option>)
-            }
-          )}
+              </option>
+            );
+          })}
         </select>
-        {error && <Alert variant='danger'>{error}</Alert>}
+        {error && <Alert variant="danger">{error}</Alert>}
       </div>
     );
   }

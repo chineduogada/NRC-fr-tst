@@ -22,8 +22,8 @@ export default class AddNewEmployee extends Form {
       nrcNo: '',
       dateOfBirth: '',
       phoneNumber: '',
-      countryOfBirth: '',
-      nationality: '',
+      countryOfBirthId: '',
+      nationalityId: '',
       email: '',
       pfaNumber: '',
       pfaId: '',
@@ -38,7 +38,7 @@ export default class AddNewEmployee extends Form {
 
       // JOB INFORMATION FORM DATA
       departmentId: '',
-      section: '',
+      sectionId: '',
       districtId: '',
       location: '',
       reportTo: '',
@@ -141,8 +141,8 @@ export default class AddNewEmployee extends Form {
     nrcNo: Joi.number(),
     dateOfBirth: Joi.string(),
     phoneNumber: Joi.number(),
-    countryOfBirth: Joi.string(),
-    nationality: Joi.string(),
+    countryOfBirthId: Joi.number(),
+    nationalityId: Joi.number(),
     email: Joi.string().email(),
     pfaNumber: Joi.number(),
     pfaId: Joi.number(),
@@ -159,7 +159,7 @@ export default class AddNewEmployee extends Form {
 
     departmentId: Joi.number(),
     districtId: Joi.number(),
-    section: Joi.string(),
+    sectionId: Joi.string(),
     location: Joi.string(),
     reportTo: Joi.number(),
     employeeStatus: Joi.string(),
@@ -194,14 +194,14 @@ export default class AddNewEmployee extends Form {
 
   render() {
     return this.state.departmentOptions.length ? (
-      <Section title='add new employee'>
+      <Section title="add new employee">
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title='basic information'>
+          <InformationBlock title="basic information">
             {this.renderInput('IPPISNO', 'ippisNo', null, null, 'number')}
             {this.renderInput('first Name', 'firstName')}
             {this.renderInput('last Name', 'lastName')}
@@ -248,12 +248,12 @@ export default class AddNewEmployee extends Form {
             )}
             {this.renderSelect(
               'country of birth',
-              'countryOfBirth',
+              'countryOfBirthId',
               this.state.countryOptions
             )}
             {this.renderSelect(
               'nationality',
-              'nationality',
+              'nationalityId',
               this.state.countryOptions
             )}
             {this.renderSelect('GPZ', 'gpzId', this.state.gpzOptions)}
@@ -270,8 +270,8 @@ export default class AddNewEmployee extends Form {
             ])}
           </InformationBlock>
 
-          <InformationBlock title='job information'>
-            {this.renderInput('section', 'section', null, null, 'number')}
+          <InformationBlock title="job information">
+            {this.renderInput('section', 'sectionId', null, null, 'number')}
             {this.renderInput('location', 'location', '')}
             {this.renderInput(
               'report to',
@@ -301,7 +301,7 @@ export default class AddNewEmployee extends Form {
             )}
           </InformationBlock>
 
-          <InformationBlock title='appointment information'>
+          <InformationBlock title="appointment information">
             {this.renderInput(
               'first appointment date',
               'firstAppointmentDate',
@@ -385,7 +385,7 @@ export default class AddNewEmployee extends Form {
         </form>
       </Section>
     ) : (
-      <Loader message='please wait...' />
+      <Loader message="please wait..." />
     );
   }
 }

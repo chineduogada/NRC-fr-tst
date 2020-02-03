@@ -2,21 +2,38 @@ import React, { Component } from 'react';
 import http from '../../../services/httpService';
 import EmployeeInfoBlock from '../EmployeeInfoBlock/EmployeeInfoBlock';
 import Loader from '../../../components/Loader/Loader';
+import UpdateForm from './updateForm';
+import Button from '../../../components/Button/Button';
+import { toast } from 'react-toastify';
 
 export default class EmployeeBasicInfo extends Component {
-  state = {
-    basicInformation: null,
-    otherInformation: null
-  };
+  constructor(props) {
+    super(props);
 
-	async componentDidMount() {
-		const res = await http.get(`/employees/${this.props.ippisNo}`);
+    this.state = {
+      basicInformation: null,
+      otherInformation: null,
+
+      originalData: {},
+
+      showForm: false
+    };
+
+    this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
+  }
+
+  async componentDidMount() {
+    const res = await http.get(`/employees/${this.props.ippisNo}`);
 
     if (res) {
       const basicInformation = this.mapToBasicView(res.data.data);
       const otherInformation = this.mapToOtherView(res.data.data);
 
-      this.setState({ basicInformation, otherInformation });
+      this.setState({
+        basicInformation,
+        otherInformation,
+        originalData: res.data.data
+      });
     }
   }
 
@@ -65,13 +82,39 @@ export default class EmployeeBasicInfo extends Component {
     ];
   }
 
-  render() {
-    const { basicInformation, otherInformation } = this.state;
+  handleUpdateButtonClick() {
+    this.setState({ showForm: !this.state.showForm });
+  }
 
+  render() {
+    const { basicInformation, otherInformation, showForm } = this.state;
     return basicInformation ? (
       <div>
-        <EmployeeInfoBlock data={basicInformation} title='' />
-        <EmployeeInfoBlock data={otherInformation} title='' />
+        <div className="Action">
+          {showForm ? (
+            <Button
+              label="cancel"
+              onClick={this.handleUpdateButtonClick}
+              plain
+            />
+          ) : (
+            <Button
+              label="update basic details"
+              onClick={this.handleUpdateButtonClick}
+              highlight
+            />
+          )}
+        </div>
+        {showForm ? (
+          <div>
+            <UpdateForm defaultValues={this.state.originalData} />
+          </div>
+        ) : (
+          <React.Fragment>
+            <EmployeeInfoBlock data={basicInformation} title="" />
+            <EmployeeInfoBlock data={otherInformation} title="" />
+          </React.Fragment>
+        )}
       </div>
     ) : (
       <Loader />

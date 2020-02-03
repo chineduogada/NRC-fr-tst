@@ -63,7 +63,7 @@ export default class Employee extends Component {
         <header>
           <div className={classes.Profile}>
             <div className={classes.ImgWrapper}>
-              <img src={imgTemp} alt='employee' />
+              <img src={imgTemp} alt="employee" />
             </div>
 
             <div className={classes.ProfileInfo}>
@@ -81,20 +81,21 @@ export default class Employee extends Component {
             </div>
           </div>
 
-          <div className={classes.Controls}>
+          {/* <div className={classes.Controls}>
             <Button fill label='edit' />
             <Button fill label='actions' />
-          </div>
+          </div> */}
         </header>
 
-        <main className=''>
+        <main className="">
           <TabsComponent
             tabs={tabs}
             activeTab={activeTab}
             onTabChange={this.handleTabChange}
           />
-
-          {this.renderTabComponent()}
+          <div className={classes.EmployeeTabBody}>
+            {this.renderTabComponent()}
+          </div>
         </main>
         <footer></footer>
       </section>
