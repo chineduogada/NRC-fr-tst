@@ -200,7 +200,7 @@ export default class EmployeeRelationInfo extends Form {
         </Section>
       ) : (
         <CleanSlate
-          onControlSlate={this.handleSlate}
+          onSlateButtonClick={this.handleSlate}
           msg="no relation has been registered for this employee"
           buttonLabel="add relation"
         />

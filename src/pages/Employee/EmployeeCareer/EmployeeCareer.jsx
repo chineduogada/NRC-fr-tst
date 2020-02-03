@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import Joi from 'joi-browser';
-import { toast } from 'react-toastify';
 import Loader from '../../../components/Loader/Loader';
 import httpService from '../../../services/httpService';
 import Section from '../../../hoc/Section/Section';
 import TableView from '../../../components/TableView/TableView';
-import ReactTable from '../../../components/ReactTable/Table';
-import SideDraw from '../../../components/SideDraw/SideDraw';
+import CleanSlate from '../../../components/CleanSlate/CleanSlate';
 
 class EmployeeCareer extends Component {
   constructor(props) {
@@ -26,10 +23,11 @@ class EmployeeCareer extends Component {
       ],
 
       pageSize: 20,
-      currentPage: 1,
+      currentPage: 1
     };
 
     this.handleRowClick = this.handleRowClick.bind(this);
+    this.handleSlate = this.handleSlate.bind(this);
   }
 
   async fetchData() {
@@ -80,6 +78,10 @@ class EmployeeCareer extends Component {
     }
   };
 
+  handleSlate = () => {
+    this.props.history.push(`/careers`);
+  };
+
   handleRowClick({ currentTarget }) {
     this.props.history.push(`/careers/${currentTarget.id}`);
   }
@@ -89,13 +91,21 @@ class EmployeeCareer extends Component {
 
     return (
       <React.Fragment>
-        {this.state.actualData ? (
+        {actualData ? (
           <Section>
-            <TableView
-              columns={columns}
-              data={actualData}
-              clickHandler={this.handleRowClick}
-            ></TableView>
+            {actualData.length ? (
+              <TableView
+                columns={columns}
+                data={actualData}
+                clickHandler={this.handleRowClick}
+              />
+            ) : (
+              <CleanSlate
+                onSlateButtonClick={this.handleSlate}
+                msg="no career record for this employee yet"
+                buttonLabel="add a record"
+              />
+            )}
           </Section>
         ) : (
           <Loader />
