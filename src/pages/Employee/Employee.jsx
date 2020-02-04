@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import classes from './Employee.module.scss';
 import TabsComponent from '../../components/Tabs/Tabs';
 import Button from '../../components/Button/Button';
 import EmployeeBasicInfo from './EmployeeBasicInfo/EmployeeBasicInfo';
@@ -12,6 +11,7 @@ import EmployeeCareer from './EmployeeCareer/EmployeeCareer';
 import EmployeeSkills from '../EmployeeSkills/EmployeeSkills';
 import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualifications';
 import imgTemp from '../../assets/images/generic-avatar.jpg';
+import classes from './Employee.module.scss';
 
 export default class Employee extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ export default class Employee extends Component {
         { label: 'Skills', key: 'skills' },
         { label: 'Qualifications', key: 'qualifications' }
       ],
-  
+
       activeTab: 'basicInformation'
     };
   }
@@ -45,9 +45,7 @@ export default class Employee extends Component {
     if (activeTab === 'basicInformation') {
       return <EmployeeBasicInfo ippisNo={this.ippisNo} />;
     } else if (activeTab === 'appointment') {
-      return (
-        <EmployeeAppointmentInfo ippisNo={this.ippisNo} />
-      );
+      return <EmployeeAppointmentInfo ippisNo={this.ippisNo} />;
     } else if (activeTab === 'jobInformation') {
       return (
         <EmployeeJobInfo
@@ -64,9 +62,7 @@ export default class Employee extends Component {
     } else if (activeTab === 'career') {
       return <EmployeeCareer ippisNo={this.ippisNo} />;
     } else if (activeTab === 'trainings') {
-      return (
-        <EmployeeTrainingRecords ippisNo={this.ippisNo} />
-      );
+      return <EmployeeTrainingRecords ippisNo={this.ippisNo} />;
     } else if (activeTab === 'skills') {
       return <EmployeeSkills ippisNo={this.ippisNo} />;
     } else if (activeTab === 'qualifications') {
@@ -82,14 +78,18 @@ export default class Employee extends Component {
         <header>
           <div className={classes.Profile}>
             <div className={classes.ImgWrapper}>
-              <img src={imgTemp} alt='employee' />
+              <img src={imgTemp} alt="employee" />
+              <div className={classes.UploadBox}>
+                <label for="upload-input">
+                  <Button label="Change Image" block plain />
+                </label>
+                <input id="upload-input" type="file" hidden />
+              </div>
             </div>
 
             <div className={classes.ProfileInfo}>
               <ul>
-                <li className={classes.EmployeeIppis}>
-                  {this.ippisNo}
-                </li>
+                <li className={classes.EmployeeIppis}>{this.ippisNo}</li>
                 <li className={classes.EmployeeName}>ebere jackson isohio</li>
                 <li className={classes.EmployeeDept}>
                   Administration and Human Resources
@@ -106,7 +106,7 @@ export default class Employee extends Component {
           </div> */}
         </header>
 
-        <main className=''>
+        <main className="">
           <TabsComponent
             tabs={tabs}
             activeTab={activeTab}
