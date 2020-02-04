@@ -17,14 +17,16 @@
   top: 100%;
   right: 0;
   transform: translate(0%, 50%);
-  min-width: 150px;
-  padding: 0.5em 0;
+  min-width: 200px;
+  min-height: 120px;
+  padding: 1em 0;
   background-color: var(--inverse-text);
   box-shadow: -3px 5px 20px rgba(0, 0, 0, 0.1);
   opacity: 0;
   transition: all 0.3s ease;
   border: 0.5px solid rgba(0, 0, 0, 0.2);
   visibility: hidden;
+  font-size: 1rem;
 
   &, &::before {
     border-radius: 2px;
@@ -45,21 +47,26 @@
 
   > ul {
     display: block !important;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1);
 
     li {
       margin-right: 0 !important;
+      transition: none !important;
     }
-
-  a {
+    
+    a {
+      padding: 0.3em 0;
       display: block;
-      font-weight: 100 !important;
+      font-weight: 600 !important;
     }
 
-    li:hover, a:hover {
-      color: var(--inverse-text) !important;
-      background: var(--basic-color);
-    }
-
+    
+  }
+  li:hover, a:hover {
+    color: var(--inverse-text) !important;
+    background: var(--basic-color);
   }
 
   &.Drop {

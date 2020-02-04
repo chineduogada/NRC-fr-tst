@@ -13,12 +13,14 @@
   }
 }
 
-.CloseBtn {
+button.CloseBtn {
+  border: none;
+  outline: none;
   background-color: transparent;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 0.2em;
+  right: 0.2em;
   transform: translate(20%, -20%);
-  font-size: 1rem;
+  font-size: 0.875rem;
   // color: var(--inverse-text);
 }

@@ -22,7 +22,7 @@ export default class PageNotice extends Component {
       <div className={classes.Notice}>
         <p>{this.props.children}</p>
         <button
-          className={`button ${classes.CloseBtn}`}
+          className={classes.CloseBtn}
           onClick={this.handleClose}
         >
           <IoMdClose className='icon' />
