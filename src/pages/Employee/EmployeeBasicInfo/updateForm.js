@@ -2,11 +2,9 @@ import React from 'react';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
 import httpService from '../../../services/httpService';
-import nameMapper from '../../../helpers/nameMapper';
 import obJectKeyEliminator from '../../../helpers/obJectKeyEliminator';
 import InformationBlock from '../../../components/InformationBlock/InformationBlock';
 import Form from '../../../components/Form/Form';
-import Loader from '../../../components/Loader/Loader';
 
 export default class UpdateForm extends Form {
   constructor(props) {
@@ -45,7 +43,7 @@ export default class UpdateForm extends Form {
         ef9f03: '',
         ef9f04: '',
         efdf01: '',
-        efdf02: '',
+        efdf02: ''
       },
 
       errors: {},
@@ -77,82 +75,104 @@ export default class UpdateForm extends Form {
       senatorialDistrictId: Joi.number(),
       stateId: Joi.number(),
       professional: Joi.string(),
-      efxf01: Joi.string().allow('').optional(),
-      efxf02: Joi.string().allow('').optional(),
-      efxf03: Joi.string().allow('').optional(),
-      efxf04: Joi.string().allow('').optional(),
-      efxf05: Joi.string().allow('').optional(),
-      ef9f01: Joi.string().allow('').optional(),
-      ef9f02: Joi.string().allow('').optional(),
-      ef9f03: Joi.string().allow('').optional(),
-      ef9f04: Joi.string().allow('').optional(),
-      efdf01: Joi.string().allow('').optional(),
-      efdf02: Joi.string().allow('').optional(),
+      efxf01: Joi.string()
+        .allow('')
+        .optional(),
+      efxf02: Joi.string()
+        .allow('')
+        .optional(),
+      efxf03: Joi.string()
+        .allow('')
+        .optional(),
+      efxf04: Joi.string()
+        .allow('')
+        .optional(),
+      efxf05: Joi.string()
+        .allow('')
+        .optional(),
+      ef9f01: Joi.string()
+        .allow('')
+        .optional(),
+      ef9f02: Joi.string()
+        .allow('')
+        .optional(),
+      ef9f03: Joi.string()
+        .allow('')
+        .optional(),
+      ef9f04: Joi.string()
+        .allow('')
+        .optional(),
+      efdf01: Joi.string()
+        .allow('')
+        .optional(),
+      efdf02: Joi.string()
+        .allow('')
+        .optional()
     };
   }
 
   fillFormWithDefaultValues() {
     this.setState({
-        formData: obJectKeyEliminator(this.props.defaultValues, [
-            'id',
-            "efxf01",
-            "efxf02",
-            "efxf03",
-            "efxf04",
-            "efxf05",
-            "ef9f01",
-            "ef9f02",
-            "ef9f03",
-            "ef9f04",
-            "efdf01",
-            "efdf02",
-            "createdAt",
-            "updatedAt",
-            'gender',
-            'bloodGroup',
-            'countryOfBirth',
-            'nationality',
-            'gpz',
-            'lga',
-            'maritalStatus',
-            'senatorialDistrict',
-            'state',
-            'pfa'
-        ])
-    })
+      formData: obJectKeyEliminator(this.props.defaultValues, [
+        'id',
+        'efxf01',
+        'efxf02',
+        'efxf03',
+        'efxf04',
+        'efxf05',
+        'ef9f01',
+        'ef9f02',
+        'ef9f03',
+        'ef9f04',
+        'efdf01',
+        'efdf02',
+        'createdAt',
+        'updatedAt',
+        'gender',
+        'bloodGroup',
+        'countryOfBirth',
+        'nationality',
+        'gpz',
+        'lga',
+        'maritalStatus',
+        'senatorialDistrict',
+        'state',
+        'pfa'
+      ])
+    });
   }
 
   async componentDidMount() {
     this.setState({
-        formData: obJectKeyEliminator(this.props.defaultValues, [
-          'id',
-          'efxf01',
-          'efxf02',
-          'efxf03',
-          'efxf04',
-          'efxf05',
-          'ef9f01',
-          'ef9f02',
-          'ef9f03',
-          'ef9f04',
-          'efdf01',
-          'efdf02',
-          'photo',
-          'createdAt',
-          'updatedAt',
-          'gender',
-          'bloodGroup',
-          'countryOfBirth',
-          'nationality',
-          'gpz',
-          'lga',
-          'maritalStatus',
-          'senatorialDistrict',
-          'state',
-          'pfa'
-        ]),
-        options: this.props.options
-    })
+      formData: obJectKeyEliminator(this.props.defaultValues, [
+        'id',
+        'efxf01',
+        'efxf02',
+        'efxf03',
+        'efxf04',
+        'efxf05',
+        'ef9f01',
+        'ef9f02',
+        'ef9f03',
+        'ef9f04',
+        'efdf01',
+        'efdf02',
+        'photo',
+        'createdAt',
+        'updatedAt',
+        'gender',
+        'bloodGroup',
+        'countryOfBirth',
+        'nationality',
+        'gpz',
+        'lga',
+        'maritalStatus',
+        'senatorialDistrict',
+        'state',
+        'pfa'
+      ]),
+      options: this.props.options
+    });
   }
 
   /**
@@ -161,21 +181,23 @@ export default class UpdateForm extends Form {
    */
   async onSuccess() {
     const { onSuccess } = this.props;
-    
+
     if (onSuccess) {
-        await onSuccess();
+      await onSuccess();
     }
   }
-  
-  async doSubmit() {
-    const res = await httpService.patch(`/employees/${this.props.ippisNo}`, this.state.formData);
 
-    
+  async doSubmit() {
+    const res = await httpService.patch(
+      `/employees/${this.props.ippisNo}`,
+      this.state.formData
+    );
+
     if (res) {
-        // Run some external callback passed as prop
-        await this.onSuccess();
-        this.stopProcessing();
-        toast.success('Updated successful');
+      // Run some external callback passed as prop
+      await this.onSuccess();
+      this.stopProcessing();
+      toast.success('Updated successful');
     }
   }
 
@@ -184,7 +206,7 @@ export default class UpdateForm extends Form {
     return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <p className="form-header">Update Employee Basic Information</p>
+          <p className='form-header'>Update Employee Basic Information</p>
           <InformationBlock>
             {this.renderInput(
               'IPPIS No',
@@ -301,7 +323,14 @@ export default class UpdateForm extends Form {
               null,
               formData.stateId
             )}
-            {this.renderSelect('state', 'stateId', this.state.options.stateOptions, null, null, formData.stateId)}
+            {this.renderSelect(
+              'state',
+              'stateId',
+              this.state.options.stateOptions,
+              null,
+              null,
+              formData.stateId
+            )}
             {this.renderSelect(
               'senatorial district',
               'senatorialDistrictId',
@@ -318,13 +347,17 @@ export default class UpdateForm extends Form {
               null,
               formData.lgaId
             )}
-            {this.renderSelect('professional', 'professional', [
-              { id: 'Y', name: 'Y' },
-              { id: 'N', name: 'N' },
-            ],
-            null,
-            null,
-            formData.professional)}
+            {this.renderSelect(
+              'professional',
+              'professional',
+              [
+                { id: 'Y', name: 'Y' },
+                { id: 'N', name: 'N' }
+              ],
+              null,
+              null,
+              formData.professional
+            )}
           </InformationBlock>
           {this.renderButton('update')}
         </form>

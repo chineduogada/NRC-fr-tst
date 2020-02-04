@@ -10,8 +10,13 @@ import EmployeeTrainingRecords from './EmployeeTrainingRecords/EmployeeTrainingR
 import EmployeeCareer from './EmployeeCareer/EmployeeCareer';
 import EmployeeSkills from '../EmployeeSkills/EmployeeSkills';
 import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualifications';
+import fileUploadAssistant from '../../helpers/fileUploadAssistant';
+import httpService from '../../services/httpService';
 import imgTemp from '../../assets/images/generic-avatar.jpg';
 import classes from './Employee.module.scss';
+import Loader from '../../components/Loader/Loader';
+import { Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 export default class Employee extends Component {
   constructor(props) {
@@ -31,13 +36,45 @@ export default class Employee extends Component {
         { label: 'Qualifications', key: 'qualifications' }
       ],
 
+      uploading: false,
+
+      employeeImageSrc: '',
+
       activeTab: 'basicInformation'
     };
+
+    this.handleImageChange = this.handleImageChange.bind(this);
+  }
+
+  toggleUploading() {
+    this.setState({ uploading: !this.state.uploading });
   }
 
   handleTabChange = tab => {
     this.setState({ activeTab: tab });
   };
+
+  async handleImageChange({ currentTarget }) {
+    this.toggleUploading();
+
+    const file = fileUploadAssistant(currentTarget);
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    const res = await httpService.patch(
+      `/employees/${this.ippisNo}`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+    );
+
+    if (res) {
+      console.log(res);
+      this.setState({ employeeImageSrc: res.data.data.photo });
+      this.toggleUploading();
+    }
+  }
 
   renderTabComponent() {
     const { activeTab } = this.state;
@@ -78,12 +115,23 @@ export default class Employee extends Component {
         <header>
           <div className={classes.Profile}>
             <div className={classes.ImgWrapper}>
-              <img src={imgTemp} alt="employee" />
+              {this.state.uploading ? (
+                <Spinner size='bg' animation='border' />
+              ) : (
+                <img
+                  src={this.state.employeeImageSrc || imgTemp}
+                  alt='employee'
+                />
+              )}
               <div className={classes.UploadBox}>
-                <label for="upload-input">
-                  <Button label="Change Image" block plain />
-                </label>
-                <input id="upload-input" type="file" hidden />
+                <label htmlFor='upload-input'>change image</label>
+                <input
+                  id='upload-input'
+                  type='file'
+                  accept='jpeg, jpg, png, svg'
+                  hidden
+                  onChange={this.handleImageChange}
+                />
               </div>
             </div>
 
@@ -106,7 +154,7 @@ export default class Employee extends Component {
           </div> */}
         </header>
 
-        <main className="">
+        <main className=''>
           <TabsComponent
             tabs={tabs}
             activeTab={activeTab}

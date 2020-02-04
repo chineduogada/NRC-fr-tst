@@ -48,10 +48,7 @@
 
   tbody tr td {
     font-size: 0.8rem;
-    // border-top: 10px solid;
-    // border-bottom: 10px solid;
-    // border-color: #f7f8f8;
-    // border-right: 1px solid rgba(0, 0, 0, 0.1);
+    text-transform: capitalize;
   }
 
   .Filter {
@@ -77,9 +74,11 @@
   }
 
   .Clickable:hover {
-    background: var(--basic-color);
+    background: var(--basic-color-light);
+    color: var(--text) !important;
     // font-weight: bold;
-    &, .Status {
+    &,
+    .Status {
       color: var(--inverse-text);
     }
 
