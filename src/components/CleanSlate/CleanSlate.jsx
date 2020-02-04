@@ -6,7 +6,7 @@ const CleanSlate = ({ onSlateButtonClick, msg, buttonLabel }) => {
   return (
     <article className="sect">
       <div className={classes.Slate}>
-        <h5 className={classes.Msg}>{msg}</h5>
+        <p className={classes.Msg}>{msg}</p>
         <Button highlight label={buttonLabel} onClick={onSlateButtonClick} />
       </div>
     </article>

@@ -10,6 +10,7 @@ import EmployeeCareerInfo from './EmployeeCareerInfo/EmployeeCareerInfo';
 import EmployeeTrainingRecords from './EmployeeTrainingRecords/EmployeeTrainingRecords';
 import EmployeeCareer from './EmployeeCareer/EmployeeCareer';
 import EmployeeSkills from '../EmployeeSkills/EmployeeSkills';
+import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualifications';
 import imgTemp from '../../assets/images/generic-avatar.jpg';
 
 export default class Employee extends Component {
@@ -64,7 +65,7 @@ export default class Employee extends Component {
     } else if (activeTab === 'skills') {
       return <EmployeeSkills ippisNo={this.props.match.params.ippisNo} />;
     } else if (activeTab === 'qualifications') {
-      return <EmployeeCareerInfo ippisNo={this.props.match.params.ippisNo} />;
+      return <EmployeeQualifications ippisNo={this.props.match.params.ippisNo} />;
     }
   }
 

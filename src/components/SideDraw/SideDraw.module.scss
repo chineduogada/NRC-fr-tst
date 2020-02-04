@@ -1,10 +1,11 @@
 .SideDraw {
   position: fixed;
-  bottom: 2em;
-  right: 1em;
+  bottom: 1em;
+  right: 0.5em;
   z-index: 3;
   background-color: #fff;
-  width: 70%;
+  width: 95%;
+  max-height: 90vh;
   max-width: 600px;
   box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s 0.1s ease;
@@ -39,7 +40,7 @@
   }
 
   .Body {
-    min-height: 400px;
+    min-height: 200px;
     max-height: 80vh;
     overflow-y: auto;
   }
