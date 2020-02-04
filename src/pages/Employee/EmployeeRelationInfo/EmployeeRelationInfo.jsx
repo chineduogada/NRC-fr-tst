@@ -1,8 +1,10 @@
 import React from 'react';
+import Joi from 'joi-browser';
+import { toast } from 'react-toastify';
 import CleanSlate from '../../../components/CleanSlate/CleanSlate';
 import Form from '../../../components/Form/Form';
+import InformationBlock from '../../../components/InformationBlock/InformationBlock';
 import Table from '../../../components/ReactTable/Table';
-import Joi from 'joi-browser';
 import Button from '../../../components/Button/Button';
 import http from '../../../services/httpService';
 import Loader from '../../../components/Loader/Loader';
@@ -38,7 +40,7 @@ export default class EmployeeRelationInfo extends Form {
       addressLine4: '',
       email: '',
       beneficiary: '',
-      beneficiaryPercentage: '',
+      beneficiaryPercentage: '0.0',
       serialCode: ''
     },
     errors: {},
@@ -54,12 +56,12 @@ export default class EmployeeRelationInfo extends Form {
     dateOfBirth: Joi.string(),
     mobileNumber: Joi.number(),
     addressLine1: Joi.string(),
-    addressLine2: Joi.string(),
-    addressLine3: Joi.string(),
-    addressLine4: Joi.string(),
+    addressLine2: Joi.string().allow('').optional(),
+    addressLine3: Joi.string().allow('').optional(),
+    addressLine4: Joi.string().allow('').optional(),
     email: Joi.string().email(),
     beneficiary: Joi.string(),
-    beneficiaryPercentage: Joi.number(),
+    beneficiaryPercentage: Joi.number().allow('').optional(),
     serialCode: Joi.number()
   };
 
@@ -77,28 +79,30 @@ export default class EmployeeRelationInfo extends Form {
 
   async doSubmit(event) {
     const relations = [this.state.formData, ...this.state.relations];
-
-    event.currentTarget.reset();
-
-    this.setState({ relations });
-
     const obj = this.state.formData;
+
     const res = await http.post(`/employees/${this.props.ippisNo}/relations`, [
       { ...obj, ippisNo: this.props.ippisNo }
     ]);
 
-    console.log(res);
+    if (res) {
+      this.stopProcessing();
+      toast.success('relation successfully added')
+      this.Form.reset();
+      this.Form.querySelectorAll('select')[0].focus();
+      this.setState({ relations });
+    }
   }
 
   async componentDidMount() {
     const relations = [];
     const res = await http.get(`/employees/${this.props.ippisNo}/relations`);
-
+    
     if (res) {
       res.data.data.forEach(relation => {
         relations.push(this.mapToViewModel(relation));
       });
-
+      
       this.setState({ hasRelation: res.data.data.length, relations });
     }
   }
@@ -112,12 +116,12 @@ export default class EmployeeRelationInfo extends Form {
       dateOfBirth: relation.dateOfBirth,
       mobileNumber: relation.mobileNumber,
       addressLine1: relation.addressLine1,
-      addressLine2: relation.addressLine2,
-      addressLine3: relation.addressLine3,
-      addressLine4: relation.addressLine4,
+      addressLine2: relation.addressLine2 || 'null',
+      addressLine3: relation.addressLine3 || 'null',
+      addressLine4: relation.addressLine4 || 'null',
       email: relation.email,
       beneficiary: relation.beneficiary,
-      beneficiaryPercentage: relation.beneficiaryPercentage
+      beneficiaryPercentage: relation.beneficiaryPercentage || '0'
     };
   };
 
@@ -135,9 +139,8 @@ export default class EmployeeRelationInfo extends Form {
           />
           {addRelation ? (
             <header>
-              <div className="sect">
-                <form onSubmit={this.handleSubmit}>
-                  <div>
+                <form ref={form => this.Form = form} onSubmit={this.handleSubmit}>
+                  <InformationBlock>
                     {this.renderSelect(
                       'relationship type',
                       'relationshipTypeId',
@@ -187,10 +190,9 @@ export default class EmployeeRelationInfo extends Form {
                       null,
                       'number'
                     )}
-                  </div>
+                  </InformationBlock>
                   {this.renderButton('save')}
                 </form>
-              </div>
             </header>
           ) : null}
 

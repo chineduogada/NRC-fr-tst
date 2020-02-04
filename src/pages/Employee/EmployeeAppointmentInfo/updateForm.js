@@ -56,6 +56,10 @@ export default class UpdateForm extends Form {
   async componentDidMount() {
     this.setState({
         formData: { ...obJectKeyEliminator(this.props.defaultValues, [
+          'id',
+          'ippisNo',
+          'createdAt',
+          'updatedAt',
           'firstJobType',
           'firstJobTitle',
           'firstJobGrade',
@@ -89,7 +93,7 @@ export default class UpdateForm extends Form {
   }
   
   async doSubmit() {
-    // const res = await httpService.patch(`/employees/${this.props.ippisNo}/appointment`, this.state.formData);
+    const res = await httpService.patch(`/employees/${this.props.ippisNo}/appointment`, this.state.formData);
 
     
     if (true) {

@@ -14,21 +14,26 @@ import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualificat
 import imgTemp from '../../assets/images/generic-avatar.jpg';
 
 export default class Employee extends Component {
-  state = {
-    currentIppisNumber: null,
-    tabs: [
-      { label: 'Basic Information', key: 'basicInformation' },
-      { label: 'Job Information', key: 'jobInformation' },
-      { label: 'Appointment', key: 'appointment' },
-      { label: 'Relations', key: 'relations' },
-      { label: 'Career', key: 'career' },
-      { label: 'Trainings', key: 'trainings' },
-      { label: 'Skills', key: 'skills' },
-      { label: 'Qualifications', key: 'qualifications' }
-    ],
+  constructor(props) {
+    super(props);
+    this.ippisNo = this.props.match.params.ippisNo;
 
-    activeTab: 'basicInformation'
-  };
+    this.state = {
+      currentIppisNumber: null,
+      tabs: [
+        { label: 'Basic Information', key: 'basicInformation' },
+        { label: 'Job Information', key: 'jobInformation' },
+        { label: 'Appointment', key: 'appointment' },
+        { label: 'Relations', key: 'relations' },
+        { label: 'Career', key: 'career' },
+        { label: 'Trainings', key: 'trainings' },
+        { label: 'Skills', key: 'skills' },
+        { label: 'Qualifications', key: 'qualifications' }
+      ],
+  
+      activeTab: 'basicInformation'
+    };
+  }
 
   handleTabChange = tab => {
     this.setState({ activeTab: tab });
@@ -38,34 +43,34 @@ export default class Employee extends Component {
     const { activeTab } = this.state;
 
     if (activeTab === 'basicInformation') {
-      return <EmployeeBasicInfo ippisNo={this.props.match.params.ippisNo} />;
+      return <EmployeeBasicInfo ippisNo={this.ippisNo} />;
     } else if (activeTab === 'appointment') {
       return (
-        <EmployeeAppointmentInfo ippisNo={this.props.match.params.ippisNo} />
+        <EmployeeAppointmentInfo ippisNo={this.ippisNo} />
       );
     } else if (activeTab === 'jobInformation') {
       return (
         <EmployeeJobInfo
-          ippisNo={this.props.match.params.ippisNo}
+          ippisNo={this.ippisNo}
           changeCurrentIppis={() =>
             this.setState({
-              currentIppisNumber: this.props.match.params.ippisNo
+              currentIppisNumber: this.ippisNo
             })
           }
         />
       );
     } else if (activeTab === 'relations') {
-      return <EmployeeRelationInfo ippisNo={this.props.match.params.ippisNo} />;
+      return <EmployeeRelationInfo ippisNo={this.ippisNo} />;
     } else if (activeTab === 'career') {
-      return <EmployeeCareer ippisNo={this.props.match.params.ippisNo} />;
+      return <EmployeeCareer ippisNo={this.ippisNo} />;
     } else if (activeTab === 'trainings') {
       return (
-        <EmployeeTrainingRecords ippisNo={this.props.match.params.ippisNo} />
+        <EmployeeTrainingRecords ippisNo={this.ippisNo} />
       );
     } else if (activeTab === 'skills') {
-      return <EmployeeSkills ippisNo={this.props.match.params.ippisNo} />;
+      return <EmployeeSkills ippisNo={this.ippisNo} />;
     } else if (activeTab === 'qualifications') {
-      return <EmployeeQualifications ippisNo={this.props.match.params.ippisNo} />;
+      return <EmployeeQualifications ippisNo={this.ippisNo} />;
     }
   }
 
@@ -83,7 +88,7 @@ export default class Employee extends Component {
             <div className={classes.ProfileInfo}>
               <ul>
                 <li className={classes.EmployeeIppis}>
-                  {this.props.match.params.ippisNo}
+                  {this.ippisNo}
                 </li>
                 <li className={classes.EmployeeName}>ebere jackson isohio</li>
                 <li className={classes.EmployeeDept}>

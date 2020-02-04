@@ -34,7 +34,18 @@ export default class UpdateForm extends Form {
         maritalStatusId: '',
         senatorialDistrictId: '',
         professional: '',
-        stateId: ''
+        stateId: '',
+        efxf01: '',
+        efxf02: '',
+        efxf03: '',
+        efxf04: '',
+        efxf05: '',
+        ef9f01: '',
+        ef9f02: '',
+        ef9f03: '',
+        ef9f04: '',
+        efdf01: '',
+        efdf02: '',
       },
 
       errors: {},
@@ -65,13 +76,38 @@ export default class UpdateForm extends Form {
       maritalStatusId: Joi.number(),
       senatorialDistrictId: Joi.number(),
       stateId: Joi.number(),
-      professional: Joi.string()
+      professional: Joi.string(),
+      efxf01: Joi.string().allow('').optional(),
+      efxf02: Joi.string().allow('').optional(),
+      efxf03: Joi.string().allow('').optional(),
+      efxf04: Joi.string().allow('').optional(),
+      efxf05: Joi.string().allow('').optional(),
+      ef9f01: Joi.string().allow('').optional(),
+      ef9f02: Joi.string().allow('').optional(),
+      ef9f03: Joi.string().allow('').optional(),
+      ef9f04: Joi.string().allow('').optional(),
+      efdf01: Joi.string().allow('').optional(),
+      efdf02: Joi.string().allow('').optional(),
     };
   }
 
   fillFormWithDefaultValues() {
     this.setState({
         formData: obJectKeyEliminator(this.props.defaultValues, [
+            'id',
+            "efxf01",
+            "efxf02",
+            "efxf03",
+            "efxf04",
+            "efxf05",
+            "ef9f01",
+            "ef9f02",
+            "ef9f03",
+            "ef9f04",
+            "efdf01",
+            "efdf02",
+            "createdAt",
+            "updatedAt",
             'gender',
             'bloodGroup',
             'countryOfBirth',
@@ -89,17 +125,31 @@ export default class UpdateForm extends Form {
   async componentDidMount() {
     this.setState({
         formData: obJectKeyEliminator(this.props.defaultValues, [
-            'gender',
-            'bloodGroup',
-            'countryOfBirth',
-            'nationality',
-            'gpz',
-            'lga',
-            'maritalStatus',
-            'senatorialDistrict',
-            'state',
-            'pfa',
-            'photo'
+          'id',
+          'efxf01',
+          'efxf02',
+          'efxf03',
+          'efxf04',
+          'efxf05',
+          'ef9f01',
+          'ef9f02',
+          'ef9f03',
+          'ef9f04',
+          'efdf01',
+          'efdf02',
+          'photo',
+          'createdAt',
+          'updatedAt',
+          'gender',
+          'bloodGroup',
+          'countryOfBirth',
+          'nationality',
+          'gpz',
+          'lga',
+          'maritalStatus',
+          'senatorialDistrict',
+          'state',
+          'pfa'
         ]),
         options: this.props.options
     })
@@ -118,10 +168,10 @@ export default class UpdateForm extends Form {
   }
   
   async doSubmit() {
-    // const res = await httpService.patch(`/employees/${this.props.ippisNo}`, this.state.formData);
+    const res = await httpService.patch(`/employees/${this.props.ippisNo}`, this.state.formData);
 
     
-    if (true) {
+    if (res) {
         // Run some external callback passed as prop
         await this.onSuccess();
         this.stopProcessing();

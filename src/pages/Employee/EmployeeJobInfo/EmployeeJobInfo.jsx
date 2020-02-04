@@ -132,7 +132,7 @@ export default class EmployeeBasicInfo extends Component {
         </div>
         {showForm ? (
           <div>
-            <UpdateForm options={this.state.options} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
+            <UpdateForm options={this.state.options} ippisNo={this.props.ippisNo} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
           </div>
         ) : (
           <React.Fragment>

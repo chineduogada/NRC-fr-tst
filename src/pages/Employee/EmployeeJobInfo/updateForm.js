@@ -33,10 +33,10 @@ export default class UpdateForm extends Form {
     this.schema = {
       departmentId: Joi.number(),
       districtId: Joi.number(),
-      sectionId: Joi.string(),
+      sectionId: Joi.number(),
       location: Joi.string(),
       reportTo: Joi.number(),
-      employeeStatus: Joi.string(),
+      employeeStatusId: Joi.number(),
       pensionable: Joi.string(),
     };
   }
@@ -44,8 +44,10 @@ export default class UpdateForm extends Form {
   async componentDidMount() {
     this.setState({
         formData: obJectKeyEliminator(this.props.defaultValues, [
-          'ippisNo',
           'id',
+          'ippisNo',
+          'createdAt',
+          'updatedAt',
           'department',
           'district',
           'employeeStatus',
@@ -69,7 +71,7 @@ export default class UpdateForm extends Form {
   }
   
   async doSubmit() {
-    // const res = await httpService.patch(`/employees/${this.props.ippisNo}/job`, this.state.formData);
+    const res = await httpService.patch(`/employees/${this.props.ippisNo}/job`, this.state.formData);
 
     
     if (true) {
@@ -97,9 +99,9 @@ export default class UpdateForm extends Form {
               'number'
             )}
             {this.renderSelect('employee status', 'employeeStatusId', [
-              { id: 'A', name: 'Active' },
-              { id: 'R', name: 'Retired' },
-              { id: 'S', name: 'Suspended' }
+              { id: 1, name: 'Active' },
+              { id: 2, name: 'Suspended' },
+              { id: 3, name: 'Retired' }
             ], null, null, formData.employeeStatusId)}
             {this.renderSelect('pensionable', 'pensionable', [
               { id: 'Y', name: 'Y' },

@@ -83,7 +83,7 @@ class EmployeeQualifications extends Form {
   };
 
   async fetchOptions() {
-    const res = await httpService.get('/qualifications');
+    const res = await httpService.get('/qualifications?statusId=1');
     if (res) {
       this.setState({
         qualificationOptions: res.data.data
@@ -152,7 +152,7 @@ class EmployeeQualifications extends Form {
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: objectKeyEliminator(rowToPreview, ['id', 'skill'])
+        formData: objectKeyEliminator(rowToPreview, ['id', 'qualification'])
       });
     }
   }

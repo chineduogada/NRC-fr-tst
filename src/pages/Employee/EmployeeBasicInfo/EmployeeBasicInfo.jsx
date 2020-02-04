@@ -107,18 +107,18 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'last name', value: data.lastName },
       { label: 'middle names', value: data.middleNames },
       { label: 'initials', value: data.initials },
-      { label: 'nrcNo', value: data.nrcNo },
+      { label: 'NRC No', value: data.nrcNo },
       { label: 'date of birth', value: data.dateOfBirth },
       { label: 'phone number', value: data.phoneNumber },
       { label: 'country of birth', value: data.countryOfBirth.country },
       { label: 'nationality', value: data.nationality.country },
       { label: 'email', value: data.email },
-      { label: 'pfa number', value: data.pfaNumber },
-      { label: 'pfa', value: data.pfa.name },
+      { label: 'PFA number', value: data.pfaNumber },
+      { label: 'PFA', value: data.pfa.name },
       { label: 'gender', value: data.gender.type },
       { label: 'blood group', value: data.bloodGroup.type },
-      { label: 'gpz', value: data.gpz.name },
-      { label: 'lga', value: data.lga.lga },
+      { label: 'geo political zone', value: data.gpz.name },
+      { label: 'LGA', value: data.lga.lga },
       {
         label: 'marital status',
         value: data.maritalStatus.status
@@ -176,7 +176,7 @@ export default class EmployeeBasicInfo extends Component {
         </div>
         {showForm ? (
           <div>
-            <UpdateForm options={this.state.options} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
+            <UpdateForm options={this.state.options} ippisNo={this.props.ippisNo} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
           </div>
         ) : (
           <React.Fragment>
