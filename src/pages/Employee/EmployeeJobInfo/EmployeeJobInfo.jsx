@@ -18,7 +18,7 @@ export default class EmployeeBasicInfo extends Component {
 
       options: {
         departmentOptions: [],
-        districtOptions: [],
+        districtOptions: []
       },
 
       showForm: false
@@ -29,21 +29,7 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   async fetchSelectComponentOptions() {
-    const [
-      departments,
-      districts,
-      bloodGroups,
-      jobTypes,
-      jobTitles,
-      jobGrades,
-      pfa,
-      gpz,
-      maritalStatuses,
-      senatorialDistricts,
-      states,
-      lga,
-      countries
-    ] = await httpService.all([
+    const [departments, districts] = await httpService.all([
       httpService.get('/departments?statusId=1'),
       httpService.get('/districts?statusId=1')
     ]);
@@ -51,7 +37,7 @@ export default class EmployeeBasicInfo extends Component {
     const options = {
       departmentOptions: nameMapper(departments.data.data, 'description'),
       districtOptions: nameMapper(districts.data.data, 'siteName')
-    }
+    };
 
     if (departments) {
       this.setState({
@@ -101,30 +87,30 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   async handleUpdateSuccess() {
+    this.props.onUpdate();
     await this.fetchEmployeeData();
-    this.setState({ showForm: false })
+    this.setState({ showForm: false });
   }
 
   handleUpdateButtonClick() {
     this.setState({ showForm: !this.state.showForm });
   }
 
-
   render() {
     const { jobInformation, showForm } = this.state;
 
     return jobInformation ? (
       <div>
-        <div className="Action">
+        <div className='Action'>
           {showForm ? (
             <Button
-              label="cancel"
+              label='cancel'
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label="update job details"
+              label='update job details'
               onClick={this.handleUpdateButtonClick}
               highlight
             />
@@ -132,7 +118,12 @@ export default class EmployeeBasicInfo extends Component {
         </div>
         {showForm ? (
           <div>
-            <UpdateForm options={this.state.options} ippisNo={this.props.ippisNo} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
+            <UpdateForm
+              options={this.state.options}
+              ippisNo={this.props.ippisNo}
+              defaultValues={this.state.originalData}
+              onSuccess={this.handleUpdateSuccess}
+            />
           </div>
         ) : (
           <React.Fragment>

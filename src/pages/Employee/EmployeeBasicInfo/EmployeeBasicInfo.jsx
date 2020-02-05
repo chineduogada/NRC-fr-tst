@@ -29,7 +29,7 @@ export default class EmployeeBasicInfo extends Component {
         senatorialDistrictOptions: [],
         stateOptions: [],
         lgaOptions: [],
-        countryOptions: [],
+        countryOptions: []
       },
 
       showForm: false
@@ -72,7 +72,7 @@ export default class EmployeeBasicInfo extends Component {
       ),
       stateOptions: nameMapper(states.data.data, 'state'),
       countryOptions: nameMapper(countries.data.data, 'country')
-    }
+    };
 
     if (bloodGroups) {
       this.setState({
@@ -147,8 +147,9 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   async handleUpdateSuccess() {
+    this.props.onUpdate();
     await this.fetchEmployeeData();
-    this.setState({ showForm: false })
+    this.setState({ showForm: false });
   }
 
   handleUpdateButtonClick() {
@@ -159,16 +160,16 @@ export default class EmployeeBasicInfo extends Component {
     const { basicInformation, otherInformation, showForm } = this.state;
     return basicInformation ? (
       <div>
-        <div className="Action">
+        <div className='Action'>
           {showForm ? (
             <Button
-              label="cancel"
+              label='cancel'
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label="update basic details"
+              label='update basic details'
               onClick={this.handleUpdateButtonClick}
               highlight
             />
@@ -176,11 +177,16 @@ export default class EmployeeBasicInfo extends Component {
         </div>
         {showForm ? (
           <div>
-            <UpdateForm options={this.state.options} ippisNo={this.props.ippisNo} defaultValues={this.state.originalData} onSuccess={this.handleUpdateSuccess} />
+            <UpdateForm
+              options={this.state.options}
+              ippisNo={this.props.ippisNo}
+              defaultValues={this.state.originalData}
+              onSuccess={this.handleUpdateSuccess}
+            />
           </div>
         ) : (
           <React.Fragment>
-            <EmployeeInfoBlock data={basicInformation} title="" />
+            <EmployeeInfoBlock data={basicInformation} title='' />
             {/* <EmployeeInfoBlock data={otherInformation} title="" /> */}
           </React.Fragment>
         )}

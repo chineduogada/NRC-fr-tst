@@ -12,6 +12,7 @@ import EmployeeSkills from '../EmployeeSkills/EmployeeSkills';
 import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualifications';
 import fileUploadAssistant from '../../helpers/fileUploadAssistant';
 import httpService from '../../services/httpService';
+import { mapEmployeeStatus } from '../../services/employeeService';
 import imgTemp from '../../assets/images/generic-avatar.jpg';
 import classes from './Employee.module.scss';
 import Loader from '../../components/Loader/Loader';
@@ -37,13 +38,46 @@ export default class Employee extends Component {
       ],
 
       uploading: false,
+      justFetchingImage: true,
 
-      employeeImageSrc: '',
+      employeeImageSrc: 'is loading',
+      fullName: '',
+      department: '',
+      employeeStatus: '',
+      presentJobType: '',
 
       activeTab: 'basicInformation'
     };
 
     this.handleImageChange = this.handleImageChange.bind(this);
+    this.fetchSimpleProfile = this.fetchSimpleProfile.bind(this);
+  }
+
+  async fetchSimpleProfile() {
+    const res = await httpService.get(`/employees?ippisNo=${this.ippisNo}`);
+
+    if (res) {
+      const {
+        photo,
+        firstName,
+        lastName,
+        employeeJob,
+        employeeAppointment
+      } = res.data.data.rows[0];
+
+      this.setState({
+        justFetchingImage: false,
+        employeeImageSrc: photo,
+        fullName: `${firstName} ${lastName}`,
+        department: employeeJob.department.description,
+        employeeStatus: mapEmployeeStatus(employeeJob.employeeStatus.status),
+        presentJobType: employeeAppointment.presentJobType.type
+      });
+    }
+  }
+
+  async componentDidMount() {
+    this.fetchSimpleProfile();
   }
 
   toggleUploading() {
@@ -73,6 +107,7 @@ export default class Employee extends Component {
       console.log(res);
       this.setState({ employeeImageSrc: res.data.data.photo });
       this.toggleUploading();
+      this.fetchSimpleProfile();
     }
   }
 
@@ -80,12 +115,23 @@ export default class Employee extends Component {
     const { activeTab } = this.state;
 
     if (activeTab === 'basicInformation') {
-      return <EmployeeBasicInfo ippisNo={this.ippisNo} />;
+      return (
+        <EmployeeBasicInfo
+          onUpdate={this.fetchSimpleProfile}
+          ippisNo={this.ippisNo}
+        />
+      );
     } else if (activeTab === 'appointment') {
-      return <EmployeeAppointmentInfo ippisNo={this.ippisNo} />;
+      return (
+        <EmployeeAppointmentInfo
+          onUpdate={this.fetchSimpleProfile}
+          ippisNo={this.ippisNo}
+        />
+      );
     } else if (activeTab === 'jobInformation') {
       return (
         <EmployeeJobInfo
+          onUpdate={this.fetchSimpleProfile}
           ippisNo={this.ippisNo}
           changeCurrentIppis={() =>
             this.setState({
@@ -108,30 +154,40 @@ export default class Employee extends Component {
   }
 
   render() {
-    const { tabs, activeTab } = this.state;
+    const {
+      tabs,
+      activeTab,
+      justFetchingImage,
+      employeeImageSrc,
+      fullName,
+      department,
+      employeeStatus,
+      presentJobType
+    } = this.state;
 
     return (
       <section className={classes.Employee}>
         <header>
           <div className={classes.Profile}>
             <div className={classes.ImgWrapper}>
-              {this.state.uploading ? (
-                <Spinner size="bg" animation="border" />
+              {this.state.uploading || justFetchingImage ? (
+                <Spinner size='bg' animation='border' />
               ) : (
                 <img
                   src={
-                    `http://localhost:8050${this.state.employeeImageSrc}` ||
-                    imgTemp
+                    employeeImageSrc
+                      ? `http://localhost:8050${this.state.employeeImageSrc}`
+                      : imgTemp
                   }
-                  alt="employee"
+                  alt='employee'
                 />
               )}
               <div className={classes.UploadBox}>
-                <label htmlFor="upload-input">change image</label>
+                <label htmlFor='upload-input'>change image</label>
                 <input
-                  id="upload-input"
-                  type="file"
-                  accept="jpeg, jpg, png, svg"
+                  id='upload-input'
+                  type='file'
+                  accept='jpeg, jpg, png, svg'
                   hidden
                   onChange={this.handleImageChange}
                 />
@@ -141,12 +197,16 @@ export default class Employee extends Component {
             <div className={classes.ProfileInfo}>
               <ul>
                 <li className={classes.EmployeeIppis}>{this.ippisNo}</li>
-                <li className={classes.EmployeeName}>ebere jackson isohio</li>
-                <li className={classes.EmployeeDept}>
-                  Administration and Human Resources
+                <li className={classes.EmployeeName}>{fullName}</li>
+                <li className={classes.EmployeeDept}>{department}</li>
+                <li className={classes.EmployeeJobType}>
+                  {presentJobType} staff
                 </li>
-                <li className={classes.EmployeeJobType}>contract staff</li>
-                <li className={`${classes.EmployeeStatus} active`}>active</li>
+                <li
+                  className={`${classes.EmployeeStatus} employee-status ${employeeStatus}`}
+                >
+                  {employeeStatus}
+                </li>
               </ul>
             </div>
           </div>
@@ -157,7 +217,7 @@ export default class Employee extends Component {
           </div> */}
         </header>
 
-        <main className="">
+        <main className=''>
           <TabsComponent
             tabs={tabs}
             activeTab={activeTab}

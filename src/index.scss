@@ -18,7 +18,7 @@
     width: 0.2em;
     height: 0.2em;
 
-    @media screen  and (min-width: 768px) {  
+    @media screen and (min-width: 768px) {
       width: 0.38em;
       height: 0.38em;
     }
@@ -171,4 +171,24 @@ ol {
 /// Displayed Data Grid
 .data-item-value {
   font-size: 0.875rem;
+}
+
+// EMPLOYEE SPECIFIC GLOBAL STYLES
+.employee-status {
+  color: var(--inverse-text);
+  &.active {
+    background: var(--basic-color);
+  }
+  &.suspended {
+    // background: rgb(255, 208, 0);
+    background: var(--assent);
+  }
+  &.retired {
+    background: var(--dogwood-rose);
+  }
+
+  // &.active,
+  // &.retired {
+  //   color: var(--inverse-text);
+  // }
 }

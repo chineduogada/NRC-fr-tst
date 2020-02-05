@@ -66,6 +66,9 @@ export default class UpdateForm extends Form {
       nationalityId: Joi.number(),
       email: Joi.string().email(),
       pfaNumber: Joi.number(),
+      photo: Joi.string()
+        .allow('')
+        .optional(),
       pfaId: Joi.number(),
       genderId: Joi.number(),
       bloodGroupId: Joi.number(),

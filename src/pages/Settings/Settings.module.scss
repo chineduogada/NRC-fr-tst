@@ -1,10 +1,15 @@
 .Setting {
   a {
     color: var(--assent);
+    font-size: 1rem;
+  }
+
+  .SettingTitle {
+    margin: 0;
   }
 
   .SettingDescription {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     opacity: 0.8;
   }
 }
