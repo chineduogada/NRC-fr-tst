@@ -116,19 +116,22 @@ export default class Employee extends Component {
           <div className={classes.Profile}>
             <div className={classes.ImgWrapper}>
               {this.state.uploading ? (
-                <Spinner size='bg' animation='border' />
+                <Spinner size="bg" animation="border" />
               ) : (
                 <img
-                  src={this.state.employeeImageSrc || imgTemp}
-                  alt='employee'
+                  src={
+                    `http://localhost:8050${this.state.employeeImageSrc}` ||
+                    imgTemp
+                  }
+                  alt="employee"
                 />
               )}
               <div className={classes.UploadBox}>
-                <label htmlFor='upload-input'>change image</label>
+                <label htmlFor="upload-input">change image</label>
                 <input
-                  id='upload-input'
-                  type='file'
-                  accept='jpeg, jpg, png, svg'
+                  id="upload-input"
+                  type="file"
+                  accept="jpeg, jpg, png, svg"
                   hidden
                   onChange={this.handleImageChange}
                 />
@@ -154,7 +157,7 @@ export default class Employee extends Component {
           </div> */}
         </header>
 
-        <main className=''>
+        <main className="">
           <TabsComponent
             tabs={tabs}
             activeTab={activeTab}
