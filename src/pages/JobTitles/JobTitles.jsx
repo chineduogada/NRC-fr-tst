@@ -11,7 +11,6 @@ import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
-import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
 import classes from './JobTitles.module.scss';
 
@@ -20,14 +19,14 @@ class JobTitles extends Form {
     super(props);
 
     this.tableRowOptions = [
-      {id: 0, name: 'inactive'},
-      {id: 0, name: 'active'},
-    ]
+      { id: 0, name: 'inactive' },
+      { id: 0, name: 'active' }
+    ];
 
     this.statusOptions = [
       { id: 1, status: 'active' },
       { id: 2, status: 'inactive' }
-    ]
+    ];
 
     this.state = {
       filteredDataFromServer: [],
@@ -61,7 +60,9 @@ class JobTitles extends Form {
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(this);
+    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(
+      this
+    );
     this.addDataObject = this.addDataObject.bind(this);
     this.updateDataObject = this.updateDataObject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -112,7 +113,7 @@ class JobTitles extends Form {
   };
 
   handleTableRowOptionChange({ currentTarget }) {
-    console.log(currentTarget.id)
+    console.log(currentTarget.id);
   }
 
   handleRowClick(event) {
@@ -135,23 +136,31 @@ class JobTitles extends Form {
    */
   updateObjectList(res) {
     const newDataObject = res.data.data;
-    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
 
-    this.setState({ filteredDataFromServer: [filteredNewDataObject, ...this.state.filteredDataFromServer] });
+    this.setState({
+      filteredDataFromServer: [
+        filteredNewDataObject,
+        ...this.state.filteredDataFromServer
+      ]
+    });
   }
 
   resetFormData() {
     this.setState({ formData: this.initialFormState });
   }
 
- /**
+  /**
    * Gets actual values of the options the user has updated
    */
   getOptionValues() {
     const { statusId } = this.state.formData;
     return {
       status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
-    }
+    };
   }
 
   /**
@@ -165,7 +174,7 @@ class JobTitles extends Form {
     // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
     // map every option to the current value the user may have selected and join them with the from data
-    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
@@ -269,7 +278,14 @@ class JobTitles extends Form {
             null,
             this.state.rowToPreview.description
           )}
-          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'), null, null, this.state.formData.statusId)}
+          {this.renderSelect(
+            'status ',
+            'statusId',
+            nameMapper(this.statusOptions, 'status'),
+            null,
+            null,
+            this.state.formData.statusId
+          )}
 
           {this.renderButton('update')}
         </form>
@@ -284,7 +300,11 @@ class JobTitles extends Form {
 
         {this.renderInput('code', 'code')}
         {this.renderInput('description', 'description')}
-        {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'))}
+        {this.renderSelect(
+          'status ',
+          'statusId',
+          nameMapper(this.statusOptions, 'status')
+        )}
 
         {this.renderButton('save')}
       </form>
@@ -316,9 +336,7 @@ class JobTitles extends Form {
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
-            >
-              
-            </TableView>
+            ></TableView>
 
             <SideDraw
               title='job title'

@@ -4,12 +4,12 @@ import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Loader from '../../components/Loader/Loader';
+import nameMapper from '../../helpers/nameMapper';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
-import Button from '../../components/Button/Button';
 import classes from './Department.module.scss';
 
 class Department extends Form {
@@ -18,12 +18,18 @@ class Department extends Form {
 
     this.id = this.props.match.params.id;
 
+    this.statusOptions = [
+      { id: 1, status: 'active' },
+      { id: 2, status: 'inactive' }
+    ];
+
     this.state = {
       departments: [],
 
       columns: [
         { accessor: 'code', Header: 'Code' },
-        { accessor: 'description', Header: 'Description' }
+        { accessor: 'description', Header: 'Description' },
+        { accessor: 'status', Header: 'Status' }
       ],
 
       pageSize: 20,
@@ -33,7 +39,8 @@ class Department extends Form {
 
       formData: {
         code: '',
-        description: ''
+        description: '',
+        statusId: ''
       },
 
       rowToPreview: null,
@@ -55,7 +62,8 @@ class Department extends Form {
 
   schema = {
     code: Joi.string(),
-    description: Joi.string()
+    description: Joi.string(),
+    statusId: Joi.number()
   };
 
   async componentWillMount() {
@@ -86,11 +94,13 @@ class Department extends Form {
     this.setState({ showForm: false, rowToPreview: null });
   }
 
-  mapToViewModel(department) {
+  mapToViewModel(row) {
     return {
-      id: department.id,
-      code: department.code,
-      description: department.description
+      id: row.id,
+      code: row.code,
+      description: row.description,
+      status: row.status.status,
+      statusId: row.statusId
     };
   }
 
@@ -109,7 +119,7 @@ class Department extends Form {
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: _.pick(rowToPreview, ['code', 'description'])
+        formData: _.pick(rowToPreview, ['code', 'description', 'statusId'])
       });
     }
   }
@@ -124,13 +134,57 @@ class Department extends Form {
     this.setState({ formData: this.initialFormState });
   }
 
-  updateTableRow() {
-    const oldState = [...this.state.departments];
-    const id = this.state.rowToPreview.id;
-    const formData = this.state.formData;
-    const rowIndex = oldState.findIndex(row => row.id === id);
+  /**
+   * Adds the newly created data object to the list of data objects initially returned from the server
+   * @param { Response } res Axios response object
+   */
+  updateObjectList(res) {
+    const newDataObject = res.data.data;
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
 
-    oldState[rowIndex] = { ...formData, id };
+    this.setState({
+      departments: [filteredNewDataObject, ...this.state.departments]
+    });
+  }
+
+  /**
+   * Gets actual values of the options the user has updated
+   */
+  getOptionValues() {
+    const { statusId } = this.state.formData;
+    return {
+      status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
+    };
+  }
+
+  // updateTableRow() {
+  //   const oldState = [...this.state.departments];
+  //   const id = this.state.rowToPreview.id;
+  //   const formData = this.state.formData;
+  //   const rowIndex = oldState.findIndex(row => row.id === id);
+
+  //   oldState[rowIndex] = { ...formData, id };
+
+  //   this.setState({ departments: oldState });
+  // }
+  updateTableRow() {
+    // create a copy of the filtered data stored in the state
+    const oldState = [...this.state.departments];
+    // obtain the id or the row to be previewed
+    const id = this.state.rowToPreview.id;
+    // obtain the form data in the state (it contains the values the user just updated)
+    const formData = this.state.formData;
+    // map every option to the current value the user may have selected and join them with the from data
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
+    // obtain the index of the row the use jus
+    const rowIndex = oldState.findIndex(row => row.id === id);
+    // map the updated data to the desired view (Ex: for table display)
+    const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
+    // updating the copy of the filtered data from the server
+    oldState[rowIndex] = { ...filteredUpdatedRow, id };
 
     this.setState({ departments: oldState });
   }
@@ -225,6 +279,14 @@ class Department extends Form {
             null,
             this.state.rowToPreview.description
           )}
+          {this.renderSelect(
+            'status ',
+            'statusId',
+            nameMapper(this.statusOptions, 'status'),
+            null,
+            null,
+            this.state.formData.statusId
+          )}
 
           {this.renderButton('update')}
         </form>
@@ -239,6 +301,11 @@ class Department extends Form {
 
         {this.renderInput('code', 'code')}
         {this.renderInput('description', 'description')}
+        {this.renderSelect(
+          'status ',
+          'statusId',
+          nameMapper(this.statusOptions, 'status')
+        )}
 
         {this.renderButton('save')}
       </form>
