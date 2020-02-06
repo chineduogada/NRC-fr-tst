@@ -176,7 +176,7 @@ export default class Employee extends Component {
                 <img
                   src={
                     employeeImageSrc
-                      ? `http://localhost:8050${this.state.employeeImageSrc}`
+                      ? `${this.state.employeeImageSrc}`
                       : imgTemp
                   }
                   alt='employee'
