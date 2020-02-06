@@ -95,6 +95,7 @@ class Department extends Form {
   }
 
   mapToViewModel(row) {
+    console.log(row);
     return {
       id: row.id,
       code: row.code,
