@@ -1,14 +1,16 @@
 import React from 'react';
 import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
 import { MdApps } from 'react-icons/md';
-import getCredentials from '../../services/Credentials';
+import getCredentials, { getUserProfileLocally } from '../../services/Credentials';
 import { Link } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
 import './Nav.scss';
+import { GetImage } from '../../services/employeeService';
 
 // Navigation
 const Nav = props => {
   const { role, firstName, lastName } = getCredentials();
+  const { employee } = getUserProfileLocally();
 
   return (
     <nav id="main-nav">
@@ -41,7 +43,11 @@ const Nav = props => {
             </li>
           ) : null}
         </ul>
-        <Dropdown trigger={<li className="nav-user"></li>}>
+        <Dropdown trigger={<li className="nav-user">  
+        <div className='nav-user-image-wrap'>
+          {<GetImage imageSource={employee.photo}/>}
+          </div>
+        </li>}>
             <ul>
               <li>
                 <Link to="/profile">Profile</Link>
