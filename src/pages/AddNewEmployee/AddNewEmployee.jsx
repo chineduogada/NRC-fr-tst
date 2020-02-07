@@ -20,9 +20,6 @@ export default class AddNewEmployee extends Form {
     this.handleIppisResponseRecieved = this.handleIppisResponseRecieved.bind(
       this
     );
-    this.handleReportToResponseRecieved = this.handleReportToResponseRecieved.bind(
-      this
-    );
   }
 
   state = {
@@ -56,7 +53,7 @@ export default class AddNewEmployee extends Form {
       districtId: '',
       location: '',
       reportTo: '',
-      employeeStatus: '',
+      employeeStatusId: '',
       pensionable: '',
 
       // APPOINTMENT INFORMATION FORM DATA
@@ -181,10 +178,10 @@ export default class AddNewEmployee extends Form {
 
     departmentId: Joi.number(),
     districtId: Joi.number(),
-    sectionId: Joi.string(),
+    sectionId: Joi.number(),
     location: Joi.string(),
     reportTo: Joi.number(),
-    employeeStatus: Joi.string(),
+    employeeStatusId: Joi.number(),
     pensionable: Joi.string(),
 
     // APPOINTMENT INFORMATION SCHEMA
@@ -210,7 +207,7 @@ export default class AddNewEmployee extends Form {
   handleEmployeeInputChange(employee) {
     const condition =
       `${this.reportTo.value}`.length > 5 &&
-      `${this.reportTo.value}`.length < 6;
+      `${this.reportTo.value}`.length <= 6;
     if (!employee || !condition) {
       this.setState({ reportToVerified: false });
     }
@@ -218,11 +215,19 @@ export default class AddNewEmployee extends Form {
 
   handleIppisResponseRecieved(employees) {
     console.log('ippis character length', this.ippisNo);
-    if (!employees.length && `${this.ippisNo.value}`.length >= 5) {
+    if (
+      !employees.length &&
+      `${this.ippisNo.value}`.length >= 5 &&
+      `${this.ippisNo.value}`.length <= 6
+    ) {
       this.setState({ ippisNoVerified: true });
     } else {
       this.setState({ ippisNoVerified: false });
     }
+  }
+
+  resetFormData() {
+    this.setState({ formData: this.initialFormState });
   }
 
   async doSubmit(event, stopProcessing) {
@@ -233,25 +238,25 @@ export default class AddNewEmployee extends Form {
     if (res) {
       toast.success('Employee successfully registered!');
       this.Form.reset();
+      this.resetFormData();
+      this.ippisNo.focus();
     }
   }
 
   render() {
     return this.state.departmentOptions.length ? (
-      <Section title="add new employee">
+      <Section title='add new employee'>
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title="">
+          <InformationBlock title=''>
             <EmployeeVerifier
               preventDefault
               checkOnResponseRecieved={employees => !employees.length}
               onResponseReceived={this.handleIppisResponseRecieved}
-              onEmployeeSelection={this.handleEmployeeSelection}
-              onInputChange={this.handleEmployeeInputChange}
             >
               {this.renderInput(
                 'IPPIS No.',
@@ -265,7 +270,7 @@ export default class AddNewEmployee extends Form {
 
           {this.state.ippisNoVerified ? (
             <>
-              <InformationBlock title="basic information">
+              <InformationBlock title='basic information'>
                 {this.renderInput('first Name', 'firstName')}
                 {this.renderInput('last Name', 'lastName')}
                 {this.renderInput('middle Names', 'middleNames')}
@@ -339,12 +344,11 @@ export default class AddNewEmployee extends Form {
                 ])}
               </InformationBlock>
 
-              <InformationBlock title="job information">
+              <InformationBlock title='job information'>
                 <EmployeeVerifier
                   checkOnResponseRecieved={employees => employees.length}
-                  onResponseReceived={this.handleReportToResponseRecieved}
                   onEmployeeSelection={this.handleEmployeeSelection}
-                  onInputChange={this.handleEmployeeReportToInputChange}
+                  onInputChange={this.handleEmployeeInputChange}
                 >
                   {this.renderInput(
                     `who ${this.state.formData.firstName ||
@@ -367,10 +371,10 @@ export default class AddNewEmployee extends Form {
                     )}
                     {this.renderInput('location', 'location', '')}
 
-                    {this.renderSelect('employee status', 'employeeStatus', [
-                      { id: 'A', name: 'Active' },
-                      { id: 'R', name: 'Retired' },
-                      { id: 'S', name: 'Suspended' }
+                    {this.renderSelect('employee status', 'employeeStatusId', [
+                      { id: '1', name: 'Active' },
+                      { id: '2', name: 'Suspended' },
+                      { id: '3', name: 'Retired' }
                     ])}
                     {this.renderSelect('pensionable', 'pensionable', [
                       { id: 'Y', name: 'Y' },
@@ -390,7 +394,7 @@ export default class AddNewEmployee extends Form {
                 ) : null}
               </InformationBlock>
 
-              <InformationBlock title="appointment information">
+              <InformationBlock title='appointment information'>
                 {this.renderInput(
                   'first appointment date',
                   'firstAppointmentDate',
@@ -476,7 +480,7 @@ export default class AddNewEmployee extends Form {
         </form>
       </Section>
     ) : (
-      <Loader message="please wait..." />
+      <Loader message='please wait...' />
     );
   }
 }

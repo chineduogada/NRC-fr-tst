@@ -44,16 +44,16 @@ export class GetImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageSource: null
-    }
+      imageSource: undefined
+    };
   }
 
   style = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    objectPosition: 'center',
-  }
+    objectPosition: 'center'
+  };
 
   componentDidMount() {
     this.setState({ imageSource: this.props.imageSource });
@@ -61,23 +61,18 @@ export class GetImage extends Component {
 
   render() {
     const { imageSource } = this.state;
-    console.log('checking out image source', imageSource)
+    console.log('checking out image source', imageSource);
     return (
       <>
-          {imageSource === null ?  (
-            <Spinner size='bg' animation='border' />
-            
-          ) : (
-            <img
-              style={this.style}
-              src={
-                imageSource
-                  ? `${imageSource}`
-                  : imgTemp
-              }
-              alt='employee'
-            />
-          )}
+        {imageSource === undefined ? (
+          <Spinner size='bg' animation='border' />
+        ) : (
+          <img
+            style={this.style}
+            src={imageSource ? `${imageSource}` : imgTemp}
+            alt='employee'
+          />
+        )}
       </>
     );
   }

@@ -56,19 +56,19 @@ class EmployeeCareer extends Component {
    * Destructures each object in the array of training records returned from the server
    * This destructuring is meant for the view (ie. the table on this page) and will not be used to map the values of input fields
    * when the user attempts to update a row (well, if updating is also allowed on this page)
-   * @param {Object} record a returned training record
+   * @param {Object} row a returned training record
    */
-  mapToViewModel(record) {
+  mapToViewModel(row) {
     return {
-      id: record.id,
-      ippisNo: record.ippisNo,
-      employee: `${record.employee.firstName} ${record.employee.lastName}`,
-      transactionDate: record.transactionDate,
-      memoReference: record.memoReference,
-      reasonCode: record.reasonCode.code,
-      newJobTitle: record.newJobTitle,
-      oldJobTitle: record.oldJobTitle,
-      remarks: record.remarks
+      id: row.id,
+      ippisNo: row.ippisNo,
+      employee: `${row.employee.firstName} ${row.employee.lastName}`,
+      transactionDate: row.transactionDate,
+      memoReference: row.memoReference,
+      reasonCode: row.reasonCode.code,
+      newJobTitle: row.newJobTitle.description,
+      oldJobTitle: row.oldJobTitle.description,
+      remarks: row.remarks
     };
   }
 
@@ -102,8 +102,8 @@ class EmployeeCareer extends Component {
             ) : (
               <CleanSlate
                 onSlateButtonClick={this.handleSlate}
-                msg="no career record for this employee yet"
-                buttonLabel="add a record"
+                msg='no career record for this employee yet'
+                buttonLabel='add a record'
               />
             )}
           </Section>

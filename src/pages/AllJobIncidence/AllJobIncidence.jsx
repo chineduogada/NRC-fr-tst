@@ -7,7 +7,9 @@ import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
+import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
+import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 
 class AllJobIncidence extends Form {
   constructor(props) {
@@ -49,6 +51,8 @@ class AllJobIncidence extends Form {
         remarks: ''
       },
 
+      ippisNoVerified: false,
+
       jobTitleOptions: [],
       reasonCodeOptions: [],
 
@@ -56,6 +60,9 @@ class AllJobIncidence extends Form {
     };
 
     this.initialFormState = { ...this.state.formData };
+
+    this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
+    this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
 
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
@@ -150,6 +157,16 @@ class AllJobIncidence extends Form {
     }
   };
 
+  handleEmployeeSelection() {
+    this.setState({ ippisNoVerified: true });
+  }
+
+  handleEmployeeInputChange(employee) {
+    if (!employee) {
+      this.setState({ ippisNoVerified: false });
+    }
+  }
+
   handleRowClick({ currentTarget }) {
     console.log(this.props);
     this.props.history.push(`job-incidence/${currentTarget.id}`);
@@ -173,7 +190,7 @@ class AllJobIncidence extends Form {
 
     if (res) {
       await this.fetchData();
-      toast.success('Training has been recorded successfully!');
+      toast.success('Incidence has been recorded successfully!');
       this.Form.reset();
       this.resetFormData();
       this.closeSideDraw();
@@ -185,35 +202,55 @@ class AllJobIncidence extends Form {
   }
 
   renderForm() {
+    const { ippisNoVerified } = this.state;
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>New career record</p>
-        {this.renderInput(
-          'transaction date',
-          'transactionDate',
-          null,
-          null,
-          'date'
-        )}
-        {this.renderInput('ippis no', 'ippisNo', null, null, 'number')}
-        {this.renderInput('memo reference', 'memoReference')}
-        {this.renderSelect('reason code', 'reasonCodeId', [
-          { id: 1, name: 'fighting' },
-          { id: 2, name: 'stealing' }
-        ])}
-        {this.renderInput('incindence line 1', 'incidenceLine1')}
-        {this.renderInput('incindence line 2', 'incidenceLine2')}
-        {this.renderInput('incindence line 3', 'incidenceLine3')}
-        {this.renderInput('incindence line 4', 'incidenceLine4')}
-        {this.renderInput('incindence line 5', 'incidenceLine5')}
-        {this.renderInput(
-          'attached document',
-          'attachedDoc',
-          null,
-          null,
-          'file'
-        )}
-        {this.renderTextArea('remarks', 'remarks')}
+
+        <EmployeeVerifier
+          checkOnResponseRecieved={employees => employees.length}
+          onEmployeeSelection={this.handleEmployeeSelection}
+          onInputChange={this.handleEmployeeInputChange}
+        >
+          {this.renderInput(
+            'IPPIS no.',
+            'ippisNo',
+            'Please enter a valid IPPIS number',
+            null,
+            'number'
+          )}
+        </EmployeeVerifier>
+
+        {ippisNoVerified ? (
+          <>
+            {this.renderInput(
+              'transaction date',
+              'transactionDate',
+              null,
+              null,
+              'date'
+            )}
+            {this.renderInput('memo reference', 'memoReference')}
+            {this.renderSelect('reason code', 'reasonCodeId', [
+              { id: 1, name: 'fighting' },
+              { id: 2, name: 'stealing' }
+            ])}
+            {this.renderInput('incindence line 1', 'incidenceLine1')}
+            {this.renderInput('incindence line 2', 'incidenceLine2')}
+            {this.renderInput('incindence line 3', 'incidenceLine3')}
+            {this.renderInput('incindence line 4', 'incidenceLine4')}
+            {this.renderInput('incindence line 5', 'incidenceLine5')}
+            {this.renderInput(
+              'attached document',
+              'attachedDoc',
+              null,
+              null,
+              'file'
+            )}
+            {this.renderTextArea('remarks', 'remarks')}
+          </>
+        ) : null}
+
         {this.renderButton('save')}
       </form>
     );
@@ -227,21 +264,21 @@ class AllJobIncidence extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title="job incidence"
-              message="Click a row to preview"
+              title='job incidence'
+              message='Click a row to preview'
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
             ></TableView>
 
-            <SideDraw
-              title="record"
-              openDraw={this.state.showDraw}
+            <Modal
+              title='incidence record'
+              openModal={this.state.showDraw}
               onClose={this.closeSideDraw}
             >
               {this.renderForm()}
-            </SideDraw>
+            </Modal>
           </Section>
         ) : (
           <Loader />

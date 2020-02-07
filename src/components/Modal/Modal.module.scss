@@ -5,8 +5,8 @@
   transform: translate(-50%, -45%);
   z-index: 3;
   background-color: #fff;
-  width: 70%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 700px;
   box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.1s 0.1s ease;
 
@@ -19,6 +19,10 @@
     justify-content: space-between;
     align-items: center;
     margin: 0;
+
+    h5 {
+      margin: 0;
+    }
 
     .CloseIcon {
       cursor: pointer;

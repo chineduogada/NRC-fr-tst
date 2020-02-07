@@ -7,7 +7,9 @@ import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
+import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
+import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 
 class AllCareers extends Form {
   constructor(props) {
@@ -42,6 +44,8 @@ class AllCareers extends Form {
         remarks: ''
       },
 
+      ippisNoVerified: false,
+
       jobTitleOptions: [],
       reasonCodeOptions: [],
 
@@ -49,6 +53,9 @@ class AllCareers extends Form {
     };
 
     this.initialFormState = { ...this.state.formData };
+
+    this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
+    this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
 
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
@@ -114,8 +121,8 @@ class AllCareers extends Form {
       transactionDate: record.transactionDate,
       memoReference: record.memoReference,
       reasonCode: record.reasonCode.code,
-      newJobTitle: record.newJobTitle,
-      oldJobTitle: record.oldJobTitle,
+      newJobTitle: record.newJobTitle.description,
+      oldJobTitle: record.oldJobTitle.description,
       remarks: record.remarks
     };
   }
@@ -125,6 +132,16 @@ class AllCareers extends Form {
       this.setState({ currentPage: page });
     }
   };
+
+  handleEmployeeSelection() {
+    this.setState({ ippisNoVerified: true });
+  }
+
+  handleEmployeeInputChange(employee) {
+    if (!employee) {
+      this.setState({ ippisNoVerified: false });
+    }
+  }
 
   handleRowClick({ currentTarget }) {
     console.log(this.props);
@@ -161,34 +178,53 @@ class AllCareers extends Form {
   }
 
   renderForm() {
+    const { ippisNoVerified } = this.state;
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>New career record</p>
-        {this.renderInput(
-          'transaction date',
-          'transactionDate',
-          null,
-          null,
-          'date'
-        )}
-        {this.renderInput('ippis no', 'ippisNo', null, null, 'number')}
-        {this.renderInput('memo reference', 'memoReference')}
-        {this.renderSelect('reason code', 'reasonCodeId', [
-          { id: 1, name: 'promotion' },
-          { id: 2, name: 'demotion' }
-        ])}
-        {this.renderSelect('new job title', 'newJobTitleId', [
-          { id: 1, name: 'managing director' },
-          { id: 1, name: 'some other title' }
-        ])}
-        {this.renderInput(
-          'attached document',
-          'attachedDoc',
-          null,
-          null,
-          'file'
-        )}
-        {this.renderTextArea('remarks', 'remarks')}
+
+        <EmployeeVerifier
+          checkOnResponseRecieved={employees => employees.length}
+          onEmployeeSelection={this.handleEmployeeSelection}
+          onInputChange={this.handleEmployeeInputChange}
+        >
+          {this.renderInput(
+            'IPPIS no.',
+            'ippisNo',
+            'Please enter a valid IPPIS number',
+            null,
+            'number'
+          )}
+        </EmployeeVerifier>
+
+        {ippisNoVerified ? (
+          <>
+            {this.renderInput(
+              'transaction date',
+              'transactionDate',
+              null,
+              null,
+              'date'
+            )}
+            {this.renderInput('memo reference', 'memoReference')}
+            {this.renderSelect('reason code', 'reasonCodeId', [
+              { id: 1, name: 'promotion' },
+              { id: 2, name: 'demotion' }
+            ])}
+            {this.renderSelect('new job title', 'newJobTitleId', [
+              { id: 1, name: 'managing director' },
+              { id: 2, name: 'financial manager' }
+            ])}
+            {this.renderInput(
+              'attached document',
+              'attachedDoc',
+              null,
+              null,
+              'file'
+            )}
+            {this.renderTextArea('remarks', 'remarks')}
+          </>
+        ) : null}
         {this.renderButton('save')}
       </form>
     );
@@ -202,21 +238,21 @@ class AllCareers extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title="careers"
-              message="Click a row to preview"
+              title='careers'
+              message='Click a row to preview'
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
             ></TableView>
 
-            <SideDraw
-              title="record"
-              openDraw={this.state.showDraw}
+            <Modal
+              title='record'
+              openModal={this.state.showDraw}
               onClose={this.closeSideDraw}
             >
               {this.renderForm()}
-            </SideDraw>
+            </Modal>
           </Section>
         ) : (
           <Loader />

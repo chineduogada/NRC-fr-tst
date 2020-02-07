@@ -123,11 +123,11 @@ class TrainingSchedule extends Form {
     return [
       {
         name: 'authorisor 1',
-        value: `${data.employee.firstName} ${data.authorisor1.lastName}`
+        value: `${data.authorisor1.firstName} ${data.authorisor1.lastName}`
       },
       {
         name: 'authorisor 2',
-        value: `${data.employee.firstName} ${data.authorisor2.lastName}`
+        value: `${data.authorisor2.firstName} ${data.authorisor2.lastName}`
       }
     ];
   }
@@ -285,7 +285,15 @@ class TrainingSchedule extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('l year', 'lYear', null, actualData.lYear, 'date')}
+          {this.renderInput(
+            'l year',
+            'lYear',
+            null,
+            actualData.lYear,
+            'date',
+            null,
+            true
+          )}
           {this.renderSelect('training type', 'trainingTypeId', [
             { id: 1, name: 'corporate' },
             { id: 2, name: 'community' }
@@ -301,28 +309,36 @@ class TrainingSchedule extends Form {
             'expectedStartDate',
             null,
             actualData.expectedStartDate,
-            'date'
+            'date',
+            null,
+            true
           )}
           {this.renderInput(
             'expected end date',
             'expectedEndDate',
             null,
             actualData.expectedEndDate,
-            'date'
+            'date',
+            null,
+            true
           )}
           {this.renderInput(
             'expected cost',
             'expectedCost',
             null,
             actualData.expectedCost,
-            'number'
+            'number',
+            null,
+            true
           )}
           {this.renderInput(
             'expected attendee no',
             'expectedAttendeeNo',
             null,
             actualData.expectedAttendeeNo,
-            'number'
+            'number',
+            null,
+            true
           )}
           {this.renderInput(
             'actual start date',
@@ -370,14 +386,18 @@ class TrainingSchedule extends Form {
             'authorisorId1',
             'enter ippis..',
             actualData.authorisor1Id,
-            'number'
+            'number',
+            null,
+            true
           )}
           {this.renderInput(
             'authorisor 2',
             'authorisorId2',
             'enter ippis..',
             actualData.authorisor2Id,
-            'number'
+            'number',
+            null,
+            true
           )}
           {this.renderSelect('residential', 'residential', [
             { id: 'Y', name: 'Y' },

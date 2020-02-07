@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { Spinner } from 'react-bootstrap';
-import {
-  IoIosCheckmarkCircle,
-  IoIosCloseCircle,
-  IoIosCheckmarkCircleOutline
-} from 'react-icons/io';
+import { IoIosCloseCircle, IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { GetImage } from '../../services/employeeService';
 import { truncate } from '../../helpers/strings';
 import classes from './EmployeeVerifier.module.scss';
@@ -288,7 +284,7 @@ export default class EmployeeVerifier extends Component {
 
   renderProcessing() {
     return (
-      <Spinner className={classes.Processing} animation="border" size="sm" />
+      <Spinner className={classes.Processing} animation='border' size='sm' />
     );
   }
 

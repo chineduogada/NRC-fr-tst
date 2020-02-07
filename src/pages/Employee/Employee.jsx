@@ -14,9 +14,7 @@ import fileUploadAssistant from '../../helpers/fileUploadAssistant';
 import httpService from '../../services/httpService';
 import { mapEmployeeStatus } from '../../services/employeeService';
 import { GetImage } from '../../services/employeeService';
-import imgTemp from '../../assets/images/generic-avatar.jpg';
 import classes from './Employee.module.scss';
-import Loader from '../../components/Loader/Loader';
 import { Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 

@@ -105,12 +105,12 @@ class Career extends Form {
         value: data.reasonCode.code
       },
       {
-        name: 'old job title',
-        value: data.oldJobTitleId
+        name: 'old job title'
+        // value: data.oldJobTitle.description
       },
       {
-        name: 'new job title',
-        value: data.newJobTitleId
+        name: 'new job title'
+        // value: data.newJobTitle.description
       }
     ];
   }

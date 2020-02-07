@@ -10,10 +10,11 @@ import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
-import Button from '../../components/Button/Button'
+import Button from '../../components/Button/Button';
 import nameMapper from '../../helpers/nameMapper';
 import classes from './Users.module.scss';
 import Select from '../../components/Select/Select';
+import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 
 class Users extends Form {
   constructor(props) {
@@ -26,12 +27,13 @@ class Users extends Form {
 
       columns: [
         { accessor: 'fullname', Header: 'Name' },
-        { accessor: 'username', Header: 'Username',
-        Cell: ({ original, value }) => (
-          <span className={classes.Custom}>
-            {value}
-          </span>
-        ) },
+        {
+          accessor: 'username',
+          Header: 'Username',
+          Cell: ({ original, value }) => (
+            <span className={classes.Custom}>{value}</span>
+          )
+        },
         { accessor: 'role', Header: 'Role' },
         { accessor: 'status', Header: 'Status' }
       ],
@@ -53,13 +55,15 @@ class Users extends Form {
       options: {
         roleOptions: [
           { id: 1, type: 'admin' },
-          { id: 2, type: 'user' },
+          { id: 2, type: 'user' }
         ],
         statusOptions: [
           { id: 1, status: 'active' },
-          { id: 2, status: 'inactive' },
+          { id: 2, status: 'inactive' }
         ]
       },
+
+      ippisNoVerified: false,
 
       updateForm: {},
 
@@ -72,6 +76,9 @@ class Users extends Form {
 
     this.initialFormState = { ...this.state.formData };
 
+    this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
+    this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
+
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
@@ -79,7 +86,9 @@ class Users extends Form {
     this.updateObjectList = this.updateObjectList.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleUpdateForm = this.handleUpdateForm.bind(this);
-    this.handleUpdateFormSelectChange = this.handleUpdateFormSelectChange.bind(this);
+    this.handleUpdateFormSelectChange = this.handleUpdateFormSelectChange.bind(
+      this
+    );
     this.gotoProfile = this.gotoProfile.bind(this);
   }
 
@@ -115,17 +124,27 @@ class Users extends Form {
     this.setState({ showForm: false });
   }
 
-  mapToViewModel({ id, ippisNo, username, role, status, employee, roleId, statusId }) {
+  mapToViewModel({
+    id,
+    ippisNo,
+    username,
+    role,
+    status,
+    employee,
+    roleId,
+    statusId
+  }) {
     return {
       id,
       ippisNo,
-      fullname: employee ? `${employee.firstName} ${employee.lastName}` : username,
+      fullname: employee
+        ? `${employee.firstName} ${employee.lastName}`
+        : username,
       username,
-      roleId, 
+      roleId,
       role: role.type,
       statusId,
       status: status.status
-      
     };
   }
 
@@ -142,6 +161,16 @@ class Users extends Form {
     }
   }
 
+  handleEmployeeSelection() {
+    this.setState({ ippisNoVerified: true });
+  }
+
+  handleEmployeeInputChange(employee) {
+    if (!employee) {
+      this.setState({ ippisNoVerified: false });
+    }
+  }
+
   handleRowClick(event) {
     if (event.detail > 1) {
       const rowToPreview = this.state.users.filter(
@@ -155,14 +184,17 @@ class Users extends Form {
       });
     }
   }
-/**
+  /**
    * Adds the newly created data object to the list of data objects initially returned from the server
    * @param { Response } res Axios response object
    */
   updateObjectList(res) {
     const newDataObject = res.data.data;
-    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
-    console.log(filteredNewDataObject)
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
+    console.log(filteredNewDataObject);
 
     this.setState({ users: [filteredNewDataObject, ...this.state.users] });
   }
@@ -177,9 +209,13 @@ class Users extends Form {
   getOptionValues() {
     const { statusId, roleId } = this.state.formData;
     return {
-      status: this.state.options.statusOptions.filter(option => option.id === statusId * 1)[0],
-      role: this.state.options.roleOptions.filter(option => option.id === statusId * 1)[0]
-    }
+      status: this.state.options.statusOptions.filter(
+        option => option.id === statusId * 1
+      )[0],
+      role: this.state.options.roleOptions.filter(
+        option => option.id === roleId * 1
+      )[0]
+    };
   }
 
   /**
@@ -193,7 +229,7 @@ class Users extends Form {
     // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
     // map every option to the current value the user may have selected and join them with the from data
-    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
@@ -217,7 +253,7 @@ class Users extends Form {
     if (res) {
       toast.success("User's state successfully updated!");
       // this.updateTableRow();
-      this.props.history.go()
+      this.props.history.go();
       this.closeSideDraw();
       this.resetFormData();
     }
@@ -292,7 +328,7 @@ class Users extends Form {
   }
 
   renderUpdateForm() {
-    const { options, formData, updateForm, rowToPreview } = this.state;
+    const { options, updateForm, rowToPreview } = this.state;
     const isSuperAdmin = rowToPreview.username === 'superadmin';
 
     return (
@@ -316,8 +352,22 @@ class Users extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleUpdateForm}
         >
-          <Select name='roleId' onChange={this.handleUpdateFormSelectChange} className='formControl' options={nameMapper(options.roleOptions, 'type')} selectedOption={updateForm.roleId} disabled={isSuperAdmin} />
-          <Select name='statusId' onChange={this.handleUpdateFormSelectChange} className='formControl' options={nameMapper(options.statusOptions, 'status')} selectedOption={updateForm.statusId} disabled={isSuperAdmin} />
+          <Select
+            name='roleId'
+            onChange={this.handleUpdateFormSelectChange}
+            className='formControl'
+            options={nameMapper(options.roleOptions, 'type')}
+            selectedOption={updateForm.roleId}
+            disabled={isSuperAdmin}
+          />
+          <Select
+            name='statusId'
+            onChange={this.handleUpdateFormSelectChange}
+            className='formControl'
+            options={nameMapper(options.statusOptions, 'status')}
+            selectedOption={updateForm.statusId}
+            disabled={isSuperAdmin}
+          />
           {this.renderButton('update')}
         </form>
       </div>
@@ -325,23 +375,48 @@ class Users extends Form {
   }
 
   renderDepartmentForm() {
-    const { options } = this.state;
+    const { options, ippisNoVerified } = this.state;
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Add a new user</p>
 
-        {this.renderInput('IPPIS no.', 'ippisNo', null, null, 'number')}
-        {this.renderInput('username', 'username')}
-        {this.renderSelect('role', 'roleId', nameMapper(options.roleOptions, 'type'))}
-        {this.renderSelect('status', 'statusId', nameMapper(options.statusOptions, 'status'))}
-        {this.renderInput('password', 'password', null, null, 'password')}
-        {this.renderInput(
-          'confirm  password',
-          'confirmPassword',
-          null,
-          null,
-          'password'
-        )}
+        <EmployeeVerifier
+          checkOnResponseRecieved={employees => employees.length}
+          onEmployeeSelection={this.handleEmployeeSelection}
+          onInputChange={this.handleEmployeeInputChange}
+        >
+          {this.renderInput(
+            'IPPIS no.',
+            'ippisNo',
+            'Please enter a valid IPPIS number',
+            null,
+            'number'
+          )}
+        </EmployeeVerifier>
+
+        {ippisNoVerified ? (
+          <>
+            {this.renderInput('username', 'username')}
+            {this.renderSelect(
+              'role',
+              'roleId',
+              nameMapper(options.roleOptions, 'type')
+            )}
+            {this.renderSelect(
+              'status',
+              'statusId',
+              nameMapper(options.statusOptions, 'status')
+            )}
+            {this.renderInput('password', 'password', null, null, 'password')}
+            {this.renderInput(
+              'confirm  password',
+              'confirmPassword',
+              null,
+              null,
+              'password'
+            )}
+          </>
+        ) : null}
 
         {this.renderButton('save')}
       </form>

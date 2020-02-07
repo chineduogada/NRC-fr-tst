@@ -9,7 +9,9 @@ import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
+import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
+import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 
 class AllTrainingRecords extends Form {
   constructor(props) {
@@ -52,10 +54,15 @@ class AllTrainingRecords extends Form {
         employeeComment: ''
       },
 
+      ippisNoVerified: false,
+
       errors: {}
     };
 
     this.initialFormState = { ...this.state.formData };
+
+    this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
+    this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
 
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
@@ -127,7 +134,7 @@ class AllTrainingRecords extends Form {
   mapToViewModel(record) {
     return {
       id: record.id,
-      lYear: record.tYear,
+      tYear: record.tYear,
       ippisNo: record.ippisNo,
       employee: `${record.employee.firstName} ${record.employee.lastName}`,
       trainingType: record.trainingType.type,
@@ -148,6 +155,16 @@ class AllTrainingRecords extends Form {
       this.setState({ currentPage: page });
     }
   };
+
+  handleEmployeeSelection() {
+    this.setState({ ippisNoVerified: true });
+  }
+
+  handleEmployeeInputChange(employee) {
+    if (!employee) {
+      this.setState({ ippisNoVerified: false });
+    }
+  }
 
   handleRowClick({ currentTarget }) {
     this.props.history.push(`training-records/${currentTarget.id}`);
@@ -186,32 +203,63 @@ class AllTrainingRecords extends Form {
   }
 
   renderForm() {
+    const { ippisNoVerified } = this.state;
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Add a training record</p>
-        {this.renderInput('t year', 'tYear', null, null, 'date')}
-        {this.renderSelect('training type', 'trainingTypeId', [
-          { id: 1, name: 'corporate' },
-          { id: 2, name: 'community' }
-        ])}
-        {this.renderInput('ippis no', 'ippisNo', null, null, 'number')}
-        {this.renderInput('serial count', 'serialCount', null, null, 'number')}
-        {this.renderInput('start date', 'startDate', null, null, 'date')}
-        {this.renderInput('end date', 'endDate', null, null, 'date')}
-        {this.renderInput('number of days', 'numDays', null, null, 'number')}
-        {this.renderInput(
-          'individual actual cost',
-          'individualActualCost',
-          null,
-          null,
-          'number'
-        )}
-        {this.renderInput('training location', 'trainingLocation')}
-        {this.renderSelect('residential', 'residential', [
-          { id: 'Y', name: 'Y' },
-          { id: 'N', name: 'N' }
-        ])}
-        {this.renderTextArea('employee comment', 'employeeComment')}
+
+        <EmployeeVerifier
+          checkOnResponseRecieved={employees => employees.length}
+          onEmployeeSelection={this.handleEmployeeSelection}
+          onInputChange={this.handleEmployeeInputChange}
+        >
+          {this.renderInput(
+            'IPPIS no.',
+            'ippisNo',
+            'Please enter a valid IPPIS number',
+            null,
+            'number'
+          )}
+        </EmployeeVerifier>
+
+        {ippisNoVerified ? (
+          <>
+            {this.renderInput('t year', 'tYear', null, null, 'date')}
+            {this.renderSelect('training type', 'trainingTypeId', [
+              { id: 1, name: 'corporate' },
+              { id: 2, name: 'community' }
+            ])}
+            {this.renderInput(
+              'serial count',
+              'serialCount',
+              null,
+              null,
+              'number'
+            )}
+            {this.renderInput('start date', 'startDate', null, null, 'date')}
+            {this.renderInput('end date', 'endDate', null, null, 'date')}
+            {this.renderInput(
+              'number of days',
+              'numDays',
+              null,
+              null,
+              'number'
+            )}
+            {this.renderInput(
+              'individual actual cost',
+              'individualActualCost',
+              null,
+              null,
+              'number'
+            )}
+            {this.renderInput('training location', 'trainingLocation')}
+            {this.renderSelect('residential', 'residential', [
+              { id: 'Y', name: 'Y' },
+              { id: 'N', name: 'N' }
+            ])}
+            {this.renderTextArea('employee comment', 'employeeComment')}
+          </>
+        ) : null}
 
         {this.renderButton('save')}
       </form>
@@ -226,21 +274,21 @@ class AllTrainingRecords extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title="all records"
-              message="Click a row to preview"
+              title='all records'
+              message='Click a row to preview'
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
             ></TableView>
 
-            <SideDraw
-              title="record"
-              openDraw={this.state.showDraw}
+            <Modal
+              title='record'
+              openModal={this.state.showDraw}
               onClose={this.closeSideDraw}
             >
               {this.renderForm()}
-            </SideDraw>
+            </Modal>
           </Section>
         ) : (
           <Loader />
