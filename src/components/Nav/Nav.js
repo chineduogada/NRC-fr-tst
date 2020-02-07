@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
 import { MdApps } from 'react-icons/md';
 import getCredentials, {
-  getUserProfileLocally
+  getPermissions
 } from '../../services/Credentials';
 import { Link } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
@@ -20,14 +20,14 @@ class Nav extends Component {
   }
 
   async componentDidMount() {
-    const { employee } = await getUserProfileLocally();
-    console.log('employee profile', employee);
-    this.setState({ imageSource: employee.photo });
+    // const { employee } = await getUserProfileLocally();
+    // console.log('employee profile', employee);
+    // this.setState({ imageSource: employee.photo });
   }
 
   render() {
-    const { role, firstName, lastName } = getCredentials();
-    const { imageSource } = this.state;
+    const { role, firstName, lastName, photo } = getCredentials();
+    // const { imageSource } = this.state;
 
     return (
       <nav id='main-nav'>
@@ -52,7 +52,7 @@ class Nav extends Component {
                 <IoMdCloudUpload className='icon' size='15px' /> Import data
               </Link>
             </li>
-            {role === 'admin' ? (
+            {role.type === 'admin' ? (
               <li>
                 <Link to='/users'>
                   {<IoMdPerson className='icon' size='15px' />} All Users
@@ -64,7 +64,7 @@ class Nav extends Component {
             trigger={
               <li className='nav-user'>
                 <div className='nav-user-image-wrap'>
-                  {imageSource ? <GetImage imageSource={imageSource} /> : null}
+                  <GetImage imageSource={photo} />
                 </div>
               </li>
             }

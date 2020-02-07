@@ -16,6 +16,12 @@ const getCredentials = () => {
   return curUser && curUser;
 };
 
+
+export const getPermissions = () => {
+  const { role } = getCredentials();
+  return role
+}
+
 export const storeUserProfile = async () => {
   const res = await axios.get('/users');
 

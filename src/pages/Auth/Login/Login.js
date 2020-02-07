@@ -1,7 +1,7 @@
 import React from 'react';
 import InputField from '../../../components/InputField/InputField';
 import Button from '../../../components/Button/Button';
-import classes from './Login.module.css';
+import classes from './Login.module.scss';
 
 const login = props => {
   const errorFeedback =
@@ -24,7 +24,7 @@ const login = props => {
             {errorFeedback}
             <InputField
               changed={props.changed}
-              id='email'
+              id='username'
               type='text'
               name='username *'
             />
