@@ -9,8 +9,6 @@ const login = props => {
       <p className='error'>{props.errorFeedback}</p>
     ) : null;
 
-  console.log('hi');
-
   return (
     <div className={classes.LoginWrapper}>
       <div className={classes.Login}>

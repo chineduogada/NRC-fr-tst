@@ -1,4 +1,7 @@
+import React, { Component } from 'react';
 import httpService from './httpService';
+import { Spinner } from 'react-bootstrap';
+import imgTemp from '../assets/images/generic-avatar.jpg';
 
 /**
  * Checks if an IPPIS number exists and returns the user's profile.
@@ -31,3 +34,51 @@ export const mapEmployeeStatus = status => {
 
   return result;
 };
+
+/**
+ * Takes the employee's image source and wraps it in a component
+ * @param { string } imageSource the employee's image source
+ * @returns a JSX element
+ */
+export class GetImage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageSource: null
+    }
+  }
+
+  style = {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+  }
+
+  componentDidMount() {
+    this.setState({ imageSource: this.props.imageSource });
+  }
+
+  render() {
+    const { imageSource } = this.state;
+    console.log('checking out image source', imageSource)
+    return (
+      <>
+          {imageSource === null ?  (
+            <Spinner size='bg' animation='border' />
+            
+          ) : (
+            <img
+              style={this.style}
+              src={
+                imageSource
+                  ? `${imageSource}`
+                  : imgTemp
+              }
+              alt='employee'
+            />
+          )}
+      </>
+    );
+  }
+}

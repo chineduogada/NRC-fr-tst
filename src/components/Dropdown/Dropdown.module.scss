@@ -28,7 +28,8 @@
   visibility: hidden;
   font-size: 1rem;
 
-  &, &::before {
+  &,
+  &::before {
     border-radius: 2px;
   }
 
@@ -55,23 +56,22 @@
       margin-right: 0 !important;
       transition: none !important;
     }
-    
+
     a {
       padding: 0.3em 0;
       display: block;
       font-weight: 600 !important;
     }
-
-    
   }
-  li:hover, a:hover {
+  li:hover,
+  a:hover {
     color: var(--inverse-text) !important;
     background: var(--basic-color);
   }
 
   &.Drop {
     opacity: 1;
-    transform: translate(0%, 20%);
+    transform: translate(0%, 10%);
     visibility: visible;
   }
 }

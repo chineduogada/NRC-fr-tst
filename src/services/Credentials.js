@@ -1,6 +1,7 @@
 // This service holds the current user information
 // It tells if any user is  currently logged in
 // It stores the current user data when they
+import axios from 'axios';
 
 export const getToken = () => {
   const curUser = JSON.parse(localStorage.getItem('curUser'));
@@ -13,6 +14,25 @@ export const isUserSignedIn = () => getToken();
 const getCredentials = () => {
   const curUser = JSON.parse(localStorage.getItem('curUser'));
   return curUser && curUser;
+};
+
+export const storeUserProfile = async () => {
+  const res = await axios.get('/users');
+
+  if (res) {
+    const user = JSON.stringify(
+      res.data.data.filter(user => (user.ippisNo = 94350))[0]
+    );
+    localStorage.setItem('user', user);
+  } else {
+    console.error('unable to fetch user profile');
+  }
+};
+
+export const getUserProfileLocally = () => {
+  const profile = JSON.parse(localStorage.getItem('user'));
+  console.log(profile);
+  return profile || {};
 };
 
 export default getCredentials;

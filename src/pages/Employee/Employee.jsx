@@ -13,6 +13,7 @@ import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualificat
 import fileUploadAssistant from '../../helpers/fileUploadAssistant';
 import httpService from '../../services/httpService';
 import { mapEmployeeStatus } from '../../services/employeeService';
+import { GetImage } from '../../services/employeeService';
 import imgTemp from '../../assets/images/generic-avatar.jpg';
 import classes from './Employee.module.scss';
 import Loader from '../../components/Loader/Loader';
@@ -173,14 +174,7 @@ export default class Employee extends Component {
               {this.state.uploading || justFetchingImage ? (
                 <Spinner size='bg' animation='border' />
               ) : (
-                <img
-                  src={
-                    employeeImageSrc
-                      ? `${this.state.employeeImageSrc}`
-                      : imgTemp
-                  }
-                  alt='employee'
-                />
+                <GetImage imageSource={employeeImageSrc} />
               )}
               <div className={classes.UploadBox}>
                 <label htmlFor='upload-input'>change image</label>

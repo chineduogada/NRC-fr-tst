@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import axios from 'axios';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import Login from './Login/Login';
+import { storeUserProfile } from '../../services/Credentials';
 import Layout from '../../components/Layout/Layout';
 
 class Auth extends Component {
@@ -76,6 +77,8 @@ class Auth extends Component {
         role: 'admin',
         token: 'hello boss'
       });
+
+      await storeUserProfile();
 
       console.log(this.state);
 

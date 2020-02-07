@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import Joi from 'joi-browser';
+import Joi, { options } from 'joi-browser';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Loader from '../../components/Loader/Loader';
@@ -10,8 +10,10 @@ import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
-import Button from '../../components/Button/Button';
+import Button from '../../components/Button/Button'
+import nameMapper from '../../helpers/nameMapper';
 import classes from './Users.module.scss';
+import Select from '../../components/Select/Select';
 
 class Users extends Form {
   constructor(props) {
@@ -23,8 +25,13 @@ class Users extends Form {
       users: [],
 
       columns: [
-        { accessor: 'fullName', Header: 'Name' },
-        { accessor: 'userName', Header: 'Username' },
+        { accessor: 'fullname', Header: 'Name' },
+        { accessor: 'username', Header: 'Username',
+        Cell: ({ original, value }) => (
+          <span className={classes.Custom}>
+            {value}
+          </span>
+        ) },
         { accessor: 'role', Header: 'Role' },
         { accessor: 'status', Header: 'Status' }
       ],
@@ -35,13 +42,26 @@ class Users extends Form {
       showForm: false,
 
       formData: {
-        fullName: '',
-        userName: '',
+        ippisNo: '',
+        username: '',
         roleId: '',
-        // status: '',
+        statusId: '',
         password: '',
-        cPassword: ''
+        confirmPassword: ''
       },
+
+      options: {
+        roleOptions: [
+          { id: 1, type: 'admin' },
+          { id: 2, type: 'user' },
+        ],
+        statusOptions: [
+          { id: 1, status: 'active' },
+          { id: 2, status: 'inactive' },
+        ]
+      },
+
+      updateForm: {},
 
       rowToPreview: null,
 
@@ -56,23 +76,26 @@ class Users extends Form {
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
     this.addUser = this.addUser.bind(this);
-    this.updateUser = this.updateUser.bind(this);
+    this.updateObjectList = this.updateObjectList.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleUpdateForm = this.handleUpdateForm.bind(this);
+    this.handleUpdateFormSelectChange = this.handleUpdateFormSelectChange.bind(this);
+    this.gotoProfile = this.gotoProfile.bind(this);
   }
 
   schema = {
-    fullName: Joi.string(),
-    userName: Joi.string(),
-    roleId: Joi.string(),
-    // status: Joi.string(),
+    ippisNo: Joi.number(),
+    username: Joi.string(),
+    roleId: Joi.number(),
+    statusId: Joi.number(),
     password: Joi.string(),
-    cPassword: Joi.string()
+    confirmPassword: Joi.string()
   };
 
   async componentDidMount() {
     const users = [];
 
-    const res = await httpService.get('/user');
+    const res = await httpService.get('/users');
 
     if (res) {
       res.data.data.forEach(user => {
@@ -84,20 +107,25 @@ class Users extends Form {
   }
 
   handleAddNew(e) {
+    this.resetFormData();
     this.setState({ showForm: true, rowToPreview: null });
   }
 
   closeSideDraw(e) {
-    this.setState({ showForm: false, rowToPreview: null });
+    this.setState({ showForm: false });
   }
 
-  mapToViewModel(data) {
+  mapToViewModel({ id, ippisNo, username, role, status, employee, roleId, statusId }) {
     return {
-      id: data.id,
-      fullName: data.fullName,
-      userName: data.userName,
-      role: data.role,
-      status: data.status
+      id,
+      ippisNo,
+      fullname: employee ? `${employee.firstName} ${employee.lastName}` : username,
+      username,
+      roleId, 
+      role: role.type,
+      statusId,
+      status: status.status
+      
     };
   }
 
@@ -106,6 +134,13 @@ class Users extends Form {
       this.setState({ currentPage: page });
     }
   };
+
+  gotoProfile() {
+    const { ippisNo } = this.state.rowToPreview;
+    if (ippisNo) {
+      this.props.history.push(`employees/${ippisNo}`);
+    }
+  }
 
   handleRowClick(event) {
     if (event.detail > 1) {
@@ -116,43 +151,73 @@ class Users extends Form {
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: _.pick(rowToPreview, ['fullName', 'role', 'email', 'status'])
+        updateForm: _.pick(rowToPreview, ['roleId', 'statusId'])
       });
     }
   }
+/**
+   * Adds the newly created data object to the list of data objects initially returned from the server
+   * @param { Response } res Axios response object
+   */
+  updateObjectList(res) {
+    const newDataObject = res.data.data;
+    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
+    console.log(filteredNewDataObject)
 
-  updateUserList(res) {
-    const newDept = res.data.data;
-
-    this.setState({ users: [...this.state.users, newDept] });
+    this.setState({ users: [filteredNewDataObject, ...this.state.users] });
   }
 
   resetFormData() {
     this.setState({ formData: this.initialFormState });
   }
 
-  updateTableRow() {
-    const oldState = [...this.state.users];
-    const id = this.state.rowToPreview.id;
-    const formData = this.state.formData;
-    const rowIndex = oldState.findIndex(row => row.id === id);
+  /**
+   * Gets actual values of the options the user has updated
+   */
+  getOptionValues() {
+    const { statusId, roleId } = this.state.formData;
+    return {
+      status: this.state.options.statusOptions.filter(option => option.id === statusId * 1)[0],
+      role: this.state.options.roleOptions.filter(option => option.id === statusId * 1)[0]
+    }
+  }
 
-    oldState[rowIndex] = { ...formData, id };
+  /**
+   * Updates the table row each time a new data object is added
+   */
+  updateTableRow() {
+    // create a copy of the filtered data stored in the state
+    const oldState = [...this.state.users];
+    // obtain the id or the row to be previewed
+    const id = this.state.rowToPreview.id;
+    // obtain the form data in the state (it contains the values the user just updated)
+    const formData = this.state.formData;
+    // map every option to the current value the user may have selected and join them with the from data
+    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    // obtain the index of the row the use jus
+    const rowIndex = oldState.findIndex(row => row.id === id);
+    // map the updated data to the desired view (Ex: for table display)
+    const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
+    // updating the copy of the filtered data from the server
+    oldState[rowIndex] = { ...filteredUpdatedRow, id };
 
     this.setState({ users: oldState });
   }
 
-  async updateUser(stopProcessing) {
+  async updateDataObject() {
+    this.startProcessing();
+
     const res = await httpService.patch(
-      `/user/${this.state.rowToPreview.id}`,
-      this.state.formData
+      `/users/${this.state.rowToPreview.id}`,
+      this.state.updateForm
     );
 
-    stopProcessing();
+    this.stopProcessing();
 
     if (res) {
-      toast.success('User successfully updated!');
-      this.updateTableRow();
+      toast.success("User's state successfully updated!");
+      // this.updateTableRow();
+      this.props.history.go()
       this.closeSideDraw();
       this.resetFormData();
     }
@@ -169,12 +234,16 @@ class Users extends Form {
     this.setState({ users: oldState });
   }
 
-  async handleDelete(event) {
+  async handleDelete({ currentTarget }) {
+    if (this.state.rowToPreview.username === 'superadmin') {
+      return;
+    }
+
     if (!this.state.isDeleteting) {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/user/${this.state.rowToPreview.id}`
+        `/users/${this.state.rowToPreview.id}`
       );
 
       if (res) {
@@ -189,17 +258,14 @@ class Users extends Form {
   }
 
   async addUser(stopProcessing) {
-    // const res = await httpService.post('/user', this.state.formData);
+    const res = await httpService.post('/users', this.state.formData);
 
-    const res = 1;
-
-    // console.log(res);
-
-    stopProcessing();
+    this.stopProcessing();
 
     if (res) {
-      toast.success('Working in progress. Please, kindly check back.');
-      // this.updateUserList(res);
+      toast.success('User successfully added');
+      // this.updateObjectList(res);
+      this.props.history.go();
       this.Form.reset();
       this.resetFormData();
       this.closeSideDraw();
@@ -208,32 +274,50 @@ class Users extends Form {
 
   async doSubmit(event, stopProcessing) {
     if (this.state.rowToPreview) {
-      return this.updateUser(stopProcessing);
+      return this.updateDataObject(stopProcessing);
     }
 
     this.addUser(stopProcessing);
   }
 
+  handleUpdateForm(event) {
+    event.preventDefault();
+    this.updateDataObject();
+  }
+
+  handleUpdateFormSelectChange({ currentTarget }) {
+    const updateForm = { ...this.state.updateForm };
+    updateForm[currentTarget.name] = currentTarget.value;
+    this.setState({ updateForm });
+  }
+
   renderUpdateForm() {
+    const { options, formData, updateForm, rowToPreview } = this.state;
+    const isSuperAdmin = rowToPreview.username === 'superadmin';
+
     return (
       <div className={classes.Preview}>
+        <div className={classes.Actions}>
+          <Button
+            label='delete'
+            danger
+            onClick={this.handleDelete}
+            disabled={this.state.isDeleteting || isSuperAdmin}
+          />
+          <Button
+            label='view profile'
+            highlight
+            onClick={this.gotoProfile}
+            disabled={!rowToPreview.ippisNo}
+          />
+        </div>
+        <br />
         <form
           ref={form => (this.updateForm = form)}
-          onSubmit={this.handleSubmit}
+          onSubmit={this.handleUpdateForm}
         >
-          {this.renderInput(
-            'full name',
-            'fullName',
-            null,
-            this.state.rowToPreview.fullName
-          )}
-          {this.renderInput(
-            'description',
-            'description',
-            null,
-            this.state.rowToPreview.description
-          )}
-
+          <Select name='roleId' onChange={this.handleUpdateFormSelectChange} className='formControl' options={nameMapper(options.roleOptions, 'type')} selectedOption={updateForm.roleId} disabled={isSuperAdmin} />
+          <Select name='statusId' onChange={this.handleUpdateFormSelectChange} className='formControl' options={nameMapper(options.statusOptions, 'status')} selectedOption={updateForm.statusId} disabled={isSuperAdmin} />
           {this.renderButton('update')}
         </form>
       </div>
@@ -241,24 +325,19 @@ class Users extends Form {
   }
 
   renderDepartmentForm() {
+    const { options } = this.state;
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Add a new user</p>
 
-        {this.renderInput('full name', 'fullName')}
-        {this.renderInput('username', 'userName')}
-        {this.renderSelect('role', 'roleId', [
-          { id: 1, name: 'admin' },
-          { id: 2, name: 'user' }
-        ])}
-        {/* {this.renderSelect('status', 'status', [
-          { id: 'active', name: 'active' },
-          { id: 'inactive', name: 'inactive' }
-        ])} */}
+        {this.renderInput('IPPIS no.', 'ippisNo', null, null, 'number')}
+        {this.renderInput('username', 'username')}
+        {this.renderSelect('role', 'roleId', nameMapper(options.roleOptions, 'type'))}
+        {this.renderSelect('status', 'statusId', nameMapper(options.statusOptions, 'status'))}
         {this.renderInput('password', 'password', null, null, 'password')}
         {this.renderInput(
           'confirm  password',
-          'cPassword',
+          'confirmPassword',
           null,
           null,
           'password'
@@ -278,7 +357,7 @@ class Users extends Form {
           <Section>
             <TableView
               title='manage users'
-              message='Double click a row to preview'
+              message="Double click a row to update user's state"
               columns={columns}
               data={users}
               clickHandler={this.handleRowClick}
