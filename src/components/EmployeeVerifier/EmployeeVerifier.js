@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { verifyIPPIS } from '../../services/employeeService';
+import {
+  IoIosCheckmarkCircle,
+  IoIosCloseCircle,
+  IoIosCheckmarkCircleOutline
+} from 'react-icons/io';
 import { GetImage } from '../../services/employeeService';
 import { truncate } from '../../helpers/strings';
 import classes from './EmployeeVerifier.module.scss';
@@ -129,7 +133,8 @@ export default class EmployeeVerifier extends Component {
       employees: [],
       isProcessing: false,
       numInputChar: 0,
-      isEmployeeSelected: false
+      isEmployeeSelected: false,
+      checked: null
     };
 
     this.inputValue = '';
@@ -148,11 +153,22 @@ export default class EmployeeVerifier extends Component {
     }
   }
 
+  /**
+   * Checks the input field as good or bad according to some condition
+   * provided by the user
+   * @param cb a function provided by the user that returns a truthy/falsy value.
+   * The call back takes the `employees` array stored in the state as input
+   */
+  checkInputField(cb) {
+    this.setState({ checked: cb(this.state.employees) });
+  }
+
   componentDidMount() {
     this.input =
       this.verifier.querySelector('input') ||
       this.verifier.querySelector('select') ||
       this.verifier.querySelector('textarea');
+
     this.input.oninput = ({ currentTarget }) => {
       this.updateInputValue(currentTarget.value);
       this.verifyEmployee();
@@ -175,7 +191,7 @@ export default class EmployeeVerifier extends Component {
   }
 
   async verifyEmployee() {
-    // this.setState({ isProcessing: true })
+    this.setState({ isProcessing: true });
     if (this.inputValue.length > 1) {
       // const results = employees.filter(employee => {
       //     return `${employee.ippisNo}`.includes(this.inputValue);
@@ -187,11 +203,11 @@ export default class EmployeeVerifier extends Component {
 
       console.log(results);
 
-      this.setState({ employees: results.data.data.rows });
+      this.setState({ employees: results.data.data.rows, isProcessing: false });
 
       this.runOnResponseReceived();
     } else {
-      this.setState({ employees: [] });
+      this.setState({ employees: [], isProcessing: false });
     }
   }
 
@@ -212,9 +228,13 @@ export default class EmployeeVerifier extends Component {
    * The callback gets the total number of results found
    */
   runOnResponseReceived() {
-    const { onResponseReceived } = this.props;
+    const { onResponseReceived, checkOnResponseRecieved } = this.props;
+    if (checkOnResponseRecieved) {
+      this.checkInputField(checkOnResponseRecieved);
+    }
+
     if (onResponseReceived) {
-      onResponseReceived(this.state.employees.length);
+      onResponseReceived(this.state.employees);
     }
   }
 
@@ -266,6 +286,12 @@ export default class EmployeeVerifier extends Component {
     ) : null;
   }
 
+  renderProcessing() {
+    return (
+      <Spinner className={classes.Processing} animation="border" size="sm" />
+    );
+  }
+
   showEmployee() {
     const { employee } = this.state;
     return `${employee.ippisNo}`.length === this.input.value.length ? (
@@ -275,16 +301,41 @@ export default class EmployeeVerifier extends Component {
     ) : null;
   }
 
+  renderCheckState() {
+    return !this.state.isProcessing ? (
+      <div className={classes.CheckState}>
+        {this.state.checked ? (
+          <span className={classes.CheckStatePassed}>
+            <span>available</span>{' '}
+            <IoIosCheckmarkCircleOutline className={classes.Icon} />
+          </span>
+        ) : (
+          <span className={classes.CheckStateError}>
+            <span>unavailable</span>{' '}
+            <IoIosCloseCircle className={classes.Icon} />
+          </span>
+        )}
+      </div>
+    ) : null;
+  }
+
   render() {
-    const { employees, employee } = this.state;
+    const { employees, employee, checked, isProcessing } = this.state;
     return (
       <div
         className={classes.Verifier}
         ref={verifier => (this.verifier = verifier)}
       >
         {this.props.children}
-        {employees.length ? this.verificationResult() : null}
-        {employee ? this.showEmployee() : null}
+        {checked !== null ? this.renderCheckState() : null}
+        {isProcessing ? this.renderProcessing() : null}
+
+        {this.props.preventDefault ? null : (
+          <React.Fragment>
+            {employees.length ? this.verificationResult() : null}
+            {employee ? this.showEmployee() : null}
+          </React.Fragment>
+        )}
       </div>
     );
   }
