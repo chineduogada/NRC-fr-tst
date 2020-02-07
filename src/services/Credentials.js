@@ -20,17 +20,19 @@ export const storeUserProfile = async () => {
   const res = await axios.get('/users');
 
   if (res) {
-    const user = JSON.stringify(res.data.data.filter(user => user.ippisNo = 94350)[0]);
-    localStorage.setItem('user', user)
+    const user = JSON.stringify(
+      res.data.data.filter(user => (user.ippisNo = 94350))[0]
+    );
+    localStorage.setItem('user', user);
   } else {
     console.error('unable to fetch user profile');
   }
-}
+};
 
 export const getUserProfileLocally = () => {
   const profile = JSON.parse(localStorage.getItem('user'));
   console.log(profile);
-  return profile;
-}
+  return profile || {};
+};
 
 export default getCredentials;
