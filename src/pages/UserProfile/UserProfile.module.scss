@@ -8,7 +8,7 @@
   padding: 1em 0.5em;
 
   .Header {
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -17,7 +17,8 @@
 
     .UserProfilePic {
       display: inline-block;
-      background-color: var(--assent);
+      background-color: var(--basic-color-light);
+      border: 1px solid rgba(0, 0, 0, 0.07);
       border-radius: 5px;
       height: 100px;
       width: 100px;

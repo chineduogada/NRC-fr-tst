@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { verifyIPPIS } from '../../services/employeeService';
+import { GetImage } from '../../services/employeeService';
 import { truncate } from '../../helpers/strings';
 import classes from './EmployeeVerifier.module.scss';
 import httpService from '../../services/httpService';
@@ -220,7 +221,9 @@ export default class EmployeeVerifier extends Component {
   profileLayout(employee) {
     return (
       <React.Fragment>
-        <span className={classes.ProfilePic}>{employee.profilePic}</span>
+        <span className={classes.ProfilePic}>
+          {<GetImage imageSource={employee.photo} />}
+        </span>
         <div>
           <p className={classes.Name}>
             {truncate(

@@ -8,9 +8,17 @@ import http from '../../services/httpService';
 import httpService from '../../services/httpService';
 import nameMapper from './../../helpers/nameMapper';
 import PageNotice from '../../components/PageNotice/PageNotice';
+import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 import Loader from '../../components/Loader/Loader';
 
 export default class AddNewEmployee extends Form {
+  constructor(props) {
+    super(props);
+
+    this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
+    this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
+  }
+
   state = {
     formData: {
       // BASIC INFORMATION FORM DATA
@@ -76,7 +84,9 @@ export default class AddNewEmployee extends Form {
     senatorialDistrictOptions: [],
     stateOptions: [],
     lgaOptions: [],
-    countryOptions: []
+    countryOptions: [],
+
+    ippisNoVerified: false
   };
 
   async componentDidMount() {
@@ -183,6 +193,16 @@ export default class AddNewEmployee extends Form {
     presentPositionStepId: Joi.number()
   };
 
+  handleEmployeeSelection() {
+    this.setState({ ippisNoVerified: true });
+  }
+
+  handleEmployeeInputChange(employee) {
+    if (!employee) {
+      this.setState({ ippisNoVerified: false });
+    }
+  }
+
   async doSubmit(event, stopProcessing) {
     const res = await http.post('/employees', this.state.formData);
     stopProcessing();
@@ -196,198 +216,222 @@ export default class AddNewEmployee extends Form {
 
   render() {
     return this.state.departmentOptions.length ? (
-      <Section title="add new employee">
+      <Section title='add new employee'>
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title="basic information">
-            {this.renderInput('IPPISNO', 'ippisNo', null, null, 'number')}
-            {this.renderInput('first Name', 'firstName')}
-            {this.renderInput('last Name', 'lastName')}
-            {this.renderInput('middle Names', 'middleNames')}
-            {this.renderInput('initials', 'initials')}
-            {this.renderInput('NRC number', 'nrcNo', null, null, 'number')}
-            {this.renderInput(
-              'date of birth',
-              'dateOfBirth',
-              null,
-              null,
-              'date'
-            )}
-            {this.renderInput(
-              'phone number',
-              'phoneNumber',
-              null,
-              null,
-              'number'
-            )}
-            {this.renderInput('email', 'email', null, null, 'email')}
-
-            {this.renderSelect(
-              'pension fund administrator',
-              'pfaId',
-              this.state.pfaOptions
-            )}
-
-            {this.renderInput('PFA number', 'pfaNumber', null, null, 'number')}
-
-            {this.renderSelect('gender', 'genderId', [
-              { id: 1, name: 'male' },
-              { id: 2, name: 'female' }
-            ])}
-            {this.renderSelect(
-              'blood group',
-              'bloodGroupId',
-              this.state.bloodGroupOptions
-            )}
-            {this.renderSelect(
-              'marital status',
-              'maritalStatusId',
-              this.state.maritalStatusOptions
-            )}
-            {this.renderSelect(
-              'country of birth',
-              'countryOfBirthId',
-              this.state.countryOptions
-            )}
-            {this.renderSelect(
-              'nationality',
-              'nationalityId',
-              this.state.countryOptions
-            )}
-            {this.renderSelect('GPZ', 'gpzId', this.state.gpzOptions)}
-            {this.renderSelect('state', 'stateId', this.state.stateOptions)}
-            {this.renderSelect(
-              'senatorial district',
-              'senatorialDistrictId',
-              this.state.senatorialDistrictOptions
-            )}
-            {this.renderSelect('LGA', 'lgaId', this.state.lgaOptions)}
-            {this.renderSelect('professional', 'professional', [
-              { id: 'Y', name: 'Y' },
-              { id: 'N', name: 'N' }
-            ])}
+          <InformationBlock title=''>
+            <EmployeeVerifier
+              onEmployeeSelection={this.handleEmployeeSelection}
+              onInputChange={this.handleEmployeeInputChange}
+            >
+              {this.renderInput(
+                'IPPIS No.',
+                'ippisNo',
+                'Please enter a valid IPPIS number',
+                null,
+                'number'
+              )}
+            </EmployeeVerifier>
           </InformationBlock>
 
-          <InformationBlock title="job information">
-            {this.renderInput('section', 'sectionId', null, null, 'number')}
-            {this.renderInput('location', 'location', '')}
-            {this.renderInput(
-              'report to',
-              'reportTo',
-              'enter ippiNo...',
-              null,
-              'number'
-            )}
-            {this.renderSelect('employee status', 'employeeStatus', [
-              { id: 'A', name: 'Active' },
-              { id: 'R', name: 'Retired' },
-              { id: 'S', name: 'Suspended' }
-            ])}
-            {this.renderSelect('pensionable', 'pensionable', [
-              { id: 'Y', name: 'Y' },
-              { id: 'N', name: 'N' }
-            ])}
-            {this.renderSelect(
-              'department',
-              'departmentId',
-              this.state.departmentOptions
-            )}
-            {this.renderSelect(
-              'district',
-              'districtId',
-              this.state.districtOptions
-            )}
-          </InformationBlock>
+          {this.state.ippisNoVerified ? (
+            <>
+              <InformationBlock title='basic information'>
+                {this.renderInput('first Name', 'firstName')}
+                {this.renderInput('last Name', 'lastName')}
+                {this.renderInput('middle Names', 'middleNames')}
+                {this.renderInput('initials', 'initials')}
+                {this.renderInput('NRC number', 'nrcNo', null, null, 'number')}
+                {this.renderInput(
+                  'date of birth',
+                  'dateOfBirth',
+                  null,
+                  null,
+                  'date'
+                )}
+                {this.renderInput(
+                  'phone number',
+                  'phoneNumber',
+                  null,
+                  null,
+                  'number'
+                )}
+                {this.renderInput('email', 'email', null, null, 'email')}
 
-          <InformationBlock title="appointment information">
-            {this.renderInput(
-              'first appointment date',
-              'firstAppointmentDate',
-              null,
-              null,
-              'date'
-            )}
-            {this.renderInput(
-              'resumption date',
-              'resumptionDate',
-              null,
-              null,
-              'date'
-            )}
-            {this.renderInput(
-              'confirmation date',
-              'confirmationDate',
-              null,
-              null,
-              'date'
-            )}
-            {this.renderInput(
-              'expected retirement date',
-              'expectedRetirementDate',
-              null,
-              null,
-              'date'
-            )}
-            {this.renderInput(
-              'present appointment date',
-              'presentAppointmentDate',
-              null,
-              null,
-              'date'
-            )}
+                {this.renderSelect(
+                  'pension fund administrator',
+                  'pfaId',
+                  this.state.pfaOptions
+                )}
 
-            {this.renderSelect(
-              'first appointment job type',
-              'firstAppointmentJobTypeId',
-              this.state.jobTypeOptions
-            )}
-            {this.renderSelect(
-              'first appointment job title',
-              'firstAppointmentJobTitleId',
-              this.state.jobTitleOptions
-            )}
-            {this.renderSelect(
-              'first appointment grade',
-              'firstAppointmentGradeId',
-              this.state.jobGradeOptions
-            )}
-            {this.renderSelect(
-              'first appointment step',
-              'firstAppointmentStepId',
-              this.state.jobGradeOptions
-            )}
-            {this.renderSelect(
-              'present position job type',
-              'presentPositionJobTypeId',
-              this.state.jobTypeOptions
-            )}
-            {this.renderSelect(
-              'present position job title',
-              'presentPositionJobTitleId',
-              this.state.jobTitleOptions
-            )}
-            {this.renderSelect(
-              'present position grade',
-              'presentPositionGradeId',
-              this.state.jobGradeOptions
-            )}
-            {this.renderSelect(
-              'present position step',
-              'presentPositionStepId',
-              this.state.jobStepOptions
-            )}
-          </InformationBlock>
+                {this.renderInput(
+                  'PFA number',
+                  'pfaNumber',
+                  null,
+                  null,
+                  'number'
+                )}
+
+                {this.renderSelect('gender', 'genderId', [
+                  { id: 1, name: 'male' },
+                  { id: 2, name: 'female' }
+                ])}
+                {this.renderSelect(
+                  'blood group',
+                  'bloodGroupId',
+                  this.state.bloodGroupOptions
+                )}
+                {this.renderSelect(
+                  'marital status',
+                  'maritalStatusId',
+                  this.state.maritalStatusOptions
+                )}
+                {this.renderSelect(
+                  'country of birth',
+                  'countryOfBirthId',
+                  this.state.countryOptions
+                )}
+                {this.renderSelect(
+                  'nationality',
+                  'nationalityId',
+                  this.state.countryOptions
+                )}
+                {this.renderSelect('GPZ', 'gpzId', this.state.gpzOptions)}
+                {this.renderSelect('state', 'stateId', this.state.stateOptions)}
+                {this.renderSelect(
+                  'senatorial district',
+                  'senatorialDistrictId',
+                  this.state.senatorialDistrictOptions
+                )}
+                {this.renderSelect('LGA', 'lgaId', this.state.lgaOptions)}
+                {this.renderSelect('professional', 'professional', [
+                  { id: 'Y', name: 'Y' },
+                  { id: 'N', name: 'N' }
+                ])}
+              </InformationBlock>
+
+              <InformationBlock title='job information'>
+                {this.renderInput('section', 'sectionId', null, null, 'number')}
+                {this.renderInput('location', 'location', '')}
+                {this.renderInput(
+                  'report to',
+                  'reportTo',
+                  'enter ippiNo...',
+                  null,
+                  'number'
+                )}
+                {this.renderSelect('employee status', 'employeeStatus', [
+                  { id: 'A', name: 'Active' },
+                  { id: 'R', name: 'Retired' },
+                  { id: 'S', name: 'Suspended' }
+                ])}
+                {this.renderSelect('pensionable', 'pensionable', [
+                  { id: 'Y', name: 'Y' },
+                  { id: 'N', name: 'N' }
+                ])}
+                {this.renderSelect(
+                  'department',
+                  'departmentId',
+                  this.state.departmentOptions
+                )}
+                {this.renderSelect(
+                  'district',
+                  'districtId',
+                  this.state.districtOptions
+                )}
+              </InformationBlock>
+
+              <InformationBlock title='appointment information'>
+                {this.renderInput(
+                  'first appointment date',
+                  'firstAppointmentDate',
+                  null,
+                  null,
+                  'date'
+                )}
+                {this.renderInput(
+                  'resumption date',
+                  'resumptionDate',
+                  null,
+                  null,
+                  'date'
+                )}
+                {this.renderInput(
+                  'confirmation date',
+                  'confirmationDate',
+                  null,
+                  null,
+                  'date'
+                )}
+                {this.renderInput(
+                  'expected retirement date',
+                  'expectedRetirementDate',
+                  null,
+                  null,
+                  'date'
+                )}
+                {this.renderInput(
+                  'present appointment date',
+                  'presentAppointmentDate',
+                  null,
+                  null,
+                  'date'
+                )}
+
+                {this.renderSelect(
+                  'first appointment job type',
+                  'firstAppointmentJobTypeId',
+                  this.state.jobTypeOptions
+                )}
+                {this.renderSelect(
+                  'first appointment job title',
+                  'firstAppointmentJobTitleId',
+                  this.state.jobTitleOptions
+                )}
+                {this.renderSelect(
+                  'first appointment grade',
+                  'firstAppointmentGradeId',
+                  this.state.jobGradeOptions
+                )}
+                {this.renderSelect(
+                  'first appointment step',
+                  'firstAppointmentStepId',
+                  this.state.jobGradeOptions
+                )}
+                {this.renderSelect(
+                  'present position job type',
+                  'presentPositionJobTypeId',
+                  this.state.jobTypeOptions
+                )}
+                {this.renderSelect(
+                  'present position job title',
+                  'presentPositionJobTitleId',
+                  this.state.jobTitleOptions
+                )}
+                {this.renderSelect(
+                  'present position grade',
+                  'presentPositionGradeId',
+                  this.state.jobGradeOptions
+                )}
+                {this.renderSelect(
+                  'present position step',
+                  'presentPositionStepId',
+                  this.state.jobStepOptions
+                )}
+              </InformationBlock>
+            </>
+          ) : null}
 
           {this.renderButton('save')}
           {this.renderButton('proceed to profile')}
         </form>
       </Section>
     ) : (
-      <Loader message="please wait..." />
+      <Loader message='please wait...' />
     );
   }
 }
