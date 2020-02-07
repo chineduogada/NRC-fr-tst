@@ -16,7 +16,7 @@ class Dropdown extends Component {
     this.hideDropdown = this.hideDropdown.bind(this);
   }
 
-  runDelay(newState, delay=100) {
+  runDelay(newState, delay = 100) {
     setTimeout(() => this.setState(newState), delay);
   }
 
@@ -31,16 +31,21 @@ class Dropdown extends Component {
   render() {
     const { drop } = this.state;
     return (
-      <div
-        className={classes.Dropdown}
-      >
-        <button className={classes.Trigger} onClick={this.handleClick} onBlur={this.hideDropdown}>
+      <div className={classes.Dropdown}>
+        <button
+          className={classes.Trigger}
+          onClick={this.handleClick}
+          onBlur={this.hideDropdown}
+        >
           {this.props.trigger}
           <IoIosArrowDown className={classes.TriggerIcon} />
         </button>
 
         {/* Dropdown Items */}
-        <div className={`${classes.Items} ${drop ? classes.Drop : null}`} onClick={this.hideDropdow}>
+        <div
+          className={`${classes.Items} ${drop ? classes.Drop : null}`}
+          onClick={this.hideDropdow}
+        >
           {this.props.children}
         </div>
       </div>
