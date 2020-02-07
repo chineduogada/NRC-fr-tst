@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
+import getCredentials from '../../services/Credentials';
+import { GetImage } from '../../services/employeeService';
 import Section from '../../hoc/Section/Section';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
@@ -79,6 +81,7 @@ class UserProfile extends Component {
 
   render() {
     const { users, columns } = this.state;
+    const { firstName, lastName, role, photo } = getCredentials();
 
     return (
       <React.Fragment>
@@ -87,11 +90,11 @@ class UserProfile extends Component {
             <div className={classes.UserProfile}>
               <div className={classes.Header}>
                 <div className={classes.UserProfilePic}>
-                  <img src='' alt='' />
+                  <GetImage imageSource={photo} />
                 </div>
                 <div className={classes.UserInfo}>
-                  <p className={classes.UserFullName}>full name here</p>
-                  <p className={classes.UserRole}>role</p>
+                  <p className={classes.UserFullName}>{firstName} {lastName}</p>
+                  <p className={classes.UserRole}>{role.type}</p>
                 </div>
               </div>
               <div className={classes.ChangePassword}>

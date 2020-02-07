@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import Login from './Login/Login';
 import { storeUserProfile } from '../../services/Credentials';
@@ -23,7 +23,7 @@ class Auth extends Component {
 
   // Login form input element values
   loginDetails = {
-    email: '',
+    username: '',
     password: ''
   };
 
@@ -66,27 +66,28 @@ class Auth extends Component {
 
     // Attempt Login
     try {
-      // const res = await axios.post('/auth/signin', this.loginDetails);
+      const res = await axios.post('/auth', this.loginDetails);
 
-      // console.log(res.data.data);
+      console.log(res);
 
       // store user credentials in local storage
-      this.storeCredentials({
-        firstName: 'Steve',
-        lastName: 'Nwakasi',
-        role: 'admin',
-        token: 'hello boss'
-      });
+      // this.storeCredentials({
+      //   firstName: 'Steve',
+      //   lastName: 'Nwakasi',
+      //   role: 'admin',
+      //   token: 'hello boss'
+      // });
+      if (res) {
+        this.storeCredentials(res.data.data);
 
-      await storeUserProfile();
+        console.log(this.state);
 
-      console.log(this.state);
-
-      // update user sign in state and reset the errorFeedback
-      this.setState({
-        userLoggedIn: true,
-        errorFeedback: ''
-      });
+        // update user sign in state and reset the errorFeedback
+        this.setState({
+          userLoggedIn: true,
+          errorFeedback: ''
+        });
+      }
     } catch ({ response }) {
       this.setState({ errorFeedback: response.data.error });
     }
@@ -96,8 +97,6 @@ class Auth extends Component {
   signOutHandler() {
     // clear stored credentials
     this.clearCredentials();
-
-    console.log('Logged out');
 
     // set the user's login state to false
     this.setState({ userLoggedIn: false });
