@@ -66,13 +66,11 @@ class Department extends Form {
     statusId: Joi.number()
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showForm: true });
     }
-  }
 
-  async componentDidMount() {
     const departments = [];
 
     const res = await httpService.get('/departments');
@@ -321,8 +319,8 @@ class Department extends Form {
         {this.state.departments.length ? (
           <Section>
             <TableView
-              title='departments'
-              message='Double click a row to preview'
+              title="departments"
+              message="Double click a row to preview"
               columns={columns}
               data={departments}
               clickHandler={this.handleRowClick}
@@ -330,7 +328,7 @@ class Department extends Form {
             ></TableView>
 
             <SideDraw
-              title='department'
+              title="department"
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >
