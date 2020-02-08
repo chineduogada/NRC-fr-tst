@@ -31,24 +31,25 @@ class TableView extends Component {
 
   async handleFilter(rows) {
     this.data = this.prepareFilteredRowsFromReactTable(rows);
-    console.log('filtered data', this.headers, this.data);
   }
-
+  
   prepareFilteredRowsFromReactTable(rows) {
     return rows.map(row => row.values);
   }
-
+  
   getCurrentDataState() {
     return this.data;
   }
-
+  
   getFileName() {
     return `${slugify(this.props.title)}`;
   }
-
+  
   handleExport() {
+    console.log('filtered data', this.headers, this.data);
+
     const csvExporter = new ExportToCsv({
-      showTitle: this.getFileName(),
+      showLabels: true,
       filename: this.getFileName(),
       headers: this.headers
     });
