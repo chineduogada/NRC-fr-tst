@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   useTable,
   useSortBy,
@@ -192,7 +192,17 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val;
 
-function Table({ columns, data, clickHandler, rowOptions, onRowOptionChange, defaultValue }) {
+// ACTUAL TABLE
+function Table({
+  columns,
+  data,
+  clickHandler,
+  rowOptions,
+  onRowOptionChange,
+  defaultValue
+}) {
+  let reactTable = useRef(null);
+
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -309,7 +319,14 @@ function Table({ columns, data, clickHandler, rowOptions, onRowOptionChange, def
     <>
       {renderPagination()}
       <div className={classes.TableWrapper}>
-        <table className={classes.Table} {...getTableProps()}>
+        <table
+          className={classes.Table}
+          ref={r => (reactTable = r)}
+          onFilteredChanged={() => {
+            setPageSize(reactTable.getResolvedState().sortedData);
+          }}
+          {...getTableProps()}
+        >
           <thead>
             {headerGroups.map((headerGroup, i) => (
               <>
@@ -374,13 +391,25 @@ function Table({ columns, data, clickHandler, rowOptions, onRowOptionChange, def
                     );
                   })}
 
-                  {rowOptions ? (<td key={i}>
-                    <select id={row.original.id} className={classes.Status} name='status' onChange={onRowOptionChange}>
-                      {rowOptions.map(option => {
-                        return `${option.id}`.toLowerCase() === `${defaultValue}`.toLowerCase() ? (<option value={option.id}>{option.name}</option>) : (<option value={option.id}>{option.name}</option>);
-                      })}
-                    </select>
-                  </td>) : null}
+                  {rowOptions ? (
+                    <td key={i}>
+                      <select
+                        id={row.original.id}
+                        className={classes.Status}
+                        name='status'
+                        onChange={onRowOptionChange}
+                      >
+                        {rowOptions.map(option => {
+                          return `${option.id}`.toLowerCase() ===
+                            `${defaultValue}`.toLowerCase() ? (
+                            <option value={option.id}>{option.name}</option>
+                          ) : (
+                            <option value={option.id}>{option.name}</option>
+                          );
+                        })}
+                      </select>
+                    </td>
+                  ) : null}
                 </tr>
               );
             })}
