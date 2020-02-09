@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Joi from 'joi-browser';
 import { Spinner } from 'react-bootstrap';
+import ReactSelect from 'react-select';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import Select from '../Select/Select';
@@ -120,7 +121,15 @@ export default class Form extends Component {
       />
     );
   }
-  renderSelect(label, name, options, callback = () => null, disabled, selectedOption) {
+
+  renderSelect(
+    label,
+    name,
+    options,
+    callback = () => null,
+    disabled,
+    selectedOption
+  ) {
     const { formData, errors } = this.state;
 
     return (
@@ -140,6 +149,37 @@ export default class Form extends Component {
         ref={input => (this[name] = input)}
         disabled={disabled}
         selectedOption={selectedOption}
+      />
+    );
+  }
+
+  renderReactSelect(
+    label,
+    name,
+    options,
+    callback = () => null,
+    disabled,
+    selectedOption
+  ) {
+    const { formData, errors } = this.state;
+
+    return (
+      <ReactSelect
+        options={options}
+        label={label}
+        name={name}
+        error={errors[name]}
+        id={name}
+        value={`${formData[name]}`}
+        onChange={event => {
+          this.handleChange(event);
+          if (callback) {
+            callback(this);
+          }
+        }}
+        ref={input => (this[name] = input)}
+        disabled={disabled}
+        defaultInputValue={selectedOption}
       />
     );
   }
@@ -178,11 +218,11 @@ export default class Form extends Component {
         <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
-            as='span'
-            animation='grow'
-            size='sm'
-            role='status'
-            aria-hidden='true'
+            as="span"
+            animation="grow"
+            size="sm"
+            role="status"
+            aria-hidden="true"
           />
         ) : null}
       </React.Fragment>

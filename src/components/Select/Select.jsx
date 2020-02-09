@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+
 const Select = React.forwardRef(
   (
     {
@@ -27,7 +28,7 @@ const Select = React.forwardRef(
         >
           <option value="">-- select --</option>
           {options.map(option => {
-            console.log(option)
+            console.log(option);
             console.log(
               'in select',
               selectedOption,

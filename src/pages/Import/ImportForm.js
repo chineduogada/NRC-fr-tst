@@ -36,7 +36,7 @@ export default class ImportForm extends Form {
   render() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        {this.renderSelect(
+        {this.renderReactSelect(
           'select resource',
           'resource',
           this.props.resourceOptions || [],

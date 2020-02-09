@@ -13,7 +13,6 @@ class TableView extends Component {
     const { columns, data } = this.props;
     this.data = data;
     this.headers = this.mapHeadersForDownloads(columns);
-
     this.handleFilter = this.handleFilter.bind(this);
     this.handleExport = this.handleExport.bind(this);
   }
@@ -25,7 +24,6 @@ class TableView extends Component {
     const mappedHeaders = headers.map(header => {
       return header.Header;
     });
-
     return mappedHeaders;
   }
 

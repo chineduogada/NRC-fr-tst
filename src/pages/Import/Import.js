@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ImportForm from './ImportForm';
 import Section from '../../hoc/Section/Section';
+import { mapForReactSelect } from '../../helpers/nameMapper';
 import ImportDocumentation from './ImportDocumentation';
 import classes from './Import.module.scss';
 
@@ -28,8 +29,8 @@ export default class Import extends Component {
     const { resourceOptions, resource } = this.state;
     return (
       <Section
-        title='import data'
-        subTitle='Import data in only three simple steps'
+        title="import data"
+        subTitle="Import data in only three simple steps"
       >
         <div className={classes.StepsToImport}>
           <ol>
@@ -48,7 +49,7 @@ export default class Import extends Component {
         </div>
         <div className={classes.FormWrapper}>
           <ImportForm
-            resourceOptions={resourceOptions}
+            resourceOptions={mapForReactSelect(resourceOptions)}
             getSelectedResource={this.getSelectedResource}
           />
         </div>
