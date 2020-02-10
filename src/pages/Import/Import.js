@@ -12,7 +12,8 @@ export default class Import extends Component {
 
       resourceOptions: [
         { id: 'Department', name: 'departments' },
-        { id: 'BloodGroup', name: 'blood groups' }
+        { id: 'BloodGroup', name: 'blood groups' },
+        { id: 'Employee', name: 'employees' }
       ]
     };
 

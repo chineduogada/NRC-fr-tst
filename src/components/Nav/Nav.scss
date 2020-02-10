@@ -40,14 +40,10 @@ nav .main-menu ul li a {
   padding: 0.5em;
 }
 
-nav .main-menu ul li a.active,
-nav .main-menu ul li a:active,
-nav .main-menu ul li a:hover {
-  color: var(--basic-color-light);
-}
-
 nav .main-menu ul li:hover a {
-  color: var(--basic-color);
+  // color: var(--basic-color);
+  background: var(--basic-color-light);
+  border-radius: 15px;
 }
 
 nav .main-menu ul li:not(:last-child) {

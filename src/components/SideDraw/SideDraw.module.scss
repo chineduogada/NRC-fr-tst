@@ -1,6 +1,6 @@
 .SideDraw {
   position: fixed;
-  bottom: 1em;
+  bottom: 0.4em;
   right: 0.3em;
   z-index: 3;
   background-color: #fff;
@@ -46,35 +46,35 @@
   }
 
   &.Show {
-    transform: translateX(-0%);
+    transform: translateY(-0%);
     opacity: 1;
-    animation: shake 0.45s 0.2s linear;
+    animation: shaker 0.45s 0.2s linear;
   }
 
   &.Hide {
-    transform: translateX(110%);
+    transform: translateY(110%);
     opacity: 0;
   }
 }
 
 @keyframes shake {
   0% {
-    transform: translateX(-8%);
+    transform: translateY(-8%);
   }
 
   // 25% {
-  //   transform: translateX(-4%);
+  //   transform: translateY(-4%);
   // }
 
   50% {
-    transform: translateX(3%);
+    transform: translateY(3%);
   }
 
   75% {
-    transform: translateX(-1%);
+    transform: translateY(-1%);
   }
 
   100% {
-    transform: translateX(0%);
+    transform: translateY(0%);
   }
 }

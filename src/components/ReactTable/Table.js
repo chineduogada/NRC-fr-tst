@@ -7,6 +7,7 @@ import {
   usePagination
 } from 'react-table';
 import matchSorter from 'match-sorter';
+import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from 'react-icons/md';
 import { truncateCellValue } from '../../helpers/strings';
 import Select from '../Select/Select';
 import classes from './Table.module.scss';
@@ -268,8 +269,6 @@ function Table({
     usePagination
   );
 
-  console.log(headers, rows);
-
   // Getting the filtered rows and pass it upwards to the parent component of this component
   if (onFilter) {
     onFilter(rows);
@@ -279,16 +278,16 @@ function Table({
     return (
       <div className={classes.Pagination}>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
+          {<MdFirstPage className='icon' />}
         </button>{' '}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
+          {<MdChevronLeft className='icon' />}
         </button>{' '}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
+          {<MdChevronRight className='icon' />}
         </button>{' '}
         <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
+          {<MdLastPage className='icon' />}
         </button>{' '}
         <span>
           Page{' '}

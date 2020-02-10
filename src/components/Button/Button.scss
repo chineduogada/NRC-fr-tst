@@ -2,9 +2,15 @@
 // .button.highlight {
 //   border: 2px solid;
 // }
+.button,
+button {
+  cursor: pointer;
+}
+
 .button {
   cursor: pointer;
-  // font-weight: bold;
+  font-weight: bold;
+  border-radius: 7px;
   text-transform: uppercase;
   text-decoration: none;
   position: relative;
@@ -13,7 +19,7 @@
   font-size: 80%;
   letter-spacing: 1px;
   border: 1px solid rgba(0, 0, 0, 0.2) !important;
-  padding: 0.4em 0.8em;
+  padding: 0.7em 1.5em;
   opacity: 0.9;
 }
 
@@ -23,7 +29,7 @@
 
 .button:hover {
   opacity: 1;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
 
 .button.highlight,

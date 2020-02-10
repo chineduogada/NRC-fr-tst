@@ -46,8 +46,6 @@ class TableView extends Component {
   }
   
   handleExport() {
-    console.log('filtered data', this.headers, this.data);
-
     const csvExporter = new ExportToCsv({
       showLabels: true,
       filename: this.getFileName(),

@@ -34,5 +34,22 @@ export default JSON.stringify({
         description: 'engineering'
       }
     ]
+  },
+
+  Employee: {
+    name: 'employees',
+    notes:
+      'Import a list of employees. Please, ensure that the headers of your excel file are mapped according to the column arrangement below:',
+    schema: {
+      'A': 'IPPIS No <string>',
+      'B': 'first name <string>',
+      'C': 'last name <string>',
+    },
+    example: [
+      {
+        code: 'FIN',
+        description: 'finance'
+      }
+    ]
   }
 });
