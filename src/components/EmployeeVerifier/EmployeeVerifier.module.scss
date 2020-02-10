@@ -38,10 +38,11 @@
     .ProfilePic {
       display: inline-block;
       background: var(--assent);
-      height: 30px;
-      width: 30px;
+      height: 35px;
+      width: 35px;
       max-height: 30px !important;
       border-radius: 5px;
+      overflow: hidden;
       margin-right: 1em;
     }
 

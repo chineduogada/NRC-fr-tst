@@ -18,6 +18,8 @@ import AllTrainingRecords from '../../pages/AllTrainingRecords/AllTrainingRecord
 import TrainingRecord from '../../pages/TrainingRecord/TrainingRecord';
 import AllCareers from '../../pages/AllCareers/AllCareers';
 import Career from '../../pages/Career/Career';
+import AllSuccessions from '../../pages/AllSuccessions/AllSuccessions';
+import Succession from '../../pages/Succession/Succession';
 import AllJobIncidence from '../../pages/AllJobIncidence/AllJobIncidence';
 import JobIncidence from '../../pages/JobIncidence/JobIncidence';
 import Import from '../../pages/Import/Import';
@@ -85,6 +87,8 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
             <Route path='/careers/:id' exact component={Career} />
             <Route path='/job-incidence' exact component={AllJobIncidence} />
             <Route path='/job-incidence/:id' exact component={JobIncidence} />
+            <Route path='/successions' exact component={AllSuccessions} />
+            <Route path='/successions/:id' exact component={Succession} />
             <Route path='/import' exact component={Import} />
             <Route path='/users' exact component={Users} />
             <Route path='/profile' exact component={UserProfile} />
@@ -99,11 +103,7 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
               exact
               component={Districts}
             />
-            <Route
-              path='/settings/static-models/pfa'
-              exact
-              component={PFA}
-            />
+            <Route path='/settings/static-models/pfa' exact component={PFA} />
             <Route
               path='/settings/static-models/job-titles'
               exact

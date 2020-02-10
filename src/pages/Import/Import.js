@@ -14,6 +14,7 @@ export default class Import extends Component {
       resourceOptions: [
         { id: 'Department', name: 'departments' },
         { id: 'BloodGroup', name: 'blood groups' }
+        // { id: 'Employee', name: 'employees' }
       ]
     };
 
@@ -22,6 +23,7 @@ export default class Import extends Component {
 
   /** Extracts the current state of a `Form` component */
   async getSelectedResource(component) {
+    console.log(component);
     this.setState({ resource: component.resource.value });
   }
 
@@ -29,8 +31,8 @@ export default class Import extends Component {
     const { resourceOptions, resource } = this.state;
     return (
       <Section
-        title="import data"
-        subTitle="Import data in only three simple steps"
+        title='import data'
+        subTitle='Import data in only three simple steps'
       >
         <div className={classes.StepsToImport}>
           <ol>
@@ -49,7 +51,7 @@ export default class Import extends Component {
         </div>
         <div className={classes.FormWrapper}>
           <ImportForm
-            resourceOptions={mapForReactSelect(resourceOptions)}
+            resourceOptions={mapForReactSelect(resourceOptions, 'name')}
             getSelectedResource={this.getSelectedResource}
           />
         </div>

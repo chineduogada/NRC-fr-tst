@@ -24,11 +24,11 @@ const nameMapper = (array, key) => {
   return array.map(item => mapper(item, key));
 };
 
-export const mapForReactSelect = arrayOfOptions => {
+export const mapForReactSelect = (arrayOfOptions, targetKey) => {
   return arrayOfOptions.map(option => {
     return {
       value: option.id,
-      label: option.name
+      label: option[targetKey]
     };
   });
 };

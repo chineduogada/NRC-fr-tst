@@ -20,13 +20,22 @@
   @media screen and (min-width: 2000px) {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   }
+}
 
-  .Title {
-    grid-column: 1 / -1;
-    text-transform: uppercase;
-    font-weight: bold;
-    margin: 0 0 0.5rem 0;
-    justify-self: start;
-    color: var(--basic-color);
-  }
+.TitleWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Title {
+  grid-column: 1 / -1;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  justify-self: start;
+  color: var(--basic-color);
+}
+
+.SubTitle {
+  font-size: 0.875rem;
 }
