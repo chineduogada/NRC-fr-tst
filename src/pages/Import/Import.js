@@ -13,8 +13,8 @@ export default class Import extends Component {
 
       resourceOptions: [
         { id: 'Department', name: 'departments' },
-        { id: 'BloodGroup', name: 'blood groups' }
-        // { id: 'Employee', name: 'employees' }
+        { id: 'BloodGroup', name: 'blood groups' },
+        { id: 'Employee', name: 'employees' }
       ]
     };
 
@@ -51,7 +51,7 @@ export default class Import extends Component {
         </div>
         <div className={classes.FormWrapper}>
           <ImportForm
-            resourceOptions={mapForReactSelect(resourceOptions, 'name')}
+            resourceOptions={resourceOptions}
             getSelectedResource={this.getSelectedResource}
           />
         </div>
