@@ -13,9 +13,7 @@
     font-size: 0.875rem;
     display: block;
   }
-  input,
-  select,
-  textarea {
+  .formControl {
     outline: none;
     font-size: 0.875rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -35,14 +33,12 @@
     min-height: 150px;
   }
 
-  input:focus,
-  textarea:focus,
-  select:focus {
+  .formControl:focus {
     outline: none;
     border: 1px solid var(--basic-color);
-    box-shadow: 0 0 4px var(--basic-color);
+    box-shadow: 0 0 1px var(--basic-color);
   }
-  
+
   input:disabled,
   textarea:disabled,
   select:disabled {

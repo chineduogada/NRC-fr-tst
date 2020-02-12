@@ -1,0 +1,23 @@
+.CreationForm {
+  position: relative;
+
+  .Close {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.75rem;
+    background: var(--dogwood-rose);
+    color: var(--inverse-text);
+    border-radius: 25px;
+    padding: 0.5em 0.8em;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    span {
+      margin-left: 0.3em;
+    }
+  }
+}

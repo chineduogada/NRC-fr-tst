@@ -3,7 +3,6 @@ import { withRouter, Link } from 'react-router-dom';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
-import _ from 'lodash';
 import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
@@ -11,7 +10,6 @@ import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
-import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
 import classes from './PFA.module.scss';
 
@@ -20,14 +18,14 @@ class PFA extends Form {
     super(props);
 
     this.tableRowOptions = [
-      {id: 0, name: 'inactive'},
-      {id: 0, name: 'active'},
-    ]
+      { id: 0, name: 'inactive' },
+      { id: 0, name: 'active' }
+    ];
 
     this.statusOptions = [
       { id: 1, status: 'active' },
       { id: 2, status: 'inactive' }
-    ]
+    ];
 
     this.state = {
       filteredDataFromServer: [],
@@ -59,7 +57,9 @@ class PFA extends Form {
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(this);
+    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(
+      this
+    );
     this.addDataObject = this.addDataObject.bind(this);
     this.updateDataObject = this.updateDataObject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -108,7 +108,7 @@ class PFA extends Form {
   };
 
   handleTableRowOptionChange({ currentTarget }) {
-    console.log(currentTarget.id)
+    console.log(currentTarget.id);
   }
 
   handleRowClick(event) {
@@ -131,9 +131,17 @@ class PFA extends Form {
    */
   updateObjectList(res) {
     const newDataObject = res.data.data;
-    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
 
-    this.setState({ filteredDataFromServer: [filteredNewDataObject, ...this.state.filteredDataFromServer] });
+    this.setState({
+      filteredDataFromServer: [
+        filteredNewDataObject,
+        ...this.state.filteredDataFromServer
+      ]
+    });
   }
 
   resetFormData() {
@@ -147,7 +155,7 @@ class PFA extends Form {
     const { statusId } = this.state.formData;
     return {
       status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
-    }
+    };
   }
 
   /**
@@ -161,7 +169,7 @@ class PFA extends Form {
     // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
     // map every option to the current value the user may have selected and join them with the from data
-    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
@@ -258,8 +266,20 @@ class PFA extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('administrator name', 'name', null, this.state.rowToPreview.name)}
-          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'), null, null, this.state.formData.statusId)}
+          {this.renderInput(
+            'administrator name',
+            'name',
+            null,
+            this.state.rowToPreview.name
+          )}
+          {this.renderSelect(
+            'status ',
+            'statusId',
+            nameMapper(this.statusOptions, 'status'),
+            null,
+            null,
+            this.state.formData.statusId
+          )}
 
           {this.renderButton('update')}
         </form>
@@ -273,7 +293,11 @@ class PFA extends Form {
         <p>Add a new administrator</p>
 
         {this.renderInput('administrator name', 'name')}
-        {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'))}
+        {this.renderSelect(
+          'status ',
+          'statusId',
+          nameMapper(this.statusOptions, 'status')
+        )}
 
         {this.renderButton('save')}
       </form>
@@ -283,46 +307,42 @@ class PFA extends Form {
   render() {
     const { filteredDataFromServer, columns } = this.state;
 
-    return (
+    return filteredDataFromServer.length ? (
       <React.Fragment>
-        {filteredDataFromServer.length ? (
-          <Section>
-            <TableView
-              title={
-                <span>
-                  <Link
-                    style={{ marginRight: '0.5em' }}
-                    className='link secondary'
-                    to='/settings/static-models'
-                  >
-                    <IoMdArrowRoundBack className='icon' />
-                  </Link>
-                  <span>pension fund administrators</span>
-                </span>
-              }
-              message='Double click a row to preview'
-              columns={columns}
-              data={filteredDataFromServer}
-              clickHandler={this.handleRowClick}
-              addNewButtonHandler={this.handleAddNew}
-            >
-              
-            </TableView>
+        <Section>
+          <TableView
+            title={
+              <span>
+                <Link
+                  style={{ marginRight: '0.5em' }}
+                  className='link secondary'
+                  to='/settings/static-models'
+                >
+                  <IoMdArrowRoundBack className='icon' />
+                </Link>
+                <span>pension fund administrators</span>
+              </span>
+            }
+            message='Double click a row to preview'
+            columns={columns}
+            data={filteredDataFromServer}
+            clickHandler={this.handleRowClick}
+            addNewButtonHandler={this.handleAddNew}
+          ></TableView>
 
-            <SideDraw
-              title='Pension Fund Admins'
-              openDraw={this.state.showForm}
-              onClose={this.closeSideDraw}
-            >
-              {this.state.rowToPreview
-                ? this.renderUpdateForm()
-                : this.renderCreateForm()}
-            </SideDraw>
-          </Section>
-        ) : (
-          <Loader />
-        )}
+          <SideDraw
+            title='Pension Fund Admins'
+            openDraw={this.state.showForm}
+            onClose={this.closeSideDraw}
+          >
+            {this.state.rowToPreview
+              ? this.renderUpdateForm()
+              : this.renderCreateForm()}
+          </SideDraw>
+        </Section>
       </React.Fragment>
+    ) : (
+      <Loader />
     );
   }
 }

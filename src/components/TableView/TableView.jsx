@@ -13,7 +13,6 @@ class TableView extends Component {
     const { columns, data } = this.props;
     this.data = data;
     this.headers = this.mapHeadersForDownloads(columns);
-
     this.handleFilter = this.handleFilter.bind(this);
     this.handleExport = this.handleExport.bind(this);
   }
@@ -25,7 +24,6 @@ class TableView extends Component {
     const mappedHeaders = headers.map(header => {
       return header.Header;
     });
-
     return mappedHeaders;
   }
 
@@ -48,6 +46,7 @@ class TableView extends Component {
   handleExport() {
     const csvExporter = new ExportToCsv({
       showLabels: true,
+      showTitle: this.getFileName(),
       filename: this.getFileName(),
       headers: this.headers
     });
@@ -74,16 +73,16 @@ class TableView extends Component {
       <section className={classes.TableView}>
         {title ? (
           <header>
-            <div className="d-flex justify-content-between">
+            <div className='d-flex justify-content-between'>
               <div>
-                <div className="title text-capitalize">
+                <div className='title text-capitalize'>
                   <h2 className={classes.TableTitle}>{title}</h2>
                 </div>
                 {message ? <PageNotice>{message}</PageNotice> : null}
               </div>
-              <div className="buttons">
-                <Button label="add new" fill onClick={addNewButtonHandler} />
-                <Button label="export" plain onClick={this.handleExport} />
+              <div className='buttons'>
+                <Button label='add new' fill onClick={addNewButtonHandler} />
+                <Button label='export' plain onClick={this.handleExport} />
               </div>
             </div>
           </header>

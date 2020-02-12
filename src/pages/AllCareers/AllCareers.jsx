@@ -6,7 +6,6 @@ import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
-import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';

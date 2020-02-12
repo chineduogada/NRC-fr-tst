@@ -150,7 +150,7 @@ export default class EmployeeVerifier extends Component {
   }
 
   /**
-   * Checks the input field as good or bad according to some condition
+   * Checks the input field is good or bad according to some condition
    * provided by the user
    * @param cb a function provided by the user that returns a truthy/falsy value.
    * The call back takes the `employees` array stored in the state as input
@@ -175,8 +175,10 @@ export default class EmployeeVerifier extends Component {
   }
 
   handleEmployeeSelection({ currentTarget }) {
-    const selectedEmployee = this.state.employees[currentTarget.id * 1];
+    const currentTargetIdx = currentTarget.id * 1;
+    const selectedEmployee = this.state.employees[currentTargetIdx];
     this.input.value = selectedEmployee.ippisNo;
+
     this.setState({
       isEmployeeSelected: true,
       employee: selectedEmployee,
@@ -273,6 +275,7 @@ export default class EmployeeVerifier extends Component {
               id={i}
               onClick={this.handleEmployeeSelection}
               className={classes.Result}
+              ref={employee => (this[`employee-${i}`] = employee)}
             >
               {this.profileLayout(employee)}
             </li>
@@ -284,7 +287,7 @@ export default class EmployeeVerifier extends Component {
 
   renderProcessing() {
     return (
-      <Spinner className={classes.Processing} animation='border' size='sm' />
+      <Spinner className={classes.Processing} animation="border" size="sm" />
     );
   }
 

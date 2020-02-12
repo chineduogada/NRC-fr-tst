@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ImportForm from './ImportForm';
 import Section from '../../hoc/Section/Section';
+import { mapForReactSelect } from '../../helpers/nameMapper';
 import ImportDocumentation from './ImportDocumentation';
 import classes from './Import.module.scss';
 
@@ -22,6 +23,7 @@ export default class Import extends Component {
 
   /** Extracts the current state of a `Form` component */
   async getSelectedResource(component) {
+    console.log(component);
     this.setState({ resource: component.resource.value });
   }
 
