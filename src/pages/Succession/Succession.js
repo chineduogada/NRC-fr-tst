@@ -68,10 +68,9 @@ class Succession extends Component {
 
   async componentDidMount() {
     await this.fetchOptionsFromServer();
-    console.log(this.id);
     const res = await httpService.get(`/successions/${this.id}`);
 
-    console.log(res);
+    // console.log(res);
 
     if (res) {
       this.setState({

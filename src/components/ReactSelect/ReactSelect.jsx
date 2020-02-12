@@ -28,14 +28,14 @@ const ReactSelect = React.forwardRef(
           name={name}
           id={name}
           value={selectedOption}
-          onChange={function(option) {
+          onChange={function(option, triggeredAction) {
             const optionValue = Array.isArray(option)
               ? option
               : option
               ? option.value
               : '';
             const currentTarget = { ...this, value: optionValue };
-            getSelectObjectOnChange({ currentTarget });
+            getSelectObjectOnChange({ currentTarget }, triggeredAction);
           }}
           defaultInputValue={selectedOption}
         />

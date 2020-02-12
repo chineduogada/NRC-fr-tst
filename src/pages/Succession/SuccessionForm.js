@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { toast } from 'react-toastify';
 import Section from '../../hoc/Section/Section';
 import httpService from '../../services/httpService';
@@ -8,6 +8,7 @@ import InformationBlock from '../../components/InformationBlock/InformationBlock
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 import ReactSelect from '../../components/ReactSelect/ReactSelect';
 import nameMapper, { mapForReactSelect } from '../../helpers/nameMapper';
+import LightBox from '../../components/LightBox/LightBox';
 import prepareOptionalRequirements from '../../services/successionService';
 
 export default class ImportForm extends Form {
@@ -39,17 +40,35 @@ export default class ImportForm extends Form {
         trainings: []
       },
 
+      otherQualifications: [],
+      otherSkills: [],
+      otherTrainings: [],
+
       justAddedADefinition: false,
 
       ippisNoVerified: false,
 
-      errors: {}
+      errors: {},
+
+      inProgress: false
     };
 
-    this.optionalRequirmentEndpoints = {
-      otherSkills: 'other-succession-skills',
-      otherTrainings: 'other-succession-trainings',
-      otherQualifications: 'other-succession-qualifications',
+    this.optionalRequirmentMap = {
+      otherSkills: {
+        endpoint: 'other-succession-skills',
+        key: 'skillId',
+        option: this.props.options.skills,
+      },
+      otherTrainings: {
+        endpoint: 'other-succession-trainings',
+        key: 'trainingId',
+        option: this.props.options.trainings,
+      },
+      otherQualifications: {
+        endpoint: 'other-succession-qualifications',
+        key: 'qualificationId',
+        option: this.props.options.qualifications,
+      }
     }
 
     this.initialFormState = this.state.formData;
@@ -88,34 +107,111 @@ export default class ImportForm extends Form {
     return yearsOfExp && basicSkillId && basicQualId && basicTrainingId;
   }
 
-  removeOptionalRequirement
+  prepareToPushToFormData(data, name, options) {
+    options.filter(option => );
+    return {
+      ...data,
 
-  handleReactSelectChange({ currentTarget }) {
-    const 
+    }
+  }
+
+  async removeExistingOptionalRequirement(name, toRemove) {
+    this.setState({ inProgress: true });
+    
+    const { endpoint } = this.optionalRequirmentMap[name];
+    
+    // obtain a list of IDs
+    const IDsOfRequirementsToRemove = toRemove.map(requirement => requirement.id);
+    
+    const res = await Promise.all(IDsOfRequirementsToRemove.map(async id => {
+      await httpService.delete(`${endpoint}/${id}`);
+    }));
+    
+    if (res) {
+      console.log(res)
+      this.setState({ inProgress: false });
+      toast.success('operation successful');
+    }
+  }
+  
+  async addNewOptionalRequirement(name, toAdd) {
+    this.setState({ inProgress: true });
+
+    const { endpoint, key, options } = this.optionalRequirmentMap[name];
+
+     // obtain a list of IDs
+     const IDsOfRequirementsToAdd = toAdd.map(requirement => requirement.value);
+     console.log(IDsOfRequirementsToAdd, toAdd)
+
+    const data = prepareOptionalRequirements(IDsOfRequirementsToAdd, key, this.props.data.id);
+    console.log(data);
+    
+    const res = await httpService.post(endpoint, data);
+
+    
+    if (res) {
+      console.log(res)
+      const preparedData = this.prepareToPushToFormData(res.data.data, name, options)
+      this.setState({ inProgress: false, [name]: [...this.state[name], preparedData]});
+      toast.success('operation successful');
+    }
+  }
+  
+
+  // This will manage updating otherSkills, otherQualifications
+  // and otherTrainings arrays
+  // The `optionalRequirment` is one of `otherSkills`,
+  // `otherQualifications` and `otherTrainings`
+  handleReactSelectChange({ currentTarget }, { action }) {
+    const { name } = currentTarget;
+    const value = currentTarget.value || [];
+    const optionalRequirement = this.state[name];
+
+    if (action === 'select-option') {
+      const toAdd = value.filter(option => {
+        return !optionalRequirement.map(requirement => requirement[this.optionalRequirmentMap[name].key]).includes(option.value)
+      })
+
+      this.addNewOptionalRequirement(name, toAdd);
+    }
+
+    if (action === 'remove-value') {
+      const toRemove = optionalRequirement.filter(requirement => {
+        return !value.map(option => option.value).includes(requirement[this.optionalRequirmentMap[name].key])
+      });
+
+      this.removeExistingOptionalRequirement(name, toRemove);
+    }
+
+    if (action === 'clear') {
+      console.log('clear all');
+    }
+
+    // console.log(shouldAddNew, shouldRemove);
   }
 
   renderReactSelect(label, name, options, disabled, selectedOption, isMulti) {
     const { formData, errors } = this.state;
 
     return (
-      <ReactSelect
-        label={label}
-        closeMenuOnSelect={false}
-        hideSelectedOptions={true}
-        isMulti={isMulti}
-        inputId={name}
-        options={options}
-        name={name}
-        error={errors[name]}
-        id={name}
-        value={`${formData[name]}`}
-        getSelectObjectOnChange={reactSelectComponent => {
-          this.handleReactSelectChange(reactSelectComponent);
-        }}
-        ref={input => (this[name] = input)}
-        disabled={disabled}
-        defaultValue={selectedOption}
-      />
+        <ReactSelect
+          label={label}
+          closeMenuOnSelect={false}
+          hideSelectedOptions={true}
+          isMulti={isMulti}
+          inputId={name}
+          options={options}
+          name={name}
+          error={errors[name]}
+          id={name}
+          value={`${formData[name]}`}
+          getSelectObjectOnChange={(reactSelectComponent, triggeredAction) => {
+            this.handleReactSelectChange(reactSelectComponent, triggeredAction);
+          }}
+          ref={input => (this[name] = input)}
+          disabled={disabled}
+          defaultValue={selectedOption}
+        />
     );
   }
 
@@ -135,14 +231,16 @@ export default class ImportForm extends Form {
         basicSkillId: data.basicSkillId,
         basicTrainingId: data.basicTrainingId,
         yearsOfExp: data.yearsOfExp,
-        otherQualifications: data.otherQualifications,
-        otherSkills: data.otherSkills,
-        otherTrainings: data.otherTrainings,
         otherRequirement: data.otherRequirement,
         otherRequirement1: data.otherRequirement1,
         otherRequirement2: data.otherRequirement2
       };
-      this.setState({ formData, ippisNoVerified: true });
+      this.setState({ 
+        formData, ippisNoVerified: true,
+        otherQualifications: data.otherQualifications,
+        otherSkills: data.otherSkills,
+        otherTrainings: data.otherTrainings
+      });
     }
   }
 
@@ -315,12 +413,14 @@ export default class ImportForm extends Form {
                     nameMapper(options.skills, 'skill'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== formData.basicSkillId
+                    option => `${option.value}` !== `${formData.basicSkillId}`
                   ),
                   null,
-                  null,
-                  [...formData.otherSkills].map(
-                    option => `${option.value}` !== formData.basicSkillId
+                  mapForReactSelect(
+                    nameMapper(options.skills, 'skill'),
+                    'name'
+                  ).filter(
+                    ({ value }) => this.state.otherSkills.map(({ skill }) => skill.id).includes(value) 
                   ),
                   true
                 )}
@@ -331,12 +431,14 @@ export default class ImportForm extends Form {
                     nameMapper(options.qualifications, 'qualification'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== formData.basicQualId
+                    option => `${option.value}` !== `${formData.basicQualId}`
                   ),
                   null,
-                  null,
-                  [...formData.otherQualifications].map(
-                    option => `${option.value}` !== formData.basicQualId
+                  mapForReactSelect(
+                    nameMapper(options.qualifications, 'qualification'),
+                    'name'
+                  ).filter(
+                    ({ value }) => this.state.otherQualifications.map(({ qualification }) => qualification.id).includes(value) 
                   ),
                   true
                 )}
@@ -347,23 +449,26 @@ export default class ImportForm extends Form {
                     nameMapper(options.trainings, 'type'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== formData.basicTrainingId
+                    option => `${option.value}` !== `${formData.basicTrainingId}`
                   ),
                   null,
-                  null,
-                  [...formData.otherTrainings].map(
-                    option => `${option.value}` !== formData.basicTrainingIdId
+                  mapForReactSelect(
+                    nameMapper(options.trainings, 'type'),
+                    'name'
+                  ).filter(
+                    ({ value }) => this.state.otherTrainings.map(({ training }) => training.id).includes(value) 
                   ),
                   true
                 )}
-                {this.renderInput('other requirement', 'otherRequirement')}
-                {this.renderInput('other requirement 1', 'otherRequirement1')}
-                {this.renderInput('other requirement 2', 'otherRequirement2')}
+                {this.renderInput('other requirement', 'otherRequirement', null, formData.otherRequirement)}
+                {this.renderInput('other requirement 1', 'otherRequirement1', null, formData.otherRequirement1)}
+                {this.renderInput('other requirement 2', 'otherRequirement2', null, formData.otherRequirement2)}
               </>
             ) : null}
             {this.renderButton('submit definition')}
           </InformationBlock>
         </form>
+        {this.state.inProgress ? <LightBox /> : null}
       </Section>
     );
   }
