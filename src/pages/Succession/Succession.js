@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
-import SuccessionForm from '../AllSuccessions/SuccessionForm';
+import SuccessionForm from './SuccessionForm';
+import Loader from '../../components/Loader/Loader';
+import nameMapper from '../../helpers/nameMapper';
 
 class Succession extends Component {
   constructor(props) {
@@ -13,41 +15,81 @@ class Succession extends Component {
     this.state = {
       actualData: null,
       dataMappedForUpdateForm: {
-        departmentId: '1',
-        sectionId: '2',
-        jobTitleId: '3',
-        employeeCount: '1',
-        reportTo: '94321',
-        basicQualificationId: '2',
-        basicSkillId: '1',
-        basicTraining: '1',
-        yearsOfExp: '3',
-        otherQualifications: [2, 3],
-        otherSkills: [1],
-        otherTrainings: [2],
+        departmentId: '',
+        sectionId: '',
+        jobTitleId: '',
+        employeeCount: '',
+        reportTo: '',
+        basicQualId: '',
+        basicSkillId: '',
+        basicTrainingId: '',
+        yearsOfExp: '',
+        otherQualifications: [],
+        otherSkills: [],
+        otherTrainings: [],
         otherRequirement: '',
         otherRequirement1: '',
         otherRequirement2: ''
-      }
+      },
+      options: {}
     };
   }
 
+  async fetchOptionsFromServer() {
+    const [
+      skills,
+      qualifications,
+      trainingTypes,
+      jobTitles,
+      departments,
+      sections
+    ] = await httpService.all([
+      httpService.get('/skills?statusId=1'),
+      httpService.get('/qualifications?statusId=1'),
+      httpService.get('/training-types?statusId=1'),
+      httpService.get('/job-titles?statusId=1'),
+      httpService.get('/departments?statusId=1'),
+      httpService.get('/sections')
+    ]);
+
+    const options = {};
+
+    if (skills) {
+      options.skills = skills.data.data;
+      options.qualifications = qualifications.data.data;
+      options.trainings = trainingTypes.data.data;
+      options.jobTitles = jobTitles.data.data;
+      options.departments = departments.data.data;
+      options.sections = sections.data.data;
+
+      this.setState({ options });
+    }
+  }
+
   async componentDidMount() {
-    const res = await httpService.get(`/successions/${this.props.id}`);
+    await this.fetchOptionsFromServer();
+    console.log(this.id);
+    const res = await httpService.get(`/successions/${this.id}`);
 
     console.log(res);
 
     if (res) {
-      this.setState({ actualData: res.data.data });
+      this.setState({
+        dataMappedForUpdateForm: res.data.data,
+        actualData: res.data.data
+      });
     }
   }
 
   render() {
-    return (
+    return this.state.actualData ? (
       <SuccessionForm
-        title='succession'
+        title="succession"
         data={this.state.dataMappedForUpdateForm}
+        options={this.state.options}
       />
+    ) : (
+      <Loader />
     );
   }
 }

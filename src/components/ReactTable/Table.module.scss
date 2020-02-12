@@ -41,6 +41,10 @@
     width: 100%;
   }
 
+  thead tr th {
+    text-transform: capitalize;
+  }
+
   tbody tr {
     border-radius: 15px;
     overflow: hidden;

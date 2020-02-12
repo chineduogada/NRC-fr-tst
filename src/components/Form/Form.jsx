@@ -118,9 +118,9 @@ export default class Form extends Component {
   }
 
   handleSubmit = event => {
+    event.preventDefault();
     // check that the form is not already being processed. Just incase the user attempts to submit the form twice before a first response is returned from the server
     if (!this.state.isProcessing) {
-      event.preventDefault();
       const errors = this.validate();
       console.log(this.state.formData, errors);
       this.setState({ errors: errors || {} });
@@ -265,11 +265,11 @@ export default class Form extends Component {
         <Button label={label} fill disabled={disabled} />
         {disabled ? (
           <Spinner
-            as='span'
-            animation='grow'
-            size='sm'
-            role='status'
-            aria-hidden='true'
+            as="span"
+            animation="grow"
+            size="sm"
+            role="status"
+            aria-hidden="true"
           />
         ) : null}
       </React.Fragment>

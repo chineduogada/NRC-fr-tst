@@ -6,7 +6,9 @@ import Form from '../../components/Form/Form';
 import Schema from './JoiSchema';
 import InformationBlock from '../../components/InformationBlock/InformationBlock';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
+import ReactSelect from '../../components/ReactSelect/ReactSelect';
 import nameMapper, { mapForReactSelect } from '../../helpers/nameMapper';
+import prepareOptionalRequirements from '../../services/successionService';
 
 export default class ImportForm extends Form {
   constructor(props) {
@@ -19,13 +21,10 @@ export default class ImportForm extends Form {
         jobTitleId: '',
         employeeCount: '',
         reportTo: '',
-        basicQualificationId: '',
+        basicQualId: '',
         basicSkillId: '',
-        basicTraining: '',
+        basicTrainingId: '',
         yearsOfExp: '',
-        otherQualifications: [],
-        otherSkills: [],
-        otherTrainings: [],
         otherRequirement: '',
         otherRequirement1: '',
         otherRequirement2: ''
@@ -33,24 +32,31 @@ export default class ImportForm extends Form {
 
       options: {
         departments: [],
-        sections: [
-          { id: 1, name: 1 },
-          { id: 2, name: 2 },
-          { id: 3, name: 3 }
-        ],
+        sections: [],
         jobTitles: [],
         skills: [],
         qualifications: [],
         trainings: []
       },
 
+      justAddedADefinition: false,
+
       ippisNoVerified: false,
 
       errors: {}
     };
 
+    this.optionalRequirmentEndpoints = {
+      otherSkills: 'other-succession-skills',
+      otherTrainings: 'other-succession-trainings',
+      otherQualifications: 'other-succession-qualifications',
+    }
+
+    this.initialFormState = this.state.formData;
+
     this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
     this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
+    this.handleReactSelectChange = this.handleReactSelectChange.bind(this);
   }
 
   schema = Schema;
@@ -60,14 +66,12 @@ export default class ImportForm extends Form {
       departmentId,
       sectionId,
       jobTitleId,
-      yearsOfExp,
       employeeCount
     } = this.state.formData;
     return (
       departmentId &&
       sectionId &&
       jobTitleId &&
-      yearsOfExp &&
       employeeCount &&
       this.state.ippisNoVerified
     );
@@ -76,41 +80,79 @@ export default class ImportForm extends Form {
   isBasicRequirementsFilled() {
     const {
       basicSkillId,
-      basicQualificationId,
-      basicTraining
+      yearsOfExp,
+      basicQualId,
+      basicTrainingId
     } = this.state.formData;
-    return basicSkillId && basicQualificationId && basicTraining;
+
+    return yearsOfExp && basicSkillId && basicQualId && basicTrainingId;
+  }
+
+  removeOptionalRequirement
+
+  handleReactSelectChange({ currentTarget }) {
+    const 
+  }
+
+  renderReactSelect(label, name, options, disabled, selectedOption, isMulti) {
+    const { formData, errors } = this.state;
+
+    return (
+      <ReactSelect
+        label={label}
+        closeMenuOnSelect={false}
+        hideSelectedOptions={true}
+        isMulti={isMulti}
+        inputId={name}
+        options={options}
+        name={name}
+        error={errors[name]}
+        id={name}
+        value={`${formData[name]}`}
+        getSelectObjectOnChange={reactSelectComponent => {
+          this.handleReactSelectChange(reactSelectComponent);
+        }}
+        ref={input => (this[name] = input)}
+        disabled={disabled}
+        defaultValue={selectedOption}
+      />
+    );
+  }
+
+  fillUpFormData() {
+    const { data } = this.props;
+
+    console.log(data);
+
+    if (data) {
+      const formData = {
+        departmentId: data.departmentId,
+        sectionId: data.sectionId,
+        jobTitleId: data.jobTitleId,
+        employeeCount: data.employeeCount,
+        reportTo: data.reportTo,
+        basicQualId: data.basicQualId,
+        basicSkillId: data.basicSkillId,
+        basicTrainingId: data.basicTrainingId,
+        yearsOfExp: data.yearsOfExp,
+        otherQualifications: data.otherQualifications,
+        otherSkills: data.otherSkills,
+        otherTrainings: data.otherTrainings,
+        otherRequirement: data.otherRequirement,
+        otherRequirement1: data.otherRequirement1,
+        otherRequirement2: data.otherRequirement2
+      };
+      this.setState({ formData, ippisNoVerified: true });
+    }
   }
 
   async componentDidMount() {
-    const [
-      skills,
-      qualifications,
-      trainingTypes,
-      jobTitles,
-      departments
-    ] = await httpService.all([
-      httpService.get('/skills?statusId=1'),
-      httpService.get('/qualifications?statusId=1'),
-      httpService.get('/training-types?statusId=1'),
-      httpService.get('/job-titles?statusId=1'),
-      httpService.get('/departments?statusId=1')
-    ]);
+    this.setState({ options: this.props.options });
+    this.fillUpFormData();
+  }
 
-    const options = { ...this.state.options };
-
-    if (skills) {
-      options.skills = nameMapper(skills.data.data, 'skill');
-      options.qualifications = nameMapper(
-        qualifications.data.data,
-        'qualification'
-      );
-      options.trainings = nameMapper(trainingTypes.data.data, 'type');
-      options.jobTitles = nameMapper(jobTitles.data.data, 'description');
-      options.departments = nameMapper(departments.data.data, 'description');
-
-      this.setState({ options });
-    }
+  resetFormData() {
+    this.setState({ formData: this.initialFormState });
   }
 
   handleEmployeeSelection() {
@@ -123,30 +165,50 @@ export default class ImportForm extends Form {
     }
   }
 
+  /**
+   * Runs a callback provided by an external
+   * user of this component if the object of
+   * this form was successfully created.
+   * The call back will recieve the Request
+   * object as an argument
+   */
+
+  runOnSuccess(res) {
+    const { onSuccess } = this.props;
+    if (onSuccess) {
+      onSuccess(res);
+    }
+  }
+
   async doSubmit(event) {
-    // const res = await httpService.post('/import', this.state.formData);
-    const res = true;
+    const res = await httpService.patch(
+      `/successions/${this.props.data.id}`,
+      this.state.formData
+    );
+    // console.log(this.state.formData);
     if (res) {
-      // toast.success('Definition successfully added');
-      toast.success('Coming Soon');
+      toast.success('Definition successfully updated');
+      this.runOnSuccess(res);
+      this.Form.querySelector(`.formControl`).focus();
       this.stopProcessing();
     }
   }
 
   render() {
-    const { options, formData } = this.state;
+    const { options, formData, justAddedADefinition } = this.state;
 
     return (
       <Section title={this.props.title} subTitle={this.props.subTitle}>
         <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+          {justAddedADefinition ? <p>Add another one?</p> : null}
           <InformationBlock
-            title='source details'
-            subTitle='All the fields in this section are required'
+            title="source details"
+            subTitle="All the fields in this section are required"
           >
             {this.renderSelect(
               'department',
               'departmentId',
-              options.departments,
+              nameMapper(options.departments, 'description'),
               null,
               null,
               formData.departmentId
@@ -154,7 +216,7 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'section',
               'sectionId',
-              options.sections,
+              nameMapper(options.sections, 'section'),
               null,
               null,
               formData.sectionId
@@ -162,23 +224,16 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'jobTitle',
               'jobTitleId',
-              options.jobTitles,
+              nameMapper(options.jobTitles, 'description'),
               null,
               null,
               formData.jobTitleId
             )}
             {this.renderInput(
-              'years of experience',
-              'yearsOfExp',
-              null,
-              formData.yearsOfExp,
-              'number'
-            )}
-            {this.renderInput(
               'employee count',
               'employeeCount',
               null,
-              formData.jobTitleId,
+              formData.employeeCount,
               'number'
             )}
             <EmployeeVerifier
@@ -198,7 +253,7 @@ export default class ImportForm extends Form {
 
           <InformationBlock
             showDropDown
-            title='basic requirements'
+            title="basic requirements"
             subTitle={
               this.isSourceDetailsFilled()
                 ? 'Please specify the basic requirements for this succession. All fields are required.'
@@ -210,26 +265,33 @@ export default class ImportForm extends Form {
                 {this.renderSelect(
                   'basic skill',
                   'basicSkillId',
-                  options.skills,
+                  nameMapper(options.skills, 'skill'),
                   null,
                   null,
                   formData.basicSkillId
                 )}
                 {this.renderSelect(
                   'basic qualification',
-                  'basicQualificationId',
-                  options.qualifications,
+                  'basicQualId',
+                  nameMapper(options.qualifications, 'qualification'),
                   null,
                   null,
-                  formData.basicQualificationId
+                  formData.basicQualId
                 )}
                 {this.renderSelect(
                   'basic training',
-                  'basicTraining',
-                  options.trainings,
+                  'basicTrainingId',
+                  nameMapper(options.trainings, 'type'),
                   null,
                   null,
-                  formData.basicTraining
+                  formData.basicTrainingId
+                )}
+                {this.renderInput(
+                  'years of experience',
+                  'yearsOfExp',
+                  null,
+                  formData.yearsOfExp,
+                  'number'
                 )}
               </>
             ) : null}
@@ -237,7 +299,7 @@ export default class ImportForm extends Form {
 
           <InformationBlock
             showDropDown
-            title='other requirements'
+            title="other requirements"
             subTitle={
               this.isBasicRequirementsFilled()
                 ? 'Please specify any other (optional) requirement for this succession'
@@ -249,12 +311,15 @@ export default class ImportForm extends Form {
                 {this.renderReactSelect(
                   'other skills',
                   'otherSkills',
-                  mapForReactSelect(options.skills, 'name').filter(
+                  mapForReactSelect(
+                    nameMapper(options.skills, 'skill'),
+                    'name'
+                  ).filter(
                     option => `${option.value}` !== formData.basicSkillId
                   ),
                   null,
                   null,
-                  [...formData.otherQualifications].map(
+                  [...formData.otherSkills].map(
                     option => `${option.value}` !== formData.basicSkillId
                   ),
                   true
@@ -262,24 +327,33 @@ export default class ImportForm extends Form {
                 {this.renderReactSelect(
                   'other qualifications',
                   'otherQualifications',
-                  mapForReactSelect(options.qualifications, 'name').filter(
-                    option =>
-                      `${option.value}` !== formData.basicQualificationId
+                  mapForReactSelect(
+                    nameMapper(options.qualifications, 'qualification'),
+                    'name'
+                  ).filter(
+                    option => `${option.value}` !== formData.basicQualId
                   ),
                   null,
                   null,
-                  null,
+                  [...formData.otherQualifications].map(
+                    option => `${option.value}` !== formData.basicQualId
+                  ),
                   true
                 )}
                 {this.renderReactSelect(
                   'other trainings',
                   'otherTrainings',
-                  mapForReactSelect(options.trainings, 'name').filter(
-                    option => `${option.value}` !== formData.basicTraining
+                  mapForReactSelect(
+                    nameMapper(options.trainings, 'type'),
+                    'name'
+                  ).filter(
+                    option => `${option.value}` !== formData.basicTrainingId
                   ),
                   null,
                   null,
-                  null,
+                  [...formData.otherTrainings].map(
+                    option => `${option.value}` !== formData.basicTrainingIdId
+                  ),
                   true
                 )}
                 {this.renderInput('other requirement', 'otherRequirement')}
@@ -287,8 +361,8 @@ export default class ImportForm extends Form {
                 {this.renderInput('other requirement 2', 'otherRequirement2')}
               </>
             ) : null}
+            {this.renderButton('submit definition')}
           </InformationBlock>
-          {this.renderButton('submit definition')}
         </form>
       </Section>
     );

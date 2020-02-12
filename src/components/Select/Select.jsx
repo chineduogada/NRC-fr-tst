@@ -28,13 +28,6 @@ const Select = React.forwardRef(
         >
           <option value="">-- select --</option>
           {options.map(option => {
-            console.log(option);
-            console.log(
-              'in select',
-              selectedOption,
-              option.id,
-              `${option.id}`.toLowerCase() === `${selectedOption}`.toLowerCase()
-            );
             return `${option.id}`.toLowerCase() ===
               `${selectedOption}`.toLowerCase() ? (
               <option className="annoying" key={option.id} value={option.id}>
