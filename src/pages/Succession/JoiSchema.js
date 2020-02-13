@@ -5,7 +5,6 @@ export default {
   sectionId: Joi.number().required(),
   jobTitleId: Joi.number().required(),
   employeeCount: Joi.number().required(),
-  reportTo: Joi.number().required(),
   basicQualId: Joi.number().required(),
   basicSkillId: Joi.number().required(),
   basicTrainingId: Joi.number().required(),

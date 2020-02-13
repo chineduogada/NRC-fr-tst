@@ -231,7 +231,7 @@ class Successions extends Component {
             ) : (
               <TableView
                 title="succession definitions"
-                message="Double click a row to preview"
+                message="Double click a row to preview or update"
                 columns={columns}
                 data={filteredDataFromServer}
                 clickHandler={this.handleRowClick}
