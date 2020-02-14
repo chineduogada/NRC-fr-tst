@@ -129,7 +129,11 @@ export default class Dashboard extends Component {
     const { basicSummary } = this.state;
     const { firstName, username } = getCredentials();
     return (
-      <Section id="post" title="dashboard" subTitle={`Welcome, ${firstName || username}`}>
+      <Section
+        id="post"
+        title="dashboard"
+        subTitle={`Welcome, ${firstName || username}`}
+      >
         <Section>
           <div className={classes.News}>{<SimpleLineChart />}</div>
         </Section>
