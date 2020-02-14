@@ -15,6 +15,12 @@ axios.interceptors.response.use(null, error => {
       toast.error('an unexpected error ocurred.');
     }
   } else {
+    if (error.response.status === 401) {
+      localStorage.removeItem('curUser');
+      if (this.history && this.history !== undefined && this.history !== null) {
+        this.history.go();
+      }
+    }
     console.log('Logging the error', error);
     toast.error(error.response.data.message);
   }

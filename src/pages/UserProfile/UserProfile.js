@@ -87,7 +87,7 @@ class UserProfile extends Component {
             <div className={classes.UserProfile}>
               <div className={classes.Header}>
                 <div className={classes.UserProfilePic}>
-                  <GetImage imageSource={photo} />
+                  <GetImage imageSource={photo || null} />
                 </div>
                 <div className={classes.UserInfo}>
                   <p className={classes.UserFullName}>

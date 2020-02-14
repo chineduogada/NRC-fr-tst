@@ -14,7 +14,25 @@ export default class Import extends Component {
       resourceOptions: [
         { id: 'Department', name: 'departments' },
         { id: 'BloodGroup', name: 'blood groups' },
-        { id: 'Employee', name: 'employees' }
+        { id: 'GPZ', name: 'geo political zones' },
+        { id: 'RelationshipType', name: 'relationship types' },
+        { id: 'TrainingType', name: 'training types' },
+        { id: 'State', name: 'states' },
+        { id: 'LGA', name: 'local government areas' },
+        { id: 'SenatorialDistrict', name: 'senatorial districts' },
+        { id: 'District', name: 'districts' },
+        { id: 'SalaryStructure', name: 'salary structures' },
+        { id: 'JobGrade', name: 'job grades' },
+        { id: 'JobTitle', name: 'job titles' },
+        { id: 'JobType', name: 'job types' },
+        { id: 'PFA', name: 'pension fund administrators' },
+        { id: 'Employee', name: 'employee personal details' },
+        { id: 'EmployeeJob', name: 'employee job details' },
+        { id: 'EmployeeJob', name: 'employees appoinment details' },
+        { id: 'Skill', name: 'skills' },
+        { id: 'Qualification', name: 'qualifications' },
+        { id: 'CareerReasonCode', name: 'career reason codes' },
+        { id: 'IncidenceReasonCode', name: 'incidence reason codes' }
       ]
     };
 
@@ -31,8 +49,8 @@ export default class Import extends Component {
     const { resourceOptions, resource } = this.state;
     return (
       <Section
-        title='import data'
-        subTitle='Import data in only three simple steps'
+        title="import data"
+        subTitle="Import data in only three simple steps"
       >
         <div className={classes.StepsToImport}>
           <ol>

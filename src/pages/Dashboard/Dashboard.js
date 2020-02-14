@@ -57,11 +57,11 @@ export default class Dashboard extends Component {
   }
 
   fetchTrainingSchedules() {
-    return httpService.get('/job-types');
+    return httpService.get('/training-schedules');
   }
 
   fetchJobIncidence() {
-    return httpService.get('/blood-groups');
+    return httpService.get('/job-incidence');
   }
 
   async setNumEmployee({ data }) {
@@ -89,7 +89,7 @@ export default class Dashboard extends Component {
     const oldState = { ...this.state.basicSummary };
     const numTrainingSchedules = {
       ...oldState.numTrainingSchedules,
-      data: data.data.length
+      data: data.data.count
     };
 
     const basicSummary = { ...oldState, numTrainingSchedules };
@@ -101,7 +101,7 @@ export default class Dashboard extends Component {
     const oldState = { ...this.state.basicSummary };
     const numJobIncidence = {
       ...oldState.numJobIncidence,
-      data: data.data.length
+      data: data.data.count
     };
 
     const basicSummary = { ...oldState, numJobIncidence };
