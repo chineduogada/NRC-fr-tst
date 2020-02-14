@@ -48,20 +48,55 @@ class AllEmployees extends Component {
   }
 
   mapToViewModel(employee) {
+    const { employeeJob, employeeAppointment } = employee;
     return {
       id: employee.ippisNo,
       name: `${employee.firstName} ${employee.lastName}`,
-      department: employee.employeeJob.department.description,
-      district: employee.employeeJob.district.siteName,
-      employeeStatus: employee.employeeJob.employeeStatus.status,
-      pensionable: employee.employeeJob.pensionable,
-      firstAppointmentDate: employee.employeeAppointment.firstAppointmentDate,
-      presentAppointmentDate:
-        employee.employeeAppointment.presentAppointmentDate,
-      presentJobType: employee.employeeAppointment.presentJobType.type,
-      presentJobTitle: employee.employeeAppointment.presentJobTitle.description
+      department: employeeJob ? employeeJob.department.description : null,
+      district: employeeJob ? employeeJob.district.siteName : null,
+      employeeStatus: employeeJob ? employeeJob.employeeStatus.status : null,
+      pensionable: employeeJob ? employeeJob.pensionable : null,
+      firstAppointmentDate: employeeAppointment
+        ? employeeAppointment.firstAppointmentDate
+        : null,
+      presentAppointmentDate: employeeAppointment
+        ? employeeAppointment.presentAppointmentDate
+        : null,
+      presentJobType: employeeAppointment
+        ? employeeAppointment.presentJobType.type
+        : null,
+      presentJobTitle: employeeAppointment
+        ? employeeAppointment.presentJobTitle.description
+        : null
     };
   }
+
+  // mapToViewModel(employee) {
+  //   const employeeInfo = {
+  //     id: employee.ippisNo,
+  //     name: `${employee.firstName} ${employee.lastName}`
+  //   };
+
+  //   if (employee.employeeJob) {
+  //     employeeInfo.department = employee.employeeJob.department.description;
+  //     employeeInfo.district = employee.employeeJob.district.siteName;
+  //     employeeInfo.employeeStatus = employee.employeeJob.employeeStatus.status;
+  //     employeeInfo.pensionable = employee.employeeJob.pensionable;
+  //   }
+
+  //   if (employee.employeeAppointment) {
+  //     employeeInfo.firstAppointmentDate =
+  //       employee.employeeAppointment.firstAppointmentDate;
+  //     employeeInfo.presentAppointmentDate =
+  //       employee.employeeAppointment.presentAppointmentDate;
+  //     employeeInfo.presentJobType =
+  //       employee.employeeAppointment.presentJobType.type;
+  //     employeeInfo.presentJobTitle =
+  //       employee.employeeAppointment.presentJobTitle.description;
+  //   }
+
+  //   return employeeInfo;
+  // }
 
   handleAddNew() {
     this.props.history.push('/employees/new');
@@ -84,7 +119,7 @@ class AllEmployees extends Component {
     return (
       <Section>
         <Table
-          title='employees'
+          title="employees"
           columns={columns}
           data={employees}
           clickHandler={this.handleRowClick}
