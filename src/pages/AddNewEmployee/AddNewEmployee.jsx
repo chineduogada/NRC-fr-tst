@@ -180,7 +180,9 @@ export default class AddNewEmployee extends Form {
     districtId: Joi.number(),
     sectionId: Joi.number(),
     location: Joi.string(),
-    reportTo: Joi.number(),
+    reportTo: Joi.number()
+      .allow('')
+      .optional(),
     employeeStatusId: Joi.number(),
     pensionable: Joi.string(),
 
@@ -245,14 +247,14 @@ export default class AddNewEmployee extends Form {
 
   render() {
     return this.state.departmentOptions.length ? (
-      <Section title='add new employee'>
+      <Section title="add new employee">
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title=''>
+          <InformationBlock title="">
             <EmployeeVerifier
               preventDefault
               checkOnResponseRecieved={employees => !employees.length}
@@ -270,7 +272,7 @@ export default class AddNewEmployee extends Form {
 
           {this.state.ippisNoVerified ? (
             <>
-              <InformationBlock title='basic information'>
+              <InformationBlock title="basic information">
                 {this.renderInput('first Name', 'firstName')}
                 {this.renderInput('last Name', 'lastName')}
                 {this.renderInput('middle Names', 'middleNames')}
@@ -344,57 +346,40 @@ export default class AddNewEmployee extends Form {
                 ])}
               </InformationBlock>
 
-              <InformationBlock title='job information'>
-                <EmployeeVerifier
-                  checkOnResponseRecieved={employees => employees.length}
-                  onEmployeeSelection={this.handleEmployeeSelection}
-                  onInputChange={this.handleEmployeeInputChange}
-                >
-                  {this.renderInput(
-                    `who ${this.state.formData.firstName ||
-                      'this employee'} reports to`,
-                    'reportTo',
-                    'Please enter a valid IPPIS number',
-                    null,
-                    'number'
-                  )}
-                </EmployeeVerifier>
+              <InformationBlock title="job information">
+                {this.renderInput(
+                  `who ${this.state.formData.firstName ||
+                    'this employee'} reports to`,
+                  'reportTo',
+                  'Please enter a valid IPPIS number',
+                  null,
+                  'number'
+                )}
+                {this.renderInput('section', 'sectionId', null, null, 'number')}
+                {this.renderInput('location', 'location', '')}
 
-                {this.state.reportToVerified ? (
-                  <>
-                    {this.renderInput(
-                      'section',
-                      'sectionId',
-                      null,
-                      null,
-                      'number'
-                    )}
-                    {this.renderInput('location', 'location', '')}
-
-                    {this.renderSelect('employee status', 'employeeStatusId', [
-                      { id: '1', name: 'Active' },
-                      { id: '2', name: 'Suspended' },
-                      { id: '3', name: 'Retired' }
-                    ])}
-                    {this.renderSelect('pensionable', 'pensionable', [
-                      { id: 'Y', name: 'Y' },
-                      { id: 'N', name: 'N' }
-                    ])}
-                    {this.renderSelect(
-                      'department',
-                      'departmentId',
-                      this.state.departmentOptions
-                    )}
-                    {this.renderSelect(
-                      'district',
-                      'districtId',
-                      this.state.districtOptions
-                    )}
-                  </>
-                ) : null}
+                {this.renderSelect('employee status', 'employeeStatusId', [
+                  { id: '1', name: 'Active' },
+                  { id: '2', name: 'Suspended' },
+                  { id: '3', name: 'Retired' }
+                ])}
+                {this.renderSelect('pensionable', 'pensionable', [
+                  { id: 'Y', name: 'Y' },
+                  { id: 'N', name: 'N' }
+                ])}
+                {this.renderSelect(
+                  'department',
+                  'departmentId',
+                  this.state.departmentOptions
+                )}
+                {this.renderSelect(
+                  'district',
+                  'districtId',
+                  this.state.districtOptions
+                )}
               </InformationBlock>
 
-              <InformationBlock title='appointment information'>
+              <InformationBlock title="appointment information">
                 {this.renderInput(
                   'first appointment date',
                   'firstAppointmentDate',
@@ -480,7 +465,7 @@ export default class AddNewEmployee extends Form {
         </form>
       </Section>
     ) : (
-      <Loader message='please wait...' />
+      <Loader message="please wait..." />
     );
   }
 }

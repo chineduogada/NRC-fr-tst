@@ -18,7 +18,6 @@ export default class ImportForm extends Form {
         sectionId: '',
         jobTitleId: '',
         employeeCount: '',
-        reportTo: '',
         basicQualId: '',
         basicSkillId: '',
         basicTrainingId: '',
@@ -62,13 +61,7 @@ export default class ImportForm extends Form {
       jobTitleId,
       employeeCount
     } = this.state.formData;
-    return (
-      departmentId &&
-      sectionId &&
-      jobTitleId &&
-      employeeCount &&
-      this.state.ippisNoVerified
-    );
+    return departmentId && sectionId && jobTitleId && employeeCount;
   }
 
   isBasicRequirementsFilled() {
@@ -93,7 +86,6 @@ export default class ImportForm extends Form {
         sectionId: data.sectionId,
         jobTitleId: data.jobTitleId,
         employeeCount: data.employeeCount,
-        reportTo: data.reportTo,
         basicQualId: data.basicQualId,
         basicSkillId: data.basicSkillId,
         basicTrainingId: data.basicTrainingId,
@@ -201,19 +193,6 @@ export default class ImportForm extends Form {
               formData.employeeCount,
               'number'
             )}
-            <EmployeeVerifier
-              checkOnResponseRecieved={employees => employees.length}
-              onEmployeeSelection={this.handleEmployeeSelection}
-              onInputChange={this.handleEmployeeInputChange}
-            >
-              {this.renderInput(
-                'report to',
-                'reportTo',
-                'Enter a valid IPPIS number to continue',
-                formData.reportTo,
-                'number'
-              )}
-            </EmployeeVerifier>
           </InformationBlock>
 
           <InformationBlock

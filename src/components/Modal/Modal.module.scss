@@ -1,12 +1,14 @@
 .Modal {
   position: fixed;
   left: 50%;
-  top: 45%;
-  transform: translate(-50%, -45%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 3;
   background-color: #fff;
   width: 90%;
   max-width: 700px;
+  overflow: hidden;
+  border-radius: 5px;
   box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.1s 0.1s ease;
 

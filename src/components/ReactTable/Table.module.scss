@@ -20,11 +20,12 @@
     background: #fff;
   }
   th {
-    // background: #333;
-    // background: rgb(77, 77, 77);
+    background: #c0c0c0;
+    background: linear-gradient(-135deg, #d3d3d3, #c0c0c0);
     background: var(--basic-color);
-    color: #fff;
-    font-weight: bold;
+    // background: var(--light-gray);
+    color: var(--inverse-text);
+    // font-weight: bold;
     font-size: 0.875rem;
   }
 
@@ -39,10 +40,16 @@
   tbody,
   thead {
     width: 100%;
+    display: block;
   }
 
   thead tr th {
     text-transform: capitalize;
+  }
+
+  tbody {
+    overflow: auto;
+    max-height: 50vh;
   }
 
   tbody tr {
@@ -56,21 +63,27 @@
   }
 
   .Filter {
-    background-color: rgb(247, 247, 247);
+    background-color: rgb(255, 255, 255);
     padding: 0.2em;
   }
 
   .Filter input {
+    box-shadow: inset 1px 2px 3px rgba(0, 0, 0, 0.2);
     border: none;
-    border-radius: 5px;
-    padding: 0.3em;
+    border-radius: 3px;
+    padding: 0.3em 0.1em;
     box-sizing: border-box;
-    border: 1px solid none;
+    border: 1px solid transparent;
   }
 
   .Filter input:focus {
     outline: none;
-    border-color: var(--basic-color);
+    border: 1px solid var(--gray);
+  }
+
+  .FunnelIcon {
+    margin-right: 0.3em;
+    color: var(--text);
   }
 
   .Clickable {

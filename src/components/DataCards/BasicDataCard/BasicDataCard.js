@@ -8,7 +8,7 @@ const BasicDataCard = ({ data, text, url, footer }) => {
   return (
     <div className={classes.BasicDataCard}>
       <div className={classes.Body}>
-        {data ? (
+        {data !== null ? (
           <>
             <h4>{data}</h4>
             <p>{text}</p>

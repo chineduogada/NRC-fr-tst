@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import httpService from '../../services/httpService';
 import Form from '../../components/Form/Form';
 import Schema from './JoiSchema';
+import BatchProcessor from '../../helpers/batchProcessor';
 
 export default class ImportForm extends Form {
   constructor(props) {

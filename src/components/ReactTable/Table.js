@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { IoIosFunnel } from 'react-icons/io';
 import {
   useTable,
   useSortBy,
@@ -7,7 +8,12 @@ import {
   usePagination
 } from 'react-table';
 import matchSorter from 'match-sorter';
-import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from 'react-icons/md';
+import {
+  MdChevronLeft,
+  MdChevronRight,
+  MdFirstPage,
+  MdLastPage
+} from 'react-icons/md';
 import { truncateCellValue } from '../../helpers/strings';
 import Select from '../Select/Select';
 import classes from './Table.module.scss';
@@ -45,13 +51,16 @@ function DefaultColumnFilter({
   const count = preFilteredRows.length;
 
   return (
-    <input
-      value={filterValue || ''}
-      onChange={e => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
-      }}
-      placeholder={`Search ${count} records...`}
-    />
+    <>
+      <IoIosFunnel className={classes.FunnelIcon} />
+      <input
+        value={filterValue || ''}
+        onChange={e => {
+          setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+        }}
+        placeholder={`Search ${count} records...`}
+      />
+    </>
   );
 }
 
@@ -261,7 +270,7 @@ function Table({
       data,
       defaultColumn,
       filterTypes,
-      initialState: { pageIndex: 0, pageSize: 5 }
+      initialState: { pageIndex: 0, pageSize: 10 }
     },
     useFilters,
     useGlobalFilter,
@@ -278,16 +287,16 @@ function Table({
     return (
       <div className={classes.Pagination}>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {<MdFirstPage className='icon' />}
+          {<MdFirstPage className="icon" />}
         </button>{' '}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {<MdChevronLeft className='icon' />}
+          {<MdChevronLeft className="icon" />}
         </button>{' '}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {<MdChevronRight className='icon' />}
+          {<MdChevronRight className="icon" />}
         </button>{' '}
         <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {<MdLastPage className='icon' />}
+          {<MdLastPage className="icon" />}
         </button>{' '}
         <span>
           Page{' '}
@@ -313,7 +322,7 @@ function Table({
             setPageSize(Number(e.target.value));
           }}
         >
-          {[5, 10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>

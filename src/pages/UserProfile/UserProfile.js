@@ -20,7 +20,7 @@ class UserProfile extends Component {
 
     this.id = this.props.match.params.id;
 
-    console.log(props)
+    console.log(props);
 
     this.state = {
       users: [],
@@ -34,14 +34,11 @@ class UserProfile extends Component {
       errors: {}
     };
 
-
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
   }
 
-  fetchLocalUser() {
-    
-  }
+  fetchLocalUser() {}
 
   async fetchUserViaAPI() {
     const users = [];
@@ -58,7 +55,7 @@ class UserProfile extends Component {
   }
 
   async componentDidMount() {
-    this.fetchUserViaAPI()
+    this.fetchUserViaAPI();
   }
 
   handleAddNew(e) {
@@ -86,14 +83,16 @@ class UserProfile extends Component {
     return (
       <React.Fragment>
         {this.state.users ? (
-          <Section title=''>
+          <Section title="">
             <div className={classes.UserProfile}>
               <div className={classes.Header}>
                 <div className={classes.UserProfilePic}>
-                  <GetImage imageSource={photo} />
+                  <GetImage imageSource={photo || null} />
                 </div>
                 <div className={classes.UserInfo}>
-                  <p className={classes.UserFullName}>{firstName} {lastName}</p>
+                  <p className={classes.UserFullName}>
+                    {firstName} {lastName}
+                  </p>
                   <p className={classes.UserRole}>{role.type}</p>
                 </div>
               </div>
@@ -102,7 +101,7 @@ class UserProfile extends Component {
               </div>
             </div>
             <Modal
-              title=''
+              title=""
               openModal={this.state.showForm}
               onClose={this.closeSideDraw}
             >

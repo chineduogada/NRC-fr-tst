@@ -117,6 +117,10 @@ class AllJobIncidence extends Form {
   }
 
   async componentDidMount() {
+    console.log(this.props);
+    if (/\?new$/.test(this.props.location.search)) {
+      this.setState({ showDraw: true });
+    }
     await this.fetchData();
   }
 
@@ -264,8 +268,8 @@ class AllJobIncidence extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title='job incidence'
-              message='Click a row to preview'
+              title="job incidence"
+              message="Click a row to preview"
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
@@ -273,7 +277,7 @@ class AllJobIncidence extends Form {
             ></TableView>
 
             <Modal
-              title='incidence record'
+              title="incidence record"
               openModal={this.state.showDraw}
               onClose={this.closeSideDraw}
             >
