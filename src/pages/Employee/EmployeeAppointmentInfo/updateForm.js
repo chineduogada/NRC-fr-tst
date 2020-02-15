@@ -100,7 +100,7 @@ export default class UpdateForm extends Form {
       this.state.formData
     );
 
-    if (true) {
+    if (res) {
       // Run some external callback passed as prop
       await this.onSuccess();
       this.stopProcessing();
@@ -113,7 +113,7 @@ export default class UpdateForm extends Form {
     return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <p className='form-header'>update employee appointment information</p>
+          <p className="form-header">update employee appointment information</p>
           <InformationBlock>
             {this.renderInput(
               'first appointment date',
