@@ -41,17 +41,14 @@ class UserProfile extends Component {
   fetchLocalUser() {}
 
   async fetchUserViaAPI() {
-    const users = [];
-
-    const res = await httpService.get('/user');
-
-    if (res) {
-      res.data.data.forEach(user => {
-        users.push(this.mapToViewModel(user));
-      });
-    }
-
-    this.setState({ users });
+    // const users = [];
+    // const res = await httpService.get('/user');
+    // if (res) {
+    //   res.data.data.forEach(user => {
+    //     users.push(this.mapToViewModel(user));
+    //   });
+    // }
+    // this.setState({ users });
   }
 
   async componentDidMount() {
@@ -83,7 +80,7 @@ class UserProfile extends Component {
     return (
       <React.Fragment>
         {this.state.users ? (
-          <Section title="">
+          <Section title=''>
             <div className={classes.UserProfile}>
               <div className={classes.Header}>
                 <div className={classes.UserProfilePic}>
@@ -101,7 +98,7 @@ class UserProfile extends Component {
               </div>
             </div>
             <Modal
-              title=""
+              title=''
               openModal={this.state.showForm}
               onClose={this.closeSideDraw}
             >

@@ -74,8 +74,11 @@ export default class AddNewEmployee extends Form {
 
     errors: {},
 
+    optionsFetched: false,
+
     departmentOptions: [],
     districtOptions: [],
+    genderOptions: [],
     bloodGroupOptions: [],
     jobTypeOptions: [],
     jobTitleOptions: [],
@@ -88,6 +91,8 @@ export default class AddNewEmployee extends Form {
     stateOptions: [],
     lgaOptions: [],
     countryOptions: [],
+    sectionOptions: [],
+    stepOptions: [],
 
     ippisNoVerified: false,
     reportToVerified: false
@@ -107,7 +112,10 @@ export default class AddNewEmployee extends Form {
       senatorialDistricts,
       states,
       lga,
-      countries
+      countries,
+      sections,
+      steps,
+      genders
     ] = await httpService.all([
       httpService.get('/departments?statusId=1'),
       httpService.get('/districts?statusId=1'),
@@ -121,7 +129,10 @@ export default class AddNewEmployee extends Form {
       httpService.get('/senatorial-districts'),
       httpService.get('/states'),
       httpService.get('/lga'),
-      httpService.get('/countries')
+      httpService.get('/countries'),
+      httpService.get('/sections'),
+      httpService.get('/steps'),
+      httpService.get('/genders')
     ]);
 
     if (departments) {
@@ -134,7 +145,7 @@ export default class AddNewEmployee extends Form {
         jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
         jobStepOptions: nameMapper(jobGrades.data.data, 'conpss'),
         pfaOptions: nameMapper(pfa.data.data, 'name'),
-        gpzOptions: nameMapper(gpz.data.data, 'name'),
+        gpzOptions: nameMapper(gpz.data.data, 'description'),
         lgaOptions: nameMapper(lga.data.data, 'lga'),
         maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
         senatorialDistrictOptions: nameMapper(
@@ -142,7 +153,11 @@ export default class AddNewEmployee extends Form {
           'name'
         ),
         stateOptions: nameMapper(states.data.data, 'state'),
-        countryOptions: nameMapper(countries.data.data, 'country')
+        countryOptions: nameMapper(countries.data.data, 'country'),
+        sectionOptions: nameMapper(sections.data.data, 'section'),
+        stepOptions: nameMapper(steps.data.data, 'step'),
+        genderOptions: nameMapper(genders.data.data, 'type'),
+        optionsFetched: true
       });
     }
   }
@@ -246,15 +261,15 @@ export default class AddNewEmployee extends Form {
   }
 
   render() {
-    return this.state.departmentOptions.length ? (
-      <Section title="add new employee">
+    return this.state.optionsFetched ? (
+      <Section title='add new employee'>
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title="">
+          <InformationBlock title=''>
             <EmployeeVerifier
               preventDefault
               checkOnResponseRecieved={employees => !employees.length}
@@ -272,7 +287,7 @@ export default class AddNewEmployee extends Form {
 
           {this.state.ippisNoVerified ? (
             <>
-              <InformationBlock title="basic information">
+              <InformationBlock title='basic information'>
                 {this.renderInput('first Name', 'firstName')}
                 {this.renderInput('last Name', 'lastName')}
                 {this.renderInput('middle Names', 'middleNames')}
@@ -346,7 +361,7 @@ export default class AddNewEmployee extends Form {
                 ])}
               </InformationBlock>
 
-              <InformationBlock title="job information">
+              <InformationBlock title='job information'>
                 {this.renderInput(
                   `who ${this.state.formData.firstName ||
                     'this employee'} reports to`,
@@ -379,7 +394,7 @@ export default class AddNewEmployee extends Form {
                 )}
               </InformationBlock>
 
-              <InformationBlock title="appointment information">
+              <InformationBlock title='appointment information'>
                 {this.renderInput(
                   'first appointment date',
                   'firstAppointmentDate',
@@ -465,7 +480,7 @@ export default class AddNewEmployee extends Form {
         </form>
       </Section>
     ) : (
-      <Loader message="please wait..." />
+      <Loader message='please wait...' />
     );
   }
 }

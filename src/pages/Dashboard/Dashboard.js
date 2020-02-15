@@ -64,49 +64,60 @@ export default class Dashboard extends Component {
     return httpService.get('/job-incidence');
   }
 
-  async setNumEmployee({ data }) {
-    const oldState = { ...this.state.basicSummary };
-    const numEmployees = { ...oldState.numEmployees, data: data.data.count };
+  async setNumEmployee(res) {
+    if (res) {
+      const oldState = { ...this.state.basicSummary };
+      const numEmployees = {
+        ...oldState.numEmployees,
+        data: res.data.data.count
+      };
 
-    const basicSummary = { ...oldState, numEmployees };
+      const basicSummary = { ...oldState, numEmployees };
 
-    this.setState({ basicSummary });
+      this.setState({ basicSummary });
+    }
   }
 
-  async setNumDept({ data }) {
-    const oldState = { ...this.state.basicSummary };
-    const numDepartments = {
-      ...oldState.numDepartments,
-      data: data.data.length
-    };
+  async setNumDept(res) {
+    if (res) {
+      const oldState = { ...this.state.basicSummary };
+      const numDepartments = {
+        ...oldState.numDepartments,
+        data: res.data.data.length
+      };
 
-    const basicSummary = { ...oldState, numDepartments };
+      const basicSummary = { ...oldState, numDepartments };
 
-    this.setState({ basicSummary });
+      this.setState({ basicSummary });
+    }
   }
 
-  async setNumTrainingSchedules({ data }) {
-    const oldState = { ...this.state.basicSummary };
-    const numTrainingSchedules = {
-      ...oldState.numTrainingSchedules,
-      data: data.data.count
-    };
+  async setNumTrainingSchedules(res) {
+    if (res) {
+      const oldState = { ...this.state.basicSummary };
+      const numTrainingSchedules = {
+        ...oldState.numTrainingSchedules,
+        data: res.data.data.count
+      };
 
-    const basicSummary = { ...oldState, numTrainingSchedules };
+      const basicSummary = { ...oldState, numTrainingSchedules };
 
-    this.setState({ basicSummary });
+      this.setState({ basicSummary });
+    }
   }
 
-  async setNumJobIncidence({ data }) {
-    const oldState = { ...this.state.basicSummary };
-    const numJobIncidence = {
-      ...oldState.numJobIncidence,
-      data: data.data.count
-    };
+  async setNumJobIncidence(res) {
+    if (res) {
+      const oldState = { ...this.state.basicSummary };
+      const numJobIncidence = {
+        ...oldState.numJobIncidence,
+        data: res.data.data.count
+      };
 
-    const basicSummary = { ...oldState, numJobIncidence };
+      const basicSummary = { ...oldState, numJobIncidence };
 
-    this.setState({ basicSummary });
+      this.setState({ basicSummary });
+    }
   }
 
   async componentDidMount() {
@@ -130,8 +141,8 @@ export default class Dashboard extends Component {
     const { firstName, username } = getCredentials();
     return (
       <Section
-        id="post"
-        title="dashboard"
+        id='post'
+        title='dashboard'
         subTitle={`Welcome, ${firstName || username}`}
       >
         <Section>

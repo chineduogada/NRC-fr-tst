@@ -88,7 +88,7 @@ function SelectColumnFilter({
         setFilter(e.target.value || undefined);
       }}
     >
-      <option value="">All</option>
+      <option value=''>All</option>
       {options.map((option, i) => (
         <option key={i} value={option}>
           {option}
@@ -120,7 +120,7 @@ function SliderColumnFilter({
   return (
     <>
       <input
-        type="range"
+        type='range'
         min={min}
         max={max}
         value={filterValue || min}
@@ -158,7 +158,7 @@ function NumberRangeColumnFilter({
     >
       <input
         value={filterValue[0] || ''}
-        type="number"
+        type='number'
         onChange={e => {
           e.stopPropagation();
           const val = e.target.value;
@@ -176,7 +176,7 @@ function NumberRangeColumnFilter({
       to
       <input
         value={filterValue[1] || ''}
-        type="number"
+        type='number'
         onChange={e => {
           e.stopPropagation();
           const val = e.target.value;
@@ -287,16 +287,16 @@ function Table({
     return (
       <div className={classes.Pagination}>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {<MdFirstPage className="icon" />}
+          {<MdFirstPage className='icon' />}
         </button>{' '}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {<MdChevronLeft className="icon" />}
+          {<MdChevronLeft className='icon' />}
         </button>{' '}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {<MdChevronRight className="icon" />}
+          {<MdChevronRight className='icon' />}
         </button>{' '}
         <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {<MdLastPage className="icon" />}
+          {<MdLastPage className='icon' />}
         </button>{' '}
         <span>
           Page{' '}
@@ -307,7 +307,7 @@ function Table({
         <span>
           | Go to page:{' '}
           <input
-            type="number"
+            type='number'
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
@@ -414,7 +414,7 @@ function Table({
                       <select
                         id={row.original.id}
                         className={classes.Status}
-                        name="status"
+                        name='status'
                         onChange={onRowOptionChange}
                       >
                         {rowOptions.map(option => {

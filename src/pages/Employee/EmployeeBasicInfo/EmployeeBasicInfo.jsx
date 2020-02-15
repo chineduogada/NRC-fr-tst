@@ -63,7 +63,7 @@ export default class EmployeeBasicInfo extends Component {
     const options = {
       bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
       pfaOptions: nameMapper(pfa.data.data, 'name'),
-      gpzOptions: nameMapper(gpz.data.data, 'name'),
+      gpzOptions: nameMapper(gpz.data.data, 'description'),
       lgaOptions: nameMapper(lga.data.data, 'lga'),
       maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
       senatorialDistrictOptions: nameMapper(
@@ -86,11 +86,9 @@ export default class EmployeeBasicInfo extends Component {
 
     if (res) {
       const basicInformation = this.mapToBasicView(res.data.data);
-      const otherInformation = this.mapToOtherView(res.data.data);
 
       this.setState({
         basicInformation,
-        otherInformation,
         originalData: res.data.data
       });
     }
@@ -102,6 +100,18 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   mapToBasicView(data) {
+    const {
+      pfa,
+      gpz,
+      state,
+      countryOfBirth,
+      nationality,
+      gender,
+      bloodGroup,
+      lga,
+      maritalStatus,
+      senatorialDistrict
+    } = data;
     return [
       { label: 'first name', value: data.firstName },
       { label: 'last name', value: data.lastName },
@@ -110,39 +120,29 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'NRC No', value: data.nrcNo },
       { label: 'date of birth', value: data.dateOfBirth },
       { label: 'phone number', value: data.phoneNumber },
-      { label: 'country of birth', value: data.countryOfBirth.country },
-      { label: 'nationality', value: data.nationality.country },
+      {
+        label: 'country of birth',
+        value: countryOfBirth ? countryOfBirth.country : null
+      },
+      { label: 'nationality', value: nationality ? nationality.country : null },
       { label: 'email', value: data.email },
       { label: 'PFA number', value: data.pfaNumber },
-      { label: 'PFA', value: data.pfa.name },
-      { label: 'gender', value: data.gender.type },
-      { label: 'blood group', value: data.bloodGroup.type },
-      { label: 'geo political zone', value: data.gpz.name },
-      { label: 'LGA', value: data.lga.lga },
+      { label: 'PFA', value: pfa ? pfa.name : null },
+      { label: 'gender', value: gender ? gender.type : null },
+      { label: 'blood group', value: bloodGroup ? bloodGroup.type : null },
+      { label: 'geo political zone', value: gpz ? gpz.name : null },
+      { label: 'LGA', value: lga ? lga.lga : null },
       {
         label: 'marital status',
-        value: data.maritalStatus.status
+        value: maritalStatus ? maritalStatus.status : null
       },
       {
         label: 'senatorial district',
-        value: data.senatorialDistrict.name
+        value: senatorialDistrict ? senatorialDistrict.name : null
       },
-      { label: 'state', value: data.state.state }
-    ];
-  }
-  mapToOtherView(data) {
-    return [
-      { label: 'efxf01', value: data.efxf01 },
-      { label: 'efxf02', value: data.efxf02 },
-      { label: 'efxf03', value: data.efxf03 },
-      { label: 'efxf04', value: data.efxf04 },
-      { label: 'efxf05', value: data.efxf05 },
-      { label: 'ef9f01', value: data.ef9f01 },
-      { label: 'ef9f02', value: data.ef9f02 },
-      { label: 'ef9f03', value: data.ef9f03 },
-      { label: 'ef9f04', value: data.ef9f04 },
-      { label: 'efdf01', value: data.efdf01 },
-      { label: 'efdf02', value: data.efdf02 }
+      { label: 'state', value: state ? state.state : null },
+      { label: 'pensionable', value: data.pensionable },
+      { label: 'address', value: data.address }
     ];
   }
 
@@ -157,7 +157,7 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   render() {
-    const { basicInformation, otherInformation, showForm } = this.state;
+    const { basicInformation, showForm } = this.state;
     return basicInformation ? (
       <div>
         <div className='Action'>

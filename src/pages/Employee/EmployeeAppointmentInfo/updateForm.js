@@ -55,7 +55,8 @@ export default class UpdateForm extends Form {
 
   async componentDidMount() {
     this.setState({
-        formData: { ...obJectKeyEliminator(this.props.defaultValues, [
+      formData: {
+        ...obJectKeyEliminator(this.props.defaultValues, [
           'id',
           'ippisNo',
           'createdAt',
@@ -65,19 +66,20 @@ export default class UpdateForm extends Form {
           'firstJobGrade',
           'presentJobType',
           'presentJobTitle',
-          'presentJobGrade',
-        ]), 
-        firstAppointmentJobTypeId: '1',
-        firstAppointmentJobTitleId: '3',
-        firstAppointmentGradeId: '1',
-        firstAppointmentStepId: '2',
-        presentPositionJobTypeId: '1',
-        presentPositionJobTitleId: '1',
-        presentPositionGradeId: '1',
-        presentPositionStepId: '1' },
+          'presentJobGrade'
+        ])
+        // firstAppointmentJobTypeId: '1',
+        // firstAppointmentJobTitleId: '3',
+        // firstAppointmentGradeId: '1',
+        // firstAppointmentStepId: '2',
+        // presentPositionJobTypeId: '1',
+        // presentPositionJobTitleId: '1',
+        // presentPositionGradeId: '1',
+        // presentPositionStepId: '1'
+      },
 
-        options: this.props.options
-    })
+      options: this.props.options
+    });
   }
 
   /**
@@ -85,22 +87,24 @@ export default class UpdateForm extends Form {
    * and a response has been recieved
    */
   async onSuccess() {
-      const { onSuccess } = this.props;
-      
-      if (onSuccess) {
-          await onSuccess();
-      }
-  }
-  
-  async doSubmit() {
-    const res = await httpService.patch(`/employees/${this.props.ippisNo}/appointment`, this.state.formData);
+    const { onSuccess } = this.props;
 
-    
+    if (onSuccess) {
+      await onSuccess();
+    }
+  }
+
+  async doSubmit() {
+    const res = await httpService.patch(
+      `/employees/${this.props.ippisNo}/appointment`,
+      this.state.formData
+    );
+
     if (true) {
-        // Run some external callback passed as prop
-        await this.onSuccess();
-        this.stopProcessing();
-        toast.success('Updated successful');
+      // Run some external callback passed as prop
+      await this.onSuccess();
+      this.stopProcessing();
+      toast.success('Updated successful');
     }
   }
 
@@ -109,9 +113,9 @@ export default class UpdateForm extends Form {
     return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <p className="form-header">update employee appointment information</p>
+          <p className='form-header'>update employee appointment information</p>
           <InformationBlock>
-          {this.renderInput(
+            {this.renderInput(
               'first appointment date',
               'firstAppointmentDate',
               null,

@@ -28,9 +28,10 @@ export default class ImportForm extends Form {
     const res = await httpService.post('/import', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
+
+    this.stopProcessing();
     if (res) {
       toast.success('Import successful');
-      this.stopProcessing();
     }
   }
 

@@ -6,121 +6,6 @@ import { truncate } from '../../helpers/strings';
 import classes from './EmployeeVerifier.module.scss';
 import httpService from '../../services/httpService';
 
-const employees = [
-  {
-    profilePic: '',
-    firstName: 'stephen',
-    lastName: 'nwakasi',
-    middleName: 'ifeanyi',
-    ippisNo: 94321,
-    department: {
-      code: 'FIN',
-      description: 'finance'
-    },
-    presentJobTitle: {
-      name: 'HOD'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94322,
-    department: {
-      code: 'FIN',
-      description: 'finance'
-    },
-    presentJobTitle: {
-      name: 'site officer 2'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94323,
-    department: {
-      code: 'ENG',
-      description: 'engineering'
-    },
-    presentJobTitle: {
-      name: 'site officer 2'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94324,
-    department: {
-      code: 'MRT',
-      description: 'marketing'
-    },
-    presentJobTitle: {
-      name: 'social media marketing'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94331,
-    department: {
-      code: 'ENG',
-      description: 'engineering'
-    },
-    presentJobTitle: {
-      name: 'systems admin'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94331,
-    department: {
-      code: 'FIN',
-      description: 'chief accountant'
-    },
-    presentJobTitle: {
-      name: 'systems admin'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94331,
-    department: {
-      code: 'FIN',
-      description: 'finance'
-    },
-    presentJobTitle: {
-      name: 'secretary'
-    }
-  },
-  {
-    profilePic: '',
-    firstName: 'zurum',
-    lastName: 'egwunwankwo',
-    middleName: 'jennifer',
-    ippisNo: 94421,
-    department: {
-      code: 'FIN',
-      description: 'finance'
-    },
-    presentJobTitle: {
-      name: 'team lead'
-    }
-  }
-];
-
 export default class EmployeeVerifier extends Component {
   constructor(props) {
     super(props);
@@ -237,6 +122,7 @@ export default class EmployeeVerifier extends Component {
   }
 
   profileLayout(employee) {
+    const { employeeJob, employeeAppointment } = employee;
     return (
       <React.Fragment>
         <span className={classes.ProfilePic}>
@@ -251,10 +137,18 @@ export default class EmployeeVerifier extends Component {
             )}
           </p>
           <p className={classes.Department}>
-            {truncate(`${employee.employeeJob.department.description}`, 30)} (
+            {truncate(
+              `${employeeJob ? employeeJob.department.description : null}`,
+              30
+            )}{' '}
+            (
             <span>
               {truncate(
-                employee.employeeAppointment.presentJobTitle.description
+                `${
+                  employeeAppointment
+                    ? employeeAppointment.presentJobTitle.description
+                    : null
+                }`
               )}
               )
             </span>
@@ -287,7 +181,7 @@ export default class EmployeeVerifier extends Component {
 
   renderProcessing() {
     return (
-      <Spinner className={classes.Processing} animation="border" size="sm" />
+      <Spinner className={classes.Processing} animation='border' size='sm' />
     );
   }
 

@@ -71,20 +71,44 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   mapToViewModel(data) {
+    const {
+      firstJobGrade,
+      firstJobType,
+      firstJobTitle,
+      presentJobGrade,
+      presentJobType,
+      presentJobTitle
+    } = data;
     return [
       { label: 'first appointment date', value: data.firstAppointmentDate },
       { label: 'resumption date', value: data.resumptionDate },
       { label: 'confirmation date', value: data.confirmationDate },
       { label: 'expected retirement date', value: data.expectedRetirementDate },
       { label: 'present appointment date', value: data.presentAppointmentDate },
-      { label: 'first job type', value: data.firstJobType.type },
-      { label: 'first job title', value: data.firstJobTitle.description },
-      { label: 'first job grade(con)', value: data.firstJobGrade.con },
-      { label: 'first job grade(conpss)', value: data.firstJobGrade.conpss },
-      { label: 'present job type', value: data.presentJobType.type },
-      { label: 'present job title', value: data.presentJobTitle.description },
-      { label: 'present job grade(con)', value: data.presentJobGrade.con },
-      { label: 'present job grade(conpss)', value: data.presentJobGrade.conpss }
+      {
+        label: 'first job type',
+        value: firstJobType ? data.firstJobType.type : null
+      },
+      {
+        label: 'first job title',
+        value: firstJobTitle ? data.firstJobTitle.description : null
+      },
+      {
+        label: 'first job grade',
+        value: firstJobGrade ? data.firstJobGrade.con : null
+      },
+      {
+        label: 'present job type',
+        value: presentJobType ? data.presentJobType.type : null
+      },
+      {
+        label: 'present job title',
+        value: presentJobTitle ? data.presentJobTitle.description : null
+      },
+      {
+        label: 'present job grade',
+        value: presentJobGrade ? data.presentJobGrade.con : null
+      }
     ];
   }
 

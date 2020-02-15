@@ -28,7 +28,7 @@ export default class Import extends Component {
         { id: 'PFA', name: 'pension fund administrators' },
         { id: 'Employee', name: 'employee personal details' },
         { id: 'EmployeeJob', name: 'employee job details' },
-        { id: 'EmployeeJob', name: 'employees appoinment details' },
+        { id: 'EmployeeAppointment', name: 'employees appoinment details' },
         { id: 'Skill', name: 'skills' },
         { id: 'Qualification', name: 'qualifications' },
         { id: 'CareerReasonCode', name: 'career reason codes' },
@@ -49,8 +49,8 @@ export default class Import extends Component {
     const { resourceOptions, resource } = this.state;
     return (
       <Section
-        title="import data"
-        subTitle="Import data in only three simple steps"
+        title='import data'
+        subTitle='Import data in only three simple steps'
       >
         <div className={classes.StepsToImport}>
           <ol>

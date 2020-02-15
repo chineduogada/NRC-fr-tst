@@ -64,13 +64,29 @@ export default class Employee extends Component {
         employeeAppointment
       } = res.data.data.rows[0];
 
+      const profile = {
+        employeeImageSrc: photo,
+        fullName: `${firstName} ${lastName}`
+      };
+
+      if (employeeJob) {
+        profile.department = employeeJob.department
+          ? employeeJob.department.description
+          : null;
+        profile.employeeStatus = mapEmployeeStatus(
+          employeeJob.employeeStatus ? employeeJob.employeeStatus.status : null
+        );
+      }
+
+      if (employeeAppointment) {
+        profile.presentJobType = employeeAppointment.presentJobType
+          ? employeeAppointment.presentJobType.type
+          : null;
+      }
+
       this.setState({
         justFetchingImage: false,
-        employeeImageSrc: photo,
-        fullName: `${firstName} ${lastName}`,
-        department: employeeJob.department.description,
-        employeeStatus: mapEmployeeStatus(employeeJob.employeeStatus.status),
-        presentJobType: employeeAppointment.presentJobType.type
+        ...profile
       });
     }
   }

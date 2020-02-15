@@ -53,7 +53,7 @@ export default JSON.stringify({
       B: 'state <string>'
     },
     notes:
-      'Please, ensure that the headers of your excel sheet follow the column arrangement below:',
+      'This requires that the state table has been populated! Please, ensure that the headers of your excel sheet follow the column arrangement below:',
     example: {
       A: 'Ojo',
       B: 'Lagos'
@@ -283,7 +283,7 @@ export default JSON.stringify({
     name: 'employee job details',
     notes:
       'Import a list of employee primary data. Please, ensure that the headers of your excel sheet follow the column arrangement below:',
-   schema: {
+    schema: {
       A: 'IPPIS number <number>',
       B: 'department <string>',
       C: 'section <number>',
@@ -310,34 +310,39 @@ export default JSON.stringify({
   },
 
   EmployeeAppointment: {
+    name: 'employee appointment details',
+    notes:
+      'Import a list of employee primary data. Please, ensure that the headers of your excel sheet follow the column arrangement below:',
     schema: {
       A: 'IPPIS number <number>',
-      B: 'firstAppointmentDate <date>',
-      C: 'firstAppointmentJobType <string>',
-      D: 'firstAppointmentJobTitle <string>',
-      E: 'firstAppointmentGrade <number>',
-      F: 'firstAppointmentStep <number>',
-      G: 'confirmationDate <date>',
-      I: 'presentAppointmentDate <date>',
-      J: 'presentPositionJobType <string>',
-      K: 'presentPositionJobTitle <string>',
-      L: 'presentPositionGrade <number>',
-      M: 'presentPositionStep <number>'
+      B: 'first Appointment Date <date>',
+      C: 'first Appointment Job Type <string>',
+      D: 'firstAppointment Job Title <string>',
+      E: 'first Appointment Grade <number>',
+      F: 'first Appointment Step <number>',
+      G: 'confirmation Date <date>',
+      H: 'resumption Date <date>',
+      I: 'present Appointment Date <date>',
+      J: 'present Position Job Type <string>',
+      K: 'present Position Job Title <string>',
+      L: 'present Position Grade <number>',
+      M: 'present Position Step <number>'
     },
     example: [
       {
-      A: '12345',
-      B: '01-01-1990',
-      C: 'NYSC',
-      D: 'Assistant Secretary',
-      E: 4,
-      F: 1,
-      G: '01-02-1990',
-      I: '01-01-1991',
-      J: 'Permanent',
-      K: 'MD',
-      L: 12,
-      M: 10
+        A: '12345',
+        B: '01-01-1990',
+        C: 'NYSC',
+        D: 'Assistant Secretary',
+        E: 4,
+        F: 1,
+        G: '01-02-1990',
+        H: '08-02-1990',
+        I: '01-01-1991',
+        J: 'Permanent',
+        K: 'MD',
+        L: 12,
+        M: 10
       }
     ]
   }

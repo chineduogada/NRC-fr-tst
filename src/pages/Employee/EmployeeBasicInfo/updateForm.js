@@ -32,18 +32,7 @@ export default class UpdateForm extends Form {
         maritalStatusId: '',
         senatorialDistrictId: '',
         professional: '',
-        stateId: '',
-        efxf01: '',
-        efxf02: '',
-        efxf03: '',
-        efxf04: '',
-        efxf05: '',
-        ef9f01: '',
-        ef9f02: '',
-        ef9f03: '',
-        ef9f04: '',
-        efdf01: '',
-        efdf02: ''
+        stateId: ''
       },
 
       errors: {},
@@ -77,72 +66,8 @@ export default class UpdateForm extends Form {
       maritalStatusId: Joi.number(),
       senatorialDistrictId: Joi.number(),
       stateId: Joi.number(),
-      professional: Joi.string(),
-      efxf01: Joi.string()
-        .allow('')
-        .optional(),
-      efxf02: Joi.string()
-        .allow('')
-        .optional(),
-      efxf03: Joi.string()
-        .allow('')
-        .optional(),
-      efxf04: Joi.string()
-        .allow('')
-        .optional(),
-      efxf05: Joi.string()
-        .allow('')
-        .optional(),
-      ef9f01: Joi.string()
-        .allow('')
-        .optional(),
-      ef9f02: Joi.string()
-        .allow('')
-        .optional(),
-      ef9f03: Joi.string()
-        .allow('')
-        .optional(),
-      ef9f04: Joi.string()
-        .allow('')
-        .optional(),
-      efdf01: Joi.string()
-        .allow('')
-        .optional(),
-      efdf02: Joi.string()
-        .allow('')
-        .optional()
+      professional: Joi.string()
     };
-  }
-
-  fillFormWithDefaultValues() {
-    this.setState({
-      formData: obJectKeyEliminator(this.props.defaultValues, [
-        'id',
-        'efxf01',
-        'efxf02',
-        'efxf03',
-        'efxf04',
-        'efxf05',
-        'ef9f01',
-        'ef9f02',
-        'ef9f03',
-        'ef9f04',
-        'efdf01',
-        'efdf02',
-        'createdAt',
-        'updatedAt',
-        'gender',
-        'bloodGroup',
-        'countryOfBirth',
-        'nationality',
-        'gpz',
-        'lga',
-        'maritalStatus',
-        'senatorialDistrict',
-        'state',
-        'pfa'
-      ])
-    });
   }
 
   async componentDidMount() {
@@ -172,7 +97,8 @@ export default class UpdateForm extends Form {
         'maritalStatus',
         'senatorialDistrict',
         'state',
-        'pfa'
+        'pfa',
+        'address'
       ]),
       options: this.props.options
     });
@@ -206,6 +132,7 @@ export default class UpdateForm extends Form {
 
   render() {
     const { formData, options } = this.state;
+    console.log(formData);
     return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
@@ -215,7 +142,7 @@ export default class UpdateForm extends Form {
               'IPPIS No',
               'ippisNo',
               null,
-              formData.ippisNo,
+              formData.ippisNo || '',
               'number',
               null,
               true
@@ -224,29 +151,38 @@ export default class UpdateForm extends Form {
               'first Name',
               'firstName',
               null,
-              formData.firstName
+              formData.firstName || ''
             )}
-            {this.renderInput('last Name', 'lastName', null, formData.lastName)}
+            {this.renderInput(
+              'last Name',
+              'lastName',
+              null,
+              formData.lastName || ''
+            )}
             {this.renderInput(
               'middle Names',
               'middleNames',
-              formData.middleNames
+              formData.middleNames || ''
             )}
-            {this.renderInput('initials', 'initials', null, formData.initials)}
+            {this.renderInput(
+              'initials',
+              'initials',
+              null,
+              formData.initials || ''
+            )}
             {this.renderInput(
               'NRC number',
               'nrcNo',
               null,
-              formData.nrcNo,
+              formData.nrcNo || '',
               'number',
-              null,
-              true
+              null
             )}
             {this.renderInput(
               'date of birth',
               'dateOfBirth',
               null,
-              formData.dateOfBirth,
+              formData.dateOfBirth || '',
               'date',
               null,
               true
@@ -255,41 +191,47 @@ export default class UpdateForm extends Form {
               'phone number',
               'phoneNumber',
               null,
-              formData.phoneNumber,
+              formData.phoneNumber || '',
               'number'
             )}
-            {this.renderInput('email', 'email', null, formData.email, 'email')}
+            {this.renderInput(
+              'email',
+              'email',
+              null,
+              formData.email || '',
+              'email'
+            )}
 
-            {/* {this.renderSelect(
+            {this.renderSelect(
               'pension fund administrator',
               'pfaId',
               this.state.options.pfaOptions,
               null,
               null,
-              formData.pfaId
-            )} */}
+              formData.pfaId || ''
+            )}
             {this.renderInput(
               'PFA number',
               'pfaNumber',
               null,
-              formData.pfaNumber,
+              formData.pfaNumber || '',
               'number'
             )}
-            {/* {this.renderSelect(
+            {this.renderSelect(
               'country of birth',
               'countryOfBirthId',
               this.state.options.countryOptions,
               null,
               true,
-              formData.countryOfBirthId
-            )} */}
+              formData.countryOfBirthId || ''
+            )}
             {this.renderSelect(
               'nationality',
               'nationalityId',
               this.state.options.countryOptions,
               null,
               true,
-              formData.nationalityId
+              formData.nationalityId || ''
             )}
             {this.renderSelect(
               'gender',
@@ -300,7 +242,7 @@ export default class UpdateForm extends Form {
               ],
               null,
               null,
-              formData.genderId
+              formData.genderId || ''
             )}
             {this.renderSelect(
               'blood group',
@@ -308,7 +250,7 @@ export default class UpdateForm extends Form {
               this.state.options.bloodGroupOptions,
               null,
               null,
-              formData.bloodGroupId
+              formData.bloodGroupId || ''
             )}
             {this.renderSelect(
               'marital status',
@@ -316,7 +258,7 @@ export default class UpdateForm extends Form {
               this.state.options.maritalStatusOptions,
               null,
               null,
-              formData.maritalStatusId
+              formData.maritalStatusId || ''
             )}
             {this.renderSelect(
               'GPZ',
@@ -324,7 +266,7 @@ export default class UpdateForm extends Form {
               this.state.options.gpzOptions,
               null,
               null,
-              formData.stateId
+              formData.gpzId || ''
             )}
             {this.renderSelect(
               'state',
@@ -332,7 +274,7 @@ export default class UpdateForm extends Form {
               this.state.options.stateOptions,
               null,
               null,
-              formData.stateId
+              formData.stateId || ''
             )}
             {this.renderSelect(
               'senatorial district',
@@ -340,7 +282,7 @@ export default class UpdateForm extends Form {
               this.state.options.senatorialDistrictOptions,
               null,
               null,
-              formData.senatorialDistrictId
+              formData.senatorialDistrictId || ''
             )}
             {this.renderSelect(
               'LGA',
@@ -348,7 +290,7 @@ export default class UpdateForm extends Form {
               this.state.options.lgaOptions,
               null,
               null,
-              formData.lgaId
+              formData.lgaId || ''
             )}
             {this.renderSelect(
               'professional',
@@ -359,7 +301,7 @@ export default class UpdateForm extends Form {
               ],
               null,
               null,
-              formData.professional
+              formData.professional || ''
             )}
           </InformationBlock>
           {this.renderButton('update')}
