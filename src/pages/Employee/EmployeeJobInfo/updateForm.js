@@ -16,11 +16,12 @@ export default class UpdateForm extends Form {
       formData: {
         departmentId: '',
         sectionId: '',
+        salaryStructureId: '',
         districtId: '',
         location: '',
         reportTo: '',
         employeeStatusId: '',
-        pensionable: '',
+        pensionable: ''
       },
 
       errors: {},
@@ -34,28 +35,34 @@ export default class UpdateForm extends Form {
       departmentId: Joi.number(),
       districtId: Joi.number(),
       sectionId: Joi.number(),
+      salaryStructureId: Joi.number(),
       location: Joi.string(),
       reportTo: Joi.number(),
       employeeStatusId: Joi.number(),
-      pensionable: Joi.string(),
+      pensionable: Joi.string()
     };
   }
 
   async componentDidMount() {
+    const { defaultValues } = this.props;
+
     this.setState({
-        formData: obJectKeyEliminator(this.props.defaultValues, [
-          'id',
-          'ippisNo',
-          'createdAt',
-          'updatedAt',
-          'department',
-          'district',
-          'employeeStatus',
-          'section',
-          'reportToEmployee'
-        ]),
-        options: this.props.options
-    })
+      formData: defaultValues
+        ? obJectKeyEliminator(defaultValues, [
+            'id',
+            'ippisNo',
+            'createdAt',
+            'updatedAt',
+            'department',
+            'district',
+            'employeeStatus',
+            'section',
+            'reportToEmployee',
+            'salaryStructure'
+          ])
+        : this.state.formData,
+      options: this.props.options
+    });
   }
 
   /**
@@ -64,21 +71,23 @@ export default class UpdateForm extends Form {
    */
   async onSuccess() {
     const { onSuccess } = this.props;
-    
+
     if (onSuccess) {
-        await onSuccess();
+      await onSuccess();
     }
   }
-  
-  async doSubmit() {
-    const res = await httpService.patch(`/employees/${this.props.ippisNo}/job`, this.state.formData);
 
-    
-    if (true) {
-        // Run some external callback passed as prop
-        await this.onSuccess();
-        this.stopProcessing();
-        toast.success('Updated successful');
+  async doSubmit() {
+    const res = await httpService.patch(
+      `/employees/${this.props.ippisNo}/job`,
+      this.state.formData
+    );
+
+    if (res) {
+      // Run some external callback passed as prop
+      await this.onSuccess();
+      this.stopProcessing();
+      toast.success('Updated successful');
     }
   }
 
@@ -89,35 +98,66 @@ export default class UpdateForm extends Form {
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
           <p className="form-header">update employee job information</p>
           <InformationBlock>
-            {this.renderInput('section', 'sectionId', null, formData.sectionId, 'number')}
+            {this.renderSelect(
+              'section',
+              'sectionId',
+              this.state.options.sectionOptions,
+              null,
+              null,
+              formData.sectionId
+            )}
+            {this.renderSelect(
+              'salary structure',
+              'salaryStructureId',
+              this.state.options.salaryStructureOptions,
+              null,
+              null,
+              formData.salaryStructureId
+            )}
             {this.renderInput('location', 'location', null, formData.location)}
             {this.renderInput(
               'report to',
               'reportTo',
               'enter ippiNo...',
               formData.reportTo,
-              'number'
+              'number',
+              null,
+              true
             )}
-            {this.renderSelect('employee status', 'employeeStatusId', [
-              { id: 1, name: 'Active' },
-              { id: 2, name: 'Suspended' },
-              { id: 3, name: 'Retired' }
-            ], null, null, formData.employeeStatusId)}
-            {this.renderSelect('pensionable', 'pensionable', [
-              { id: 'Y', name: 'Y' },
-              { id: 'N', name: 'N' }
-            ], null, null, formData.pensionable)}
+            {this.renderSelect(
+              'employee status',
+              'employeeStatusId',
+              this.state.options.employeeStatusOptions,
+              null,
+              null,
+              formData.employeeStatusId
+            )}
+            {this.renderSelect(
+              'pensionable',
+              'pensionable',
+              [
+                { id: 'Y', name: 'Y' },
+                { id: 'N', name: 'N' }
+              ],
+              null,
+              null,
+              formData.pensionable
+            )}
             {this.renderSelect(
               'department',
               'departmentId',
               this.state.options.departmentOptions,
-              null, null, formData.departmentId
+              null,
+              null,
+              formData.departmentId
             )}
             {this.renderSelect(
               'district',
               'districtId',
               this.state.options.districtOptions,
-              null, null, formData.districtId
+              null,
+              null,
+              formData.districtId
             )}
           </InformationBlock>
           {this.renderButton('update')}

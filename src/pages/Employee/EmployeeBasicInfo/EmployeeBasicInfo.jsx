@@ -60,21 +60,21 @@ export default class EmployeeBasicInfo extends Component {
       httpService.get('/countries')
     ]);
 
-    const options = {
-      bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
-      pfaOptions: nameMapper(pfa.data.data, 'name'),
-      gpzOptions: nameMapper(gpz.data.data, 'description'),
-      lgaOptions: nameMapper(lga.data.data, 'lga'),
-      maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
-      senatorialDistrictOptions: nameMapper(
-        senatorialDistricts.data.data,
-        'name'
-      ),
-      stateOptions: nameMapper(states.data.data, 'state'),
-      countryOptions: nameMapper(countries.data.data, 'country')
-    };
-
     if (bloodGroups) {
+      const options = {
+        bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
+        pfaOptions: nameMapper(pfa.data.data, 'name'),
+        gpzOptions: nameMapper(gpz.data.data, 'description'),
+        lgaOptions: nameMapper(lga.data.data, 'lga'),
+        maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
+        senatorialDistrictOptions: nameMapper(
+          senatorialDistricts.data.data,
+          'name'
+        ),
+        stateOptions: nameMapper(states.data.data, 'state'),
+        countryOptions: nameMapper(countries.data.data, 'country')
+      };
+
       this.setState({
         options
       });
@@ -160,16 +160,16 @@ export default class EmployeeBasicInfo extends Component {
     const { basicInformation, showForm } = this.state;
     return basicInformation ? (
       <div>
-        <div className='Action'>
+        <div className="Action">
           {showForm ? (
             <Button
-              label='cancel'
+              label="cancel"
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label='update basic details'
+              label="update basic details"
               onClick={this.handleUpdateButtonClick}
               highlight
             />
@@ -186,7 +186,7 @@ export default class EmployeeBasicInfo extends Component {
           </div>
         ) : (
           <React.Fragment>
-            <EmployeeInfoBlock data={basicInformation} title='' />
+            <EmployeeInfoBlock data={basicInformation} title="" />
             {/* <EmployeeInfoBlock data={otherInformation} title="" /> */}
           </React.Fragment>
         )}

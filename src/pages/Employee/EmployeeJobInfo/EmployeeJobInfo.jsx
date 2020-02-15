@@ -18,7 +18,10 @@ export default class EmployeeBasicInfo extends Component {
 
       options: {
         departmentOptions: [],
-        districtOptions: []
+        districtOptions: [],
+        sectionOptions: [],
+        employeeStatusOptions: [],
+        salaryStructureOptions: []
       },
 
       showForm: false
@@ -29,17 +32,34 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   async fetchSelectComponentOptions() {
-    const [departments, districts] = await httpService.all([
+    const [
+      departments,
+      districts,
+      sections,
+      employeeStatuses,
+      salaryStructures
+    ] = await httpService.all([
       httpService.get('/departments?statusId=1'),
-      httpService.get('/districts?statusId=1')
+      httpService.get('/districts?statusId=1'),
+      httpService.get('/sections'),
+      httpService.get('/employee-statuses'),
+      httpService.get('/salary-structures')
     ]);
 
-    const options = {
-      departmentOptions: nameMapper(departments.data.data, 'description'),
-      districtOptions: nameMapper(districts.data.data, 'siteName')
-    };
-
     if (departments) {
+      const options = {
+        departmentOptions: nameMapper(departments.data.data, 'description'),
+        districtOptions: nameMapper(districts.data.data, 'siteName'),
+        sectionOptions: nameMapper(sections.data.data, 'section'),
+        employeeStatusOptions: nameMapper(
+          employeeStatuses.data.data,
+          'description'
+        ),
+        salaryStructureOptions: nameMapper(
+          salaryStructures.data.data,
+          'description'
+        )
+      };
       this.setState({
         options
       });
@@ -68,20 +88,35 @@ export default class EmployeeBasicInfo extends Component {
     return [
       {
         label: 'department',
-        value: data.department.description
+        value: data && data.department ? data.department.description : null
       },
-      { label: 'district', value: data.district.siteName },
-      { label: 'location', value: data.location },
-      { label: 'section', value: data.section.section },
-      { label: 'employee status', value: data.employeeStatus.status },
-      { label: 'pensionable', value: data.pensionable },
+      {
+        label: 'district',
+        value: data && data.district ? data.district.siteName : null
+      },
+      { label: 'location', value: data ? data.location : null },
+      {
+        label: 'section',
+        value: data && data.section ? data.section.section : null
+      },
+      {
+        label: 'salary structure',
+        value:
+          data && data.salaryStructure ? data.salaryStructure.description : null
+      },
+      {
+        label: 'employee status',
+        value: data && data.employeeStatus ? data.employeeStatus.status : null
+      },
+      { label: 'pensionable', value: data ? data.pensionable : null },
       {
         label: 'report to',
-        value: (
-          <a href={`/employees/${data.reportToEmployee.ippisNo}`}>
-            {`${data.reportToEmployee.firstName} ${data.reportToEmployee.lastName}`}
-          </a>
-        )
+        value:
+          data && data.reportToEmployee ? (
+            <a href={`/employees/${data.reportToEmployee.ippisNo}`}>
+              {`${data.reportToEmployee.firstName} ${data.reportToEmployee.lastName}`}
+            </a>
+          ) : null
       }
     ];
   }
@@ -101,16 +136,16 @@ export default class EmployeeBasicInfo extends Component {
 
     return jobInformation ? (
       <div>
-        <div className='Action'>
+        <div className="Action">
           {showForm ? (
             <Button
-              label='cancel'
+              label="cancel"
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label='update job details'
+              label="update job details"
               onClick={this.handleUpdateButtonClick}
               highlight
             />
@@ -127,7 +162,7 @@ export default class EmployeeBasicInfo extends Component {
           </div>
         ) : (
           <React.Fragment>
-            <EmployeeInfoBlock data={jobInformation} title='' />
+            <EmployeeInfoBlock data={jobInformation} title="" />
           </React.Fragment>
         )}
       </div>
