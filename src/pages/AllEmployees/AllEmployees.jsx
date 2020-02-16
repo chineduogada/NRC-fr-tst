@@ -34,17 +34,32 @@ class AllEmployees extends Component {
     this.handleAddNew = this.handleAddNew.bind(this);
   }
 
-  async componentDidMount() {
-    const employees = [];
-    const res = await http.get('/employees?page=1&limit=500');
+  async fetchFromServer() {
+    const limit = 500;
+    let page = 1;
+    let count = page;
+    while (count) {
+      const employees = [];
 
-    if (res) {
-      res.data.data.rows.forEach(employee => {
-        employees.push(this.mapToViewModel(employee));
-      });
+      const res = await http.get(`/employees?page=${page}&limit=${limit}`);
 
-      this.setState({ employees });
+      if (res) {
+        res.data.data.rows.forEach(employee => {
+          employees.push(this.mapToViewModel(employee));
+        });
+
+        count = res.data.data.rows.length === limit;
+        page++;
+
+        const newState = [...this.state.employees, ...employees];
+
+        this.setState({ employees: newState });
+      }
     }
+  }
+
+  async componentDidMount() {
+    this.fetchFromServer();
   }
 
   // mapToViewModel(employee) {
@@ -129,7 +144,7 @@ class AllEmployees extends Component {
     return (
       <Section>
         <Table
-          title="employees"
+          title='employees'
           columns={columns}
           data={employees}
           clickHandler={this.handleRowClick}

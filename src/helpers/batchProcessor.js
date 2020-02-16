@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 class BatchProcessor {
   /**
    * Processes an array of similar items in batches
@@ -7,41 +9,49 @@ class BatchProcessor {
     this._arrayToProcess = arrayToProcess;
     this._process = process;
 
+    this.done = false;
+
     this.totalBatchSize = this._arrayToProcess.length;
 
-    this.currentBatch = -1;
-
-    this.onBatchProcess = () => null;
+    this.currentBatch = 1;
   }
 
-  batches = {
-    [Symbol.iterator]: () => {
-      return {
-        next: async () => {
-          this.currentBatch++;
-          if (this.currentBatch < this.totalBatchSize) {
-            return {
-              value: await this.runProcess(),
-              done: false
-            };
-          }
+  /**
+   * This will be run after each batch has been processed
+   * If set, recieves the current state of the BatchProcessor
+   * and return the same
+   */
+  onBatchProcess = () => null;
 
-          return { done: true };
-        }
-      };
-    }
-  };
+  /**
+   * This will be run before any of the batches have been processed
+   * If set, recieves the current state of the BatchProcessor
+   * and return the same
+   */
+  onStart = () => null;
+
+  /**
+   * This will be run after all the batches have been processed
+   * If set, recieves the current state of the BatchProcessor
+   * and return the same
+   */
+  onDone = () => null;
 
   getState() {
     const { currentBatch, totalBatchSize } = this;
     return {
       currentBatch,
-      totalBatchSize
+      totalBatchSize,
+      done: this.done
     };
   }
 
   getTotalBatchSize() {
     return this.totalBatchSize;
+  }
+
+  setDoneState() {
+    if (this.currentBatch === this.totalBatchSize) this.done = true;
   }
 
   /**
@@ -51,7 +61,7 @@ class BatchProcessor {
    *
    */
   async runProcess() {
-    await this._process(this._arrayToProcess[this.currentBatch]);
+    await this._process(this._arrayToProcess[this.currentBatch - 1]);
     this.onBatchProcess(this.getState());
   }
 
@@ -59,36 +69,38 @@ class BatchProcessor {
    * Starts the batch processing
    */
   async startProcessor() {
-    for await (const batch of this.batches) {
-      console.log(batch);
-    }
+    this.onStart();
+
+    // This delay just ensures that every preliminary to run
+    // the processor is set
+    setTimeout(async () => {
+      while (this.currentBatch <= this.totalBatchSize) {
+        await this.runProcess();
+        console.log(`done with batch ${this.currentBatch}`);
+        this.currentBatch += 1;
+        this.setDoneState();
+      }
+
+      this.onDone(this.getState());
+    }, 0);
   }
 }
 
-const items = [1, 2, 3, 4, 5];
+export default BatchProcessor;
 
-const processItems = item => {
-  return new Promise(resolve => {
-    setTimeout(() => resolve(item), 2000);
-  });
-};
+// const items = [260799, 260798, 260797, 260796, 260795];
 
-const batchProcessor = new BatchProcessor(items, processItems);
+// const processItems = async item => {
+//   const res = await axios.get(`/employees/${item}`);
 
-batchProcessor.onBatchProcess = state => console.log(state);
+//   if (res) {
+//     console.log(res.data.data.ippisNo);
+//   }
+// };
 
-const p = batchProcessor.batches;
+// const batchProcessor = new BatchProcessor(items, processItems);
 
-// for (const i of p) {
-//   console.log('i am' + i);
-// }
-
-(async function() {
-  p[Symbol.iterator]().next();
-  p[Symbol.iterator]().next();
-  p[Symbol.iterator]().next();
-  p[Symbol.iterator]().next();
-  p[Symbol.iterator]().next();
-})();
+// batchProcessor.onBatchProcess = state => console.log(state);
+// batchProcessor.onDone = () => console.log('I done finish o!');
 
 // batchProcessor.startProcessor();

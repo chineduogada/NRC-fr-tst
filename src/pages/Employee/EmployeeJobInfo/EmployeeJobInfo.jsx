@@ -106,7 +106,8 @@ export default class EmployeeBasicInfo extends Component {
       },
       {
         label: 'employee status',
-        value: data && data.employeeStatus ? data.employeeStatus.status : null
+        value:
+          data && data.employeeStatus ? data.employeeStatus.description : null
       },
       { label: 'pensionable', value: data ? data.pensionable : null },
       {
@@ -136,16 +137,16 @@ export default class EmployeeBasicInfo extends Component {
 
     return jobInformation ? (
       <div>
-        <div className="Action">
+        <div className='Action'>
           {showForm ? (
             <Button
-              label="cancel"
+              label='cancel'
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label="update job details"
+              label='update job details'
               onClick={this.handleUpdateButtonClick}
               highlight
             />
@@ -162,7 +163,7 @@ export default class EmployeeBasicInfo extends Component {
           </div>
         ) : (
           <React.Fragment>
-            <EmployeeInfoBlock data={jobInformation} title="" />
+            <EmployeeInfoBlock data={jobInformation} title='' />
           </React.Fragment>
         )}
       </div>

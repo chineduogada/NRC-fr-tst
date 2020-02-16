@@ -55,7 +55,9 @@ export default class Employee extends Component {
   async fetchSimpleProfile() {
     const res = await httpService.get(`/employees?ippisNo=${this.ippisNo}`);
 
-    if (res) {
+    if (!res) return;
+
+    if (res && res.data.data.rows.length) {
       const {
         photo,
         firstName,
@@ -73,9 +75,9 @@ export default class Employee extends Component {
         profile.department = employeeJob.department
           ? employeeJob.department.description
           : null;
-        profile.employeeStatus = mapEmployeeStatus(
-          employeeJob.employeeStatus ? employeeJob.employeeStatus.status : null
-        );
+        profile.employeeStatus = employeeJob.employeeStatus
+          ? employeeJob.employeeStatus.description
+          : null;
       }
 
       if (employeeAppointment) {

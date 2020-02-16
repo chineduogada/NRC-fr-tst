@@ -14,17 +14,22 @@ export default class ImportForm extends Form {
         file: ''
       },
 
+      batchState: {},
+
       errors: {}
     };
+
+    this.runInBatch = this.runInBatch.bind(this);
+    this.onBatchProcess = this.onBatchProcess.bind(this);
   }
 
   schema = Schema;
 
-  async doSubmit(event) {
-    const file = this.file.files[0];
+  async runInBatch(file) {
     const formData = new FormData();
     formData.append('resource', this.state.formData.resource);
     formData.append('file', file);
+
     const res = await httpService.post('/import', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
@@ -35,9 +40,31 @@ export default class ImportForm extends Form {
     }
   }
 
+  onBatchProcess(batchState = {}) {
+    this.setState({ batchState });
+  }
+
+  async doSubmit(event) {
+    const files = this.file.files;
+    const batchProcessor = new BatchProcessor(files, this.runInBatch);
+    const batchState = batchProcessor.getState();
+    batchProcessor.onBatchProcess = this.onBatchProcess();
+
+    this.setState({ batchState });
+
+    batchProcessor.startProcessor();
+  }
+
   render() {
+    const { batchState } = this.state;
+    console.log(batchState);
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+        {batchState.totalBatchSize ? (
+          <div>
+            {batchState.currentBatch}/{batchState.totalBatchSize}
+          </div>
+        ) : null}
         {this.renderSelect(
           'select resource',
           'resource',
