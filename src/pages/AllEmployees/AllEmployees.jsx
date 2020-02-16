@@ -36,7 +36,7 @@ class AllEmployees extends Component {
 
   async componentDidMount() {
     const employees = [];
-    const res = await http.get('/employees/');
+    const res = await http.get('/employees?page=1&limit=500');
 
     if (res) {
       res.data.data.rows.forEach(employee => {
