@@ -20,6 +20,9 @@ export default class AddNewEmployee extends Form {
     this.handleIppisResponseRecieved = this.handleIppisResponseRecieved.bind(
       this
     );
+    this.handleNrcNoResponseRecieved = this.handleNrcNoResponseRecieved.bind(
+      this
+    );
   }
 
   state = {
@@ -46,6 +49,7 @@ export default class AddNewEmployee extends Form {
       senatorialDistrictId: '',
       professional: '',
       stateId: '',
+      address: '',
 
       // JOB INFORMATION FORM DATA
       departmentId: '',
@@ -60,7 +64,6 @@ export default class AddNewEmployee extends Form {
       firstAppointmentDate: '',
       resumptionDate: '',
       confirmationDate: '',
-      expectedRetirementDate: '',
       presentAppointmentDate: '',
       firstAppointmentJobTypeId: '',
       firstAppointmentJobTitleId: '',
@@ -93,9 +96,11 @@ export default class AddNewEmployee extends Form {
     countryOptions: [],
     sectionOptions: [],
     stepOptions: [],
+    salaryStructureOptions: [],
+    employeeStatusOptions: [],
 
     ippisNoVerified: false,
-    reportToVerified: false
+    nrcNoVerified: false
   };
 
   async componentDidMount() {
@@ -115,7 +120,9 @@ export default class AddNewEmployee extends Form {
       countries,
       sections,
       steps,
-      genders
+      genders,
+      salaryStructures,
+      employeeStatuses
     ] = await httpService.all([
       httpService.get('/departments?statusId=1'),
       httpService.get('/districts?statusId=1'),
@@ -132,7 +139,9 @@ export default class AddNewEmployee extends Form {
       httpService.get('/countries'),
       httpService.get('/sections'),
       httpService.get('/steps'),
-      httpService.get('/genders')
+      httpService.get('/genders'),
+      httpService.get('/salary-structures'),
+      httpService.get('/employee-statuses')
     ]);
 
     if (departments) {
@@ -142,8 +151,8 @@ export default class AddNewEmployee extends Form {
         bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
         jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
         jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
-        jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
-        jobStepOptions: nameMapper(jobGrades.data.data, 'conpss'),
+        jobGradeOptions: nameMapper(jobGrades.data.data, 'con'),
+        jobStepOptions: nameMapper(jobGrades.data.data, 'step'),
         pfaOptions: nameMapper(pfa.data.data, 'name'),
         gpzOptions: nameMapper(gpz.data.data, 'description'),
         lgaOptions: nameMapper(lga.data.data, 'lga'),
@@ -157,6 +166,14 @@ export default class AddNewEmployee extends Form {
         sectionOptions: nameMapper(sections.data.data, 'section'),
         stepOptions: nameMapper(steps.data.data, 'step'),
         genderOptions: nameMapper(genders.data.data, 'type'),
+        salaryStructureOptions: nameMapper(
+          salaryStructures.data.data,
+          'description'
+        ),
+        employeeStatusOptions: nameMapper(
+          employeeStatuses.data.data,
+          'description'
+        ),
         optionsFetched: true
       });
     }
@@ -171,8 +188,11 @@ export default class AddNewEmployee extends Form {
     firstName: Joi.string(),
     lastName: Joi.string(),
     middleNames: Joi.string(),
-    initials: Joi.string(),
-    nrcNo: Joi.number(),
+    initials: Joi.string().allow(''),
+    nrcNo: Joi.string()
+      .min(3)
+      .max(8)
+      .required(),
     dateOfBirth: Joi.string(),
     phoneNumber: Joi.number(),
     countryOfBirthId: Joi.number(),
@@ -188,12 +208,16 @@ export default class AddNewEmployee extends Form {
     senatorialDistrictId: Joi.number(),
     stateId: Joi.number(),
     professional: Joi.string(),
+    address: Joi.string()
+      .allow('')
+      .optional(),
 
     // JOB INFORMATION SCHEMA
 
     departmentId: Joi.number(),
     districtId: Joi.number(),
     sectionId: Joi.number(),
+    salaryStructureId: Joi.number(),
     location: Joi.string(),
     reportTo: Joi.number()
       .allow('')
@@ -205,7 +229,6 @@ export default class AddNewEmployee extends Form {
     firstAppointmentDate: Joi.string(),
     resumptionDate: Joi.string(),
     confirmationDate: Joi.string(),
-    expectedRetirementDate: Joi.string(),
     presentAppointmentDate: Joi.string(),
     firstAppointmentJobTypeId: Joi.number(),
     firstAppointmentJobTitleId: Joi.number(),
@@ -243,6 +266,18 @@ export default class AddNewEmployee extends Form {
     }
   }
 
+  handleNrcNoResponseRecieved(employees) {
+    if (
+      !employees.length &&
+      `${this.nrcNo.value}`.length >= 3 &&
+      `${this.nrcNo.value}`.length <= 8
+    ) {
+      this.setState({ nrcNoVerified: true });
+    } else {
+      this.setState({ nrcNoVerified: false });
+    }
+  }
+
   resetFormData() {
     this.setState({ formData: this.initialFormState });
   }
@@ -261,15 +296,17 @@ export default class AddNewEmployee extends Form {
   }
 
   render() {
+    const { nrcNoVerified, ippisNoVerified } = this.state;
+
     return this.state.optionsFetched ? (
-      <Section title='add new employee'>
+      <Section title="add new employee">
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
           another employee. Click "proceed to profile" button to save and
           redirect to the employee's profile
         </PageNotice>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <InformationBlock title=''>
+          <InformationBlock title="">
             <EmployeeVerifier
               preventDefault
               checkOnResponseRecieved={employees => !employees.length}
@@ -283,16 +320,24 @@ export default class AddNewEmployee extends Form {
                 'number'
               )}
             </EmployeeVerifier>
+
+            <EmployeeVerifier
+              queryParam="nrcNo"
+              preventDefault
+              checkOnResponseRecieved={employees => !employees.length}
+              onResponseReceived={this.handleNrcNoResponseRecieved}
+            >
+              {this.renderInput('NRC number', 'nrcNo', null, null, 'number')}
+            </EmployeeVerifier>
           </InformationBlock>
 
-          {this.state.ippisNoVerified ? (
+          {ippisNoVerified && nrcNoVerified ? (
             <>
-              <InformationBlock title='basic information'>
+              <InformationBlock title="basic information">
                 {this.renderInput('first Name', 'firstName')}
                 {this.renderInput('last Name', 'lastName')}
                 {this.renderInput('middle Names', 'middleNames')}
                 {this.renderInput('initials', 'initials')}
-                {this.renderInput('NRC number', 'nrcNo', null, null, 'number')}
                 {this.renderInput(
                   'date of birth',
                   'dateOfBirth',
@@ -323,10 +368,11 @@ export default class AddNewEmployee extends Form {
                   'number'
                 )}
 
-                {this.renderSelect('gender', 'genderId', [
-                  { id: 1, name: 'male' },
-                  { id: 2, name: 'female' }
-                ])}
+                {this.renderSelect(
+                  'gender',
+                  'genderId',
+                  this.state.genderOptions
+                )}
                 {this.renderSelect(
                   'blood group',
                   'bloodGroupId',
@@ -359,9 +405,10 @@ export default class AddNewEmployee extends Form {
                   { id: 'Y', name: 'Y' },
                   { id: 'N', name: 'N' }
                 ])}
+                {this.renderInput('address', 'address', null)}
               </InformationBlock>
 
-              <InformationBlock title='job information'>
+              <InformationBlock title="job information">
                 {this.renderInput(
                   `who ${this.state.formData.firstName ||
                     'this employee'} reports to`,
@@ -370,14 +417,21 @@ export default class AddNewEmployee extends Form {
                   null,
                   'number'
                 )}
-                {this.renderInput('section', 'sectionId', null, null, 'number')}
-                {this.renderInput('location', 'location', '')}
-
-                {this.renderSelect('employee status', 'employeeStatusId', [
-                  { id: '1', name: 'Active' },
-                  { id: '2', name: 'Suspended' },
-                  { id: '3', name: 'Retired' }
-                ])}
+                {this.renderSelect(
+                  'section',
+                  'sectionId',
+                  this.state.sectionOptions
+                )}
+                {this.renderSelect(
+                  'salary structure',
+                  'salaryStructureId',
+                  this.state.salaryStructureOptions
+                )}
+                {this.renderSelect(
+                  'employee status',
+                  'employeeStatusId',
+                  this.state.employeeStatusOptions
+                )}
                 {this.renderSelect('pensionable', 'pensionable', [
                   { id: 'Y', name: 'Y' },
                   { id: 'N', name: 'N' }
@@ -394,7 +448,7 @@ export default class AddNewEmployee extends Form {
                 )}
               </InformationBlock>
 
-              <InformationBlock title='appointment information'>
+              <InformationBlock title="appointment information">
                 {this.renderInput(
                   'first appointment date',
                   'firstAppointmentDate',
@@ -412,13 +466,6 @@ export default class AddNewEmployee extends Form {
                 {this.renderInput(
                   'confirmation date',
                   'confirmationDate',
-                  null,
-                  null,
-                  'date'
-                )}
-                {this.renderInput(
-                  'expected retirement date',
-                  'expectedRetirementDate',
                   null,
                   null,
                   'date'
@@ -476,11 +523,11 @@ export default class AddNewEmployee extends Form {
           ) : null}
 
           {this.renderButton('save')}
-          {this.renderButton('proceed to profile')}
+          {/* {this.renderButton('proceed to profile')} */}
         </form>
       </Section>
     ) : (
-      <Loader message='please wait...' />
+      <Loader message="please wait..." />
     );
   }
 }

@@ -30,20 +30,20 @@ export default class EmployeeBasicInfo extends Component {
   }
 
   async fetchSelectComponentOptions() {
-    const [jobTypes, jobTitles, jobGrades] = await httpService.all([
+    const [jobTypes, jobTitles, jobGrades, steps] = await httpService.all([
       httpService.get('/job-types?statusId=1'),
       httpService.get('/job-titles?statusId=1'),
-      httpService.get('/job-grades')
+      httpService.get('/job-grades'),
+      httpService.get('/steps')
     ]);
 
-    const options = {
-      jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
-      jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
-      jobGradeOptions: nameMapper(jobGrades.data.data, 'conpss'),
-      jobStepOptions: nameMapper(jobGrades.data.data, 'conpss')
-    };
-
     if (jobTypes) {
+      const options = {
+        jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
+        jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
+        jobGradeOptions: nameMapper(jobGrades.data.data, 'con'),
+        jobStepOptions: nameMapper(steps.data.data, 'step')
+      };
       this.setState({
         options
       });
@@ -98,6 +98,10 @@ export default class EmployeeBasicInfo extends Component {
         value: firstJobGrade ? data.firstJobGrade.con : null
       },
       {
+        label: 'first step',
+        value: firstJobGrade ? data.firstJobGrade.con : null
+      },
+      {
         label: 'present job type',
         value: presentJobType ? data.presentJobType.type : null
       },
@@ -107,6 +111,10 @@ export default class EmployeeBasicInfo extends Component {
       },
       {
         label: 'present job grade',
+        value: presentJobGrade ? data.presentJobGrade.con : null
+      },
+      {
+        label: 'present step',
         value: presentJobGrade ? data.presentJobGrade.con : null
       }
     ];
@@ -126,16 +134,16 @@ export default class EmployeeBasicInfo extends Component {
     const { basicInformation, appointmentInformation, showForm } = this.state;
     return appointmentInformation ? (
       <div>
-        <div className='Action'>
+        <div className="Action">
           {showForm ? (
             <Button
-              label='cancel'
+              label="cancel"
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label='update appointment details'
+              label="update appointment details"
               onClick={this.handleUpdateButtonClick}
               highlight
             />

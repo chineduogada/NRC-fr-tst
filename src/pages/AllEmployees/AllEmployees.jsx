@@ -87,7 +87,7 @@ class AllEmployees extends Component {
         ? employeeJob.district.siteName
         : null;
       employeeInfo.employeeStatus = employeeJob.employeeStatus
-        ? employeeJob.employeeStatus.status
+        ? employeeJob.employeeStatus.description
         : null;
       employeeInfo.pensionable = employeeJob.pensionable;
     }
@@ -129,7 +129,7 @@ class AllEmployees extends Component {
     return (
       <Section>
         <Table
-          title='employees'
+          title="employees"
           columns={columns}
           data={employees}
           clickHandler={this.handleRowClick}

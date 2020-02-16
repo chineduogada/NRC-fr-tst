@@ -76,12 +76,10 @@ export default class EmployeeVerifier extends Component {
   async verifyEmployee() {
     this.setState({ isProcessing: true });
     if (this.inputValue.length > 1) {
-      // const results = employees.filter(employee => {
-      //     return `${employee.ippisNo}`.includes(this.inputValue);
-      // });
+      const queryParam = this.props.queryParam || 'ippisNo';
 
       const results = await httpService.get(
-        `/employees?ippisNo=${this.inputValue}`
+        `/employees?${queryParam}=${this.inputValue}`
       );
 
       console.log(results);
@@ -181,7 +179,7 @@ export default class EmployeeVerifier extends Component {
 
   renderProcessing() {
     return (
-      <Spinner className={classes.Processing} animation='border' size='sm' />
+      <Spinner className={classes.Processing} animation="border" size="sm" />
     );
   }
 

@@ -136,7 +136,7 @@ export default class UpdateForm extends Form {
     return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <p className='form-header'>Update Employee Basic Information</p>
+          <p className="form-header">Update Employee Basic Information</p>
           <InformationBlock>
             {this.renderInput(
               'IPPIS No',
@@ -176,7 +176,8 @@ export default class UpdateForm extends Form {
               null,
               formData.nrcNo || '',
               'number',
-              null
+              null,
+              true
             )}
             {this.renderInput(
               'date of birth',
