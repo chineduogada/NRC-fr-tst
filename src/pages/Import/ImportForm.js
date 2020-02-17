@@ -4,6 +4,8 @@ import httpService from '../../services/httpService';
 import Form from '../../components/Form/Form';
 import Schema from './JoiSchema';
 import BatchProcessor from '../../helpers/batchProcessor';
+import Loader from '../../components/Loader/Loader';
+import LightBox from '../../components/LightBox/LightBox';
 
 export default class ImportForm extends Form {
   constructor(props) {
@@ -14,7 +16,11 @@ export default class ImportForm extends Form {
         file: ''
       },
 
-      batchState: {},
+      batchState: {
+        currentBatch: 0
+      },
+
+      showLightBox: false,
 
       errors: {}
     };
@@ -47,23 +53,30 @@ export default class ImportForm extends Form {
   async doSubmit(event) {
     const files = this.file.files;
     const batchProcessor = new BatchProcessor(files, this.runInBatch);
-    const batchState = batchProcessor.getState();
-    batchProcessor.onBatchProcess = this.onBatchProcess();
+    const totalBatchSize = batchProcessor.getTotalBatchSize();
+    batchProcessor.onBatchProcess = this.onBatchProcess;
+    batchProcessor.onStart = () => this.setState({ showLightBox: true });
+    batchProcessor.onDone = () =>
+      setTimeout(() => this.setState({ showLightBox: false }), 1000);
 
-    this.setState({ batchState });
+    this.setState({
+      batchState: { ...this.state.batchState, currentBatch: 0, totalBatchSize }
+    });
 
     batchProcessor.startProcessor();
   }
 
   render() {
-    const { batchState } = this.state;
+    const { batchState, showLightBox } = this.state;
     console.log(batchState);
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        {batchState.totalBatchSize ? (
-          <div>
-            {batchState.currentBatch}/{batchState.totalBatchSize}
-          </div>
+        {showLightBox ? (
+          <LightBox>
+            <Loader
+              message={`Completed ${batchState.currentBatch}/${batchState.totalBatchSize}`}
+            />
+          </LightBox>
         ) : null}
         {this.renderSelect(
           'select resource',

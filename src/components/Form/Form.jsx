@@ -155,6 +155,7 @@ export default class Form extends Component {
         autoFocus={autofocus}
         ref={input => (this[name] = input)}
         disabled={disabled}
+        multiple
       />
     );
   }

@@ -23,8 +23,8 @@ class AllEmployees extends Component {
           accessor: 'presentAppointmentDate',
           Header: 'Present Appointment Date'
         },
-        { accessor: 'presentJobType', Header: 'present job type' },
-        { accessor: 'presentJobTitle', Header: 'present job title' }
+        { accessor: 'presentJobType', Header: 'Present Job Type' },
+        { accessor: 'presentJobTitle', Header: 'Present Job Title' }
       ],
       pageSize: 20,
       currentPage: 1
@@ -37,8 +37,9 @@ class AllEmployees extends Component {
   async fetchFromServer() {
     const limit = 500;
     let page = 1;
-    let count = page;
-    while (count) {
+    let countEqualLimit = true; // assumes that the length of the result sets we get back before the last result set is equal to the pagination limit
+    let responseDefined = true; // assumes that the response we get back is not undefined
+    while (countEqualLimit && responseDefined) {
       const employees = [];
 
       const res = await http.get(`/employees?page=${page}&limit=${limit}`);
@@ -48,12 +49,14 @@ class AllEmployees extends Component {
           employees.push(this.mapToViewModel(employee));
         });
 
-        count = res.data.data.rows.length === limit;
+        countEqualLimit = res.data.data.rows.length === limit;
         page++;
 
         const newState = [...this.state.employees, ...employees];
 
         this.setState({ employees: newState });
+      } else {
+        responseDefined = false;
       }
     }
   }
@@ -144,7 +147,7 @@ class AllEmployees extends Component {
     return (
       <Section>
         <Table
-          title='employees'
+          title="employees"
           columns={columns}
           data={employees}
           clickHandler={this.handleRowClick}
