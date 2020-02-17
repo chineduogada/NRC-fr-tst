@@ -29,7 +29,7 @@ class JobTitles extends Form {
     ];
 
     this.state = {
-      filteredDataFromServer: [],
+      filteredDataFromServer: null,
 
       columns: [
         { accessor: 'code', Header: 'Code' },
@@ -316,22 +316,22 @@ class JobTitles extends Form {
 
     return (
       <React.Fragment>
-        {filteredDataFromServer.length ? (
+        {filteredDataFromServer ? (
           <Section>
             <TableView
               title={
                 <span>
                   <Link
                     style={{ marginRight: '0.5em' }}
-                    className='link secondary'
-                    to='/settings/static-models'
+                    className="link secondary"
+                    to="/settings/static-models"
                   >
-                    <IoMdArrowRoundBack className='icon' />
+                    <IoMdArrowRoundBack className="icon" />
                   </Link>
                   <span>job titles</span>
                 </span>
               }
-              message='Double click a row to preview'
+              message="Double click a row to preview"
               columns={columns}
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}
@@ -339,7 +339,7 @@ class JobTitles extends Form {
             ></TableView>
 
             <SideDraw
-              title='job title'
+              title="job title"
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >

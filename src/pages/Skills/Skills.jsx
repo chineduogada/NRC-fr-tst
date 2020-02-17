@@ -20,17 +20,17 @@ class Skills extends Form {
     super(props);
 
     this.tableRowOptions = [
-      {id: 0, name: 'inactive'},
-      {id: 0, name: 'active'},
-    ]
+      { id: 0, name: 'inactive' },
+      { id: 0, name: 'active' }
+    ];
 
     this.statusOptions = [
       { id: 1, status: 'active' },
       { id: 2, status: 'inactive' }
-    ]
+    ];
 
     this.state = {
-      filteredDataFromServer: [],
+      filteredDataFromServer: null,
 
       columns: [
         { accessor: 'skill', Header: 'Skill' },
@@ -59,7 +59,9 @@ class Skills extends Form {
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(this);
+    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(
+      this
+    );
     this.addDataObject = this.addDataObject.bind(this);
     this.updateDataObject = this.updateDataObject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -108,7 +110,7 @@ class Skills extends Form {
   };
 
   handleTableRowOptionChange({ currentTarget }) {
-    console.log(currentTarget.id)
+    console.log(currentTarget.id);
   }
 
   handleRowClick(event) {
@@ -131,9 +133,17 @@ class Skills extends Form {
    */
   updateObjectList(res) {
     const newDataObject = res.data.data;
-    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
 
-    this.setState({ filteredDataFromServer: [filteredNewDataObject, ...this.state.filteredDataFromServer] });
+    this.setState({
+      filteredDataFromServer: [
+        filteredNewDataObject,
+        ...this.state.filteredDataFromServer
+      ]
+    });
   }
 
   resetFormData() {
@@ -147,7 +157,7 @@ class Skills extends Form {
     const { statusId } = this.state.formData;
     return {
       status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
-    }
+    };
   }
 
   /**
@@ -161,7 +171,7 @@ class Skills extends Form {
     // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
     // map every option to the current value the user may have selected and join them with the from data
-    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
@@ -258,8 +268,20 @@ class Skills extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput('skill', 'skill', null, this.state.rowToPreview.skill)}
-          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'), null, null, this.state.formData.statusId)}
+          {this.renderInput(
+            'skill',
+            'skill',
+            null,
+            this.state.rowToPreview.skill
+          )}
+          {this.renderSelect(
+            'status ',
+            'statusId',
+            nameMapper(this.statusOptions, 'status'),
+            null,
+            null,
+            this.state.formData.statusId
+          )}
 
           {this.renderButton('update')}
         </form>
@@ -273,7 +295,11 @@ class Skills extends Form {
         <p>Add a new skill</p>
 
         {this.renderInput('skill', 'skill')}
-        {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'))}
+        {this.renderSelect(
+          'status ',
+          'statusId',
+          nameMapper(this.statusOptions, 'status')
+        )}
 
         {this.renderButton('save')}
       </form>
@@ -285,32 +311,30 @@ class Skills extends Form {
 
     return (
       <React.Fragment>
-        {filteredDataFromServer.length ? (
+        {filteredDataFromServer ? (
           <Section>
             <TableView
               title={
                 <span>
                   <Link
                     style={{ marginRight: '0.5em' }}
-                    className='link secondary'
-                    to='/settings/static-models'
+                    className="link secondary"
+                    to="/settings/static-models"
                   >
-                    <IoMdArrowRoundBack className='icon' />
+                    <IoMdArrowRoundBack className="icon" />
                   </Link>
                   <span>skills</span>
                 </span>
               }
-              message='Double click a row to preview'
+              message="Double click a row to preview"
               columns={columns}
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
-            >
-              
-            </TableView>
+            ></TableView>
 
             <SideDraw
-              title='skill'
+              title="skill"
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >

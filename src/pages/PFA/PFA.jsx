@@ -28,7 +28,7 @@ class PFA extends Form {
     ];
 
     this.state = {
-      filteredDataFromServer: [],
+      filteredDataFromServer: null,
 
       columns: [
         { accessor: 'name', Header: 'Pension Fund Admin' },
@@ -307,7 +307,7 @@ class PFA extends Form {
   render() {
     const { filteredDataFromServer, columns } = this.state;
 
-    return filteredDataFromServer.length ? (
+    return filteredDataFromServer ? (
       <React.Fragment>
         <Section>
           <TableView
@@ -315,15 +315,15 @@ class PFA extends Form {
               <span>
                 <Link
                   style={{ marginRight: '0.5em' }}
-                  className='link secondary'
-                  to='/settings/static-models'
+                  className="link secondary"
+                  to="/settings/static-models"
                 >
-                  <IoMdArrowRoundBack className='icon' />
+                  <IoMdArrowRoundBack className="icon" />
                 </Link>
                 <span>pension fund administrators</span>
               </span>
             }
-            message='Double click a row to preview'
+            message="Double click a row to preview"
             columns={columns}
             data={filteredDataFromServer}
             clickHandler={this.handleRowClick}
@@ -331,7 +331,7 @@ class PFA extends Form {
           ></TableView>
 
           <SideDraw
-            title='Pension Fund Admins'
+            title="Pension Fund Admins"
             openDraw={this.state.showForm}
             onClose={this.closeSideDraw}
           >

@@ -20,17 +20,17 @@ class IncidenceReasonCodes extends Form {
     super(props);
 
     this.tableRowOptions = [
-      {id: 0, name: 'inactive'},
-      {id: 0, name: 'active'},
-    ]
+      { id: 0, name: 'inactive' },
+      { id: 0, name: 'active' }
+    ];
 
     this.statusOptions = [
       { id: 1, status: 'active' },
       { id: 2, status: 'inactive' }
-    ]
+    ];
 
     this.state = {
-      filteredDataFromServer: [],
+      filteredDataFromServer: null,
 
       columns: [
         { accessor: 'code', Header: 'Code' },
@@ -59,7 +59,9 @@ class IncidenceReasonCodes extends Form {
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(this);
+    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(
+      this
+    );
     this.addDataObject = this.addDataObject.bind(this);
     this.updateDataObject = this.updateDataObject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -108,7 +110,7 @@ class IncidenceReasonCodes extends Form {
   };
 
   handleTableRowOptionChange({ currentTarget }) {
-    console.log(currentTarget.id)
+    console.log(currentTarget.id);
   }
   handleRowClick(event) {
     if (event.detail > 1) {
@@ -130,9 +132,17 @@ class IncidenceReasonCodes extends Form {
    */
   updateObjectList(res) {
     const newDataObject = res.data.data;
-    const filteredNewDataObject = this.mapToViewModel({...newDataObject, ...this.getOptionValues()});
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
 
-    this.setState({ filteredDataFromServer: [filteredNewDataObject, ...this.state.filteredDataFromServer] });
+    this.setState({
+      filteredDataFromServer: [
+        filteredNewDataObject,
+        ...this.state.filteredDataFromServer
+      ]
+    });
   }
 
   resetFormData() {
@@ -146,7 +156,7 @@ class IncidenceReasonCodes extends Form {
     const { statusId } = this.state.formData;
     return {
       status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
-    }
+    };
   }
 
   /**
@@ -160,7 +170,7 @@ class IncidenceReasonCodes extends Form {
     // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
     // map every option to the current value the user may have selected and join them with the from data
-    const updatedRowToPreview = {...formData, ...this.getOptionValues() }
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
@@ -170,7 +180,6 @@ class IncidenceReasonCodes extends Form {
 
     this.setState({ filteredDataFromServer: oldState });
   }
-
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
@@ -222,7 +231,10 @@ class IncidenceReasonCodes extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/incidence-reason-codes', this.state.formData);
+    const res = await httpService.post(
+      '/incidence-reason-codes',
+      this.state.formData
+    );
 
     stopProcessing();
 
@@ -259,7 +271,14 @@ class IncidenceReasonCodes extends Form {
           onSubmit={this.handleSubmit}
         >
           {this.renderInput('code', 'code', null, this.state.rowToPreview.code)}
-          {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'), null, null, this.state.formData.statusId)}
+          {this.renderSelect(
+            'status ',
+            'statusId',
+            nameMapper(this.statusOptions, 'status'),
+            null,
+            null,
+            this.state.formData.statusId
+          )}
 
           {this.renderButton('update')}
         </form>
@@ -273,7 +292,11 @@ class IncidenceReasonCodes extends Form {
         <p>Add a new reason code</p>
 
         {this.renderInput('code', 'code')}
-        {this.renderSelect('status ', 'statusId', nameMapper(this.statusOptions, 'status'))}
+        {this.renderSelect(
+          'status ',
+          'statusId',
+          nameMapper(this.statusOptions, 'status')
+        )}
 
         {this.renderButton('save')}
       </form>
@@ -285,32 +308,30 @@ class IncidenceReasonCodes extends Form {
 
     return (
       <React.Fragment>
-        {filteredDataFromServer.length ? (
+        {filteredDataFromServer ? (
           <Section>
             <TableView
               title={
                 <span>
                   <Link
                     style={{ marginRight: '0.5em' }}
-                    className='link secondary'
-                    to='/settings/static-models'
+                    className="link secondary"
+                    to="/settings/static-models"
                   >
-                    <IoMdArrowRoundBack className='icon' />
+                    <IoMdArrowRoundBack className="icon" />
                   </Link>
                   <span>incidence reason codes</span>
                 </span>
               }
-              message='Double click a row to preview'
+              message="Double click a row to preview"
               columns={columns}
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
-            >
-              
-            </TableView>
+            ></TableView>
 
             <SideDraw
-              title='reason code'
+              title="reason code"
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >

@@ -24,7 +24,7 @@ class Department extends Form {
     ];
 
     this.state = {
-      departments: [],
+      departments: null,
 
       columns: [
         { accessor: 'code', Header: 'Code' },
@@ -316,7 +316,7 @@ class Department extends Form {
 
     return (
       <React.Fragment>
-        {this.state.departments.length ? (
+        {this.state.departments ? (
           <Section>
             <TableView
               title="departments"
