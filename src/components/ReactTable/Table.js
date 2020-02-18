@@ -5,7 +5,9 @@ import {
   useSortBy,
   useFilters,
   useGlobalFilter,
-  usePagination
+  usePagination,
+  useGroupBy,
+  useExpanded
 } from 'react-table';
 import matchSorter from 'match-sorter';
 import {
@@ -202,6 +204,60 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val;
 
+// Legend
+function Legend() {
+  return (
+    <div
+      style={{
+        padding: '0.5rem 0'
+      }}
+    >
+      <span
+        style={{
+          display: 'inline-block',
+          background: '#0aff0082',
+          padding: '0.5rem'
+        }}
+      >
+        Grouped
+      </span>{' '}
+      <span
+        style={{
+          display: 'inline-block',
+          background: '#ffa50078',
+          padding: '0.5rem'
+        }}
+      >
+        Aggregated
+      </span>{' '}
+      <span
+        style={{
+          display: 'inline-block',
+          background: '#ff000042',
+          padding: '0.5rem'
+        }}
+      >
+        Repeated Value
+      </span>
+    </div>
+  );
+}
+
+// This is a custom aggregator that
+// takes in an array of leaf values and
+// returns the rounded median
+function roundedMedian(leafValues) {
+  let min = leafValues[0] || 0;
+  let max = leafValues[0] || 0;
+
+  leafValues.forEach(value => {
+    min = Math.min(min, value);
+    max = Math.max(max, value);
+  });
+
+  return Math.round((min + max) / 2);
+}
+
 // ACTUAL TABLE
 function Table({
   columns,
@@ -263,7 +319,7 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
+    state: { groupBy, expanded, pageIndex, pageSize }
   } = useTable(
     {
       columns,
@@ -275,7 +331,9 @@ function Table({
     useFilters,
     useGlobalFilter,
     useSortBy,
-    usePagination
+    useGroupBy,
+    usePagination,
+    useExpanded // required to use `useGroupBy` hook
   );
 
   // Getting the filtered rows and pass it upwards to the parent component of this component
@@ -353,6 +411,12 @@ function Table({
                     <th
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                     >
+                      {column.canGroupBy ? (
+                        // If the column can be grouped, let's add a toggle
+                        <span {...column.getGroupByToggleProps()}>
+                          {column.isGrouped ? '🛑 ' : '👊 '}
+                        </span>
+                      ) : null}
                       {column.render('Header')}
                       {/* Add a sort direction indicator */}
                       <span>
@@ -403,8 +467,36 @@ function Table({
                 >
                   {row.cells.map((cell, i) => {
                     return (
-                      <td {...cell.getCellProps()}>
-                        {truncateCellValue(cell.render('Cell'))}
+                      <td
+                        {...cell.getCellProps()}
+                        {...cell.getCellProps()}
+                        style={{
+                          background: cell.isGrouped
+                            ? '#0aff0082'
+                            : cell.isAggregated
+                            ? '#ffa50078'
+                            : cell.isPlaceholder
+                            ? '#ff000042'
+                            : 'white'
+                        }}
+                      >
+                        {cell.isGrouped ? (
+                          // If it's a grouped cell, add an expander and row count
+                          <>
+                            <span {...row.getToggleRowExpandedProps()}>
+                              {row.isExpanded ? '👇' : '👉'}
+                            </span>{' '}
+                            {cell.render('Cell')} ({row.subRows.length})
+                          </>
+                        ) : cell.isAggregated ? (
+                          // If the cell is aggregated, use the Aggregated
+                          // renderer for cell
+                          cell.render('Aggregated')
+                        ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                          // Otherwise, just render the regular cell
+                          // cell.render('Cell')
+                          truncateCellValue(cell.render('Cell'))
+                        )}
                       </td>
                     );
                   })}

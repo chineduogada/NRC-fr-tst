@@ -16,7 +16,12 @@ class AllEmployees extends Component {
         { accessor: 'name', Header: 'Name' },
         { accessor: 'department', Header: 'Department' },
         { accessor: 'district', Header: 'District' },
-        { accessor: 'employeeStatus', Header: 'Employee Status' },
+        {
+          accessor: 'employeeStatus',
+          Header: 'Employee Status',
+          aggregate: 'count',
+          Aggregate: ({ cell: { value } }) => `${value} Statuses`
+        },
         { accessor: 'pensionable', Header: 'Pensionable' },
         { accessor: 'firstAppointmentDate', Header: 'First Appointment Date' },
         {
