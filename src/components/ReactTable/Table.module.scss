@@ -46,6 +46,10 @@
 
   thead tr th {
     text-transform: capitalize;
+
+    span:first-of-type {
+      margin-right: 0.8em;
+    }
   }
 
   tbody {
@@ -56,6 +60,18 @@
 
   tbody tr td {
     font-size: 0.8rem;
+  }
+
+  .IsAggregated {
+    background: var(--magic-mint);
+  }
+
+  .IsPlaceHolder {
+    background: var(--darkwood-rose);
+  }
+
+  .IsGrouped {
+    background: yellow;
   }
 
   .Filter {
@@ -87,7 +103,7 @@
   }
 
   .Clickable:hover {
-    background: var(--basic-color-light);
+    background: var(--basic-color-light) !important;
     color: var(--text);
     font-weight: bold;
   }

@@ -40,7 +40,7 @@ class AllEmployees extends Component {
   }
 
   async fetchFromServer() {
-    const limit = 500;
+    const limit = 200;
     let page = 1;
     let countEqualLimit = true; // assumes that the length of the result sets we get back before the last result set is equal to the pagination limit
     let responseDefined = true; // assumes that the response we get back is not undefined
@@ -141,9 +141,10 @@ class AllEmployees extends Component {
     }
   };
 
-  handleRowClick({ currentTarget }) {
-    console.log(currentTarget);
-    this.props.history.push(`/employees/${currentTarget.id}`);
+  handleRowClick({ currentTarget, detail }) {
+    if (detail > 1) {
+      this.props.history.push(`/employees/${currentTarget.id}`);
+    }
   }
 
   render() {

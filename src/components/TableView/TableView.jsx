@@ -30,19 +30,19 @@ class TableView extends Component {
   async handleFilter(rows) {
     this.data = this.prepareFilteredRowsFromReactTable(rows);
   }
-  
+
   prepareFilteredRowsFromReactTable(rows) {
     return rows.map(row => row.values);
   }
-  
+
   getCurrentDataState() {
     return this.data;
   }
-  
+
   getFileName() {
     return `${slugify(this.props.title)}`;
   }
-  
+
   handleExport() {
     const csvExporter = new ExportToCsv({
       showLabels: true,
@@ -73,16 +73,16 @@ class TableView extends Component {
       <section className={classes.TableView}>
         {title ? (
           <header>
-            <div className='d-flex justify-content-between'>
+            <div className="d-flex justify-content-between">
               <div>
-                <div className='title text-capitalize'>
+                <div className="title text-capitalize">
                   <h2 className={classes.TableTitle}>{title}</h2>
                 </div>
                 {message ? <PageNotice>{message}</PageNotice> : null}
               </div>
-              <div className='buttons'>
-                <Button label='add new' fill onClick={addNewButtonHandler} />
-                <Button label='export' plain onClick={this.handleExport} />
+              <div className="buttons">
+                <Button label="add new" fill onClick={addNewButtonHandler} />
+                <Button label="export" plain onClick={this.handleExport} />
               </div>
             </div>
           </header>
@@ -90,7 +90,6 @@ class TableView extends Component {
 
         <ReactTable
           onFilter={this.handleFilter}
-          ref={reactTable => (this.reactTable = reactTable)}
           columns={columns}
           data={data}
           clickHandler={clickHandler}

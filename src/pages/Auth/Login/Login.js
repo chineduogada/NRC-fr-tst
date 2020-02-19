@@ -6,7 +6,7 @@ import classes from './Login.module.scss';
 const login = props => {
   const errorFeedback =
     props.errorFeedback !== '' ? (
-      <p className='error'>{props.errorFeedback}</p>
+      <p className="error">{props.errorFeedback}</p>
     ) : null;
 
   return (
@@ -24,17 +24,17 @@ const login = props => {
             {errorFeedback}
             <InputField
               changed={props.changed}
-              id='username'
-              type='text'
-              name='username *'
+              id="username"
+              type="text"
+              name="username *"
             />
             <InputField
               changed={props.changed}
-              id='password'
-              type='password'
-              name='password *'
+              id="password"
+              type="password"
+              name="password *"
             />
-            <Button label='sign in' fullwidth fill>
+            <Button label="sign in" fullwidth fill>
               sign in
             </Button>
 

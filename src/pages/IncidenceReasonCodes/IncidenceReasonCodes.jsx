@@ -26,7 +26,12 @@ class IncidenceReasonCodes extends Form {
 
     this.statusOptions = [
       { id: 1, status: 'active' },
-      { id: 2, status: 'inactive' }
+      {
+        id: 2,
+        status: 'inactive',
+        aggregate: 'count',
+        Aggregated: ({ cell: { value } }) => `${value} Statuses`
+      }
     ];
 
     this.state = {

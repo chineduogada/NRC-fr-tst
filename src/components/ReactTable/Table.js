@@ -1,13 +1,18 @@
 import React, { useRef } from 'react';
-import { IoIosFunnel } from 'react-icons/io';
+import {
+  IoIosFunnel,
+  IoIosArrowForward,
+  IoIosArrowDown,
+  IoMdFiling
+} from 'react-icons/io';
 import {
   useTable,
+  useGroupBy,
+  useExpanded,
   useSortBy,
   useFilters,
   useGlobalFilter,
-  usePagination,
-  useGroupBy,
-  useExpanded
+  usePagination
 } from 'react-table';
 import matchSorter from 'match-sorter';
 import {
@@ -90,7 +95,7 @@ function SelectColumnFilter({
         setFilter(e.target.value || undefined);
       }}
     >
-      <option value=''>All</option>
+      <option value="">All</option>
       {options.map((option, i) => (
         <option key={i} value={option}>
           {option}
@@ -122,7 +127,7 @@ function SliderColumnFilter({
   return (
     <>
       <input
-        type='range'
+        type="range"
         min={min}
         max={max}
         value={filterValue || min}
@@ -160,7 +165,7 @@ function NumberRangeColumnFilter({
     >
       <input
         value={filterValue[0] || ''}
-        type='number'
+        type="number"
         onChange={e => {
           e.stopPropagation();
           const val = e.target.value;
@@ -178,7 +183,7 @@ function NumberRangeColumnFilter({
       to
       <input
         value={filterValue[1] || ''}
-        type='number'
+        type="number"
         onChange={e => {
           e.stopPropagation();
           const val = e.target.value;
@@ -330,31 +335,33 @@ function Table({
     },
     useFilters,
     useGlobalFilter,
-    useSortBy,
     useGroupBy,
-    usePagination,
-    useExpanded // required to use `useGroupBy` hook
+    useExpanded, // required to use `useGroupBy` hook
+    useSortBy,
+    usePagination
   );
 
   // Getting the filtered rows and pass it upwards to the parent component of this component
   if (onFilter) {
     onFilter(rows);
+    console.log(rows, headers);
+    console.log(headerGroups);
   }
 
   const renderPagination = () => {
     return (
       <div className={classes.Pagination}>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {<MdFirstPage className='icon' />}
+          {<MdFirstPage className="icon" />}
         </button>{' '}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {<MdChevronLeft className='icon' />}
+          {<MdChevronLeft className="icon" />}
         </button>{' '}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {<MdChevronRight className='icon' />}
+          {<MdChevronRight className="icon" />}
         </button>{' '}
         <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {<MdLastPage className='icon' />}
+          {<MdLastPage className="icon" />}
         </button>{' '}
         <span>
           Page{' '}
@@ -365,7 +372,7 @@ function Table({
         <span>
           | Go to page:{' '}
           <input
-            type='number'
+            type="number"
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
@@ -393,28 +400,30 @@ function Table({
   // Render the UI for your table
   return (
     <>
+      <p>showing {rows.length} rows</p>
       {renderPagination()}
       <div className={classes.TableWrapper}>
-        <table
-          className={classes.Table}
-          ref={r => (reactTable = r)}
-          onFilteredChanged={() => {
-            setPageSize(reactTable.getResolvedState().sortedData);
-          }}
-          {...getTableProps()}
-        >
+        <table className={classes.Table} {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup, i) => (
-              <>
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
+              <React.Fragment key={i}>
+                <tr {...headerGroup.getHeaderGroupProps()} id={i}>
+                  {headerGroup.headers.map((column, i) => (
                     <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      {...column.getHeaderProps(
+                        column.getSortByToggleProps(),
+                        column.getGroupByToggleProps()
+                      )}
+                      key={i}
                     >
                       {column.canGroupBy ? (
                         // If the column can be grouped, let's add a toggle
                         <span {...column.getGroupByToggleProps()}>
-                          {column.isGrouped ? '🛑 ' : '👊 '}
+                          {column.isGrouped ? (
+                            '🛑 '
+                          ) : (
+                            <IoMdFiling style={{ color: 'yellow' }} />
+                          )}
                         </span>
                       ) : null}
                       {column.render('Header')}
@@ -428,9 +437,8 @@ function Table({
                       </span>
                     </th>
                   ))}
-                  {rowOptions ? <th key={i}></th> : null}
                 </tr>
-                <tr {...headerGroup.getHeaderGroupProps()}>
+                <tr {...headerGroup.getHeaderGroupProps()} key={i + 1}>
                   {headerGroup.headers.map((column, i) => (
                     <th
                       key={i}
@@ -445,7 +453,7 @@ function Table({
                     </th>
                   ))}
                 </tr>
-              </>
+              </React.Fragment>
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
@@ -454,14 +462,11 @@ function Table({
 
               // Check if the rows have a click listener
               const clickable = clickHandler ? classes.Clickable : null;
-              // Check to see if rowOptions is defined
-              // rowOptions = rowOptions || [];
-
               return (
                 <tr
                   className={clickable}
                   {...row.getRowProps()}
-                  id={row.original.id}
+                  id={row.original ? row.original.id : row.id}
                   key={i}
                   onClick={clickHandler}
                 >
@@ -470,21 +475,25 @@ function Table({
                       <td
                         {...cell.getCellProps()}
                         {...cell.getCellProps()}
-                        style={{
-                          background: cell.isGrouped
-                            ? '#0aff0082'
-                            : cell.isAggregated
-                            ? '#ffa50078'
+                        className={
+                          cell.isAggregated
+                            ? classes.IsAggregated
+                            : cell.isGrouped
+                            ? classes.IsGrouped
                             : cell.isPlaceholder
-                            ? '#ff000042'
-                            : 'white'
-                        }}
+                            ? classes.IsPlaceholder
+                            : null
+                        }
                       >
                         {cell.isGrouped ? (
                           // If it's a grouped cell, add an expander and row count
                           <>
-                            <span {...row.getToggleRowExpandedProps()}>
-                              {row.isExpanded ? '👇' : '👉'}
+                            <span {...row.getExpandedToggleProps()}>
+                              {row.isExpanded ? (
+                                <IoIosArrowDown />
+                              ) : (
+                                <IoIosArrowForward />
+                              )}
                             </span>{' '}
                             {cell.render('Cell')} ({row.subRows.length})
                           </>
@@ -506,7 +515,7 @@ function Table({
                       <select
                         id={row.original.id}
                         className={classes.Status}
-                        name='status'
+                        name="status"
                         onChange={onRowOptionChange}
                       >
                         {rowOptions.map(option => {
@@ -524,10 +533,8 @@ function Table({
               );
             })}
           </tbody>
-          <footer></footer>
         </table>
       </div>
-
       {renderPagination()}
     </>
   );
