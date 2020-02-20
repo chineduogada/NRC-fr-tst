@@ -15,7 +15,7 @@ import httpService from '../../services/httpService';
 import { mapEmployeeStatus } from '../../services/employeeService';
 import { GetImage } from '../../services/employeeService';
 import classes from './Employee.module.scss';
-import { Spinner } from 'react-bootstrap';
+import { Spinner } from '../../components/Loader/Loader';
 import { toast } from 'react-toastify';
 
 export default class Employee extends Component {
@@ -188,16 +188,16 @@ export default class Employee extends Component {
           <div className={classes.Profile}>
             <div className={classes.ImgWrapper}>
               {this.state.uploading || justFetchingImage ? (
-                <Spinner size='bg' animation='border' />
+                <Spinner />
               ) : (
                 <GetImage imageSource={employeeImageSrc} />
               )}
               <div className={classes.UploadBox}>
-                <label htmlFor='upload-input'>change image</label>
+                <label htmlFor="upload-input">change image</label>
                 <input
-                  id='upload-input'
-                  type='file'
-                  accept='jpeg, jpg, png, svg'
+                  id="upload-input"
+                  type="file"
+                  accept="jpeg, jpg, png, svg"
                   hidden
                   onChange={this.handleImageChange}
                 />
@@ -227,7 +227,7 @@ export default class Employee extends Component {
           </div> */}
         </header>
 
-        <main className=''>
+        <main className="">
           <TabsComponent
             tabs={tabs}
             activeTab={activeTab}

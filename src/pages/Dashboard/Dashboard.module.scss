@@ -18,17 +18,40 @@
 }
 
 .BasicSummary,
+.PieChartSummary,
 .MainSummary {
   display: grid;
   grid-gap: 2em;
 }
 
 .MainSummary .Summary {
-  height: 500px;
+  min-height: 300px;
+  max-height: 500px;
+  width: 100%;
   background-color: #fff;
-  // box-shadow: 0 5px 7px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  padding: 1.5em 1em;
+  padding: 1.2em 1em;
+}
+
+.PieChartSummary {
+  width: 100%;
+  grid-gap: 1em;
+  margin: 3em 0 5em;
+}
+
+.PieChartSummary .Summary {
+  min-height: 300px;
+  max-height: 300px;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  padding: 1.2em 0.5em;
+  color: var(--basic-color);
+
+  h5 {
+    font-size: 0.85rem;
+  }
 }
 
 .MainSummary .Summary:first-child {
@@ -40,11 +63,20 @@
   .BasicSummary {
     grid-template-columns: repeat(2, 1fr);
   }
+  .PieChartSummary {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
-@media screen and (min-width: 768px) {
-  .MainSummary {
-    grid-template-columns: 3fr 1fr;
+@media screen and (min-width: 900px) {
+  .PieChartSummary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .PieChartSummary {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

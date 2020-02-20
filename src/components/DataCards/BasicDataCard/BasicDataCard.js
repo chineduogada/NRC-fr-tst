@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoIosLink } from 'react-icons/io';
 import { Link } from 'react-router-dom';
-import Loader from '../../../components/Loader/Loader';
+import Loader, { Spinner } from '../../../components/Loader/Loader';
 import classes from './BasicDataCard.module.scss';
 
 const BasicDataCard = ({ data, text, url, footer }) => {
@@ -14,7 +14,7 @@ const BasicDataCard = ({ data, text, url, footer }) => {
             <p>{text}</p>
           </>
         ) : (
-          <Loader />
+          <Spinner />
         )}
       </div>
       <div className={classes.Footer}>{footer}</div>

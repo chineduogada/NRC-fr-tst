@@ -6,6 +6,8 @@ import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import BasicDataCard from '../../components/DataCards/BasicDataCard/BasicDataCard';
 import SimpleLineChart from '../../components/Charts/SimpleLineChart/SimpleLineChart';
+import Distributions from './Distributions';
+import PieCharts from './PieCharts';
 import classes from './Dashboard.module.scss';
 
 export default class Dashboard extends Component {
@@ -49,7 +51,7 @@ export default class Dashboard extends Component {
   }
 
   fetchEmployees() {
-    return httpService.get('/employees');
+    return httpService.get('/summary/employees');
   }
 
   fetchDepartments() {
@@ -69,7 +71,7 @@ export default class Dashboard extends Component {
       const oldState = { ...this.state.basicSummary };
       const numEmployees = {
         ...oldState.numEmployees,
-        data: res.data.data.count
+        data: res.data.data.length
       };
 
       const basicSummary = { ...oldState, numEmployees };
@@ -141,8 +143,8 @@ export default class Dashboard extends Component {
     const { firstName, username } = getCredentials();
     return (
       <Section
-        id='post'
-        title='dashboard'
+        id="post"
+        title="dashboard"
         subTitle={`Welcome, ${firstName || username}`}
       >
         <Section>
@@ -169,18 +171,17 @@ export default class Dashboard extends Component {
             })}
           </div>
         </Section>
+
+        <Section>
+          <PieCharts />
+        </Section>
+
         <Section>
           <div className={classes.MainSummary}>
             <div className={classes.Summary}>
-              <header>
-                <h4>Data to review</h4>
-              </header>
-            </div>
-
-            <div className={classes.Summary}>
-              <header>
-                <h4>Recent activities</h4>
-              </header>
+              <div>
+                <Distributions />
+              </div>
             </div>
           </div>
         </Section>

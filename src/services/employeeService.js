@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import httpService from './httpService';
-import { Spinner } from 'react-bootstrap';
+import { Spinner } from '../components/Loader/Loader';
 import imgTemp from '../assets/images/generic-avatar.jpg';
 
 /**
@@ -65,12 +65,12 @@ export class GetImage extends Component {
     return (
       <>
         {imageSource === undefined ? (
-          <Spinner size='bg' animation='border' />
+          <Spinner />
         ) : (
           <img
             style={this.style}
             src={imageSource ? `${imageSource}` : imgTemp}
-            alt='employee'
+            alt="employee"
           />
         )}
       </>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Spinner } from 'react-bootstrap';
+import { Spinner } from '../Loader/Loader';
 import { IoIosCloseCircle, IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { GetImage } from '../../services/employeeService';
 import { truncate } from '../../helpers/strings';
@@ -136,7 +136,13 @@ export default class EmployeeVerifier extends Component {
           </p>
           <p className={classes.Department}>
             {truncate(
-              `${employeeJob ? employeeJob.department.description : null}`,
+              `${
+                employeeJob
+                  ? employeeJob.department
+                    ? employeeJob.department.description
+                    : null
+                  : null
+              }`,
               30
             )}{' '}
             (
@@ -144,7 +150,9 @@ export default class EmployeeVerifier extends Component {
               {truncate(
                 `${
                   employeeAppointment
-                    ? employeeAppointment.presentJobTitle.description
+                    ? employeeAppointment.presentJobTitle
+                      ? employeeAppointment.presentJobTitle.description
+                      : null
                     : null
                 }`
               )}
@@ -179,7 +187,9 @@ export default class EmployeeVerifier extends Component {
 
   renderProcessing() {
     return (
-      <Spinner className={classes.Processing} animation="border" size="sm" />
+      <span className={classes.Processing}>
+        <Spinner size={10} />
+      </span>
     );
   }
 

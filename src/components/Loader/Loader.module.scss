@@ -1,12 +1,11 @@
 .Loader {
-  display: grid;
+  display: flex;
   height: fit-content;
   width: fit-content;
-  // justify-content: center;
-  // align-items: center;
-  // flex-direction: columns;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   position: relative;
-  background-color: #fff;
 
   padding: 1.5rem;
   .Spinner {
@@ -17,10 +16,11 @@
   }
 }
 
+.LoaderContainer {
+  max-height: 30px;
+  overflow: hidden;
+}
+
 .LoaderMessage {
-  position: absolute;
-  bottom: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  line-height: 23;
+  font-size: 0.875rem;
 }

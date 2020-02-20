@@ -37,9 +37,11 @@
   .DataCardBody {
     height: 100%;
     color: var(--gray);
+    display: flex;
+    flex-direction: column;
 
     h4 {
-      font-size: 4rem;
+      font-size: rem;
       color: var(--basic-color);
     }
   }
@@ -55,7 +57,6 @@
   .DataCardTitle,
   .DataCardFooter {
     display: flex;
-    // flex-direction: column;
     align-items: center;
     margin: 1em;
   }
