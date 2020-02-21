@@ -37,6 +37,7 @@ import CareerReasonCodes from '../../pages/CareerReasonCodes/CareerReasonCodes';
 import IncidenceReasonCodes from '../../pages/IncidenceReasonCodes/IncidenceReasonCodes';
 import Skills from '../../pages/Skills/Skills';
 import Qualifications from '../../pages/Qualifications/Qualifications';
+import Reports from '../../pages/Reports/Reports';
 
 const Layout = ({ userLoggedIn, signOutHandler }) => {
   // set token
@@ -52,104 +53,105 @@ const Layout = ({ userLoggedIn, signOutHandler }) => {
       {/* Aside */}
       <Aside />
       {/* Main Section */}
-      <div className='d-flex flex-column' style={{ position: 'relative' }}>
+      <div className="d-flex flex-column" style={{ position: 'relative' }}>
         {/* Navigation */}
         <Nav triggerSignOut={signOutHandler} />
         <MainArea>
           {/* <AllEmployees /> */}
           <Switch>
-            <Route path='/' exact component={Dashboard} />
+            <Route path="/" exact component={Dashboard} />
             <Route
-              path='/training-schedules'
+              path="/training-schedules"
               exact
               component={AllTrainingSchedules}
             />
             <Route
-              path='/training-schedules/:id'
+              path="/training-schedules/:id"
               exact
               component={TrainingSchedule}
             />
             <Route
-              path='/training-records'
+              path="/training-records"
               exact
               component={AllTrainingRecords}
             />
             <Route
-              path='/training-records/:id'
+              path="/training-records/:id"
               exact
               component={TrainingRecord}
             />
-            <Route path='/employees/' exact component={AllEmployees} />
-            <Route path='/employees/new' exact component={AddNewEmployee} />
-            <Route path='/employees/:ippisNo' exact component={Employee} />
-            <Route path='/departments' component={Department} />
-            <Route path='/careers' exact component={AllCareers} />
-            <Route path='/careers/:id' exact component={Career} />
-            <Route path='/job-incidence' exact component={AllJobIncidence} />
-            <Route path='/job-incidence/:id' exact component={JobIncidence} />
-            <Route path='/successions' exact component={AllSuccessions} />
-            <Route path='/successions/:id' exact component={Succession} />
-            <Route path='/import' exact component={Import} />
-            <Route path='/users' exact component={Users} />
-            <Route path='/profile' exact component={UserProfile} />
-            <Route path='/settings' exact component={Settings} />
+            <Route path="/employees/" exact component={AllEmployees} />
+            <Route path="/employees/new" exact component={AddNewEmployee} />
+            <Route path="/employees/:ippisNo" exact component={Employee} />
+            <Route path="/departments" component={Department} />
+            <Route path="/careers" exact component={AllCareers} />
+            <Route path="/careers/:id" exact component={Career} />
+            <Route path="/job-incidence" exact component={AllJobIncidence} />
+            <Route path="/job-incidence/:id" exact component={JobIncidence} />
+            <Route path="/successions" exact component={AllSuccessions} />
+            <Route path="/successions/:id" exact component={Succession} />
+            <Route path="/import" exact component={Import} />
+            <Route path="/users" exact component={Users} />
+            <Route path="/profile" exact component={UserProfile} />
+            <Route path="/settings" exact component={Settings} />
             <Route
-              path='/settings/static-models'
+              path="/settings/static-models"
               exact
               component={StaticModels}
             />
             <Route
-              path='/settings/static-models/districts'
+              path="/settings/static-models/districts"
               exact
               component={Districts}
             />
-            <Route path='/settings/static-models/pfa' exact component={PFA} />
+            <Route path="/settings/static-models/pfa" exact component={PFA} />
             <Route
-              path='/settings/static-models/job-titles'
+              path="/settings/static-models/job-titles"
               exact
               component={JobTitles}
             />
             <Route
-              path='/settings/static-models/job-types'
+              path="/settings/static-models/job-types"
               exact
               component={JobTypes}
             />
             <Route
-              path='/settings/static-models/training-types'
+              path="/settings/static-models/training-types"
               exact
               component={TrainingTypes}
             />
             <Route
-              path='/settings/static-models/sections'
+              path="/settings/static-models/sections"
               exact
               component={Sections}
             />
             <Route
-              path='/settings/static-models/career-reason-codes'
+              path="/settings/static-models/career-reason-codes"
               exact
               component={CareerReasonCodes}
             />
             <Route
-              path='/settings/static-models/incidence-reason-codes'
+              path="/settings/static-models/incidence-reason-codes"
               exact
               component={IncidenceReasonCodes}
             />
             <Route
-              path='/settings/static-models/skills'
+              path="/settings/static-models/skills"
               exact
               component={Skills}
             />
             <Route
-              path='/settings/static-models/qualifications'
+              path="/settings/static-models/qualifications"
               exact
               component={Qualifications}
             />
+            <Route path="/reports" exact component={Reports} />
           </Switch>
         </MainArea>
       </div>
     </div>
   );
-  return userLoggedIn ? renderLayout() : <Redirect to='/' />;
+  return userLoggedIn ? renderLayout() : <Redirect to="/" />;
 };
 
 export default Layout;

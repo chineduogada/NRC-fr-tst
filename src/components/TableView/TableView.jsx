@@ -81,7 +81,9 @@ class TableView extends Component {
                 {message ? <PageNotice>{message}</PageNotice> : null}
               </div>
               <div className="buttons">
-                <Button label="add new" fill onClick={addNewButtonHandler} />
+                {addNewButtonHandler ? (
+                  <Button label="add new" fill onClick={addNewButtonHandler} />
+                ) : null}
                 <Button label="export" plain onClick={this.handleExport} />
               </div>
             </div>
