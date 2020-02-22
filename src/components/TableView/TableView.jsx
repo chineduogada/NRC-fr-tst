@@ -71,24 +71,24 @@ class TableView extends Component {
 
     return (
       <section className={classes.TableView}>
-        {title ? (
-          <header>
-            <div className="d-flex justify-content-between">
-              <div>
+        <header>
+          <div className="d-flex justify-content-between">
+            <div>
+              {title ? (
                 <div className="title text-capitalize">
                   <h2 className={classes.TableTitle}>{title}</h2>
                 </div>
-                {message ? <PageNotice>{message}</PageNotice> : null}
-              </div>
-              <div className="buttons">
-                {addNewButtonHandler ? (
-                  <Button label="add new" fill onClick={addNewButtonHandler} />
-                ) : null}
-                <Button label="export" plain onClick={this.handleExport} />
-              </div>
+              ) : null}
+              {message ? <PageNotice>{message}</PageNotice> : null}
             </div>
-          </header>
-        ) : null}
+            <div className="buttons">
+              {addNewButtonHandler ? (
+                <Button label="add new" fill onClick={addNewButtonHandler} />
+              ) : null}
+              <Button label="export" plain onClick={this.handleExport} />
+            </div>
+          </div>
+        </header>
 
         <ReactTable
           onFilter={this.handleFilter}

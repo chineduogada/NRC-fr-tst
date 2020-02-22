@@ -32,15 +32,15 @@ export default class Distributions extends PureComponent {
         name: 'job title',
         url: '/summary/employee-appointments?groupBy=presentPositionJobTitleId',
         data: [],
-        targetKeyInRow: 'jobTitleId',
-        targetKeyInOption: 'description'
+        targetKeyInRow: 'presentPositionJobTitleId',
+        targetKeyInOption: 'code'
       },
 
       jobTypes: {
         name: 'job type',
         url: '/summary/employee-appointments?groupBy=presentPositionJobTypeId',
         data: [],
-        targetKeyInRow: 'jobTypeId',
+        targetKeyInRow: 'presentPositionJobTypeId',
         targetKeyInOption: 'type'
       },
 
@@ -171,9 +171,11 @@ export default class Distributions extends PureComponent {
   // static jsfiddleUrl = 'https://jsfiddle.net/alidingling/30763kr7/';
 
   async handleChange({ currentTarget }) {
-    await this.setState({ activeSummary: currentTarget.value });
+    if (currentTarget.value) {
+      await this.setState({ activeSummary: currentTarget.value });
 
-    this.fetchActiveSummary();
+      this.fetchActiveSummary();
+    }
   }
 
   render() {
@@ -197,7 +199,11 @@ export default class Distributions extends PureComponent {
           Employees grouped by {name}
         </h4>
         <div style={{ width: '100%', maxWidth: '200px' }}>
-          <Select options={optionsToSelect} onChange={this.handleChange} />
+          <Select
+            options={optionsToSelect}
+            onChange={this.handleChange}
+            selectedOption={activeSummary}
+          />
         </div>
         {isFetchingData ? (
           <div

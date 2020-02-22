@@ -29,73 +29,73 @@ const Aside = props => (
     <div className={classes.Menu}>
       <ul>
         <li className={classes.Active}>
-          <Link to='/'>
-            <span className='icon'>
-              <IoMdHome className='icon' />
+          <Link to="/">
+            <span className="icon">
+              <IoMdHome className="icon" />
             </span>
             <span>Dashboard</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/employees'>
-            <span className='icon'>
-              <IoIosMan className='icon' />
+          <Link to="/employees">
+            <span className="icon">
+              <IoIosMan className="icon" />
             </span>
             <span>Employees</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/departments'>
-            <span className='icon'>
-              <IoIosContacts className='icon' />
+          <Link to="/departments">
+            <span className="icon">
+              <IoIosContacts className="icon" />
             </span>
-            <span>department</span>
+            <span>departments</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/training-schedules'>
-            <span className='icon'>
-              <IoIosCalendar className='icon' />
+          <Link to="/training-schedules">
+            <span className="icon">
+              <IoIosCalendar className="icon" />
             </span>
             <span>Training Schedules</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/training-records'>
-            <span className='icon'>
-              <MdBook className='icon' />
+          <Link to="/training-records">
+            <span className="icon">
+              <MdBook className="icon" />
             </span>
             <span>Training Records</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/successions'>
-            <span className='icon'>
-              <IoMdMedal className='icon' />
+          <Link to="/successions">
+            <span className="icon">
+              <IoMdMedal className="icon" />
             </span>
             <span>Successions</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/careers'>
-            <span className='icon'>
-              <IoIosSchool className='icon' />
+          <Link to="/careers">
+            <span className="icon">
+              <IoIosSchool className="icon" />
             </span>
             <span>Careers</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/job-incidence'>
-            <span className='icon'>
-              <MdFlag className='icon' />
+          <Link to="/job-incidence">
+            <span className="icon">
+              <MdFlag className="icon" />
             </span>
             <span>Job Incedence</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/reports'>
-            <span className='icon'>
-              <MdPieChart className='icon' />
+          <Link to="/reports">
+            <span className="icon">
+              <MdPieChart className="icon" />
             </span>
             <span>Reports</span>
           </Link>
@@ -113,17 +113,17 @@ const Aside = props => (
           </Link>
         </li> */}
         <li className={classes}>
-          <Link to='/reports'>
-            <span className='icon'>
-              <MdHelp className='icon' />
+          <Link to="/support">
+            <span className="icon">
+              <MdHelp className="icon" />
             </span>
             <span>support</span>
           </Link>
         </li>
         <li className={classes}>
-          <Link to='/settings'>
-            <span className='icon'>
-              <MdSettings className='icon' />
+          <Link to="/settings">
+            <span className="icon">
+              <MdSettings className="icon" />
             </span>
             <span>settings</span>
           </Link>

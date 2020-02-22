@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import http from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
-// import ReactTable from '../../components/ReactTable/Table';
 import Table from '../../components/TableView/TableView';
+import formats from './formats';
+import Select from '../../components/Select/Select';
 
 class AllEmployees extends Component {
   constructor(props) {
@@ -11,32 +12,14 @@ class AllEmployees extends Component {
 
     this.state = {
       employees: [],
-      columns: [
-        { accessor: 'id', Header: 'IPPIS No' },
-        { accessor: 'name', Header: 'Name' },
-        { accessor: 'department', Header: 'Department' },
-        { accessor: 'district', Header: 'District' },
-        {
-          accessor: 'employeeStatus',
-          Header: 'Employee Status',
-          aggregate: 'count',
-          Aggregate: ({ cell: { value } }) => `${value} Statuses`
-        },
-        { accessor: 'pensionable', Header: 'Pensionable' },
-        { accessor: 'firstAppointmentDate', Header: 'First Appointment Date' },
-        {
-          accessor: 'presentAppointmentDate',
-          Header: 'Present Appointment Date'
-        },
-        { accessor: 'presentJobType', Header: 'Present Job Type' },
-        { accessor: 'presentJobTitle', Header: 'Present Job Title' }
-      ],
+      activeColumnFormat: 'formatA',
+      columns: formats,
       pageSize: 20,
       currentPage: 1
     };
 
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleAddNew = this.handleAddNew.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   async fetchFromServer() {
@@ -70,36 +53,22 @@ class AllEmployees extends Component {
     this.fetchFromServer();
   }
 
-  // mapToViewModel(employee) {
-  //   const { employeeJob, employeeAppointment } = employee;
-  //   return {
-  //     id: employee.ippisNo,
-  //     name: `${employee.firstName} ${employee.lastName}`,
-  //     department: employeeJob ? employeeJob.department.description : null,
-  //     district: employeeJob ? employeeJob.district.siteName : null,
-  //     employeeStatus: employeeJob ? employeeJob.employeeStatus.status : null,
-  //     pensionable: employeeJob ? employeeJob.pensionable : null,
-  //     firstAppointmentDate: employeeAppointment
-  //       ? employeeAppointment.firstAppointmentDate
-  //       : null,
-  //     presentAppointmentDate: employeeAppointment
-  //       ? employeeAppointment.presentAppointmentDate
-  //       : null,
-  //     presentJobType: employeeAppointment
-  //       ? employeeAppointment.presentJobType.type
-  //       : null,
-  //     presentJobTitle: employeeAppointment
-  //       ? employeeAppointment.presentJobTitle.description
-  //       : null
-  //   };
-  // }
-
   mapToViewModel(employee) {
     const { employeeJob, employeeAppointment } = employee;
 
     const employeeInfo = {
       id: employee.ippisNo,
-      name: `${employee.firstName} ${employee.lastName}`
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      initials: employee.initials,
+      dateOfBirth: employee.dateOfBirth,
+      gender: employee.gender ? employee.gender.type : null,
+      gpz: employee.gpz ? employee.gpz.description : null,
+      state: employee.state ? employee.state.state : null,
+      senatorialDistrict: employee.senatorialDistrict
+        ? employee.senatorialDistrict.name
+        : null,
+      lga: employee.lga ? employee.lga.lga : null
     };
 
     if (employee.employeeJob) {
@@ -109,37 +78,28 @@ class AllEmployees extends Component {
       employeeInfo.district = employeeJob.district
         ? employeeJob.district.siteName
         : null;
-      employeeInfo.employeeStatus = employeeJob.employeeStatus
-        ? employeeJob.employeeStatus.description
+      employeeInfo.salaryStructure = employeeJob.salaryStructure
+        ? employeeJob.salaryStructure.description
         : null;
-      employeeInfo.pensionable = employeeJob.pensionable;
     }
 
     if (employee.employeeAppointment) {
-      employeeInfo.firstAppointmentDate =
-        employeeAppointment.firstAppointmentDate;
-      employeeInfo.presentAppointmentDate =
-        employeeAppointment.presentAppointmentDate;
-      employeeInfo.presentJobType = employeeAppointment.presentJobType
-        ? employeeAppointment.presentJobType.type
+      employeeInfo.resumptionDate = employeeAppointment.resumptionDate;
+      employeeInfo.expectedRetirementDate =
+        employeeAppointment.expectedRetirementDate;
+      employeeInfo.presentJobGrade = employeeAppointment.presentJobGrade
+        ? employeeAppointment.presentJobGrade.con
         : null;
       employeeInfo.presentJobTitle = employeeAppointment.presentJobTitle
         ? employeeAppointment.presentJobTitle.description
+        : null;
+      employeeInfo.presentPositionStep = employeeAppointment.presentPositionStep
+        ? employeeAppointment.presentPositionStep.step
         : null;
     }
 
     return employeeInfo;
   }
-
-  handleAddNew() {
-    this.props.history.push('/employees/new');
-  }
-
-  handlePageChange = page => {
-    if (page) {
-      this.setState({ currentPage: page });
-    }
-  };
 
   handleRowClick({ currentTarget, detail }) {
     if (detail > 1) {
@@ -147,17 +107,36 @@ class AllEmployees extends Component {
     }
   }
 
+  handleChange({ currentTarget }) {
+    if (currentTarget.value) {
+      this.setState({ activeColumnFormat: currentTarget.value });
+    }
+  }
+
   render() {
-    const { employees, currentPage, columns } = this.state;
+    const { employees, currentPage, columns, activeColumnFormat } = this.state;
+
+    console.log(employees);
+    const options = [
+      { id: 'formatA', name: 'format a' },
+      { id: 'formatB', name: 'format b' },
+      { id: 'formatC', name: 'format c' }
+    ];
 
     return (
-      <Section>
+      <Section title="reports">
+        <div className="format-controller">
+          <Select
+            label="switch format"
+            options={options}
+            onChange={this.handleChange}
+            selectedOption={activeColumnFormat}
+          />
+        </div>
         <Table
-          title="reports"
-          columns={columns}
+          columns={columns[activeColumnFormat]}
           data={employees}
           clickHandler={this.handleRowClick}
-          currentPage={currentPage}
         />
       </Section>
     );
