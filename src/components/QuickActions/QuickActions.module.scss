@@ -1,0 +1,85 @@
+.QuickActions {
+  position: fixed;
+  bottom: 3%;
+  right: 3%;
+  z-index: 2;
+
+  .Toggler,
+  .Actions {
+    transition: all 0.2s ease;
+    box-shadow: -1px 3px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .Toggler {
+    background: var(--basic-color);
+    color: var(--inverse-text);
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(45deg);
+    cursor: pointer;
+
+    &.Active {
+      transform: rotate(0deg);
+    }
+  }
+
+  .Actions {
+    width: 90vw;
+    min-height: 300px;
+    max-width: 300px;
+    position: absolute;
+    bottom: 100%;
+    right: 0%;
+    z-index: 2;
+    background: var(--inverse-text);
+    transform: scale(0);
+    transform-origin: bottom right;
+    padding: 0.5em 0;
+    border-radius: 5px;
+
+    &.Active {
+      transform: scale(1);
+    }
+
+    ul {
+      width: 100%;
+      li {
+        font-size: 0.78rem;
+        width: 100%;
+
+        a {
+          display: inline-block;
+          color: var(--basic-color);
+          padding: 0.5em 1em;
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        span {
+          margin-right: 0.5em;
+          color: rgba(0, 0, 0, 0.8);
+        }
+
+        &:hover {
+          background: var(--basic-color);
+
+          a,
+          span {
+            color: var(--inverse-text);
+          }
+        }
+      }
+    }
+  }
+
+  .Header {
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-bottom: 1em;
+    padding: 1em;
+  }
+}

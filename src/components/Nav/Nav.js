@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
 import { MdApps } from 'react-icons/md';
 import getCredentials from '../../services/Credentials';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
 import './Nav.scss';
 import { GetImage } from '../../services/employeeService';
@@ -16,20 +16,15 @@ class Nav extends Component {
     };
   }
 
-  async componentDidMount() {
-    // const { employee } = await getUserProfileLocally();
-    // console.log('employee profile', employee);
-    // this.setState({ imageSource: employee.photo });
-  }
-
   render() {
     const { role, firstName, lastName, photo } = getCredentials();
-    // const { imageSource } = this.state;
+    const activeNavItem = this.props.location.pathname.split('/')[1];
+    console.log(activeNavItem);
 
     return (
       <nav id="main-nav">
         {/* Logo */}
-        {/* <Link to='/'><h1 id="logo">Teamwork</h1></Link> */}
+        {/* <Link to='/'><h1 id="logo">NRC HR</h1></Link> */}
         <div></div>
 
         {/* Main Menu */}
@@ -39,19 +34,25 @@ class Nav extends Component {
           {/* Menu Items */}
           <ul>
             <li>
-              <Link to="/" className="active"></Link>
+              <Link to="/" className=""></Link>
             </li>
             <li>
               {lastName} {firstName}
             </li>
             <li className="btn">
-              <Link to="/import">
+              <Link
+                to="/import"
+                className={`${activeNavItem === 'import' ? 'Active' : null}`}
+              >
                 <IoMdCloudUpload className="icon" size="15px" /> Import data
               </Link>
             </li>
             {role.type === 'admin' ? (
               <li>
-                <Link to="/users">
+                <Link
+                  to="/users"
+                  className={`${activeNavItem === 'users' ? 'Active' : null}`}
+                >
                   {<IoMdPerson className="icon" size="15px" />} All Users
                 </Link>
               </li>
@@ -83,4 +84,4 @@ class Nav extends Component {
   }
 }
 
-export default Nav;
+export default withRouter(Nav);

@@ -95,6 +95,9 @@ class AllCareers extends Form {
   }
 
   async componentDidMount() {
+    if (/\?new$/.test(this.props.location.search)) {
+      this.setState({ showDraw: true });
+    }
     await this.fetchData();
   }
 
@@ -237,8 +240,8 @@ class AllCareers extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title='careers'
-              message='Click a row to preview'
+              title="careers"
+              message="Click a row to preview"
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
@@ -246,7 +249,7 @@ class AllCareers extends Form {
             ></TableView>
 
             <Modal
-              title='record'
+              title="career record"
               openModal={this.state.showDraw}
               onClose={this.closeSideDraw}
             >

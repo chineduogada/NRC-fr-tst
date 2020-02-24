@@ -507,7 +507,7 @@ export default class ImportForm extends Form {
                 )}
               </>
             ) : null}
-            {this.renderButton('submit definition')}
+            {this.renderButton('update definition')}
           </InformationBlock>
         </form>
         {this.state.inProgress ? <LightBox /> : null}

@@ -117,7 +117,6 @@ class AllJobIncidence extends Form {
   }
 
   async componentDidMount() {
-    console.log(this.props);
     if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showDraw: true });
     }

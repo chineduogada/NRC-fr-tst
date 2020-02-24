@@ -40,7 +40,8 @@ nav .main-menu ul li a {
   padding: 0.5em;
 }
 
-nav .main-menu ul li:hover a {
+nav .main-menu ul li:hover a,
+.Active {
   // color: var(--basic-color);
   background: var(--basic-color-light);
   border-radius: 15px;
