@@ -1,0 +1,13 @@
+.Beneficiaries {
+  width: 100%;
+  max-width: 500px;
+}
+
+.Beneficiary {
+  display: flex;
+  justify-content: space-between;
+
+  span {
+    margin-right: 0.5em;
+  }
+}

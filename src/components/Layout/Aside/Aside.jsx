@@ -27,7 +27,7 @@ class Aside extends Component {
       <aside className={classes.Aside}>
         <div className={classes.Brand}>
           <h1>
-            <span>N R C</span> - HR
+            <span>P R M</span>
           </h1>
         </div>
 
@@ -51,18 +51,6 @@ class Aside extends Component {
                   <IoIosMan className="icon" />
                 </span>
                 <span>Employees</span>
-              </Link>
-            </li>
-            <li
-              className={`${
-                activeNavItem === 'departments' ? classes.Active : null
-              }`}
-            >
-              <Link to="/departments">
-                <span className="icon">
-                  <IoIosContacts className="icon" />
-                </span>
-                <span>departments</span>
               </Link>
             </li>
             <li

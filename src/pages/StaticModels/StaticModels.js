@@ -15,7 +15,7 @@ class StaticModels extends Component {
 
     this.models = [
       { name: 'districts', url: 'districts' },
-      // { name: 'sections', url: 'sections' },
+      { name: 'departments', url: 'departments' },
       { name: 'pension fund administrators', url: 'pfa' },
       { name: 'job types', url: 'job-types' },
       { name: 'job titles', url: 'job-titles' },
@@ -23,7 +23,7 @@ class StaticModels extends Component {
       { name: 'skills', url: 'skills' },
       { name: 'qualifications', url: 'qualifications' },
       { name: 'career reason codes', url: 'career-reason-codes' },
-      { name: 'incidence reason codes', url: 'incidence-reason-codes' },
+      { name: 'incidence reason codes', url: 'incidence-reason-codes' }
     ];
   }
 
@@ -56,10 +56,10 @@ class StaticModels extends Component {
           <span>
             <Link
               style={{ marginRight: '0.5em' }}
-              className='link secondary'
-              to='/settings'
+              className="link secondary"
+              to="/settings"
             >
-              <IoMdArrowRoundBack className='icon' />
+              <IoMdArrowRoundBack className="icon" />
             </Link>
             <span>static models</span>
           </span>

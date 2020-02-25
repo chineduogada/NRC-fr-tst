@@ -187,16 +187,22 @@ export default class AddNewEmployee extends Form {
     firstName: Joi.string(),
     lastName: Joi.string(),
     middleNames: Joi.string(),
-    initials: Joi.string().allow(''),
+    initials: Joi.string()
+      .allow('')
+      .optional(),
     nrcNo: Joi.string()
       .min(3)
       .max(8)
-      .required(),
+      .allow()
+      .optional(),
     dateOfBirth: Joi.string(),
     phoneNumber: Joi.number(),
     countryOfBirthId: Joi.number(),
     nationalityId: Joi.number(),
-    email: Joi.string().email(),
+    email: Joi.string()
+      .email()
+      .allow('')
+      .optional(),
     pfaNumber: Joi.number(),
     pfaId: Joi.number(),
     genderId: Joi.number(),
@@ -266,11 +272,8 @@ export default class AddNewEmployee extends Form {
   }
 
   handleNrcNoResponseRecieved(employees) {
-    if (
-      !employees.length &&
-      `${this.nrcNo.value}`.length >= 3 &&
-      `${this.nrcNo.value}`.length <= 8
-    ) {
+    if (!employees.length) {
+      this.state.errors['nrcNo'] = 'NRC number already exists';
       this.setState({ nrcNoVerified: true });
     } else {
       this.setState({ nrcNoVerified: false });
@@ -295,7 +298,7 @@ export default class AddNewEmployee extends Form {
   }
 
   render() {
-    const { nrcNoVerified, ippisNoVerified } = this.state;
+    const { nrcNoVerified, ippisNoVerified, formData } = this.state;
 
     return this.state.optionsFetched ? (
       <Section title="add new employee">
@@ -319,20 +322,25 @@ export default class AddNewEmployee extends Form {
                 'number'
               )}
             </EmployeeVerifier>
-
-            <EmployeeVerifier
-              queryParam="nrcNo"
-              preventDefault
-              checkOnResponseRecieved={employees => !employees.length}
-              onResponseReceived={this.handleNrcNoResponseRecieved}
-            >
-              {this.renderInput('NRC number', 'nrcNo', null, null, 'number')}
-            </EmployeeVerifier>
           </InformationBlock>
 
-          {ippisNoVerified && nrcNoVerified ? (
+          {ippisNoVerified ? (
             <>
               <InformationBlock title="basic information">
+                <EmployeeVerifier
+                  queryParam="nrcNo"
+                  preventDefault
+                  checkOnResponseRecieved={employees => !employees.length}
+                  onResponseReceived={this.handleNrcNoResponseRecieved}
+                >
+                  {this.renderInput(
+                    'NRC number',
+                    'nrcNo',
+                    null,
+                    null,
+                    'number'
+                  )}
+                </EmployeeVerifier>
                 {this.renderInput('first Name', 'firstName')}
                 {this.renderInput('last Name', 'lastName')}
                 {this.renderInput('middle Names', 'middleNames')}

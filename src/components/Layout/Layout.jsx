@@ -90,7 +90,6 @@ class Layout extends Component {
               <Route path="/employees/" exact component={AllEmployees} />
               <Route path="/employees/new" exact component={AddNewEmployee} />
               <Route path="/employees/:ippisNo" exact component={Employee} />
-              <Route path="/departments" component={Department} />
               <Route path="/careers" exact component={AllCareers} />
               <Route path="/careers/:id" exact component={Career} />
               <Route path="/job-incidence" exact component={AllJobIncidence} />
@@ -110,6 +109,11 @@ class Layout extends Component {
                 path="/settings/static-models/districts"
                 exact
                 component={Districts}
+              />
+              <Route
+                path="/settings/static-models/departments"
+                exact
+                component={Department}
               />
               <Route path="/settings/static-models/pfa" exact component={PFA} />
               <Route

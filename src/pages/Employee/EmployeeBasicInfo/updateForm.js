@@ -47,26 +47,32 @@ export default class UpdateForm extends Form {
       firstName: Joi.string(),
       lastName: Joi.string(),
       middleNames: Joi.string(),
-      initials: Joi.string(),
-      nrcNo: Joi.number(),
+      initials: Joi.string().allow(''),
+      nrcNo: Joi.number()
+        .allow('')
+        .optional(),
       dateOfBirth: Joi.string(),
       phoneNumber: Joi.number(),
-      countryOfBirthId: Joi.number(),
-      nationalityId: Joi.number(),
-      email: Joi.string().email(),
+      countryOfBirthId: Joi.required(),
+      nationalityId: Joi.required(),
+      email: Joi.string()
+        .allow('')
+        .optional(),
       pfaNumber: Joi.number(),
       photo: Joi.string()
         .allow('')
         .optional(),
-      pfaId: Joi.number(),
-      genderId: Joi.number(),
-      bloodGroupId: Joi.number(),
-      gpzId: Joi.number(),
-      lgaId: Joi.number(),
-      maritalStatusId: Joi.number(),
-      senatorialDistrictId: Joi.number(),
-      stateId: Joi.number(),
+      pfaId: Joi.required(),
+      genderId: Joi.required(),
+      bloodGroupId: Joi.required(),
+      gpzId: Joi.required(),
+      lgaId: Joi.required(),
+      maritalStatusId: Joi.required(),
+      senatorialDistrictId: Joi.required(),
+      stateId: Joi.required(),
       professional: Joi.string()
+        .allow('')
+        .optional()
     };
   }
 
@@ -176,8 +182,7 @@ export default class UpdateForm extends Form {
               null,
               formData.nrcNo || '',
               'number',
-              null,
-              true
+              null
             )}
             {this.renderInput(
               'date of birth',
@@ -237,10 +242,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'gender',
               'genderId',
-              [
-                { id: 1, name: 'male' },
-                { id: 2, name: 'female' }
-              ],
+              this.state.options.genders,
               null,
               null,
               formData.genderId || ''

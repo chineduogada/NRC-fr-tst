@@ -12,7 +12,8 @@ class Auth extends Component {
     // state
     this.state = {
       userLoggedIn: false,
-      errorFeedback: ''
+      errorFeedback: '',
+      isLoggingIn: false
     };
 
     // bindings
@@ -64,6 +65,8 @@ class Auth extends Component {
   async loginHandler(event) {
     event.preventDefault();
 
+    this.setState({ isLoggingIn: true });
+
     // Attempt Login
     try {
       const res = await axios.post('/auth', this.loginDetails);
@@ -85,8 +88,11 @@ class Auth extends Component {
         // update user sign in state and reset the errorFeedback
         this.setState({
           userLoggedIn: true,
+          isLoggingIn: false,
           errorFeedback: ''
         });
+      } else {
+        this.setState({ isLoggingIn: true });
       }
     } catch ({ response }) {
       this.setState({ errorFeedback: response.data.error });
@@ -104,13 +110,13 @@ class Auth extends Component {
 
   // returns the Login Screen
   renderLoginScreen() {
-    console.log('sdfss');
     return (
       <Login
         errorFeedback={this.state.errorFeedback}
         changed={event => this.getInputValueHandler(event, this.loginDetails)}
         submitted={this.loginHandler}
         toggleScreen={this.toggleLoginAndSignUpScreen}
+        isLoggingIn={this.state.isLoggingIn}
       />
     );
   }

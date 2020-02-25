@@ -1,6 +1,7 @@
 import React from 'react';
 import InputField from '../../../components/InputField/InputField';
 import Button from '../../../components/Button/Button';
+import { Spinner } from '../../../components/Loader/Loader';
 import classes from './Login.module.scss';
 
 const login = props => {
@@ -15,7 +16,7 @@ const login = props => {
         <div className={classes.Container}>
           <div className={classes.Brand}>
             <h1>
-              <span>NRC</span> - HR
+              <span>P R M</span>
             </h1>
           </div>
 
@@ -35,7 +36,7 @@ const login = props => {
               name="password *"
             />
             <Button label="sign in" fullwidth fill>
-              sign in
+              sign in {props.isLoggingIn ? <Spinner size="1em" /> : null}
             </Button>
 
             {/* <span className={classes.Footer} onClick={props.toggleScreen}>Don't have an account?</span> */}

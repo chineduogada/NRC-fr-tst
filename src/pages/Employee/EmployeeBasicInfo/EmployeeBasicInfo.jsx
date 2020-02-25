@@ -17,19 +17,15 @@ export default class EmployeeBasicInfo extends Component {
       originalData: {},
 
       options: {
-        departmentOptions: [],
-        districtOptions: [],
         bloodGroupOptions: [],
-        jobTypeOptions: [],
-        jobTitleOptions: [],
-        jobGradeOptions: [],
         pfaOptions: [],
         gpzOptions: [],
         maritalStatusOptions: [],
         senatorialDistrictOptions: [],
         stateOptions: [],
         lgaOptions: [],
-        countryOptions: []
+        countryOptions: [],
+        genders: []
       },
 
       showForm: false
@@ -48,7 +44,8 @@ export default class EmployeeBasicInfo extends Component {
       senatorialDistricts,
       states,
       lga,
-      countries
+      countries,
+      genders
     ] = await httpService.all([
       httpService.get('/blood-groups'),
       httpService.get('/pfa?statusId=1'),
@@ -57,7 +54,8 @@ export default class EmployeeBasicInfo extends Component {
       httpService.get('/senatorial-districts'),
       httpService.get('/states'),
       httpService.get('/lga'),
-      httpService.get('/countries')
+      httpService.get('/countries'),
+      httpService.get('/genders')
     ]);
 
     if (bloodGroups) {
@@ -72,7 +70,8 @@ export default class EmployeeBasicInfo extends Component {
           'name'
         ),
         stateOptions: nameMapper(states.data.data, 'state'),
-        countryOptions: nameMapper(countries.data.data, 'country')
+        countryOptions: nameMapper(countries.data.data, 'country'),
+        genders: nameMapper(genders.data.data, 'type')
       };
 
       this.setState({

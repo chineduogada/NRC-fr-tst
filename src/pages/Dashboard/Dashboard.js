@@ -25,7 +25,7 @@ export default class Dashboard extends Component {
           data: null,
           text: 'Departments',
           url: '/departments',
-          addNew: '/departments?new'
+          addNew: '/settings/static-models/departments?new'
         },
         numTrainingSchedules: {
           data: null,
