@@ -16,11 +16,10 @@ const getCredentials = () => {
   return curUser && curUser;
 };
 
-
 export const getPermissions = () => {
   const { role } = getCredentials();
-  return role
-}
+  return role;
+};
 
 export const storeUserProfile = async () => {
   const res = await axios.get('/users');
@@ -39,6 +38,17 @@ export const getUserProfileLocally = () => {
   const profile = JSON.parse(localStorage.getItem('user'));
   console.log(profile);
   return profile || {};
+};
+
+export const forceLogout = () => {
+  localStorage.removeItem('curUser');
+  if (
+    window.location &&
+    window.location !== undefined &&
+    window.location !== null
+  ) {
+    window.location.reload();
+  }
 };
 
 export default getCredentials;

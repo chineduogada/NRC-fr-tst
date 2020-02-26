@@ -36,16 +36,16 @@ class HTTP {
           toast.error('an unexpected error ocurred.');
         }
       } else {
-        if (error.response.status === 401) {
-          localStorage.removeItem('curUser');
-          if (
-            this.history &&
-            this.history !== undefined &&
-            this.history !== null
-          ) {
-            this.history.go();
-          }
-        }
+        // if (error.response.status === 401) {
+        //   localStorage.removeItem('curUser');
+        //   if (
+        //     window.location &&
+        //     window.location !== undefined &&
+        //     window.location !== null
+        //   ) {
+        //     window.location.reload();
+        //   }
+        // }
         console.log('Logging the error', error);
         toast.error(error.response.data.message);
       }

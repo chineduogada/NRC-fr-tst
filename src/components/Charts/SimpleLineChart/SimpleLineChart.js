@@ -54,7 +54,7 @@ export default class SimpleLineChart extends PureComponent {
     return (
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
-          data={data}
+          data={this.props.data || []}
           margin={{
             top: 5,
             right: 30,
@@ -73,7 +73,7 @@ export default class SimpleLineChart extends PureComponent {
             stroke="#8884d8"
             activeDot={{ r: 8 }}
           />
-          <Line type="monotone" dataKey="retired" stroke="#82ca9d" />
+          <Line type="monotone" dataKey="ex-employee" stroke="#82ca9d" />
           <Line type="monotone" dataKey="suspended" stroke="#d81e5b" />
         </LineChart>
       </ResponsiveContainer>

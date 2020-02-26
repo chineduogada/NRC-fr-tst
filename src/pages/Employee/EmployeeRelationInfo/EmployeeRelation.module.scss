@@ -9,5 +9,24 @@
 
   span {
     margin-right: 0.5em;
+    font-size: 0.8rem;
+  }
+}
+
+.Actions {
+  display: flex;
+
+  &.Right {
+    justify-content: flex-end;
+  }
+}
+
+.DisplayInfo {
+  display: flex;
+  flex-wrap: wrap;
+  p {
+    font-weight: bold;
+    text-transform: capitalize;
+    margin-right: 1em;
   }
 }

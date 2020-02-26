@@ -23,8 +23,6 @@ class UserProfile extends Component {
     console.log(props);
 
     this.state = {
-      users: [],
-
       user: null,
 
       showForm: false,
@@ -52,6 +50,8 @@ class UserProfile extends Component {
   }
 
   async componentDidMount() {
+    console.log(getCredentials());
+    this.setState({ user: getCredentials() });
     this.fetchUserViaAPI();
   }
 
@@ -74,13 +74,12 @@ class UserProfile extends Component {
   }
 
   render() {
-    const { users, columns } = this.state;
     const { firstName, lastName, role, photo } = getCredentials();
 
     return (
       <React.Fragment>
-        {this.state.users ? (
-          <Section title=''>
+        {this.state.user ? (
+          <Section title="">
             <div className={classes.UserProfile}>
               <div className={classes.Header}>
                 <div className={classes.UserProfilePic}>
@@ -94,11 +93,11 @@ class UserProfile extends Component {
                 </div>
               </div>
               <div className={classes.ChangePassword}>
-                <UserForm />
+                <UserForm user={this.state.user} />
               </div>
             </div>
             <Modal
-              title=''
+              title=""
               openModal={this.state.showForm}
               onClose={this.closeSideDraw}
             >
