@@ -145,8 +145,13 @@ export default class EmployeeRelationInfo extends Form {
   async handleRowClick(event) {
     const { currentTarget } = event;
 
-    if (event.detail > 1) {
+    if (!Number(currentTarget.id, 10)) return;
+
+    if (event.detail === 1) {
       this.setState({ addRelation: true });
+      await this.resetActiveRelationState();
+      await this.resetForm();
+      await this.setState({ beneficiaryPercentages: [] });
       await this.setActiveRelation(Number(currentTarget.id, 10));
       await this.fillFormWithActiveRelation();
       await this.setBeneficiaryPercentages();
@@ -180,7 +185,10 @@ export default class EmployeeRelationInfo extends Form {
   }
 
   handleBeneficiaryStatusChange({ beneficiary }) {
-    if (beneficiary.value.toLowerCase() !== 'y') {
+    if (
+      beneficiary.value.toLowerCase() !== 'y' &&
+      !this.state.activeRelation.id
+    ) {
       this.resetBeneficiaryPercentages();
     }
   }
@@ -188,18 +196,16 @@ export default class EmployeeRelationInfo extends Form {
   resetBeneficiaryPercentages() {
     setTimeout(() => {
       this.resetPercentageOfCurrentRelation();
-      this.calculateTotalPercentage();
       this.setBeneficiaryPercentages();
+      this.calculateTotalPercentage();
     }, 100);
   }
 
   resetPercentageOfCurrentRelation() {
-    const { activeRelation } = this.state;
+    // const { activeRelation } = this.state;
     const formData = { ...this.state.formData };
 
-    formData.beneficiaryPercentage = activeRelation.id
-      ? activeRelation.beneficiaryPercentage
-      : '';
+    formData.beneficiaryPercentage = '';
 
     this.setState({ formData });
   }
@@ -264,7 +270,6 @@ export default class EmployeeRelationInfo extends Form {
         // this.resetForm();
         // this.Form.reset();
         this.fetchRelations();
-        this.resetActiveRelationState();
         toast.success('relation successfully added');
         // this.setState({ addRelation: false });
       } else {
@@ -379,8 +384,9 @@ export default class EmployeeRelationInfo extends Form {
 
     const beneficiaryPercentages = this.state.relations.filter(
       relation =>
-        relation.beneficiary.toLowerCase() === 'y' &&
-        relation.id !== activeRelation.id
+        (relation.beneficiaryPercentage && relation.id !== activeRelation.id) ||
+        (relation.beneficiary.toLowerCase() === 'y' &&
+          relation.id !== activeRelation.id)
     );
 
     this.setState({ beneficiaryPercentages });
@@ -422,7 +428,7 @@ export default class EmployeeRelationInfo extends Form {
 
   handleBeneficairyPercentChange({ currentTarget }) {
     const oldState = [...this.state.beneficiaryPercentages];
-    const { id, dataset, value } = currentTarget;
+    const { dataset, value } = currentTarget;
 
     const updatedBeneficiaryPercentages = oldState.map(beneficiary => {
       if (beneficiary.id === Number(dataset.id, 10)) {
@@ -436,29 +442,38 @@ export default class EmployeeRelationInfo extends Form {
   }
 
   renderBeneficiaries() {
+    console.log(this.state.beneficiaryPercentages);
+
     return this.state.beneficiaryPercentages.map((relation, idx) => {
-      if (relation.beneficiary.toLowerCase() === 'y') {
-        return (
-          <div key={idx} className={`d-flex ${classes.Beneficiary}`}>
-            <span>{`${relation.surname} ${relation.otherNames} (${relation.serialCode})`}</span>
-            <Input
-              data-id={relation.id}
-              defaultValue={relation.beneficiaryPercentage}
-              onChange={this.handleBeneficairyPercentChange}
-              onKeyUp={this.calculateTotalPercentage}
-            />
-          </div>
-        );
-      }
+      return (
+        <div key={idx} className={`d-flex ${classes.Beneficiary}`}>
+          <span>{`${relation.surname} ${relation.otherNames} (${relation.serialCode})`}</span>
+          <Input
+            data-id={relation.id}
+            defaultValue={relation.beneficiaryPercentage}
+            onChange={this.handleBeneficairyPercentChange}
+            onKeyUp={this.calculateTotalPercentage}
+          />
+        </div>
+      );
     });
   }
 
   cannotMakeNoBeneficiary() {
     const { formData, activeRelation, totalPercentage } = this.state;
     return (
-      (activeRelation.id && formData.beneficiaryPercentage !== '') ||
-      Number(totalPercentage, 10) !== 100
+      (formData.beneficiary === 'Y' &&
+        activeRelation.id &&
+        formData.beneficiaryPercentage !== '' &&
+        Number(totalPercentage, 10) === 100) ||
+      (Number(totalPercentage, 10) !== 100 &&
+        formData.beneficiaryPercentage !== '') ||
+      (formData.beneficiaryPercentage !== '' &&
+        formData.beneficiary === 'Y' &&
+        Number(totalPercentage, 10) !== 100)
     );
+
+    // return false;
   }
 
   renderForm() {
@@ -562,7 +577,10 @@ export default class EmployeeRelationInfo extends Form {
 
           {this.state.formData.beneficiary === 'Y' ? (
             <div className={classes.Beneficiaries}>
-              <p>Beneficiary Percentages</p>
+              <p>
+                Beneficiary Percentages{' '}
+                {console.log(this.cannotMakeNoBeneficiary())}
+              </p>
 
               {this.renderBeneficiaries()}
 

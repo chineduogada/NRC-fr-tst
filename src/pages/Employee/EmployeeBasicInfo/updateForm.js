@@ -47,7 +47,9 @@ export default class UpdateForm extends Form {
       firstName: Joi.string(),
       lastName: Joi.string(),
       middleNames: Joi.string(),
-      initials: Joi.string().allow(''),
+      initials: Joi.string()
+        .allow('')
+        .optional(),
       nrcNo: Joi.number()
         .allow('')
         .optional(),
