@@ -6,9 +6,9 @@ import Section from '../../hoc/Section/Section';
 import Table from '../../components/TableView/TableView';
 import GlobalFilters from '../../components/GlobalFilters/GlobalFilters';
 import LightBox from '../../components/LightBox/LightBox';
-import Select from '../../components/Select/Select';
+import Input from '../../components/Input/Input';
 import formats from './formats';
-import classes from './Reports.module.scss';
+import classes from './EmployeeGrid.module.scss';
 
 class Reports extends Component {
   constructor(props) {
@@ -180,14 +180,13 @@ class Reports extends Component {
         };
 
     return (
-      <Section title="reports">
+      <Section>
         <div className={`d-flex ${classes.ReportFilters}`}>
           <div className="format-controller">
-            <Select
-              label="switch format"
+            <Input
               options={options}
               onChange={this.handleChange}
-              selectedOption={activeColumnFormat}
+              placeholder="search by name"
             />
           </div>
           <div className="icon" onClick={this.toggleFilterDraw}>

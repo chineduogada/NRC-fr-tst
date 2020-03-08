@@ -38,6 +38,7 @@ import IncidenceReasonCodes from '../../pages/IncidenceReasonCodes/IncidenceReas
 import Skills from '../../pages/Skills/Skills';
 import Qualifications from '../../pages/Qualifications/Qualifications';
 import Reports from '../../pages/Reports/Reports';
+import EmployeeGrid from '../../pages/EmployeeGrid/EmployeeGrid';
 
 class Layout extends Component {
   constructor(props) {
@@ -157,6 +158,7 @@ class Layout extends Component {
                 component={Qualifications}
               />
               <Route path="/reports" exact component={Reports} />
+              <Route path="/search" exact component={EmployeeGrid} />
             </Switch>
           </MainArea>
         </div>

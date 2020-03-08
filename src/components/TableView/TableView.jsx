@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { CSVLink } from 'react-csv';
 import { ExportToCsv } from 'export-to-csv';
 import classes from './TableView.module.scss';
 import Button from '../Button/Button';
 import ReactTable from '../ReactTable/Table';
 import PageNotice from '../PageNotice/PageNotice';
 import slugify from '../../helpers/slugify';
+import { toast } from 'react-toastify';
 
 class TableView extends Component {
   constructor(props) {
     super(props);
     const { columns, data } = this.props;
-    this.data = data;
+    this.data = data || [];
     this.headers = this.mapHeadersForDownloads(columns);
     this.handleFilter = this.handleFilter.bind(this);
     this.handleExport = this.handleExport.bind(this);
@@ -28,7 +28,7 @@ class TableView extends Component {
   }
 
   async handleFilter(rows) {
-    this.data = this.prepareFilteredRowsFromReactTable(rows);
+    this.data = this.prepareFilteredRowsFromReactTable(rows) || [];
   }
 
   prepareFilteredRowsFromReactTable(rows) {
@@ -44,14 +44,18 @@ class TableView extends Component {
   }
 
   handleExport() {
-    const csvExporter = new ExportToCsv({
-      showLabels: true,
-      showTitle: this.getFileName(),
-      filename: this.getFileName(),
-      headers: this.headers
-    });
+    if (this.data.length) {
+      const csvExporter = new ExportToCsv({
+        showLabels: true,
+        showTitle: this.getFileName(),
+        filename: this.getFileName(),
+        headers: this.headers
+      });
 
-    csvExporter.generateCsv(this.data);
+      csvExporter.generateCsv(this.data);
+    } else {
+      toast.info('Unable to export empty datasets');
+    }
   }
 
   render() {

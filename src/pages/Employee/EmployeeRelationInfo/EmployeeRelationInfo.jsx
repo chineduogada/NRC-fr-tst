@@ -295,11 +295,11 @@ export default class EmployeeRelationInfo extends Form {
         this.resetForm();
         this.Form.reset();
         this.Form.querySelectorAll('select')[0].focus();
-        const relations = [
-          this.embedRelationshipType(formData),
-          ...this.state.relations
-        ];
-        this.setState({ relations });
+        // const relations = [
+        //   this.embedRelationshipType(formData),
+        //   ...this.state.relations
+        // ];
+        // this.setState({ relations });
         this.fetchRelations();
       } else {
         this.stopProcessing();
@@ -322,8 +322,11 @@ export default class EmployeeRelationInfo extends Form {
     const res = await httpService.get('/relationship-types');
 
     if (res) {
+      console.log(res.data.data);
       const options = {};
       options.relationshipTypes = nameMapper(res.data.data, 'type');
+
+      console.log(options);
       this.setState({ options });
     }
   }
@@ -335,6 +338,8 @@ export default class EmployeeRelationInfo extends Form {
     );
 
     if (res) {
+      console.log(res.data.data);
+
       res.data.data.forEach(relation => {
         relations.push(this.mapToViewModel(relation));
       });

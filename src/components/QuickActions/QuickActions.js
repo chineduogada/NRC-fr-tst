@@ -16,7 +16,7 @@ export default class QuickActions extends Component {
       { title: 'Schedule a training', url: '/training-schedules?new' },
       { title: 'Add a career record', url: '/careers?new' },
       { title: 'Record incidence', url: '/job-incidence?new' },
-      // { title: 'View employee grid', url: '/search' },
+      { title: 'View employee grid', url: '/search' },
       { title: 'Update static models', url: '/settings/static-models' }
     ];
 
@@ -33,7 +33,7 @@ export default class QuickActions extends Component {
 
   actionTemplate(action, key) {
     return (
-      <li key={key} className="btny" onClick={this.handleHideActions}>
+      <li key={key} onClick={this.handleHideActions}>
         <Link to={action.url} className="d-flex">
           <span>{action.title}</span>
           <IoIosArrowRoundForward size="1rem" />

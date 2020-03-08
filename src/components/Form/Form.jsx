@@ -215,6 +215,13 @@ export default class Form extends Component {
         id={name}
         value={`${formData[name]}`}
         getSelectObjectOnChange={reactSelectComponent => {
+          const value = reactSelectComponent.currentTarget.value;
+          reactSelectComponent.currentTarget.value = isMulti
+            ? value
+              ? value
+              : []
+            : value;
+
           this.handleChange(reactSelectComponent);
           if (callback) {
             const MutatedThis = {

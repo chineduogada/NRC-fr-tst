@@ -41,6 +41,7 @@
 html {
   // --basic-color: #067236;
   --basic-color: #058f43;
+  --core-bg-color: #f8f8f8;
   --sky-blue: #bdfffd;
   --dogwood-rose: #d81e5b;
   --red-orange: #f0544f;
@@ -66,8 +67,7 @@ td .lowercase {
 
 body {
   min-height: 100vh;
-  background: #fcfcfc !important;
-  background: #f8f8f8 !important;
+  background: var(--core-bg-color) !important;
   color: var(--text);
   overflow: hidden;
 }
@@ -97,9 +97,13 @@ a {
 
 .icon {
   margin: 0 0.2em;
-  font-size: 1.2em;
+  font-size: 1.2rem;
   opacity: 0.85;
   cursor: pointer;
+
+  span {
+    font-size: 0.87rem;
+  }
 }
 
 a.link.secondary {

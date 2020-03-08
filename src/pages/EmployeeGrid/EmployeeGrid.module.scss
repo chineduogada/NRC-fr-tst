@@ -1,0 +1,14 @@
+.ReportContainer {
+  width: 100%;
+  overflow-x: hidden;
+
+  & > div:first-child {
+    width: 100%;
+    transition: transform 0.3s ease;
+  }
+}
+
+.ReportFilters {
+  justify-content: space-between;
+  align-items: center;
+}
