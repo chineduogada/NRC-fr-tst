@@ -142,8 +142,6 @@ export default class extends Component {
             <Button
               label="Apply Filter"
               fill
-              block
-              fullwidth
               onClick={isProcessing ? null : this.applyFilter}
               disabled={isProcessing}
             />

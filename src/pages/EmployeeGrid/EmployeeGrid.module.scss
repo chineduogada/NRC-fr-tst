@@ -1,6 +1,15 @@
+.EmployeeGrid {
+  position: relative;
+}
+
 .ReportContainer {
   width: 100%;
   overflow-x: hidden;
+  margin-top: 3em;
+
+  .Grid {
+    overflow: hidden;
+  }
 
   & > div:first-child {
     width: 100%;
@@ -9,6 +18,40 @@
 }
 
 .ReportFilters {
+  background: var(--core-bg-color);
+  position: sticky;
+  position: -webkit-sticky;
+  top: -20px;
+  z-index: 1;
+  padding-top: 0.5em;
+}
+
+.Search {
+  flex-grow: 1;
+  max-width: 768px;
+  margin-right: 1em;
+  position: relative;
+
+  input {
+    border-color: var(--basic-color) !important;
+  }
+}
+
+.SearchIcon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-80%);
+  // padding: 0.5em;
+}
+
+.ReportFilters_Inner {
   justify-content: space-between;
   align-items: center;
+}
+
+.LoaderArea {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }

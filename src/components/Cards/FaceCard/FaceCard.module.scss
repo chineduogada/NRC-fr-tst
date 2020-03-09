@@ -1,0 +1,50 @@
+.FaceCard {
+  height: 300px;
+  border-radius: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 1em;
+  background: var(--inverse-text);
+}
+
+.Header {
+  height: 40%;
+  width: 100%;
+  background: var(--gray);
+  position: relative;
+}
+
+.ImageWrapper {
+  min-height: 50px;
+  height: calc(50px + 2vw);
+  max-height: 100px;
+  min-width: 60px;
+  width: calc(60px + 2vw);
+  max-width: 120px;
+  overflow: hidden;
+  border-radius: 5px;
+  position: absolute;
+  bottom: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.Body {
+  padding: 0.5em;
+  margin-top: 1em;
+
+  p {
+    font-size: 0.75rem;
+    margin: 0;
+
+    span {
+      color: var(--basic-color);
+    }
+  }
+}
+
+.Name {
+  margin: 0 0 0.5em;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+}

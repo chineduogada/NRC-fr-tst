@@ -6,6 +6,7 @@ import Section from '../../hoc/Section/Section';
 import Table from '../../components/TableView/TableView';
 import GlobalFilters from '../../components/GlobalFilters/GlobalFilters';
 import LightBox from '../../components/LightBox/LightBox';
+import Loader from '../../components/Loader/Loader';
 import Select from '../../components/Select/Select';
 import formats from './formats';
 import classes from './Reports.module.scss';
@@ -63,6 +64,10 @@ class Reports extends Component {
 
   async fetchFromServer(queryString) {
     this.toggleIsProcessing();
+
+    if (this.state.showFilters) {
+      this.toggleFilterDraw();
+    }
     const employees = [];
 
     const res = await http.get(`/reports${queryString}`);
@@ -170,47 +175,43 @@ class Reports extends Component {
       { id: 'formatC', name: 'format c' }
     ];
 
-    const style = showFilters
-      ? {
-          transform: 'translateX(-400px)',
-          paddingRight: '1em'
-        }
-      : {
-          width: '100%'
-        };
-
     return (
       <Section title="reports">
-        <div className={`d-flex ${classes.ReportFilters}`}>
-          <div className="format-controller">
-            <Select
-              label="switch format"
-              options={options}
-              onChange={this.handleChange}
-              selectedOption={activeColumnFormat}
-            />
+        <div className={classes.Reports}>
+          <div className={`d-flex ${classes.ReportFilters}`}>
+            <div className="format-controller">
+              <Select
+                label="switch format"
+                options={options}
+                onChange={this.handleChange}
+                selectedOption={activeColumnFormat}
+              />
+            </div>
+            <div className="icon" onClick={this.toggleFilterDraw}>
+              <IoMdFunnel />
+              <span> filters</span>
+            </div>
           </div>
-          <div className="icon" onClick={this.toggleFilterDraw}>
-            <IoMdFunnel />
-            <span> filters</span>
-          </div>
-        </div>
 
-        <div className={`d-flex ${classes.ReportContainer}`}>
-          <div style={style}>
+          <GlobalFilters
+            showFilters={showFilters}
+            queryStringConsumer={this.consumeQueryString}
+            isProcessing={isProcessing}
+          />
+
+          <div className={`d-flex ${classes.ReportContainer}`}>
             <Table
               columns={columns[activeColumnFormat]}
               data={employees}
               clickHandler={this.handleRowClick}
             />
           </div>
-          <GlobalFilters
-            showFilters={showFilters}
-            queryStringConsumer={this.consumeQueryString}
-            isProcessing={isProcessing}
-          />
         </div>
-        {isProcessing ? <LightBox></LightBox> : null}
+        {isProcessing ? (
+          <LightBox>
+            <Loader message="generating report" />
+          </LightBox>
+        ) : null}
       </Section>
     );
   }

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { IoMdFunnel } from 'react-icons/io';
+import { IoMdFunnel, IoMdSearch } from 'react-icons/io';
+import { Row, Col } from 'react-bootstrap';
 import http from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
-import Table from '../../components/TableView/TableView';
 import GlobalFilters from '../../components/GlobalFilters/GlobalFilters';
-import LightBox from '../../components/LightBox/LightBox';
+import Loader from '../../components/Loader/Loader';
 import Input from '../../components/Input/Input';
+import NotFound from '../../components/NotFound/NotFound';
+import FaceCard from '../../components/Cards/FaceCard/FaceCard';
 import formats from './formats';
 import classes from './EmployeeGrid.module.scss';
 
@@ -19,7 +21,9 @@ class Reports extends Component {
       activeColumnFormat: 'formatA',
       columns: formats,
       showFilters: false,
-      isProcessing: false
+      isProcessing: false,
+      page: 1,
+      limit: 20
     };
 
     this.handleRowClick = this.handleRowClick.bind(this);
@@ -61,11 +65,18 @@ class Reports extends Component {
     this.setState({ isProcessing: !this.state.isProcessing });
   }
 
-  async fetchFromServer(queryString) {
+  async fetchFromServer(queryString = '?') {
+    const { page, limit, showFilters } = this.state;
+
     this.toggleIsProcessing();
+    if (showFilters) {
+      this.toggleFilterDraw();
+    }
     const employees = [];
 
-    const res = await http.get(`/reports${queryString}`);
+    const res = await http.get(
+      `/reports${queryString}&page=${page}&limit=${limit}`
+    );
 
     if (res) {
       res.data.data.forEach(employee => {
@@ -74,12 +85,15 @@ class Reports extends Component {
 
       this.toggleIsProcessing();
 
-      this.setState({ employees });
+      this.setState({
+        employees: [...this.state.employees, ...employees],
+        page: page + 1
+      });
     }
   }
 
   async componentDidMount() {
-    this.showFiltersIfNoData();
+    this.fetchFromServer();
   }
 
   showFiltersIfNoData() {
@@ -118,6 +132,10 @@ class Reports extends Component {
       employeeInfo.salaryStructure = employeeJob.salaryStructure
         ? employeeJob.salaryStructure.description
         : null;
+
+      employeeInfo.employeeStatus = employeeJob.employeeStatus
+        ? employeeJob.employeeStatus.status
+        : null;
     }
 
     if (employee.employeeAppointment) {
@@ -139,6 +157,8 @@ class Reports extends Component {
   }
 
   consumeQueryString(queryString) {
+    this.setState({ employees: [] });
+
     this.fetchFromServer(queryString);
   }
 
@@ -154,14 +174,18 @@ class Reports extends Component {
     }
   }
 
+  renderResults(results = []) {
+    return results.map(result => {
+      return (
+        <Col sm={6} md={4} lg={3}>
+          <FaceCard data={result} />
+        </Col>
+      );
+    });
+  }
+
   render() {
-    const {
-      employees,
-      columns,
-      activeColumnFormat,
-      showFilters,
-      isProcessing
-    } = this.state;
+    const { employees, showFilters, isProcessing } = this.state;
 
     console.log(employees);
     const options = [
@@ -170,46 +194,47 @@ class Reports extends Component {
       { id: 'formatC', name: 'format c' }
     ];
 
-    const style = showFilters
-      ? {
-          transform: 'translateX(-400px)',
-          paddingRight: '1em'
-        }
-      : {
-          width: '100%'
-        };
-
     return (
       <Section>
-        <div className={`d-flex ${classes.ReportFilters}`}>
-          <div className="format-controller">
-            <Input
-              options={options}
-              onChange={this.handleChange}
-              placeholder="search by name"
-            />
-          </div>
-          <div className="icon" onClick={this.toggleFilterDraw}>
-            <IoMdFunnel />
-            <span> filters</span>
-          </div>
-        </div>
+        <div className={classes.EmployeeGrid}>
+          <div className={classes.ReportFilters}>
+            <div className={`d-flex ${classes.ReportFilters_Inner}`}>
+              <div className={classes.Search}>
+                <IoMdSearch className={classes.SearchIcon} />
+                <Input
+                  options={options}
+                  onChange={this.handleChange}
+                  placeholder="search first name, last name or middle name"
+                />
+              </div>
+              <div className="icon" onClick={this.toggleFilterDraw}>
+                <IoMdFunnel />
+                <span> filters</span>
+              </div>
+            </div>
 
-        <div className={`d-flex ${classes.ReportContainer}`}>
-          <div style={style}>
-            <Table
-              columns={columns[activeColumnFormat]}
-              data={employees}
-              clickHandler={this.handleRowClick}
+            <GlobalFilters
+              showFilters={showFilters}
+              queryStringConsumer={this.consumeQueryString}
+              isProcessing={isProcessing}
             />
           </div>
-          <GlobalFilters
-            showFilters={showFilters}
-            queryStringConsumer={this.consumeQueryString}
-            isProcessing={isProcessing}
-          />
+
+          <div className={`d-flex ${classes.ReportContainer}`}>
+            <div>
+              <Row className={classes.Grid}>
+                {this.renderResults(employees)}
+              </Row>
+              <div className={classes.LoaderArea}>
+                {isProcessing ? (
+                  <Loader />
+                ) : employees.length ? null : (
+                  <NotFound />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-        {isProcessing ? <LightBox></LightBox> : null}
       </Section>
     );
   }

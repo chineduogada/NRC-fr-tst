@@ -34,7 +34,7 @@ export default {
   presentPositionJobTypeId: Joi.array()
     .allow([], '')
     .optional(),
-  presentPositionJobGradeId: Joi.array()
+  presentPositionGradeId: Joi.array()
     .allow([], '')
     .optional()
 };

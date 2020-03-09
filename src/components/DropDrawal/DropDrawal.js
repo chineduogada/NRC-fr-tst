@@ -29,8 +29,10 @@ export default class extends Component {
         <div className={classes.Header}>
           <h6>{title}</h6>
         </div>
-        <div className={classes.Body}>{children}</div>
-        <div className={classes.Footer}>{footer}</div>
+        <div className={classes.Body}>
+          {children}
+          <div className={`d-flex ${classes.Footer}`}>{footer}</div>
+        </div>
       </div>
     );
   }
