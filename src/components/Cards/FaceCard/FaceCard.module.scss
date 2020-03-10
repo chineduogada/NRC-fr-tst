@@ -28,6 +28,13 @@
   transform: translateX(-50%);
 }
 
+.Status {
+  font-size: 0.8rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .Body {
   padding: 0.5em;
   margin-top: 1em;
@@ -38,6 +45,7 @@
 
     span {
       color: var(--basic-color);
+      font-weight: bold;
     }
   }
 }
@@ -47,4 +55,5 @@
   font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
+  text-transform: capitalize;
 }

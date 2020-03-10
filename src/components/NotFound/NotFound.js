@@ -8,7 +8,7 @@ export default ({ message }) => {
       <div className={classes.Image}>
         <img className="img" src={notFoundImg} alt="not found" />
         <p>
-          We looked everywhere, but nothing was found. Please, try to tweak your
+          We looked everywhere, but found nothing. Please, try to tweak your
           query a little
         </p>
       </div>
