@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ExportToCsv } from 'export-to-csv';
 import classes from './TableView.module.scss';
 import Button from '../Button/Button';
+import Printer from '../Printer/Printer';
 import ReactTable from '../ReactTable/Table';
 import PageNotice from '../PageNotice/PageNotice';
 import slugify from '../../helpers/slugify';
@@ -70,6 +71,7 @@ class TableView extends Component {
       onRowOptionChange,
       columns,
       useLinks,
+      printTemplate,
       addNewButtonHandler
     } = this.props;
 
@@ -85,9 +87,16 @@ class TableView extends Component {
               ) : null}
               {message ? <PageNotice>{message}</PageNotice> : null}
             </div>
-            <div className="buttons">
+            <div className="d-fle buttons">
               {addNewButtonHandler ? (
                 <Button label="add new" fill onClick={addNewButtonHandler} />
+              ) : null}
+              {printTemplate ? (
+                <Printer
+                  trigger={<Button label="print" fill />}
+                  ComponentToPrint={printTemplate}
+                  data={data}
+                />
               ) : null}
               <Button label="export" plain onClick={this.handleExport} />
             </div>

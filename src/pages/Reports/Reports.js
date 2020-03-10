@@ -8,6 +8,7 @@ import GlobalFilters from '../../components/GlobalFilters/GlobalFilters';
 import LightBox from '../../components/LightBox/LightBox';
 import Loader from '../../components/Loader/Loader';
 import Select from '../../components/Select/Select';
+import ReportPrintTemplate from '../../components/ReportPrintTemplate/Template';
 import formats from './formats';
 import classes from './Reports.module.scss';
 
@@ -177,6 +178,8 @@ class Reports extends Component {
 
     return (
       <Section title="reports">
+        <ReportPrintTemplate data={employees} />
+
         <div className={classes.Reports}>
           <div className={`d-flex ${classes.ReportFilters}`}>
             <div className="format-controller">
@@ -204,6 +207,7 @@ class Reports extends Component {
               columns={columns[activeColumnFormat]}
               data={employees}
               clickHandler={this.handleRowClick}
+              printTemplate={ReportPrintTemplate}
             />
           </div>
         </div>

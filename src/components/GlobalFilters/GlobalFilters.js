@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DropDrawal from '../DropDrawal/DropDrawal';
 import httpService from '../../services/httpService';
-import nameMapper, { mapForReactSelect } from '../../helpers/nameMapper';
+import { mapForReactSelect } from '../../helpers/nameMapper';
 import transformToQueryString from '../../helpers/transformToQueryString';
 import FilterForm from './FilterForm';
 import Button from '../Button/Button';
