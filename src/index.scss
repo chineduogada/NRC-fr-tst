@@ -98,11 +98,20 @@ a {
 .icon {
   margin: 0 0.2em;
   font-size: 1.2rem;
+  line-height: 1.2rem;
   opacity: 0.85;
   cursor: pointer;
+}
 
+.filter-icon {
   span {
     font-size: 0.87rem;
+  }
+
+  @media screen and (max-width: 767px) {
+    span {
+      display: none;
+    }
   }
 }
 
@@ -204,6 +213,11 @@ ol {
 // EMPLOYEE SPECIFIC GLOBAL STYLES
 .employee-status {
   color: var(--inverse-text);
+  width: fit-content;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+
   &.active {
     background: var(--basic-color);
   }

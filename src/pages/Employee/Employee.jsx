@@ -212,9 +212,7 @@ export default class Employee extends Component {
                 <li className={classes.EmployeeJobType}>
                   {presentJobType} staff
                 </li>
-                <li
-                  className={`${classes.EmployeeStatus} employee-status ${employeeStatus}`}
-                >
+                <li className={`employee-status ${employeeStatus}`}>
                   {employeeStatus}
                 </li>
               </ul>

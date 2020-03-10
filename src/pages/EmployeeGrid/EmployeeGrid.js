@@ -111,6 +111,7 @@ class Reports extends Component {
       id: employee.ippisNo,
       firstName: employee.firstName,
       lastName: employee.lastName,
+      middleNames: employee.middleNames,
       initials: employee.initials,
       dateOfBirth: employee.dateOfBirth,
       gender: employee.gender ? employee.gender.type : null,
@@ -134,7 +135,7 @@ class Reports extends Component {
         : null;
 
       employeeInfo.employeeStatus = employeeJob.employeeStatus
-        ? employeeJob.employeeStatus.status
+        ? employeeJob.employeeStatus.description
         : null;
     }
 
@@ -207,7 +208,7 @@ class Reports extends Component {
                   placeholder="search first name, last name or middle name"
                 />
               </div>
-              <div className="icon" onClick={this.toggleFilterDraw}>
+              <div className="filter-icon" onClick={this.toggleFilterDraw}>
                 <IoMdFunnel />
                 <span> filters</span>
               </div>
