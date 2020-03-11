@@ -179,7 +179,7 @@ class Reports extends Component {
 
     return (
       <Section title="reports">
-        <ReportPrintTemplate data={employees} />
+        {/* <ReportPrintTemplate data={employees} /> */}
 
         <div className={classes.Reports}>
           <div className={`d-flex ${classes.ReportFilters}`}>
