@@ -61,7 +61,7 @@ export class GetImage extends Component {
 
   render() {
     const { imageSource } = this.state;
-    console.log('checking out image source', imageSource);
+    // console.log('checking out image source', imageSource);
     return (
       <>
         {imageSource === undefined ? (
@@ -71,6 +71,7 @@ export class GetImage extends Component {
             style={this.style}
             src={imageSource ? `${imageSource}` : imgTemp}
             alt="employee"
+            loading="lazy"
           />
         )}
       </>

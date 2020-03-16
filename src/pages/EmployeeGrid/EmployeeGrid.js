@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { IoMdFunnel, IoMdSearch } from 'react-icons/io';
 import { Row, Col } from 'react-bootstrap';
 import http from '../../services/httpService';
+import intersectionObserver from '../../helpers/intersectionObserver';
 import Section from '../../hoc/Section/Section';
 import GlobalFilters from '../../components/GlobalFilters/GlobalFilters';
 import Loader from '../../components/Loader/Loader';
@@ -23,7 +24,8 @@ class Reports extends Component {
       showFilters: false,
       isProcessing: false,
       page: 1,
-      limit: 20
+      limit: 20,
+      queryString: '?'
     };
 
     this.handleRowClick = this.handleRowClick.bind(this);
@@ -65,8 +67,12 @@ class Reports extends Component {
     this.setState({ isProcessing: !this.state.isProcessing });
   }
 
-  async fetchFromServer(queryString = '?') {
-    const { page, limit, showFilters } = this.state;
+  async resetResultAndPagination() {
+    await this.setState({ employees: [], page: 1 });
+  }
+
+  async fetchFromServer() {
+    const { page, limit, showFilters, queryString } = this.state;
 
     this.toggleIsProcessing();
     if (showFilters) {
@@ -92,8 +98,14 @@ class Reports extends Component {
     }
   }
 
+  observeLoaderArea() {
+    const options = { threshold: 1, rootMargin: 'Opx 0px -300px 0px' };
+    intersectionObserver([this.loaderArea], this.fetchFromServer, options);
+  }
+
   async componentDidMount() {
     this.fetchFromServer();
+    this.observeLoaderArea();
   }
 
   showFiltersIfNoData() {
@@ -157,10 +169,16 @@ class Reports extends Component {
     return employeeInfo;
   }
 
-  consumeQueryString(queryString) {
-    this.setState({ employees: [] });
+  setQueryString(queryString) {
+    this.setState({ queryString });
+  }
 
-    this.fetchFromServer(queryString);
+  async consumeQueryString(queryString) {
+    await this.resetResultAndPagination();
+
+    this.setQueryString(queryString);
+
+    this.fetchFromServer();
   }
 
   handleRowClick({ currentTarget, detail }) {
@@ -226,7 +244,10 @@ class Reports extends Component {
               <Row className={classes.Grid}>
                 {this.renderResults(employees)}
               </Row>
-              <div className={classes.LoaderArea}>
+              <div
+                className={classes.LoaderArea}
+                ref={loaderArea => (this.loaderArea = loaderArea)}
+              >
                 {isProcessing ? (
                   <Loader />
                 ) : employees.length ? null : (

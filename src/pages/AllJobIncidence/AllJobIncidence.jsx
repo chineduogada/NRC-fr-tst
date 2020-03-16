@@ -6,7 +6,7 @@ import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
-import SideDraw from '../../components/SideDraw/SideDraw';
+import nameMapper from '../../helpers/nameMapper';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
@@ -25,11 +25,7 @@ class AllJobIncidence extends Form {
         { accessor: 'employee', Header: 'Employee' },
         { accessor: 'memoReference', Header: 'Memo Reference' },
         { accessor: 'reasonCode', Header: 'Reason Code' },
-        { accessor: 'incidenceLine1', Header: 'Incidence Line 1' },
-        { accessor: 'incidenceLine2', Header: 'Incidence Line 2' },
-        { accessor: 'incidenceLine3', Header: 'Incidence Line 3' },
-        { accessor: 'incidenceLine4', Header: 'Incidence Line 4' },
-        { accessor: 'incidenceLine5', Header: 'Incidence Line 5' }
+        { accessor: 'decisionCode', Header: 'Decision Code' }
       ],
 
       pageSize: 20,
@@ -42,21 +38,23 @@ class AllJobIncidence extends Form {
         ippisNo: '',
         memoReference: '',
         reasonCodeId: '',
-        incidenceLine1: '',
-        incidenceLine2: '',
-        incidenceLine3: '',
-        incidenceLine4: '',
-        incidenceLine5: '',
+        reasonDescription: '',
+        decisionCodeId: '',
+        decisionDescription: '',
         attachedDoc: '',
         remarks: ''
       },
 
       ippisNoVerified: false,
 
-      jobTitleOptions: [],
       reasonCodeOptions: [],
 
-      errors: {}
+      errors: {},
+
+      options: {
+        reasonCodes: [],
+        decisionCodes: []
+      }
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -75,19 +73,11 @@ class AllJobIncidence extends Form {
     transactionDate: Joi.string(),
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
-    incidenceLine1: Joi.string()
+    reasonDescription: Joi.string()
       .allow('')
       .optional(),
-    incidenceLine2: Joi.string()
-      .allow('')
-      .optional(),
-    incidenceLine3: Joi.string()
-      .allow('')
-      .optional(),
-    incidenceLine4: Joi.string()
-      .allow('')
-      .optional(),
-    incidenceLine5: Joi.string()
+    decisionCodeId: Joi.number(),
+    decisionDescription: Joi.string()
       .allow('')
       .optional(),
     attachedDoc: Joi.string()
@@ -116,7 +106,24 @@ class AllJobIncidence extends Form {
     }
   }
 
+  async fetchOptions() {
+    const [reasonCodes, decisionCodes] = await httpService.all([
+      httpService.get('/incidence-reason-codes'),
+      httpService.get('/incidence-decision-codes')
+    ]);
+
+    if (reasonCodes) {
+      const options = {
+        reasonCodes: nameMapper(reasonCodes.data.data, 'code'),
+        decisionCodes: nameMapper(decisionCodes.data.data, 'code')
+      };
+
+      this.setState({ options });
+    }
+  }
+
   async componentDidMount() {
+    this.fetchOptions();
     if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showDraw: true });
     }
@@ -145,11 +152,7 @@ class AllJobIncidence extends Form {
       transactionDate: record.transactionDate,
       memoReference: record.memoReference,
       reasonCode: record.reasonCode.code,
-      incidenceLine1: record.incidenceLine1,
-      incidenceLine2: record.incidenceLine2,
-      incidenceLine3: record.incidenceLine3,
-      incidenceLine4: record.incidenceLine4,
-      incidenceLine5: record.incidenceLine5,
+      decisionCode: record.decisionCode.code,
       remarks: record.remarks
     };
   }
@@ -186,7 +189,6 @@ class AllJobIncidence extends Form {
   }
 
   async postNewData(stopProcessing) {
-    console.log('still submitting');
     const res = await httpService.post('/job-incidence', this.state.formData);
 
     stopProcessing();
@@ -205,7 +207,7 @@ class AllJobIncidence extends Form {
   }
 
   renderForm() {
-    const { ippisNoVerified } = this.state;
+    const { ippisNoVerified, options } = this.state;
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>New career record</p>
@@ -234,15 +236,18 @@ class AllJobIncidence extends Form {
               'date'
             )}
             {this.renderInput('memo reference', 'memoReference')}
-            {this.renderSelect('reason code', 'reasonCodeId', [
-              { id: 1, name: 'fighting' },
-              { id: 2, name: 'stealing' }
-            ])}
-            {this.renderInput('incindence line 1', 'incidenceLine1')}
-            {this.renderInput('incindence line 2', 'incidenceLine2')}
-            {this.renderInput('incindence line 3', 'incidenceLine3')}
-            {this.renderInput('incindence line 4', 'incidenceLine4')}
-            {this.renderInput('incindence line 5', 'incidenceLine5')}
+            {this.renderSelect(
+              'reason code',
+              'reasonCodeId',
+              options.reasonCodes
+            )}
+            {this.renderInput('reason description', 'reasonDescription')}
+            {this.renderSelect(
+              'decision code',
+              'decisionCodeId',
+              options.decisionCodes
+            )}
+            {this.renderInput('decision description', 'decisionDescription')}
             {this.renderInput(
               'attached document',
               'attachedDoc',

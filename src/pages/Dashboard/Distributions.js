@@ -185,8 +185,6 @@ export default class Distributions extends PureComponent {
     const optionsToSelect = [
       { id: 'departments', name: 'departments' },
       { id: 'LGA', name: 'LGA' },
-      // { id: 'salaryStructures', name: 'salary structures' },
-      // { id: 'genders', name: 'genders' },
       { id: 'states', name: 'states' },
       { id: 'jobTitles', name: 'job titles' },
       { id: 'jobTypes', name: 'job types' },

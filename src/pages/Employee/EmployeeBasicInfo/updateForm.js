@@ -17,7 +17,6 @@ export default class UpdateForm extends Form {
         lastName: '',
         middleNames: '',
         initials: '',
-        nrcNo: '',
         dateOfBirth: '',
         phoneNumber: '',
         countryOfBirthId: '',
@@ -48,9 +47,6 @@ export default class UpdateForm extends Form {
       lastName: Joi.string(),
       middleNames: Joi.string(),
       initials: Joi.string()
-        .allow('')
-        .optional(),
-      nrcNo: Joi.number()
         .allow('')
         .optional(),
       dateOfBirth: Joi.string(),
@@ -177,14 +173,6 @@ export default class UpdateForm extends Form {
               'initials',
               null,
               formData.initials || ''
-            )}
-            {this.renderInput(
-              'NRC number',
-              'nrcNo',
-              null,
-              formData.nrcNo || '',
-              'number',
-              null
             )}
             {this.renderInput(
               'date of birth',

@@ -31,7 +31,9 @@ class JobIncidence extends Form {
         ippisNo: '',
         memoReference: '',
         reasonCodeId: '',
-        newJobTitleId: '',
+        reasonDescription: '',
+        decisionCodeId: '',
+        decisionDescription: '',
         attachedDoc: '',
         remarks: ''
       },
@@ -58,19 +60,11 @@ class JobIncidence extends Form {
     transactionDate: Joi.string(),
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
-    incidenceLine1: Joi.string()
+    reasonDescription: Joi.string()
       .allow('')
       .optional(),
-    incidenceLine2: Joi.string()
-      .allow('')
-      .optional(),
-    incidenceLine3: Joi.string()
-      .allow('')
-      .optional(),
-    incidenceLine4: Joi.string()
-      .allow('')
-      .optional(),
-    incidenceLine5: Joi.string()
+    decisionCodeId: Joi.number(),
+    decisionDescription: Joi.string()
       .allow('')
       .optional(),
     attachedDoc: Joi.string()
@@ -117,6 +111,10 @@ class JobIncidence extends Form {
       {
         name: 'reason code',
         value: data.reasonCode.code
+      },
+      {
+        name: 'decision code',
+        value: data.decisionCode.code
       }
     ];
   }

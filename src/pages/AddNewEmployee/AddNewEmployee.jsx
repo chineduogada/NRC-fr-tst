@@ -33,7 +33,6 @@ export default class AddNewEmployee extends Form {
       lastName: '',
       middleNames: '',
       initials: '',
-      nrcNo: '',
       dateOfBirth: '',
       phoneNumber: '',
       countryOfBirthId: '',
@@ -55,7 +54,7 @@ export default class AddNewEmployee extends Form {
       departmentId: '',
       sectionId: '',
       districtId: '',
-      location: '',
+      // location: '',
       reportTo: '',
       employeeStatusId: '',
       pensionable: '',
@@ -190,11 +189,6 @@ export default class AddNewEmployee extends Form {
     initials: Joi.string()
       .allow('')
       .optional(),
-    nrcNo: Joi.string()
-      .min(3)
-      .max(8)
-      .allow()
-      .optional(),
     dateOfBirth: Joi.string(),
     phoneNumber: Joi.number(),
     countryOfBirthId: Joi.number(),
@@ -223,7 +217,7 @@ export default class AddNewEmployee extends Form {
     districtId: Joi.number(),
     sectionId: Joi.number(),
     salaryStructureId: Joi.number(),
-    location: Joi.string(),
+    // location: Joi.string(),
     reportTo: Joi.number()
       .allow('')
       .optional(),
@@ -327,20 +321,6 @@ export default class AddNewEmployee extends Form {
           {ippisNoVerified ? (
             <>
               <InformationBlock title="basic information">
-                <EmployeeVerifier
-                  queryParam="nrcNo"
-                  preventDefault
-                  checkOnResponseRecieved={employees => !employees.length}
-                  onResponseReceived={this.handleNrcNoResponseRecieved}
-                >
-                  {this.renderInput(
-                    'NRC number',
-                    'nrcNo',
-                    null,
-                    null,
-                    'number'
-                  )}
-                </EmployeeVerifier>
                 {this.renderInput('first Name', 'firstName')}
                 {this.renderInput('last Name', 'lastName')}
                 {this.renderInput('middle Names', 'middleNames')}

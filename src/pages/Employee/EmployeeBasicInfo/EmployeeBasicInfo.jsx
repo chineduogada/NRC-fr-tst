@@ -116,7 +116,6 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'last name', value: data.lastName },
       { label: 'middle names', value: data.middleNames },
       { label: 'initials', value: data.initials },
-      { label: 'NRC No', value: data.nrcNo },
       { label: 'date of birth', value: data.dateOfBirth },
       { label: 'phone number', value: data.phoneNumber },
       {
