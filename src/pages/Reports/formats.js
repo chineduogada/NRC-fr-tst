@@ -1,6 +1,5 @@
 const base = [
   { accessor: 'id', Header: 'IPPIS No' },
-  { accessor: 'nrcNo', Header: 'NRC No' },
   { accessor: 'lastName', Header: 'Last Name' },
   { accessor: 'firstName', Header: 'First Name' },
   { accessor: 'initials', Header: 'Initials' },

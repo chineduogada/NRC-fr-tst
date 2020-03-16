@@ -24,7 +24,7 @@ class Reports extends Component {
       showFilters: false,
       isProcessing: false,
       page: 1,
-      limit: 20,
+      limit: 50,
       queryString: '?'
     };
 
@@ -32,6 +32,7 @@ class Reports extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.toggleFilterDraw = this.toggleFilterDraw.bind(this);
     this.consumeQueryString = this.consumeQueryString.bind(this);
+    this.fetchFromServer = this.fetchFromServer.bind(this);
   }
 
   async autoFetchFromServer(queryString) {
@@ -99,7 +100,7 @@ class Reports extends Component {
   }
 
   observeLoaderArea() {
-    const options = { threshold: 1, rootMargin: 'Opx 0px -300px 0px' };
+    const options = { threshold: 1, rootMargin: '0px 0px 300px 0px' };
     intersectionObserver([this.loaderArea], this.fetchFromServer, options);
   }
 

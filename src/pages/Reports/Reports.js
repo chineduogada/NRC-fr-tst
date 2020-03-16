@@ -30,12 +30,22 @@ class Reports extends Component {
     this.consumeQueryString = this.consumeQueryString.bind(this);
   }
 
+  async resetResultAndPagination() {
+    await this.setState({ employees: [], page: 1 });
+  }
+
   async autoFetchFromServer(queryString) {
-    const limit = 100;
+    this.toggleIsProcessing();
+
+    if (this.state.showFilters) {
+      this.toggleFilterDraw();
+    }
+
+    const limit = 200;
     let page = 1;
-    let countEqualLimit = true; // assumes that the length of the result sets we get back before the last result set is equal to the pagination limit
+    let countEqualsLimit = true; // assumes that the length of the result sets we get back before the last result set is equal to the pagination limit
     let responseDefined = true; // assumes that the response we get back is not undefined
-    while (countEqualLimit && responseDefined) {
+    while (countEqualsLimit && responseDefined) {
       const employees = [];
 
       const res = await http.get(
@@ -47,8 +57,12 @@ class Reports extends Component {
           employees.push(this.mapToViewModel(employee));
         });
 
-        countEqualLimit = res.data.data.length === limit;
+        countEqualsLimit = res.data.data.length === limit;
         page++;
+
+        if (!countEqualsLimit) {
+          this.toggleIsProcessing();
+        }
 
         const newState = [...this.state.employees, ...employees];
 
@@ -145,8 +159,9 @@ class Reports extends Component {
     return employeeInfo;
   }
 
-  consumeQueryString(queryString) {
-    this.fetchFromServer(queryString);
+  async consumeQueryString(queryString) {
+    await this.resetResultAndPagination();
+    this.autoFetchFromServer(queryString);
   }
 
   handleRowClick({ currentTarget, detail }) {
@@ -208,7 +223,7 @@ class Reports extends Component {
               columns={columns[activeColumnFormat]}
               data={employees}
               clickHandler={this.handleRowClick}
-              printTemplate={ReportPrintTemplate}
+              enablePrint={true}
             />
           </div>
         </div>

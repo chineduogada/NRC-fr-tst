@@ -70,30 +70,6 @@ class AllEmployees extends Component {
     this.fetchFromServer();
   }
 
-  // mapToViewModel(employee) {
-  //   const { employeeJob, employeeAppointment } = employee;
-  //   return {
-  //     id: employee.ippisNo,
-  //     name: `${employee.firstName} ${employee.lastName}`,
-  //     department: employeeJob ? employeeJob.department.description : null,
-  //     district: employeeJob ? employeeJob.district.siteName : null,
-  //     employeeStatus: employeeJob ? employeeJob.employeeStatus.status : null,
-  //     pensionable: employeeJob ? employeeJob.pensionable : null,
-  //     firstAppointmentDate: employeeAppointment
-  //       ? employeeAppointment.firstAppointmentDate
-  //       : null,
-  //     presentAppointmentDate: employeeAppointment
-  //       ? employeeAppointment.presentAppointmentDate
-  //       : null,
-  //     presentJobType: employeeAppointment
-  //       ? employeeAppointment.presentJobType.type
-  //       : null,
-  //     presentJobTitle: employeeAppointment
-  //       ? employeeAppointment.presentJobTitle.description
-  //       : null
-  //   };
-  // }
-
   mapToViewModel(employee) {
     const { employeeJob, employeeAppointment } = employee;
 

@@ -6,6 +6,7 @@ import Printer from '../Printer/Printer';
 import ReactTable from '../ReactTable/Table';
 import PageNotice from '../PageNotice/PageNotice';
 import slugify from '../../helpers/slugify';
+import printJS from 'print-js';
 import { toast } from 'react-toastify';
 
 class TableView extends Component {
@@ -16,6 +17,7 @@ class TableView extends Component {
     this.headers = this.mapHeadersForDownloads(columns);
     this.handleFilter = this.handleFilter.bind(this);
     this.handleExport = this.handleExport.bind(this);
+    this.handlePrint = this.handlePrint.bind(this);
   }
   /**
    * Maps headers to be compatible with the react-csv
@@ -59,6 +61,39 @@ class TableView extends Component {
     }
   }
 
+  handlePrint() {
+    const { data, columns } = this.props;
+
+    const getProperties = (headers = []) => {
+      return headers.map(({ accessor, Header }) => {
+        return {
+          field: accessor,
+          displayName: Header
+        };
+      });
+    };
+
+    const styles = {
+      gridHeaderStyle: 'color: #2a2a2a;  border: 2px solid #058f43;',
+      gridStyle: 'border: 2px solid #2a2a2a; padding: 1px'
+    };
+
+    const header = `
+        <div className={classes.Brand}>
+          <div className={classes.Logo}></div>
+          <h2>PRM</h2>
+        </div>`;
+
+    printJS({
+      header,
+      documentTitle: 'Employees Report',
+      printable: data,
+      properties: getProperties(columns),
+      type: 'json',
+      ...styles
+    });
+  }
+
   render() {
     const {
       title,
@@ -71,7 +106,7 @@ class TableView extends Component {
       onRowOptionChange,
       columns,
       useLinks,
-      printTemplate,
+      enablePrint,
       addNewButtonHandler
     } = this.props;
 
@@ -91,12 +126,8 @@ class TableView extends Component {
               {addNewButtonHandler ? (
                 <Button label="add new" fill onClick={addNewButtonHandler} />
               ) : null}
-              {printTemplate ? (
-                <Printer
-                  trigger={<Button label="print" fill />}
-                  ComponentToPrint={printTemplate}
-                  data={data}
-                />
+              {enablePrint ? (
+                <Button label="print" fill onClick={this.handlePrint} />
               ) : null}
               <Button label="export" plain onClick={this.handleExport} />
             </div>
