@@ -36,5 +36,17 @@ export default {
     .optional(),
   presentPositionGradeId: Joi.array()
     .allow([], '')
+    .optional(),
+  presentPositionStepId: Joi.array()
+    .allow([], '')
+    .optional(),
+  expectedRetirementDate: Joi.array()
+    .allow([], '')
+    .optional(),
+  dateOfBirth: Joi.array()
+    .allow([], '')
+    .optional(),
+  resumptionDate: Joi.array()
+    .allow([], '')
     .optional()
 };

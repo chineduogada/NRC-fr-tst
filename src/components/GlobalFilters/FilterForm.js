@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import Form from '../Form/Form';
 import InformationBlock from '../InformationBlock/InformationBlock';
 import schema from './JoiSchema';
+import RangeInput from '../RangeInput/RangeInput';
 // import classes from './GlobalFilters.module.scss';
 
 export default class extends Form {
@@ -23,18 +24,33 @@ export default class extends Form {
         salaryStructureId: [],
         presentPositionJobTitleId: [],
         presentPositionJobTypeId: [],
-        presentPositionGradeId: []
+        presentPositionGradeId: [],
+        presentPositionStepId: [],
+        expectedRetirementDate: [],
+        dateOfBirth: [],
+        resumptionDate: []
       },
 
       errors: {}
     };
+
+    this.initialFormData = this.state.formData;
+  }
+
+  resetFormAndFormData() {
+    // this.setState({ formData: this.initialFormData });
+    this.Form.reset();
   }
 
   componentDidUpdate() {
-    const { formDataIsResquested } = this.props;
+    const { formDataIsResquested, resetForm } = this.props;
 
     if (formDataIsResquested) {
       this.provideFormData();
+    }
+
+    if (resetForm) {
+      // this.resetFormAndFormData();
     }
   }
 
@@ -55,9 +71,10 @@ export default class extends Form {
 
   renderForm(formData, options) {
     const otherConfig = [null, null, null, true];
+    const currentDate = new Date().toISOString().split('T')[0];
 
     return (
-      <form>
+      <form ref={form => (this.Form = form)}>
         <InformationBlock>
           {this.renderReactSelect(
             'gender',
@@ -141,6 +158,40 @@ export default class extends Form {
             this.includeOptionForNullValues(options.jobGrade),
             ...otherConfig
           )}
+
+          {this.renderReactSelect(
+            'present step',
+            'presentPositionStepId',
+            this.includeOptionForNullValues(options.step),
+            ...otherConfig
+          )}
+        </InformationBlock>
+
+        <InformationBlock>
+          <RangeInput
+            field="useInput"
+            type="date"
+            label="date of date"
+            fieldName="dateOfBirth"
+            consumeRange={this.handleChange}
+            defaultValue={currentDate}
+          />
+          <RangeInput
+            field="useInput"
+            type="date"
+            label="resumption date"
+            fieldName="resumptionDate"
+            consumeRange={this.handleChange}
+            defaultValue={currentDate}
+          />
+          <RangeInput
+            field="useInput"
+            type="date"
+            label="expected retirement date"
+            fieldName="expectedRetirementDate"
+            consumeRange={this.handleChange}
+            defaultValue={currentDate}
+          />
         </InformationBlock>
       </form>
     );
@@ -148,7 +199,11 @@ export default class extends Form {
 
   render() {
     const { formData } = this.state;
-    const { options } = this.props;
+    const { options, resetForm } = this.props;
+
+    if (resetForm) {
+      this.resetFormAndFormData();
+    }
 
     return <Fragment>{this.renderForm(formData, options)}</Fragment>;
   }

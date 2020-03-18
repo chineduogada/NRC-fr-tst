@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { IoMdFunnel } from 'react-icons/io';
 import http from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
@@ -8,17 +8,17 @@ import GlobalFilters from '../../components/GlobalFilters/GlobalFilters';
 import LightBox from '../../components/LightBox/LightBox';
 import Loader from '../../components/Loader/Loader';
 import Select from '../../components/Select/Select';
-import formats from './formats';
-import classes from './Reports.module.scss';
+import { useSingleHeader, useNestedHeader } from './rollHeaders';
+import classes from './NominalRolls.module.scss';
 
-class Reports extends Component {
+class NominalRolls extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       employees: [],
       activeColumnFormat: 'formatA',
-      columns: formats,
+      columns: useSingleHeader(),
       showFilters: false,
       isProcessing: false
     };
@@ -84,7 +84,7 @@ class Reports extends Component {
     }
     const employees = [];
 
-    const res = await http.get(`/reports${queryString}`);
+    const res = await http.get(`/summary/${queryString}`);
 
     if (res) {
       res.data.data.forEach(employee => {
@@ -192,14 +192,7 @@ class Reports extends Component {
     ];
 
     return (
-      <Section
-        title="reports"
-        subTitle={
-          <Fragment>
-            Go to <Link to="/reports/nominal-rolls">nominal rolls</Link>
-          </Fragment>
-        }
-      >
+      <Section title="reports">
         {/* <ReportPrintTemplate data={employees} /> */}
 
         <div className={classes.Reports}>
@@ -243,4 +236,4 @@ class Reports extends Component {
   }
 }
 
-export default withRouter(Reports);
+export default NominalRolls;

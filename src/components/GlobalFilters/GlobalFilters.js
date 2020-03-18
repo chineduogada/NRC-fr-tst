@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import DropDrawal from '../DropDrawal/DropDrawal';
 import httpService from '../../services/httpService';
 import { mapForReactSelect } from '../../helpers/nameMapper';
@@ -23,19 +23,22 @@ export default class extends Component {
         employeeStatus: [],
         jobType: [],
         jobTitle: [],
-        jobGrade: []
+        jobGrade: [],
+        steps: []
       },
 
       queryString: '',
 
       showDrawal: false,
       formDataIsRequested: false,
-      isProcessing: false
+      isProcessing: false,
+      resetForm: false
     };
 
     this.toggleDrawal = this.toggleDrawal.bind(this);
     this.extractFormData = this.extractFormData.bind(this);
     this.applyFilter = this.applyFilter.bind(this);
+    this.handleFormReset = this.handleFormReset.bind(this);
   }
 
   toggleDrawal() {
@@ -55,7 +58,8 @@ export default class extends Component {
       employeeStatuses,
       jobTitles,
       jobTypes,
-      jobGrades
+      jobGrades,
+      steps
     ] = await httpService.all([
       httpService.get('/gpz'),
       httpService.get('/senatorial-districts'),
@@ -68,7 +72,8 @@ export default class extends Component {
       httpService.get('/employee-statuses'),
       httpService.get('/job-titles'),
       httpService.get('/job-types'),
-      httpService.get('/job-grades')
+      httpService.get('/job-grades'),
+      httpService.get('/steps')
     ]);
 
     if (gpz) {
@@ -93,7 +98,8 @@ export default class extends Component {
         ),
         jobTitle: mapForReactSelect(jobTitles.data.data, 'description'),
         jobType: mapForReactSelect(jobTypes.data.data, 'type'),
-        jobGrade: mapForReactSelect(jobGrades.data.data, 'con')
+        jobGrade: mapForReactSelect(jobGrades.data.data, 'con'),
+        step: mapForReactSelect(steps.data.data, 'step')
       };
 
       this.setState({
@@ -104,6 +110,16 @@ export default class extends Component {
 
   componentDidMount() {
     this.getOptions();
+  }
+
+  toggleResetForm() {
+    this.setState({ resetForm: !this.state.resetForm });
+  }
+
+  handleFormReset() {
+    this.toggleResetForm();
+
+    setTimeout(() => this.toggleResetForm, 1000);
   }
 
   exposeQueryString(queryString) {
@@ -130,7 +146,7 @@ export default class extends Component {
   }
 
   render() {
-    const { options, formDataIsRequested } = this.state;
+    const { options, formDataIsRequested, resetForm } = this.state;
     const { isProcessing } = this.props;
 
     return (
@@ -139,12 +155,20 @@ export default class extends Component {
           showDrawal={this.props.showFilters}
           title="Filter Result"
           footer={
-            <Button
-              label="Apply Filter"
-              fill
-              onClick={isProcessing ? null : this.applyFilter}
-              disabled={isProcessing}
-            />
+            <Fragment>
+              <Button
+                label="clear filters"
+                plain
+                onClick={isProcessing ? null : this.handleFormReset}
+                disabled={isProcessing}
+              />
+              <Button
+                label="Apply Filter"
+                fill
+                onClick={isProcessing ? null : this.applyFilter}
+                disabled={isProcessing}
+              />
+            </Fragment>
           }
         >
           <div className={classes.GlobalFilters_Inner}>
@@ -152,6 +176,7 @@ export default class extends Component {
               options={options}
               formDataIsResquested={formDataIsRequested}
               formDataConsumer={this.extractFormData}
+              // resetForm={resetForm}
             />
           </div>
         </DropDrawal>

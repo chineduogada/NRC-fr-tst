@@ -56,4 +56,16 @@
   width: 100%;
   z-index: 0;
   padding: 1em 0;
+  background: var(--core-bg-color);
+}
+
+.ButtonArea {
+  bottom: 0;
+  width: 100%;
+  background: var(--core-bg-color);
+
+  button {
+    width: 50%;
+    margin-left: auto;
+  }
 }
