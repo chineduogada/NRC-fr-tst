@@ -194,11 +194,11 @@ class Reports extends Component {
     return (
       <Section
         title="reports"
-        subTitle={
-          <Fragment>
-            Go to <Link to="/reports/nominal-rolls">nominal rolls</Link>
-          </Fragment>
-        }
+        // subTitle={
+        //   <Fragment>
+        //     Go to <Link to="/reports/nominal-rolls">nominal rolls</Link>
+        //   </Fragment>
+        // }
       >
         {/* <ReportPrintTemplate data={employees} /> */}
 
