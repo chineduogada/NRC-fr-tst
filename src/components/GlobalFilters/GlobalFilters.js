@@ -156,12 +156,12 @@ export default class extends Component {
           title="Filter Result"
           footer={
             <Fragment>
-              <Button
+              {/* <Button
                 label="clear filters"
                 plain
                 onClick={isProcessing ? null : this.handleFormReset}
                 disabled={isProcessing}
-              />
+              /> */}
               <Button
                 label="Apply Filter"
                 fill
