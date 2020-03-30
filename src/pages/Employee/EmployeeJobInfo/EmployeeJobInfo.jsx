@@ -41,7 +41,7 @@ export default class EmployeeBasicInfo extends Component {
     ] = await httpService.all([
       httpService.get('/departments?statusId=1'),
       httpService.get('/districts?statusId=1'),
-      httpService.get('/sections'),
+      httpService.get('/sections?statusId=1'),
       httpService.get('/employee-statuses'),
       httpService.get('/salary-structures')
     ]);
@@ -50,7 +50,7 @@ export default class EmployeeBasicInfo extends Component {
       const options = {
         departmentOptions: nameMapper(departments.data.data, 'description'),
         districtOptions: nameMapper(districts.data.data, 'siteName'),
-        sectionOptions: nameMapper(sections.data.data, 'section'),
+        sectionOptions: nameMapper(sections.data.data, 'description'),
         employeeStatusOptions: nameMapper(
           employeeStatuses.data.data,
           'description'
@@ -97,7 +97,7 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'location', value: data ? data.location : null },
       {
         label: 'section',
-        value: data && data.section ? data.section.section : null
+        value: data && data.section ? data.section.description : null
       },
       {
         label: 'salary structure',
@@ -137,16 +137,16 @@ export default class EmployeeBasicInfo extends Component {
 
     return jobInformation ? (
       <div>
-        <div className='Action'>
+        <div className="Action">
           {showForm ? (
             <Button
-              label='cancel'
+              label="cancel"
               onClick={this.handleUpdateButtonClick}
               plain
             />
           ) : (
             <Button
-              label='update job details'
+              label="update job details"
               onClick={this.handleUpdateButtonClick}
               highlight
             />
@@ -163,7 +163,7 @@ export default class EmployeeBasicInfo extends Component {
           </div>
         ) : (
           <React.Fragment>
-            <EmployeeInfoBlock data={jobInformation} title='' />
+            <EmployeeInfoBlock data={jobInformation} title="" />
           </React.Fragment>
         )}
       </div>

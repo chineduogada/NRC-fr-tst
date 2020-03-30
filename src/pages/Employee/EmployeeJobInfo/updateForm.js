@@ -96,7 +96,7 @@ export default class UpdateForm extends Form {
     return options ? (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
-          <p className='form-header'>update employee job information</p>
+          <p className="form-header">update employee job information</p>
           <InformationBlock>
             {this.renderSelect(
               'section',

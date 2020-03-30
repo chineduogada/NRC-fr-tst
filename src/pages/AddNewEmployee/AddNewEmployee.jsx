@@ -136,7 +136,7 @@ export default class AddNewEmployee extends Form {
       httpService.get('/states'),
       httpService.get('/lga'),
       httpService.get('/countries'),
-      httpService.get('/sections'),
+      httpService.get('/sections?statusId=1'),
       httpService.get('/steps'),
       httpService.get('/genders'),
       httpService.get('/salary-structures'),
@@ -161,7 +161,7 @@ export default class AddNewEmployee extends Form {
         ),
         stateOptions: nameMapper(states.data.data, 'state'),
         countryOptions: nameMapper(countries.data.data, 'country'),
-        sectionOptions: nameMapper(sections.data.data, 'section'),
+        sectionOptions: nameMapper(sections.data.data, 'description'),
         jobStepOptions: nameMapper(steps.data.data, 'step'),
         genderOptions: nameMapper(genders.data.data, 'type'),
         salaryStructureOptions: nameMapper(

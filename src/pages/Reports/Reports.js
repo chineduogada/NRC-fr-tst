@@ -15,9 +15,112 @@ class Reports extends Component {
   constructor(props) {
     super(props);
 
+    this.reports = {
+      state: {
+        id: 'state',
+        name: 'Employees by state',
+        format: 'formatC',
+        urlToOptions: '/states'
+      },
+      gender: {
+        id: 'gender',
+        name: 'Employees by gender',
+        format: 'formatB',
+        urlToOptions: '/genders'
+      },
+      department: {
+        id: 'department',
+        name: 'Employees by department',
+        format: 'formatB',
+        urlToOptions: '/departments'
+      },
+      district: {
+        id: 'district',
+        name: 'Employees by district',
+        format: 'formatB',
+        urlToOptions: '/districts'
+      },
+      LGA: {
+        id: 'LGA',
+        name: 'Employees by LGA',
+        format: 'formatC',
+        urlToOptions: '/lga'
+      },
+      GPZ: {
+        id: 'GPZ',
+        name: 'Employees by GPZ',
+        format: 'formatC',
+        urlToOptions: '/gpz'
+      },
+      senatorialDistrict: {
+        id: 'senatorialDistrict',
+        name: 'Employees by senatorial district',
+        format: 'formatC',
+        urlToOptions: '/senatorial-districts'
+      },
+      step: {
+        id: 'step',
+        name: 'Employees by step',
+        format: 'formatB',
+        urlToOptions: '/steps'
+      },
+      section: {
+        id: 'section',
+        name: 'Employees by section',
+        format: 'formatB',
+        urlToOptions: '/sections'
+      },
+      salaryStructure: {
+        id: 'salaryStructure',
+        name: 'Employees by salary structure',
+        format: 'formatC',
+        urlToOptions: '/salaray-structures'
+      },
+      employeeStatus: {
+        id: 'employeeStatus',
+        name: 'Employees by employee status',
+        format: 'formatB',
+        urlToOptions: '/employee-statuses'
+      },
+      jobType: {
+        id: 'jobType',
+        name: 'Employees by job type',
+        format: 'formatB',
+        urlToOptions: '/departments'
+      },
+      jobGrade: {
+        id: 'jobGrade',
+        name: 'Employees by job grade',
+        format: 'formatB',
+        urlToOptions: '/job-types'
+      },
+      jobTitle: {
+        id: 'jobTitle',
+        name: 'Employees by job title',
+        format: 'formatC',
+        urlToOptions: '/job-titles'
+      },
+      resumptionDate: {
+        id: 'resumptionDate',
+        name: 'Employees by resumption date',
+        format: 'formatA'
+      },
+      dateOfBirth: {
+        id: 'dateOfBirth',
+        name: 'Employees by date of birth',
+        format: 'formatB'
+      },
+      expectedRetirementDate: {
+        id: 'expectedRetirementDate',
+        name: 'Employees by expected retirement date',
+        format: 'formatA'
+      }
+    };
+
     this.state = {
       employees: [],
       activeColumnFormat: 'formatA',
+      activeReport: '',
       columns: formats,
       showFilters: false,
       isProcessing: false
@@ -144,13 +247,13 @@ class Reports extends Component {
       employeeInfo.resumptionDate = employeeAppointment.resumptionDate;
       employeeInfo.expectedRetirementDate =
         employeeAppointment.expectedRetirementDate;
-      employeeInfo.presentJobGrade = employeeAppointment.presentJobGrade
+      employeeInfo.jobGrade = employeeAppointment.presentJobGrade
         ? employeeAppointment.presentJobGrade.con
         : null;
-      employeeInfo.presentJobTitle = employeeAppointment.presentJobTitle
+      employeeInfo.jobTitle = employeeAppointment.presentJobTitle
         ? employeeAppointment.presentJobTitle.description
         : null;
-      employeeInfo.presentPositionStep = employeeAppointment.presentPositionStep
+      employeeInfo.step = employeeAppointment.presentPositionStep
         ? employeeAppointment.presentPositionStep.step
         : null;
     }
@@ -163,16 +266,26 @@ class Reports extends Component {
     this.autoFetchFromServer(queryString);
   }
 
+  setActiveColumnFormat() {
+    const { activeReport } = this.state;
+    if (activeReport) {
+      const activeColumnFormat = this.reports[activeReport].format;
+      this.setState({ activeColumnFormat });
+    }
+  }
+
   handleRowClick({ currentTarget, detail }) {
     if (detail > 1) {
       this.props.history.push(`/employees/${currentTarget.id}`);
     }
   }
 
-  handleChange({ currentTarget }) {
-    if (currentTarget.value) {
-      this.setState({ activeColumnFormat: currentTarget.value });
-    }
+  async handleChange({ currentTarget }) {
+    await this.setState({
+      activeReport: currentTarget.value
+    });
+
+    this.setActiveColumnFormat();
   }
 
   render() {
@@ -180,36 +293,26 @@ class Reports extends Component {
       employees,
       columns,
       activeColumnFormat,
+      activeReport,
       showFilters,
       isProcessing
     } = this.state;
 
     console.log(employees);
-    const options = [
-      { id: 'formatA', name: 'format a' },
-      { id: 'formatB', name: 'format b' },
-      { id: 'formatC', name: 'format c' }
-    ];
+    const options = Object.values(this.reports);
 
     return (
-      <Section
-        title="reports"
-        // subTitle={
-        //   <Fragment>
-        //     Go to <Link to="/reports/nominal-rolls">nominal rolls</Link>
-        //   </Fragment>
-        // }
-      >
+      <Section title="reports">
         {/* <ReportPrintTemplate data={employees} /> */}
 
         <div className={classes.Reports}>
           <div className={`d-flex ${classes.ReportFilters}`}>
             <div className="format-controller">
               <Select
-                label="switch format"
+                label="specify report"
                 options={options}
                 onChange={this.handleChange}
-                selectedOption={activeColumnFormat}
+                selectedOption={activeReport}
               />
             </div>
             <div className="filter-icon" onClick={this.toggleFilterDraw}>
@@ -220,6 +323,7 @@ class Reports extends Component {
 
           <GlobalFilters
             showFilters={showFilters}
+            showOnly={activeReport}
             queryStringConsumer={this.consumeQueryString}
             isProcessing={isProcessing}
           />
@@ -230,6 +334,12 @@ class Reports extends Component {
               data={employees}
               clickHandler={this.handleRowClick}
               enablePrint={true}
+              activeReport={activeReport}
+              activeReportTitle={
+                this.reports[activeReport]
+                  ? this.reports[activeReport].name
+                  : ''
+              }
             />
           </div>
         </div>

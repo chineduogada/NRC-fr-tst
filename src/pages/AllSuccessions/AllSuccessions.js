@@ -84,7 +84,7 @@ class Successions extends Component {
       httpService.get('/training-types?statusId=1'),
       httpService.get('/job-titles?statusId=1'),
       httpService.get('/departments?statusId=1'),
-      httpService.get('/sections')
+      httpService.get('/sections?statusId=1')
     ]);
 
     const options = {};

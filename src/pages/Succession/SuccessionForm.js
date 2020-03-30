@@ -334,7 +334,7 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'section',
               'sectionId',
-              nameMapper(options.sections, 'section'),
+              nameMapper(options.sections, 'description'),
               null,
               null,
               formData.sectionId

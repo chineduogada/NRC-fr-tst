@@ -147,7 +147,7 @@ export default class extends Component {
 
   render() {
     const { options, formDataIsRequested, resetForm } = this.state;
-    const { isProcessing } = this.props;
+    const { isProcessing, showOnly } = this.props;
 
     return (
       <div className={classes.GlobalFilters}>
@@ -176,6 +176,7 @@ export default class extends Component {
               options={options}
               formDataIsResquested={formDataIsRequested}
               formDataConsumer={this.extractFormData}
+              showOnly={showOnly}
               // resetForm={resetForm}
             />
           </div>

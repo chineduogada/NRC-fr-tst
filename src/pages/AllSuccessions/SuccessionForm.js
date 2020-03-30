@@ -160,8 +160,8 @@ export default class ImportForm extends Form {
         <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
           {justAddedADefinition ? <p>Add another one?</p> : null}
           <InformationBlock
-            title='source details'
-            subTitle='All the fields in this section are required'
+            title="source details"
+            subTitle="All the fields in this section are required"
           >
             {this.renderSelect(
               'department',
@@ -174,7 +174,7 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'section',
               'sectionId',
-              nameMapper(options.sections, 'section'),
+              nameMapper(options.sections, 'description'),
               null,
               null,
               formData.sectionId
@@ -198,7 +198,7 @@ export default class ImportForm extends Form {
 
           <InformationBlock
             showDropDown
-            title='basic requirements'
+            title="basic requirements"
             subTitle={
               this.isSourceDetailsFilled()
                 ? 'Please specify the basic requirements for this succession. All fields are required.'
@@ -244,7 +244,7 @@ export default class ImportForm extends Form {
 
           <InformationBlock
             showDropDown
-            title='other requirements'
+            title="other requirements"
             subTitle={
               this.isBasicRequirementsFilled()
                 ? 'Please specify any other (optional) requirement for this succession'
