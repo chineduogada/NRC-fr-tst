@@ -61,8 +61,39 @@ class TableView extends Component {
     }
   }
 
+  groupDataByActiveReport(data, activeReport) {
+    const result = {};
+
+    data.forEach(row => {
+      const instance = row[activeReport];
+      if (result[instance]) {
+        result[instance] += 1;
+        return;
+      }
+
+      result[instance] = 1;
+    });
+
+    return result;
+  }
+
+  getSummary(data) {
+    const { activeReport } = this.props;
+    let summary = '';
+
+    if (activeReport) {
+      const groupedData = this.groupDataByActiveReport(data, activeReport);
+      Object.keys(groupedData).forEach(group => {
+        summary += `${group}: ${groupedData[group]}; `;
+      });
+    }
+
+    return summary;
+  }
+
   handlePrint() {
-    const { data, columns } = this.props;
+    const { columns, activeReport, activeReportTitle } = this.props;
+    const { data } = this;
 
     const getProperties = (headers = []) => {
       return headers.map(({ accessor, Header }) => {
@@ -79,10 +110,27 @@ class TableView extends Component {
     };
 
     const header = `
-        <div className={classes.Brand}>
-          <div className={classes.Logo}></div>
-          <h2>PRM</h2>
-        </div>`;
+      <div className={classes.Brand}>
+        <div className={classes.Logo}></div>
+        <h2>PRM</h2>
+      </div>
+      
+      ${
+        activeReport
+          ? `<div className='report-summary' style='margin-bottom: 2em;'>
+              <div>
+                <h4 style='margin-bottom: none; margin-right: 0.5em; display: inline;'>Summary:</h4>
+                <span style='text-decoration: underline'>${activeReportTitle} (Total count: ${
+              data.length
+            })</span>
+              </div>
+              <p style='text-transform: capitalize;'>${this.getSummary(data) ||
+                ''}</p>
+              <hr />
+            </div>`
+          : ''
+      }
+      `;
 
     printJS({
       header,

@@ -13,22 +13,32 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import objectKeyEliminator from '../../helpers/obJectKeyEliminator';
-import classes from './Skills.module.scss';
+import classes from './IncidenceDecisionCodes.module.scss';
 
-class Skills extends Form {
+class IncidenceDecisionCodes extends Form {
   constructor(props) {
     super(props);
 
+    this.tableRowOptions = [
+      { id: 0, name: 'inactive' },
+      { id: 0, name: 'active' }
+    ];
+
     this.statusOptions = [
       { id: 1, status: 'active' },
-      { id: 2, status: 'inactive' }
+      {
+        id: 2,
+        status: 'inactive',
+        aggregate: 'count',
+        Aggregated: ({ cell: { value } }) => `${value} Statuses`
+      }
     ];
 
     this.state = {
       filteredDataFromServer: null,
 
       columns: [
-        { accessor: 'skill', Header: 'Skill' },
+        { accessor: 'code', Header: 'Code' },
         { accessor: 'status', Header: 'Status' }
       ],
 
@@ -38,7 +48,7 @@ class Skills extends Form {
       showForm: false,
 
       formData: {
-        skill: '',
+        code: '',
         statusId: ''
       },
 
@@ -63,14 +73,14 @@ class Skills extends Form {
   }
 
   schema = {
-    skill: Joi.string(),
+    code: Joi.string(),
     statusId: Joi.number()
   };
 
   async componentDidMount() {
     const filteredDataFromServer = [];
 
-    const res = await httpService.get('/skills');
+    const res = await httpService.get('/incidence-decision-codes');
 
     if (res) {
       res.data.data.forEach(row => {
@@ -92,7 +102,7 @@ class Skills extends Form {
   mapToViewModel(row) {
     return {
       id: row.id,
-      skill: row.skill,
+      code: row.code,
       status: row.status.status,
       statusId: row.statusId
     };
@@ -107,7 +117,6 @@ class Skills extends Form {
   handleTableRowOptionChange({ currentTarget }) {
     console.log(currentTarget.id);
   }
-
   handleRowClick(event) {
     if (event.detail > 1) {
       const rowToPreview = this.state.filteredDataFromServer.filter(
@@ -179,14 +188,14 @@ class Skills extends Form {
 
   async updateDataObject(stopProcessing) {
     const res = await httpService.patch(
-      `/skills/${this.state.rowToPreview.id}`,
+      `/incidence-decision-codes/${this.state.rowToPreview.id}`,
       this.state.formData
     );
 
     stopProcessing();
 
     if (res) {
-      toast.success('Skills successfully updated!');
+      toast.success('Decision code successfully updated!');
       this.updateTableRow();
       this.closeSideDraw();
       this.resetFormData();
@@ -212,11 +221,11 @@ class Skills extends Form {
       this.setState({ isDeleteting: true });
 
       const res = await httpService.delete(
-        `/skills/${this.state.rowToPreview.id}`
+        `/incidence-decision-codes/${this.state.rowToPreview.id}`
       );
 
       if (res) {
-        toast.success('Skills successfully deleted!');
+        toast.success('Decision code successfully deleted!');
         this.removeTableRow();
         this.updateForm.reset();
         this.resetFormData();
@@ -227,12 +236,15 @@ class Skills extends Form {
   }
 
   async addDataObject(stopProcessing) {
-    const res = await httpService.post('/skills', this.state.formData);
+    const res = await httpService.post(
+      '/incidence-decision-codes',
+      this.state.formData
+    );
 
     stopProcessing();
 
     if (res) {
-      toast.success('Skills successfully added!');
+      toast.success('Decision code successfully added!');
       this.updateObjectList(res);
       this.Form.reset();
       this.resetFormData();
@@ -263,12 +275,7 @@ class Skills extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-          {this.renderInput(
-            'skill',
-            'skill',
-            null,
-            this.state.rowToPreview.skill
-          )}
+          {this.renderInput('code', 'code', null, this.state.rowToPreview.code)}
           {this.renderSelect(
             'status ',
             'statusId',
@@ -287,9 +294,9 @@ class Skills extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new skill</p>
+        <p>Add a new reason code</p>
 
-        {this.renderInput('skill', 'skill')}
+        {this.renderInput('code', 'code')}
         {this.renderSelect(
           'status ',
           'statusId',
@@ -318,7 +325,7 @@ class Skills extends Form {
                   >
                     <IoMdArrowRoundBack className="icon" />
                   </Link>
-                  <span>skills</span>
+                  <span>incidence decision codes</span>
                 </span>
               }
               message="Double click a row to preview"
@@ -329,7 +336,7 @@ class Skills extends Form {
             ></TableView>
 
             <SideDraw
-              title="skill"
+              title="decision code"
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >
@@ -346,4 +353,4 @@ class Skills extends Form {
   }
 }
 
-export default withRouter(Skills);
+export default withRouter(IncidenceDecisionCodes);

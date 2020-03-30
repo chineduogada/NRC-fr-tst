@@ -16,6 +16,7 @@ class StaticModels extends Component {
     this.models = [
       { name: 'districts', url: 'districts' },
       { name: 'departments', url: 'departments' },
+      { name: 'sections', url: 'sections' },
       { name: 'pension fund administrators', url: 'pfa' },
       { name: 'job types', url: 'job-types' },
       { name: 'job titles', url: 'job-titles' },
@@ -23,7 +24,8 @@ class StaticModels extends Component {
       { name: 'skills', url: 'skills' },
       { name: 'qualifications', url: 'qualifications' },
       { name: 'career reason codes', url: 'career-reason-codes' },
-      { name: 'incidence reason codes', url: 'incidence-reason-codes' }
+      { name: 'incidence reason codes', url: 'incidence-reason-codes' },
+      { name: 'incidence decision codes', url: 'incidence-decision-codes' }
     ];
   }
 

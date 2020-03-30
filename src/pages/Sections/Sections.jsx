@@ -4,6 +4,7 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
@@ -18,16 +19,18 @@ class Sections extends Form {
   constructor(props) {
     super(props);
 
-    this.tableRowOptions = [
-      {id: 0, name: 'inactive'},
-      {id: 0, name: 'active'},
-    ]
+    this.statusOptions = [
+      { id: 1, status: 'active' },
+      { id: 2, status: 'inactive' }
+    ];
 
     this.state = {
-      filteredDataFromServer: [],
+      filteredDataFromServer: null,
 
       columns: [
-        { accessor: 'section', Header: 'Section' },
+        { accessor: 'code', Header: 'code' },
+        { accessor: 'description', Header: 'description' },
+        { accessor: 'status', Header: 'Status' }
       ],
 
       pageSize: 20,
@@ -36,7 +39,9 @@ class Sections extends Form {
       showForm: false,
 
       formData: {
-        section: '',
+        code: '',
+        description: '',
+        statusId: ''
       },
 
       rowToPreview: null,
@@ -51,14 +56,18 @@ class Sections extends Form {
     this.handleAddNew = this.handleAddNew.bind(this);
     this.closeSideDraw = this.closeSideDraw.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(this);
+    this.handleTableRowOptionChange = this.handleTableRowOptionChange.bind(
+      this
+    );
     this.addDataObject = this.addDataObject.bind(this);
     this.updateDataObject = this.updateDataObject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   schema = {
-    section: Joi.string(),
+    code: Joi.string(),
+    description: Joi.string(),
+    statusId: Joi.number()
   };
 
   async componentDidMount() {
@@ -83,10 +92,13 @@ class Sections extends Form {
     this.setState({ showForm: false, rowToPreview: null });
   }
 
-  mapToViewModel(data) {
+  mapToViewModel(row) {
     return {
-      id: data.id,
-      section: data.section,
+      id: row.id,
+      code: row.code,
+      description: row.description,
+      status: row.status.status,
+      statusId: row.statusId
     };
   }
 
@@ -97,7 +109,7 @@ class Sections extends Form {
   };
 
   handleTableRowOptionChange({ currentTarget }) {
-    console.log(currentTarget.id)
+    console.log(currentTarget.id);
   }
 
   handleRowClick(event) {
@@ -109,7 +121,7 @@ class Sections extends Form {
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: objectKeyEliminator(rowToPreview, ['id'])
+        formData: objectKeyEliminator(rowToPreview, ['id', 'status'])
       });
     }
   }
@@ -119,9 +131,18 @@ class Sections extends Form {
    * @param { Response } res Axios response object
    */
   updateObjectList(res) {
-    const newDept = res.data.data;
+    const newDataObject = res.data.data;
+    const filteredNewDataObject = this.mapToViewModel({
+      ...newDataObject,
+      ...this.getOptionValues()
+    });
 
-    this.setState({ filteredDataFromServer: [...this.state.filteredDataFromServer, newDept] });
+    this.setState({
+      filteredDataFromServer: [
+        filteredNewDataObject,
+        ...this.state.filteredDataFromServer
+      ]
+    });
   }
 
   resetFormData() {
@@ -129,15 +150,33 @@ class Sections extends Form {
   }
 
   /**
+   * Gets actual values of the options the user has updated
+   */
+  getOptionValues() {
+    const { statusId } = this.state.formData;
+    return {
+      status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
+    };
+  }
+
+  /**
    * Updates the table row each time a new data object is added
    */
   updateTableRow() {
+    // create a copy of the filtered data stored in the state
     const oldState = [...this.state.filteredDataFromServer];
+    // obtain the id or the row to be previewed
     const id = this.state.rowToPreview.id;
+    // obtain the form data in the state (it contains the values the user just updated)
     const formData = this.state.formData;
+    // map every option to the current value the user may have selected and join them with the from data
+    const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
+    // obtain the index of the row the use jus
     const rowIndex = oldState.findIndex(row => row.id === id);
-
-    oldState[rowIndex] = { ...formData, id };
+    // map the updated data to the desired view (Ex: for table display)
+    const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
+    // updating the copy of the filtered data from the server
+    oldState[rowIndex] = { ...filteredUpdatedRow, id };
 
     this.setState({ filteredDataFromServer: oldState });
   }
@@ -228,7 +267,21 @@ class Sections extends Form {
           ref={form => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
-        {this.renderInput('section', 'section', null, this.state.rowToPreview.section)}
+          {this.renderInput('code', 'code', null, this.state.rowToPreview.code)}
+          {this.renderInput(
+            'description',
+            'description',
+            null,
+            this.state.rowToPreview.description
+          )}
+          {this.renderSelect(
+            'status ',
+            'statusId',
+            nameMapper(this.statusOptions, 'status'),
+            null,
+            null,
+            this.state.formData.statusId
+          )}
 
           {this.renderButton('update')}
         </form>
@@ -239,9 +292,14 @@ class Sections extends Form {
   renderCreateForm() {
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        <p>Add a new section</p>
+        <p>Add a new skill</p>
 
-        {this.renderInput('section', 'section')}
+        {this.renderInput('skill', 'skill')}
+        {this.renderSelect(
+          'status ',
+          'statusId',
+          nameMapper(this.statusOptions, 'status')
+        )}
 
         {this.renderButton('save')}
       </form>
@@ -253,32 +311,30 @@ class Sections extends Form {
 
     return (
       <React.Fragment>
-        {filteredDataFromServer.length ? (
+        {filteredDataFromServer ? (
           <Section>
             <TableView
               title={
                 <span>
                   <Link
                     style={{ marginRight: '0.5em' }}
-                    className='link secondary'
-                    to='/settings/static-models'
+                    className="link secondary"
+                    to="/settings/static-models"
                   >
-                    <IoMdArrowRoundBack className='icon' />
+                    <IoMdArrowRoundBack className="icon" />
                   </Link>
-                  <span>sections</span>
+                  <span>Section</span>
                 </span>
               }
-              message='Double click a row to preview'
+              message="Double click a row to preview"
               columns={columns}
               data={filteredDataFromServer}
               clickHandler={this.handleRowClick}
               addNewButtonHandler={this.handleAddNew}
-            >
-              
-            </TableView>
+            ></TableView>
 
             <SideDraw
-              title='section'
+              title="skill"
               openDraw={this.state.showForm}
               onClose={this.closeSideDraw}
             >

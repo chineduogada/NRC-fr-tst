@@ -241,13 +241,13 @@ class AllJobIncidence extends Form {
               'reasonCodeId',
               options.reasonCodes
             )}
-            {this.renderInput('reason description', 'reasonDescription')}
+            {this.renderTextArea('reason description', 'reasonDescription')}
             {this.renderSelect(
               'decision code',
               'decisionCodeId',
               options.decisionCodes
             )}
-            {this.renderInput('decision description', 'decisionDescription')}
+            {this.renderTextArea('decision description', 'decisionDescription')}
             {this.renderInput(
               'attached document',
               'attachedDoc',

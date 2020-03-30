@@ -31,6 +31,8 @@ export default class extends Form {
         resumptionDate: []
       },
 
+      activeFormField: '',
+
       errors: {}
     };
 
@@ -38,15 +40,35 @@ export default class extends Form {
   }
 
   resetFormAndFormData() {
-    // this.setState({ formData: this.initialFormData });
+    const { showOnly } = this.props;
+    this.setState({
+      formData: this.initialFormData,
+      activeFormField: showOnly
+    });
     this.Form.reset();
   }
 
+  shouldComponentUpdate() {
+    const { showOnly, options } = this.props;
+    const { activeFormField } = this.state;
+
+    if (showOnly !== activeFormField || options) {
+      return true;
+    }
+
+    return false;
+  }
+
   componentDidUpdate() {
-    const { formDataIsResquested, resetForm } = this.props;
+    const { formDataIsResquested, resetForm, showOnly } = this.props;
+    const { activeFormField } = this.state;
 
     if (formDataIsResquested) {
       this.provideFormData();
+    }
+
+    if (showOnly !== activeFormField) {
+      this.resetFormAndFormData();
     }
 
     if (resetForm) {
@@ -70,140 +92,161 @@ export default class extends Form {
   }
 
   renderForm(formData, options) {
+    const { showOnly } = this.props;
     const otherConfig = [null, null, null, true];
     const currentDate = new Date().toISOString().split('T')[0];
+    let fieldsForSelectElement = [
+      {
+        label: 'gender',
+        key: 'gender',
+        name: 'genderId',
+        options: this.includeOptionForNullValues(options.gender)
+      },
+      {
+        label: 'state',
+        key: 'state',
+        name: 'stateId',
+        options: this.includeOptionForNullValues(options.state)
+      },
+      {
+        label: 'LGA',
+        key: 'LGA',
+        name: 'lgaId',
+        options: this.includeOptionForNullValues(options.lga)
+      },
+      {
+        label: 'GPZ',
+        key: 'GPZ',
+        name: 'gpzId',
+        options: this.includeOptionForNullValues(options.gpz)
+      },
+      {
+        label: 'senatorial district',
+        key: 'senatorialDistrict',
+        name: 'senatorialDistrictId',
+        options: this.includeOptionForNullValues(options.senatorialDistrict)
+      },
+      {
+        label: 'district',
+        key: 'district',
+        name: 'districtId',
+        options: this.includeOptionForNullValues(options.district)
+      },
+      {
+        label: 'department',
+        key: 'department',
+        name: 'departmentId',
+        options: this.includeOptionForNullValues(options.department)
+      },
+      {
+        label: 'salary structure',
+        key: 'salaryStructure',
+        name: 'salaryStructureId',
+        options: this.includeOptionForNullValues(options.salaryStructure)
+      },
+      {
+        label: 'employee status',
+        key: 'employeeStatus',
+        name: 'employeeStatusId',
+        options: this.includeOptionForNullValues(options.employeeStatus)
+      },
+      {
+        label: 'present job title',
+        key: 'jobTitle',
+        name: 'presentPositionJobTitleId',
+        options: this.includeOptionForNullValues(options.jobTitle)
+      },
+      {
+        label: 'present job type',
+        key: 'jobType',
+        name: 'presentPositionJobTypeId',
+        options: this.includeOptionForNullValues(options.jobType)
+      },
+      {
+        label: 'present job grade',
+        key: 'jobGrade',
+        name: 'presentPositionGradeId',
+        options: this.includeOptionForNullValues(options.jobGrade)
+      },
+      {
+        label: 'present step',
+        key: 'step',
+        name: 'presentPositionStepId',
+        options: this.includeOptionForNullValues(options.step)
+      }
+    ];
+
+    let dateFields = [
+      {
+        type: 'date',
+        label: 'date of birth',
+        fieldName: 'dateOfBirth',
+        key: 'dateOfBirth'
+      },
+      {
+        type: 'date',
+        label: 'resumption date',
+        fieldName: 'resumptionDate',
+        key: 'resumptionDate'
+      },
+      {
+        type: 'date',
+        label: 'expected retirement date',
+        fieldName: 'expectedRetirementDate',
+        key: 'expectedRetirementDate'
+      }
+    ];
+
+    const getFieldToShow = (fields, fieldKey) => {
+      return fields.filter(field => field.key === fieldKey);
+    };
+
+    if (showOnly) {
+      fieldsForSelectElement = getFieldToShow(fieldsForSelectElement, showOnly);
+      dateFields = getFieldToShow(dateFields, showOnly);
+    }
 
     return (
       <form ref={form => (this.Form = form)}>
-        <InformationBlock>
-          {this.renderReactSelect(
-            'gender',
-            'genderId',
-            this.includeOptionForNullValues(options.gender),
-            ...otherConfig
-          )}
+        {fieldsForSelectElement.length ? (
+          <InformationBlock>
+            {fieldsForSelectElement.map((field, index) => {
+              return this.renderReactSelect(
+                field.label,
+                field.name,
+                field.options,
+                null,
+                null,
+                this.state.formData[field.name],
+                true
+              );
+            })}
+          </InformationBlock>
+        ) : null}
 
-          {this.renderReactSelect(
-            'state',
-            'stateId',
-            this.includeOptionForNullValues(options.state),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'LGA',
-            'lgaId',
-            this.includeOptionForNullValues(options.lga),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'GPZ',
-            'gpzId',
-            this.includeOptionForNullValues(options.gpz),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'senatorial district',
-            'senatorialDistrictId',
-            this.includeOptionForNullValues(options.senatorialDistrict),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'department',
-            'departmentId',
-            this.includeOptionForNullValues(options.department),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'district',
-            'districtId',
-            this.includeOptionForNullValues(options.district),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'salaryStructure',
-            'salaryStructureId',
-            this.includeOptionForNullValues(options.salaryStructure),
-            ...otherConfig
-          )}
-          {this.renderReactSelect(
-            'employeeStatus',
-            'employeeStatusId',
-            this.includeOptionForNullValues(options.employeeStatus),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'present job title',
-            'presentPositionJobTitleId',
-            this.includeOptionForNullValues(options.jobTitle),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'present job type',
-            'presentPositionJobTypeId',
-            this.includeOptionForNullValues(options.jobType),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'present job grade',
-            'presentPositionGradeId',
-            this.includeOptionForNullValues(options.jobGrade),
-            ...otherConfig
-          )}
-
-          {this.renderReactSelect(
-            'present step',
-            'presentPositionStepId',
-            this.includeOptionForNullValues(options.step),
-            ...otherConfig
-          )}
-        </InformationBlock>
-
-        <InformationBlock>
-          <RangeInput
-            field="useInput"
-            type="date"
-            label="date of date"
-            fieldName="dateOfBirth"
-            consumeRange={this.handleChange}
-            defaultValue={currentDate}
-          />
-          <RangeInput
-            field="useInput"
-            type="date"
-            label="resumption date"
-            fieldName="resumptionDate"
-            consumeRange={this.handleChange}
-            defaultValue={currentDate}
-          />
-          <RangeInput
-            field="useInput"
-            type="date"
-            label="expected retirement date"
-            fieldName="expectedRetirementDate"
-            consumeRange={this.handleChange}
-            defaultValue={currentDate}
-          />
-        </InformationBlock>
+        {dateFields.length ? (
+          <InformationBlock>
+            {dateFields.map((field, index) => {
+              return (
+                <RangeInput
+                  field="useInput"
+                  type={field.type}
+                  label={field.label}
+                  fieldName={field.fieldName}
+                  consumeRange={this.handleChange}
+                  defaultValue={currentDate}
+                />
+              );
+            })}
+          </InformationBlock>
+        ) : null}
       </form>
     );
   }
 
   render() {
     const { formData } = this.state;
-    const { options, resetForm } = this.props;
-
-    if (resetForm) {
-      this.resetFormAndFormData();
-    }
+    const { options } = this.props;
 
     return <Fragment>{this.renderForm(formData, options)}</Fragment>;
   }

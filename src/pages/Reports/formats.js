@@ -5,14 +5,14 @@ const base = [
   { accessor: 'initials', Header: 'Initials' },
   { accessor: 'gender', Header: 'Gender' },
   { accessor: 'salaryStructure', Header: 'salary structure' },
-  { accessor: 'presentJobGrade', Header: 'Grade Level' },
-  { accessor: 'presentPositionStep', Header: 'Step' }
+  { accessor: 'jobGrade', Header: 'Grade Level' },
+  { accessor: 'step', Header: 'present Position Step' }
 ];
 
 const commonToFormatsA_B = [
   ...base,
   { accessor: 'department', Header: 'Department' },
-  { accessor: 'presentJobTitle', Header: 'Present Job Title' }
+  { accessor: 'jobTitle', Header: 'Present Job Title' }
 ];
 
 const formatA = [

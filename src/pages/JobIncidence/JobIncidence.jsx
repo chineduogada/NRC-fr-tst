@@ -10,6 +10,7 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
+import nameMapper from '../../helpers/nameMapper';
 import classes from './JobIncidence.module.scss';
 
 class JobIncidence extends Form {
@@ -22,7 +23,10 @@ class JobIncidence extends Form {
       dataFilteredForView: null,
       dataForView: null,
       dataForForm: null,
-
+      options: {
+        reasonCodes: [],
+        decisionCodes: []
+      },
       showForm: false,
       showModal: false,
 
@@ -87,7 +91,24 @@ class JobIncidence extends Form {
     }
   }
 
+  async fetchOptions() {
+    const [reasonCodes, decisionCodes] = await httpService.all([
+      httpService.get('/incidence-reason-codes'),
+      httpService.get('/incidence-decision-codes')
+    ]);
+
+    if (reasonCodes) {
+      const options = {
+        reasonCodes: nameMapper(reasonCodes.data.data, 'code'),
+        decisionCodes: nameMapper(decisionCodes.data.data, 'code')
+      };
+
+      this.setState({ options });
+    }
+  }
+
   async componentDidMount() {
+    this.fetchOptions();
     await this.fetchJobIncidence();
   }
 
@@ -122,24 +143,12 @@ class JobIncidence extends Form {
   mapDataForIncidenceLines(data) {
     return [
       {
-        name: 'incidence line 1',
-        value: data.incidenceLine1
+        name: 'reason description',
+        value: data.reasonDescription
       },
       {
-        name: 'incidence line 2',
-        value: data.incidenceLine2
-      },
-      {
-        name: 'incidence line 3',
-        value: data.incidenceLine3
-      },
-      {
-        name: 'incidence line 4',
-        value: data.incidenceLine4
-      },
-      {
-        name: 'incidence line 5',
-        value: data.incidenceLine5
+        name: 'decision description',
+        value: data.decisionDescription
       }
     ];
   }
@@ -159,11 +168,9 @@ class JobIncidence extends Form {
       ippisNo: data.ippisNo,
       memoReference: data.memoReference,
       reasonCodeId: data.reasonCodeId,
-      incidenceLine1: data.incidenceLine1,
-      incidenceLine2: data.incidenceLine2,
-      incidenceLine3: data.incidenceLine3,
-      incidenceLine4: data.incidenceLine4,
-      incidenceLine5: data.incidenceLine5,
+      decisionCodeId: data.decisionCodeId,
+      reasonDescription: data.reasonDescription,
+      decisionDescription: data.decisionDescription,
       attachedDoc: data.attachedDoc,
       remarks: data.remarks
     };
@@ -176,11 +183,9 @@ class JobIncidence extends Form {
       ippisNo: data.ippisNo,
       memoReference: data.memoReference,
       reasonCodeId: data.reasonCodeId,
-      incidenceLine1: data.incidenceLine1,
-      incidenceLine2: data.incidenceLine2,
-      incidenceLine3: data.incidenceLine3,
-      incidenceLine4: data.incidenceLine4,
-      incidenceLine5: data.incidenceLine5,
+      decisionCodeId: data.decisionCodeId,
+      reasonDescription: data.reasonDescription,
+      decisionDescription: data.decisionDescription,
       attachedDoc: data.attachedDoc,
       remarks: data.remarks
     };
@@ -245,7 +250,7 @@ class JobIncidence extends Form {
   }
 
   renderUpdateForm() {
-    const { dataForForm } = this.state;
+    const { dataForForm, options } = this.state;
 
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
@@ -262,46 +267,33 @@ class JobIncidence extends Form {
           null,
           dataForForm.memoReference
         )}
-        {this.renderSelect('reason code', 'reasonCodeId', [
-          { id: 1, name: 'fighting' },
-          { id: 2, name: 'stealing' }
-        ])}
-        {this.renderInput(
-          'transaction date',
-          'transactionDate',
+        {this.renderSelect(
+          'reason code',
+          'reasonCodeId',
+          options.reasonCodes,
           null,
           null,
-          'date'
+          dataForForm.reasonCodeId
         )}
-        {this.renderInput(
-          'incindence line 1',
-          'incidenceLine1',
+        {this.renderTextArea(
+          'reason description',
+          'reasonDescription',
           null,
-          dataForForm.incidenceLine1
+          dataForForm.reasonDescription
         )}
-        {this.renderInput(
-          'incindence line 2',
-          'incidenceLine2',
+        {this.renderSelect(
+          'decision code',
+          'decisionCodeId',
+          options.decisionCodes,
           null,
-          dataForForm.incidenceLine2
+          null,
+          dataForForm.decisionCodeId
         )}
-        {this.renderInput(
-          'incindence line 3',
-          'incidenceLine3',
+        {this.renderTextArea(
+          'decision description',
+          'decisionDescription',
           null,
-          dataForForm.incidenceLine3
-        )}
-        {this.renderInput(
-          'incindence line 4',
-          'incidenceLine4',
-          null,
-          dataForForm.incidenceLine4
-        )}
-        {this.renderInput(
-          'incindence line 5',
-          'incidenceLine5',
-          null,
-          dataForForm.incidenceLine5
+          dataForForm.decisionDescription
         )}
         {this.renderTextArea('remarks', 'remarks', null, dataForForm.remarks)}
 
@@ -343,7 +335,7 @@ class JobIncidence extends Form {
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
-            <InformationBlock title="incidence lines">
+            <InformationBlock title="descriptions">
               {this.displayInfo(
                 this.mapDataForIncidenceLines(this.state.dataFilteredForView)
               )}

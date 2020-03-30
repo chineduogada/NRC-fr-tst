@@ -35,6 +35,7 @@ import TrainingTypes from '../../pages/TrainingTypes/TrainingTypes';
 import Sections from '../../pages/Sections/Sections';
 import CareerReasonCodes from '../../pages/CareerReasonCodes/CareerReasonCodes';
 import IncidenceReasonCodes from '../../pages/IncidenceReasonCodes/IncidenceReasonCodes';
+import IncidenceDecisionCodes from '../../pages/IncidenceDecisionCodes/IncidenceDecisionCodes';
 import Skills from '../../pages/Skills/Skills';
 import Qualifications from '../../pages/Qualifications/Qualifications';
 import Reports from '../../pages/Reports/Reports';
@@ -146,6 +147,11 @@ class Layout extends Component {
                 path="/settings/static-models/incidence-reason-codes"
                 exact
                 component={IncidenceReasonCodes}
+              />
+              <Route
+                path="/settings/static-models/incidence-decision-codes"
+                exact
+                component={IncidenceDecisionCodes}
               />
               <Route
                 path="/settings/static-models/skills"
