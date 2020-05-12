@@ -17,6 +17,7 @@ export default class extends Form {
         stateId: [],
         lgaId: [],
         gpzId: [],
+        sectionId: [],
         senatorialDistrictId: [],
         departmentId: [],
         districtId: [],
@@ -28,12 +29,12 @@ export default class extends Form {
         presentPositionStepId: [],
         expectedRetirementDate: [],
         dateOfBirth: [],
-        resumptionDate: []
+        resumptionDate: [],
       },
 
       activeFormField: '',
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormData = this.state.formData;
@@ -43,7 +44,7 @@ export default class extends Form {
     const { showOnly } = this.props;
     this.setState({
       formData: this.initialFormData,
-      activeFormField: showOnly
+      activeFormField: showOnly,
     });
     this.Form.reset();
   }
@@ -100,80 +101,86 @@ export default class extends Form {
         label: 'gender',
         key: 'gender',
         name: 'genderId',
-        options: this.includeOptionForNullValues(options.gender)
+        options: this.includeOptionForNullValues(options.gender),
       },
       {
         label: 'state',
         key: 'state',
         name: 'stateId',
-        options: this.includeOptionForNullValues(options.state)
+        options: this.includeOptionForNullValues(options.state),
       },
       {
         label: 'LGA',
         key: 'LGA',
         name: 'lgaId',
-        options: this.includeOptionForNullValues(options.lga)
+        options: this.includeOptionForNullValues(options.lga),
       },
       {
         label: 'GPZ',
         key: 'GPZ',
         name: 'gpzId',
-        options: this.includeOptionForNullValues(options.gpz)
+        options: this.includeOptionForNullValues(options.gpz),
       },
       {
         label: 'senatorial district',
         key: 'senatorialDistrict',
         name: 'senatorialDistrictId',
-        options: this.includeOptionForNullValues(options.senatorialDistrict)
+        options: this.includeOptionForNullValues(options.senatorialDistrict),
       },
       {
         label: 'district',
         key: 'district',
         name: 'districtId',
-        options: this.includeOptionForNullValues(options.district)
+        options: this.includeOptionForNullValues(options.district),
       },
       {
         label: 'department',
         key: 'department',
         name: 'departmentId',
-        options: this.includeOptionForNullValues(options.department)
+        options: this.includeOptionForNullValues(options.department),
       },
       {
         label: 'salary structure',
         key: 'salaryStructure',
         name: 'salaryStructureId',
-        options: this.includeOptionForNullValues(options.salaryStructure)
+        options: this.includeOptionForNullValues(options.salaryStructure),
       },
       {
         label: 'employee status',
         key: 'employeeStatus',
         name: 'employeeStatusId',
-        options: this.includeOptionForNullValues(options.employeeStatus)
+        options: this.includeOptionForNullValues(options.employeeStatus),
       },
       {
         label: 'present job title',
         key: 'jobTitle',
         name: 'presentPositionJobTitleId',
-        options: this.includeOptionForNullValues(options.jobTitle)
+        options: this.includeOptionForNullValues(options.jobTitle),
       },
       {
         label: 'present job type',
         key: 'jobType',
         name: 'presentPositionJobTypeId',
-        options: this.includeOptionForNullValues(options.jobType)
+        options: this.includeOptionForNullValues(options.jobType),
       },
       {
         label: 'present job grade',
         key: 'jobGrade',
         name: 'presentPositionGradeId',
-        options: this.includeOptionForNullValues(options.jobGrade)
+        options: this.includeOptionForNullValues(options.jobGrade),
       },
       {
         label: 'present step',
         key: 'step',
         name: 'presentPositionStepId',
-        options: this.includeOptionForNullValues(options.step)
-      }
+        options: this.includeOptionForNullValues(options.step),
+      },
+      {
+        label: 'section',
+        key: 'section',
+        name: 'sectionId',
+        options: this.includeOptionForNullValues(options.section),
+      },
     ];
 
     let dateFields = [
@@ -181,24 +188,24 @@ export default class extends Form {
         type: 'date',
         label: 'date of birth',
         fieldName: 'dateOfBirth',
-        key: 'dateOfBirth'
+        key: 'dateOfBirth',
       },
       {
         type: 'date',
         label: 'resumption date',
         fieldName: 'resumptionDate',
-        key: 'resumptionDate'
+        key: 'resumptionDate',
       },
       {
         type: 'date',
         label: 'expected retirement date',
         fieldName: 'expectedRetirementDate',
-        key: 'expectedRetirementDate'
-      }
+        key: 'expectedRetirementDate',
+      },
     ];
 
     const getFieldToShow = (fields, fieldKey) => {
-      return fields.filter(field => field.key === fieldKey);
+      return fields.filter((field) => field.key === fieldKey);
     };
 
     if (showOnly) {
@@ -207,7 +214,7 @@ export default class extends Form {
     }
 
     return (
-      <form ref={form => (this.Form = form)}>
+      <form ref={(form) => (this.Form = form)}>
         {fieldsForSelectElement.length ? (
           <InformationBlock>
             {fieldsForSelectElement.map((field, index) => {

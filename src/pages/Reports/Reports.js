@@ -20,101 +20,101 @@ class Reports extends Component {
         id: 'state',
         name: 'Employees by state',
         format: 'formatC',
-        urlToOptions: '/states'
+        urlToOptions: '/states',
       },
       gender: {
         id: 'gender',
         name: 'Employees by gender',
         format: 'formatB',
-        urlToOptions: '/genders'
+        urlToOptions: '/genders',
       },
       department: {
         id: 'department',
         name: 'Employees by department',
         format: 'formatB',
-        urlToOptions: '/departments'
+        urlToOptions: '/departments',
       },
       district: {
         id: 'district',
         name: 'Employees by district',
         format: 'formatB',
-        urlToOptions: '/districts'
+        urlToOptions: '/districts',
       },
       LGA: {
         id: 'LGA',
         name: 'Employees by LGA',
         format: 'formatC',
-        urlToOptions: '/lga'
+        urlToOptions: '/lga',
       },
       GPZ: {
         id: 'GPZ',
         name: 'Employees by GPZ',
         format: 'formatC',
-        urlToOptions: '/gpz'
+        urlToOptions: '/gpz',
       },
       senatorialDistrict: {
         id: 'senatorialDistrict',
         name: 'Employees by senatorial district',
         format: 'formatC',
-        urlToOptions: '/senatorial-districts'
+        urlToOptions: '/senatorial-districts',
       },
       step: {
         id: 'step',
         name: 'Employees by step',
         format: 'formatB',
-        urlToOptions: '/steps'
+        urlToOptions: '/steps',
       },
       section: {
         id: 'section',
         name: 'Employees by section',
         format: 'formatB',
-        urlToOptions: '/sections'
+        urlToOptions: '/sections',
       },
       salaryStructure: {
         id: 'salaryStructure',
         name: 'Employees by salary structure',
         format: 'formatC',
-        urlToOptions: '/salaray-structures'
+        urlToOptions: '/salaray-structures',
       },
       employeeStatus: {
         id: 'employeeStatus',
         name: 'Employees by employee status',
         format: 'formatB',
-        urlToOptions: '/employee-statuses'
+        urlToOptions: '/employee-statuses',
       },
       jobType: {
         id: 'jobType',
         name: 'Employees by job type',
         format: 'formatB',
-        urlToOptions: '/departments'
+        urlToOptions: '/departments',
       },
       jobGrade: {
         id: 'jobGrade',
         name: 'Employees by job grade',
         format: 'formatB',
-        urlToOptions: '/job-types'
+        urlToOptions: '/job-types',
       },
       jobTitle: {
         id: 'jobTitle',
         name: 'Employees by job title',
         format: 'formatC',
-        urlToOptions: '/job-titles'
+        urlToOptions: '/job-titles',
       },
       resumptionDate: {
         id: 'resumptionDate',
         name: 'Employees by resumption date',
-        format: 'formatA'
+        format: 'formatA',
       },
       dateOfBirth: {
         id: 'dateOfBirth',
         name: 'Employees by date of birth',
-        format: 'formatB'
+        format: 'formatB',
       },
       expectedRetirementDate: {
         id: 'expectedRetirementDate',
         name: 'Employees by expected retirement date',
-        format: 'formatA'
-      }
+        format: 'formatA',
+      },
     };
 
     this.state = {
@@ -123,7 +123,7 @@ class Reports extends Component {
       activeReport: '',
       columns: formats,
       showFilters: false,
-      isProcessing: false
+      isProcessing: false,
     };
 
     this.handleRowClick = this.handleRowClick.bind(this);
@@ -155,7 +155,7 @@ class Reports extends Component {
       );
 
       if (res) {
-        res.data.data.forEach(employee => {
+        res.data.data.forEach((employee) => {
           employees.push(this.mapToViewModel(employee));
         });
 
@@ -190,14 +190,13 @@ class Reports extends Component {
     const res = await http.get(`/reports${queryString}`);
 
     if (res) {
-      res.data.data.forEach(employee => {
+      res.data.data.forEach((employee) => {
         employees.push(this.mapToViewModel(employee));
       });
 
-      this.toggleIsProcessing();
-
       this.setState({ employees });
     }
+    this.toggleIsProcessing();
   }
 
   async componentDidMount() {
@@ -228,7 +227,7 @@ class Reports extends Component {
       senatorialDistrict: employee.senatorialDistrict
         ? employee.senatorialDistrict.name
         : null,
-      lga: employee.lga ? employee.lga.lga : null
+      lga: employee.lga ? employee.lga.lga : null,
     };
 
     if (employee.employeeJob) {
@@ -282,7 +281,7 @@ class Reports extends Component {
 
   async handleChange({ currentTarget }) {
     await this.setState({
-      activeReport: currentTarget.value
+      activeReport: currentTarget.value,
     });
 
     this.setActiveColumnFormat();
@@ -295,7 +294,7 @@ class Reports extends Component {
       activeColumnFormat,
       activeReport,
       showFilters,
-      isProcessing
+      isProcessing,
     } = this.state;
 
     console.log(employees);

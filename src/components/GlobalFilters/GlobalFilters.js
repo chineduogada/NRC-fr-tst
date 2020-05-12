@@ -24,7 +24,8 @@ export default class extends Component {
         jobType: [],
         jobTitle: [],
         jobGrade: [],
-        steps: []
+        step: [],
+        section: [],
       },
 
       queryString: '',
@@ -32,7 +33,7 @@ export default class extends Component {
       showDrawal: false,
       formDataIsRequested: false,
       isProcessing: false,
-      resetForm: false
+      resetForm: false,
     };
 
     this.toggleDrawal = this.toggleDrawal.bind(this);
@@ -59,7 +60,8 @@ export default class extends Component {
       jobTitles,
       jobTypes,
       jobGrades,
-      steps
+      steps,
+      sections,
     ] = await httpService.all([
       httpService.get('/gpz'),
       httpService.get('/senatorial-districts'),
@@ -73,7 +75,8 @@ export default class extends Component {
       httpService.get('/job-titles'),
       httpService.get('/job-types'),
       httpService.get('/job-grades'),
-      httpService.get('/steps')
+      httpService.get('/steps'),
+      httpService.get('/sections'),
     ]);
 
     if (gpz) {
@@ -99,11 +102,12 @@ export default class extends Component {
         jobTitle: mapForReactSelect(jobTitles.data.data, 'description'),
         jobType: mapForReactSelect(jobTypes.data.data, 'type'),
         jobGrade: mapForReactSelect(jobGrades.data.data, 'con'),
-        step: mapForReactSelect(steps.data.data, 'step')
+        step: mapForReactSelect(steps.data.data, 'step'),
+        section: mapForReactSelect(sections.data.data, 'description'),
       };
 
       this.setState({
-        options
+        options,
       });
     }
   }
