@@ -9,6 +9,7 @@ import TableView from '../../components/TableView/TableView';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
+import nameMapper from '../../helpers/nameMapper';
 
 class AllCareers extends Form {
   constructor(props) {
@@ -41,6 +42,11 @@ class AllCareers extends Form {
         newJobTitleId: '',
         attachedDoc: '',
         remarks: ''
+      },
+
+      options: {
+        jobTitles: [],
+        careerReasonCodes: [],
       },
 
       ippisNoVerified: false,
@@ -76,6 +82,25 @@ class AllCareers extends Form {
       .optional()
   };
 
+  async fetchOptions() {
+    const [jobTitles, careerReasonCodes] = await httpService.all([
+        httpService.get(`/job-titles`),
+        httpService.get(`/career-reason-codes`),
+      ]);
+
+    if (jobTitles) {
+      console.log('Career Registration', jobTitles, careerReasonCodes);
+      const options = {
+        jobTitles: jobTitles.data.data,
+        careerReasonCodes: careerReasonCodes.data.data,
+      }
+
+      this.setState({
+        options
+      })
+    }
+  }
+
   async fetchData() {
     const actualData = [];
 
@@ -83,6 +108,8 @@ class AllCareers extends Form {
 
     if (res) {
       const { rows } = res.data.data;
+
+      console.log('Career', rows);
 
       if (rows && rows.length) {
         rows.forEach(row => {
@@ -98,6 +125,7 @@ class AllCareers extends Form {
     if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showDraw: true });
     }
+    this.fetchOptions();
     await this.fetchData();
   }
 
@@ -124,7 +152,7 @@ class AllCareers extends Form {
       memoReference: record.memoReference,
       reasonCode: record.reasonCode.code,
       newJobTitle: record.newJobTitle.description,
-      oldJobTitle: record.oldJobTitle.description,
+      oldJobTitle: record.oldJobTitle ? record.oldJobTitle.description : 'null',
       remarks: record.remarks
     };
   }
@@ -180,7 +208,8 @@ class AllCareers extends Form {
   }
 
   renderForm() {
-    const { ippisNoVerified } = this.state;
+    const { ippisNoVerified, options } = this.state;
+
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>New career record</p>
@@ -209,14 +238,8 @@ class AllCareers extends Form {
               'date'
             )}
             {this.renderInput('memo reference', 'memoReference')}
-            {this.renderSelect('reason code', 'reasonCodeId', [
-              { id: 1, name: 'promotion' },
-              { id: 2, name: 'demotion' }
-            ])}
-            {this.renderSelect('new job title', 'newJobTitleId', [
-              { id: 1, name: 'managing director' },
-              { id: 2, name: 'financial manager' }
-            ])}
+            {this.renderSelect('reason code', 'reasonCodeId', nameMapper(options.careerReasonCodes, 'code'))}
+            {this.renderSelect('new job title', 'newJobTitleId', nameMapper(options.jobTitles, 'description'))}
             {this.renderInput(
               'attached document',
               'attachedDoc',

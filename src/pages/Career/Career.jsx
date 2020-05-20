@@ -11,6 +11,7 @@ import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import classes from './Career.module.scss';
+import nameMapper from '../../helpers/nameMapper';
 
 class Career extends Form {
   constructor(props) {
@@ -34,6 +35,11 @@ class Career extends Form {
         newJobTitleId: '',
         attachedDoc: '',
         remarks: ''
+      },
+
+      options: {
+        jobTitles: [],
+        careerReasonCodes: [],
       },
 
       isDeleteting: false,
@@ -71,6 +77,7 @@ class Career extends Form {
     const res = await httpService.get(`/careers/${this.id}`);
 
     if (res) {
+      console.log(res.data)
       this.setState({
         dataFilteredForView: this.filterDataForView(res.data.data),
         dataForView: this.mapDataForView(res.data.data),
@@ -79,7 +86,27 @@ class Career extends Form {
     }
   }
 
+  async fetchOptions() {
+    const [jobTitles, careerReasonCodes] = await httpService.all([
+        httpService.get(`/job-titles`),
+        httpService.get(`/career-reason-codes`),
+      ]);
+
+    if (jobTitles) {
+      console.log('Career Registration', jobTitles, careerReasonCodes);
+      const options = {
+        jobTitles: jobTitles.data.data,
+        careerReasonCodes: careerReasonCodes.data.data,
+      }
+
+      this.setState({
+        options
+      })
+    }
+  }
+
   async componentDidMount() {
+    this.fetchOptions();
     await this.fetchCareer();
   }
 
@@ -105,12 +132,12 @@ class Career extends Form {
         value: data.reasonCode.code
       },
       {
-        name: 'old job title'
-        // value: data.oldJobTitle.description
+        name: 'old job title',
+        value: data.oldJobTitle ? data.oldJobTitle.description : 'null',
       },
       {
-        name: 'new job title'
-        // value: data.newJobTitle.description
+        name: 'new job title',
+        value: data.newJobTitle.description
       }
     ];
   }
@@ -198,7 +225,7 @@ class Career extends Form {
   }
 
   renderUpdateForm() {
-    const { dataForForm } = this.state;
+    const { dataForForm, options } = this.state;
 
     return (
       <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
@@ -215,14 +242,8 @@ class Career extends Form {
           null,
           dataForForm.memoReference
         )}
-        {this.renderSelect('reason code', 'reasonCodeId', [
-          { id: 1, name: 'promotion' },
-          { id: 2, name: 'demotion' }
-        ])}
-        {this.renderSelect('new job title', 'newJobTitleId', [
-          { id: 1, name: 'managing director' },
-          { id: 2, name: 'some other title' }
-        ])}
+        {this.renderSelect('reason code', 'reasonCodeId', nameMapper(options.careerReasonCodes, 'code'), null, false, dataForForm.reasonCodeId)}
+        {this.renderSelect('new job title', 'newJobTitleId', nameMapper(options.jobTitles, 'description'), null, false, dataForForm.newJobTitleId)}
         {this.renderTextArea('remarks', 'remarks', null, dataForForm.remarks)}
 
         {this.renderButton('save')}

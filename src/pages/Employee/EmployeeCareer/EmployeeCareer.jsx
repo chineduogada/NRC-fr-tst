@@ -67,7 +67,7 @@ class EmployeeCareer extends Component {
       memoReference: row.memoReference,
       reasonCode: row.reasonCode.code,
       newJobTitle: row.newJobTitle.description,
-      oldJobTitle: row.oldJobTitle.description,
+      oldJobTitle: row.oldJobTitle ? row.oldJobTitle.description : 'null',
       remarks: row.remarks
     };
   }

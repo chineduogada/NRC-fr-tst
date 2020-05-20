@@ -134,7 +134,7 @@ class TrainingSchedule extends Form {
 
   mapDataForView(data) {
     return [
-      { name: 'l year', value: data.lYear },
+      { name: 'leave year', value: data.lYear },
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
@@ -286,7 +286,7 @@ class TrainingSchedule extends Form {
           onSubmit={this.handleSubmit}
         >
           {this.renderInput(
-            'l year',
+            'leave year',
             'lYear',
             null,
             actualData.lYear,

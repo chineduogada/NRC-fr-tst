@@ -21,7 +21,7 @@ class AllTrainingSchedules extends Form {
       actualData: null,
 
       columns: [
-        { accessor: 'lYear', Header: 'LYear' },
+        { accessor: 'lYear', Header: 'Leave Year' },
         { accessor: 'ippisNo', Header: 'IPPSI No' },
         { accessor: 'employee', Header: 'Employee Name' },
         { accessor: 'trainingType', Header: 'Training Type' },
@@ -341,7 +341,7 @@ class AllTrainingSchedules extends Form {
             !authorisorIsTrainee &&
             !authorisor1IsAuthorisor2 ? (
               <>
-                {this.renderInput('l year', 'lYear', null, null, 'date')}
+                {this.renderInput('leave year', 'lYear', null, null, 'date')}
                 {this.renderSelect('training type', 'trainingTypeId', [
                   { id: 1, name: 'corporate' },
                   { id: 2, name: 'community' }
