@@ -48,14 +48,14 @@ class TrainingSchedule extends Form {
         authorisor1Id: '',
         authorisor2Id: '',
         reportSubmitted: '',
-        objectiveMet: ''
+        objectiveMet: '',
       },
 
       rowToPreview: null,
 
       isDeleteting: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -92,7 +92,7 @@ class TrainingSchedule extends Form {
     authorisor1Id: Joi.number(),
     authorisor2Id: Joi.number(),
     reportSubmitted: Joi.string(),
-    objectiveMet: Joi.string()
+    objectiveMet: Joi.string(),
   };
 
   async fetchTraining() {
@@ -102,7 +102,7 @@ class TrainingSchedule extends Form {
       this.setState({
         actualData: this.filterReturnedData(res.data.data),
         dataForView: this.mapDataForView(res.data.data),
-        authorisors: this.mapAuthorisors(res.data.data)
+        authorisors: this.mapAuthorisors(res.data.data),
       });
     }
   }
@@ -123,12 +123,12 @@ class TrainingSchedule extends Form {
     return [
       {
         name: 'authorisor 1',
-        value: `${data.authorisor1.firstName} ${data.authorisor1.lastName}`
+        value: `${data.authorisor1.firstName} ${data.authorisor1.lastName}`,
       },
       {
         name: 'authorisor 2',
-        value: `${data.authorisor2.firstName} ${data.authorisor2.lastName}`
-      }
+        value: `${data.authorisor2.firstName} ${data.authorisor2.lastName}`,
+      },
     ];
   }
 
@@ -138,48 +138,54 @@ class TrainingSchedule extends Form {
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
-        value: `${data.employee.firstName} ${data.employee.lastName}`
+        value: `${data.employee.firstName} ${data.employee.lastName}`,
       },
       { name: 'training type', value: data.trainingType.type },
       { name: 'resource organisation', value: data.resourceOrg },
       {
         name: 'expected start date',
-        value: data.expectedStartDate
+        value: data.expectedStartDate,
       },
       {
         name: 'expected end date',
-        value: data.expectedEndDate
+        value: data.expectedEndDate,
       },
-      { name: 'expected cost', value: currency(data.expectedCost) },
+      {
+        name: 'expected cost',
+        value: data.expectedCost ? currency(data.expectedCost) : null,
+      },
       {
         name: 'expected attendee no',
-        value: data.expectedAttendeeNo
+        value: data.expectedAttendeeNo,
       },
       {
         name: 'actual start date',
-        value: data.actualStartDate || null
+        value: data.actualStartDate || null,
       },
       {
         name: 'actual start date',
-        value: data.actualEndDate || null
+        value: data.actualEndDate || null,
       },
-      { name: 'actual cost', value: currency(data.actualCost) || null },
+      {
+        name: 'actual cost',
+        value: data.actualCost ? currency(data.actualCost) : null,
+      },
       {
         name: 'actual attendee no',
-        value: data.actualAttendeeNo || null
+        value: data.actualAttendeeNo || null,
       },
       { name: 'email', value: data.email },
       {
         name: 'main resource person',
-        value: data.mainResourcePerson
+        value: data.mainResourcePerson,
       },
       {
         name: 'report submitted',
-        value: data.reportSubmitted
+        value: data.reportSubmitted,
       },
       { name: 'residential', value: data.residential },
       { name: 'approved', value: data.approved },
-      { name: 'objective met', value: data.objectiveMet }
+      { name: 'objective met', value: data.objectiveMet },
     ];
   }
 
@@ -205,11 +211,11 @@ class TrainingSchedule extends Form {
       reportSubmitted: data.reportSubmitted,
       residential: data.residential,
       approved: data.approved,
-      objectiveMet: data.objectiveMet
+      objectiveMet: data.objectiveMet,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -260,7 +266,7 @@ class TrainingSchedule extends Form {
   async approveSchedule() {
     if (!this.isApproved()) {
       await this.setState({
-        formData: { ...this.state.actualData, approved: 'Y' }
+        formData: { ...this.state.actualData, approved: 'Y' },
       });
 
       console.log(this.state.formData);
@@ -282,7 +288,7 @@ class TrainingSchedule extends Form {
     return (
       <div className={classes.Preview}>
         <form
-          ref={form => (this.updateForm = form)}
+          ref={(form) => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
           {this.renderInput(
@@ -296,7 +302,7 @@ class TrainingSchedule extends Form {
           )}
           {this.renderSelect('training type', 'trainingTypeId', [
             { id: 1, name: 'corporate' },
-            { id: 2, name: 'community' }
+            { id: 2, name: 'community' },
           ])}
           {this.renderTextArea(
             'objective',
@@ -401,15 +407,15 @@ class TrainingSchedule extends Form {
           )}
           {this.renderSelect('residential', 'residential', [
             { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
+            { id: 'N', name: 'N' },
           ])}
           {this.renderSelect('report submitted', 'reportSubmitted', [
             { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
+            { id: 'N', name: 'N' },
           ])}
           {this.renderSelect('objective met', 'objectiveMet', [
             { id: 'Y', name: 'Y' },
-            { id: 'N', name: 'N' }
+            { id: 'N', name: 'N' },
           ])}
           {this.renderButton('update')}
         </form>
@@ -438,13 +444,13 @@ class TrainingSchedule extends Form {
       showModal,
       actualData,
       dataForView,
-      authorisors
+      authorisors,
     } = this.state;
 
     return (
       <React.Fragment>
         {actualData ? (
-          <Section title='training schedule'>
+          <Section title="training schedule">
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button
                 label={this.isApproved() ? 'approved' : 'approve'}
@@ -452,45 +458,45 @@ class TrainingSchedule extends Form {
                 disabled={this.isApproved()}
                 onClick={this.approveSchedule}
               />
-              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
-              <Button label='delete' danger onClick={this.handleDelete} />
+              <Button label="update" fill onClick={this.handleUpdateBtnClick} />
+              <Button label="delete" danger onClick={this.handleDelete} />
               <Button
-                label='view employee'
+                label="view employee"
                 plain
                 onClick={this.handleViewEmployee}
                 id={actualData.ippisNo}
               />
             </div>
 
-            <InformationBlock title='basic'>
+            <InformationBlock title="basic">
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button
-                label='view authorisor 1'
+                label="view authorisor 1"
                 plain
                 onClick={this.handleViewEmployee}
                 id={actualData.authorisor1Id}
               />
               <Button
-                label='view authorisor 2'
+                label="view authorisor 2"
                 plain
                 onClick={this.handleViewEmployee}
                 id={actualData.authorisor2Id}
               />
             </div>
 
-            <InformationBlock title='authorisors'>
+            <InformationBlock title="authorisors">
               {this.displayInfo(authorisors)}
             </InformationBlock>
 
-            <InformationBlock title='objective'>
+            <InformationBlock title="objective">
               {actualData.objective}
             </InformationBlock>
 
             <SideDraw
-              title='schedule'
+              title="schedule"
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -498,14 +504,14 @@ class TrainingSchedule extends Form {
             </SideDraw>
 
             <Modal
-              title='delete schedule'
+              title="delete schedule"
               openModal={showModal}
               onClose={this.closeModal}
             >
               <p>This operation can not be reversed. Proceed?</p>
               <div className={`${classes.Actions} ${classes.Right}`}>
                 <Button
-                  label='proceed'
+                  label="proceed"
                   danger
                   onClick={this.handleProceedDelete}
                   disabled={this.state.isDeleteting}
@@ -514,7 +520,7 @@ class TrainingSchedule extends Form {
             </Modal>
           </Section>
         ) : (
-          <Loader message='please wait' />
+          <Loader message="please wait" />
         )}
       </React.Fragment>
     );

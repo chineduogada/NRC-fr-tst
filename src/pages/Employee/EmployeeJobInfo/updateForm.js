@@ -2,11 +2,11 @@ import React from 'react';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
 import httpService from '../../../services/httpService';
-import nameMapper from '../../../helpers/nameMapper';
+// import nameMapper from '../../../helpers/nameMapper';
 import obJectKeyEliminator from '../../../helpers/obJectKeyEliminator';
 import InformationBlock from '../../../components/InformationBlock/InformationBlock';
 import Form from '../../../components/Form/Form';
-import Loader from '../../../components/Loader/Loader';
+// import Loader from '../../../components/Loader/Loader';
 
 export default class UpdateForm extends Form {
   constructor(props) {
@@ -18,17 +18,17 @@ export default class UpdateForm extends Form {
         sectionId: '',
         salaryStructureId: '',
         districtId: '',
-        location: '',
-        reportTo: '',
+        // location: '',
+        // reportTo: '',
         employeeStatusId: '',
-        pensionable: ''
+        pensionable: '',
       },
 
       errors: {},
 
       options: null,
 
-      defaultValues: null
+      defaultValues: null,
     };
 
     this.schema = {
@@ -36,10 +36,10 @@ export default class UpdateForm extends Form {
       districtId: Joi.number(),
       sectionId: Joi.number(),
       salaryStructureId: Joi.number(),
-      location: Joi.string(),
-      reportTo: Joi.number(),
+      // location: Joi.string(),
+      // reportTo: Joi.number(),
       employeeStatusId: Joi.number(),
-      pensionable: Joi.string()
+      pensionable: Joi.string(),
     };
   }
 
@@ -57,11 +57,13 @@ export default class UpdateForm extends Form {
             'district',
             'employeeStatus',
             'section',
+            'location',
+            'reportTo',
             'reportToEmployee',
-            'salaryStructure'
+            'salaryStructure',
           ])
         : this.state.formData,
-      options: this.props.options
+      options: this.props.options,
     });
   }
 
@@ -95,7 +97,7 @@ export default class UpdateForm extends Form {
     const { formData, options } = this.state;
     return options ? (
       <React.Fragment>
-        <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
+        <form onSubmit={this.handleSubmit} ref={(form) => (this.Form = form)}>
           <p className="form-header">update employee job information</p>
           <InformationBlock>
             {this.renderSelect(
@@ -114,15 +116,15 @@ export default class UpdateForm extends Form {
               null,
               formData.salaryStructureId
             )}
-            {this.renderInput('location', 'location', null, formData.location)}
-            {this.renderInput(
+            {/* {this.renderInput('location', 'location', null, formData.location)} */}
+            {/* {this.renderInput(
               'report to',
               'reportTo',
               'enter ippiNo...',
               formData.reportTo,
               'number',
               null
-            )}
+            )} */}
             {this.renderSelect(
               'employee status',
               'employeeStatusId',
@@ -136,7 +138,7 @@ export default class UpdateForm extends Form {
               'pensionable',
               [
                 { id: 'Y', name: 'Y' },
-                { id: 'N', name: 'N' }
+                { id: 'N', name: 'N' },
               ],
               null,
               null,

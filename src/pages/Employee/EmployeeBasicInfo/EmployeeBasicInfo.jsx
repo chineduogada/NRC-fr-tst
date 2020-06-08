@@ -25,10 +25,10 @@ export default class EmployeeBasicInfo extends Component {
         stateOptions: [],
         lgaOptions: [],
         countryOptions: [],
-        genders: []
+        genders: [],
       },
 
-      showForm: false
+      showForm: false,
     };
 
     this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
@@ -45,7 +45,7 @@ export default class EmployeeBasicInfo extends Component {
       states,
       lga,
       countries,
-      genders
+      genders,
     ] = await httpService.all([
       httpService.get('/blood-groups'),
       httpService.get('/pfa?statusId=1'),
@@ -55,27 +55,24 @@ export default class EmployeeBasicInfo extends Component {
       httpService.get('/states'),
       httpService.get('/lga'),
       httpService.get('/countries'),
-      httpService.get('/genders')
+      httpService.get('/genders'),
     ]);
 
     if (bloodGroups) {
       const options = {
-        bloodGroupOptions: nameMapper(bloodGroups.data.data, 'type'),
-        pfaOptions: nameMapper(pfa.data.data, 'name'),
-        gpzOptions: nameMapper(gpz.data.data, 'description'),
-        lgaOptions: nameMapper(lga.data.data, 'lga'),
-        maritalStatusOptions: nameMapper(maritalStatuses.data.data, 'status'),
-        senatorialDistrictOptions: nameMapper(
-          senatorialDistricts.data.data,
-          'name'
-        ),
-        stateOptions: nameMapper(states.data.data, 'state'),
-        countryOptions: nameMapper(countries.data.data, 'country'),
-        genders: nameMapper(genders.data.data, 'type')
+        bloodGroupOptions: bloodGroups.data.data,
+        pfaOptions: pfa.data.data,
+        gpzOptions: gpz.data.data,
+        lgaOptions: lga.data.data,
+        maritalStatusOptions: maritalStatuses.data.data,
+        senatorialDistrictOptions: senatorialDistricts.data.data,
+        stateOptions: states.data.data,
+        countryOptions: countries.data.data,
+        genders: genders.data.data,
       };
 
       this.setState({
-        options
+        options,
       });
     }
   }
@@ -88,7 +85,7 @@ export default class EmployeeBasicInfo extends Component {
 
       this.setState({
         basicInformation,
-        originalData: res.data.data
+        originalData: res.data.data,
       });
     }
   }
@@ -109,7 +106,7 @@ export default class EmployeeBasicInfo extends Component {
       bloodGroup,
       lga,
       maritalStatus,
-      senatorialDistrict
+      senatorialDistrict,
     } = data;
     return [
       { label: 'first name', value: data.firstName },
@@ -120,7 +117,7 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'phone number', value: data.phoneNumber },
       {
         label: 'country of birth',
-        value: countryOfBirth ? countryOfBirth.country : null
+        value: countryOfBirth ? countryOfBirth.country : null,
       },
       { label: 'nationality', value: nationality ? nationality.country : null },
       { label: 'email', value: data.email },
@@ -128,19 +125,19 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'PFA', value: pfa ? pfa.name : null },
       { label: 'gender', value: gender ? gender.type : null },
       { label: 'blood group', value: bloodGroup ? bloodGroup.type : null },
-      { label: 'geo political zone', value: gpz ? gpz.name : null },
+      { label: 'geo political zone', value: gpz ? gpz.description : null },
       { label: 'LGA', value: lga ? lga.lga : null },
       {
         label: 'marital status',
-        value: maritalStatus ? maritalStatus.status : null
+        value: maritalStatus ? maritalStatus.status : null,
       },
       {
         label: 'senatorial district',
-        value: senatorialDistrict ? senatorialDistrict.name : null
+        value: senatorialDistrict ? senatorialDistrict.name : null,
       },
       { label: 'state', value: state ? state.state : null },
-      { label: 'pensionable', value: data.pensionable },
-      { label: 'address', value: data.address }
+      { label: 'professional', value: data.professional },
+      { label: 'address', value: data.address },
     ];
   }
 

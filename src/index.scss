@@ -247,3 +247,20 @@ ol {
   width: 70%;
   max-width: 400px;
 }
+
+// Link as tabs
+.tab {
+  margin-right: 1em;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.5);
+
+  &:hover {
+    color: var(--basic-color);
+    opacity: 0.8;
+  }
+
+  &.active {
+    color: var(--basic-color);
+    border-bottom: 2px solid var(--basic-color);
+  }
+}

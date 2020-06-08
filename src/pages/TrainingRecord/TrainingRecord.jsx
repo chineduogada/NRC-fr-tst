@@ -2,6 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import dates from '../../helpers/dates';
+import autobind from '../../helpers/autobind';
 import currency from '../../helpers/currency';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
@@ -34,28 +36,30 @@ class TrainingRecord extends Form {
         serialCount: '',
         startDate: '',
         endDate: '',
-        numDays: '',
         individualActualCost: '',
         trainingLocation: '',
         residential: '',
-        employeeComment: ''
+        employeeComment: '',
       },
 
       isDeleteting: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
 
-    this.closeSideDraw = this.closeSideDraw.bind(this);
-    this.updateDatabase = this.updateDatabase.bind(this);
-    this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleProceedDelete = this.handleProceedDelete.bind(this);
-    this.deleteObject = this.deleteObject.bind(this);
-    this.handleViewEmployee = this.handleViewEmployee.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    autobind(
+      this,
+      'handleUpdateBtnClick',
+      'updateDatabase',
+      'closeSideDraw',
+      'closeModal',
+      'handleViewEmployee',
+      'deleteObject',
+      'handleDelete',
+      'handleProceedDelete'
+    );
   }
 
   schema = {
@@ -65,11 +69,10 @@ class TrainingRecord extends Form {
     serialCount: Joi.number(),
     startDate: Joi.string(),
     endDate: Joi.string(),
-    numDays: Joi.number(),
     individualActualCost: Joi.number(),
     trainingLocation: Joi.string(),
     residential: Joi.string(),
-    employeeComment: Joi.string().allow('').optional()
+    employeeComment: Joi.string().allow('').optional(),
   };
 
   async fetchTraining() {
@@ -79,7 +82,7 @@ class TrainingRecord extends Form {
       this.setState({
         dataFilteredForView: this.filterDataForView(res.data.data),
         dataForView: this.mapDataForView(res.data.data),
-        dataForForm: this.filterForForm(res.data.data)
+        dataForForm: this.filterForForm(res.data.data),
       });
     }
   }
@@ -102,36 +105,42 @@ class TrainingRecord extends Form {
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
-        value: `${data.employee.firstName} ${data.employee.lastName}`
+        value: `${data.employee.firstName} ${data.employee.lastName}`,
       },
       { name: 'training type', value: data.trainingType.type },
       {
+        name: 'number of days',
+        value: dates.getDurationBetween(data.startDate, data.endDate),
+      },
+      {
         name: 'start date',
-        value: data.startDate
+        value: data.startDate,
       },
       {
         name: 'end date',
-        value: data.endDate
+        value: data.endDate,
       },
-      { name: 'individual actual cost', value: currency(data.individualActualCost) || null },
+      {
+        name: 'individual actual cost',
+        value: currency(data.individualActualCost) || null,
+      },
       { name: 'residential', value: data.residential },
     ];
   }
 
   filterForForm(record) {
-      return {
-        tYear: record.tYear,
-        ippisNo: record.ippisNo,
-        trainingTypeId: record.trainingType.id,
-        serialCount: record.serialCount,
-        startDate: record.startDate,
-        endDate: record.endDate,
-        numDays: record.numDays,
-        individualActualCost: record.individualActualCost,
-        trainingLocation: record.trainingLocation,
-        residential: record.residential,
-        employeeComment: record.employeeComment
-    }
+    return {
+      tYear: record.tYear,
+      ippisNo: record.ippisNo,
+      trainingTypeId: record.trainingType.id,
+      serialCount: record.serialCount,
+      startDate: record.startDate,
+      endDate: record.endDate,
+      individualActualCost: record.individualActualCost,
+      trainingLocation: record.trainingLocation,
+      residential: record.residential,
+      employeeComment: record.employeeComment,
+    };
   }
 
   filterDataForView(record) {
@@ -143,15 +152,18 @@ class TrainingRecord extends Form {
       serialCount: record.serialCount,
       startDate: record.startDate,
       endDate: record.endDate,
-      numDays: record.numDays,
+      numDays: dates.getDurationBetween(
+        Date(record.startDate),
+        Date(record.endDate)
+      ),
       individualActualCost: record.individualActualCost,
       trainingLocation: record.trainingLocation,
       residential: record.residential,
-      employeeComment: record.employeeComment
+      employeeComment: record.employeeComment,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -204,7 +216,7 @@ class TrainingRecord extends Form {
   }
 
   async doSubmit(event) {
-    console.log('updating')
+    console.log('updating');
     return this.updateDatabase();
   }
 
@@ -212,16 +224,39 @@ class TrainingRecord extends Form {
     const { dataForForm } = this.state;
 
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
-        {this.renderInput('t year', 'tYear', null, dataForForm.tYear, 'date')}
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
+        {this.renderInput(
+          'training year',
+          'tYear',
+          null,
+          dataForForm.tYear,
+          'date'
+        )}
         {this.renderSelect('training type', 'trainingTypeId', [
           { id: 1, name: 'corporate' },
-          { id: 2, name: 'community' }
+          { id: 2, name: 'community' },
         ])}
-        {this.renderInput('serial count', 'serialCount', dataForForm.serialCount, null, 'number')}
-        {this.renderInput('start date', 'startDate', null, dataForForm.startDate, 'date')}
-        {this.renderInput('end date', 'endDate', null, dataForForm.endDate, 'date')}
-        {this.renderInput('number of days', 'numDays', null, dataForForm.numDays, 'number')}
+        {this.renderInput(
+          'serial count',
+          'serialCount',
+          dataForForm.serialCount,
+          null,
+          'number'
+        )}
+        {this.renderInput(
+          'start date',
+          'startDate',
+          null,
+          dataForForm.startDate,
+          'date'
+        )}
+        {this.renderInput(
+          'end date',
+          'endDate',
+          null,
+          dataForForm.endDate,
+          'date'
+        )}
         {this.renderInput(
           'individual actual cost',
           'individualActualCost',
@@ -229,12 +264,22 @@ class TrainingRecord extends Form {
           dataForForm.individualActualCost,
           'number'
         )}
-        {this.renderInput('training location', 'trainingLocation', null, dataForForm.trainingLocation)}
+        {this.renderInput(
+          'training location',
+          'trainingLocation',
+          null,
+          dataForForm.trainingLocation
+        )}
         {this.renderSelect('residential', 'residential', [
           { id: 'Y', name: 'Y' },
-          { id: 'N', name: 'N' }
+          { id: 'N', name: 'N' },
         ])}
-        {this.renderTextArea('employee comment', 'employeeComment', null, dataForForm.employeeComment)}
+        {this.renderTextArea(
+          'employee comment',
+          'employeeComment',
+          null,
+          dataForForm.employeeComment
+        )}
 
         {this.renderButton('save')}
       </form>
@@ -253,38 +298,33 @@ class TrainingRecord extends Form {
   }
 
   render() {
-    const {
-      showForm,
-      showModal,
-      dataForView,
-      dataForForm
-    } = this.state;
+    const { showForm, showModal, dataForView, dataForForm } = this.state;
 
     return (
       <React.Fragment>
         {dataForView ? (
-          <Section title='training record'>
+          <Section title="training record">
             <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
-              <Button label='delete' danger onClick={this.handleDelete} />
+              <Button label="update" fill onClick={this.handleUpdateBtnClick} />
+              <Button label="delete" danger onClick={this.handleDelete} />
               <Button
-                label='view employee'
+                label="view employee"
                 plain
                 onClick={this.handleViewEmployee}
                 id={dataForForm.ippisNo}
               />
             </div>
 
-            <InformationBlock title='basic'>
+            <InformationBlock title="basic">
               {this.displayInfo(dataForView)}
             </InformationBlock>
 
-            <InformationBlock title='employee comment'>
+            <InformationBlock title="employee comment">
               {dataForForm.employeeComment}
             </InformationBlock>
 
             <SideDraw
-              title='Record'
+              title="Record"
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -292,14 +332,14 @@ class TrainingRecord extends Form {
             </SideDraw>
 
             <Modal
-              title='delete record'
+              title="delete record"
               openModal={showModal}
               onClose={this.closeModal}
             >
               <p>This operation can not be reversed. Proceed?</p>
               <div className={`${classes.Actions} ${classes.Right}`}>
                 <Button
-                  label='proceed'
+                  label="proceed"
                   danger
                   onClick={this.handleProceedDelete}
                   disabled={this.state.isDeleteting}
@@ -308,7 +348,7 @@ class TrainingRecord extends Form {
             </Modal>
           </Section>
         ) : (
-          <Loader message='please wait' />
+          <Loader message="please wait" />
         )}
       </React.Fragment>
     );

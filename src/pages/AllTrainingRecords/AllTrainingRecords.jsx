@@ -32,7 +32,7 @@ class AllTrainingRecords extends Form {
         { accessor: 'endDate', Header: 'End Date' },
         { accessor: 'residential', Header: 'Residential' },
         { accessor: 'individualActualCost', Header: 'Individual Actual Cost' },
-        { accessor: 'trainingLocation', Header: 'Training Location' }
+        { accessor: 'trainingLocation', Header: 'Training Location' },
       ],
 
       pageSize: 20,
@@ -47,16 +47,15 @@ class AllTrainingRecords extends Form {
         serialCount: '',
         startDate: '',
         endDate: '',
-        numDays: '',
         individualActualCost: '',
         trainingLocation: '',
         residential: '',
-        employeeComment: ''
+        employeeComment: '',
       },
 
       ippisNoVerified: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -71,21 +70,16 @@ class AllTrainingRecords extends Form {
   }
 
   schema = {
-    tYear: Joi.string()
-      .allow('')
-      .optional(),
+    tYear: Joi.string().allow('').optional(),
     trainingTypeId: Joi.number(),
     ippisNo: Joi.number(),
     serialCount: Joi.number(),
     startDate: Joi.string(),
     endDate: Joi.string(),
-    numDays: Joi.number(),
     individualActualCost: Joi.number(),
     trainingLocation: Joi.string(),
     residential: Joi.string(),
-    employeeComment: Joi.string()
-      .allow('')
-      .optional()
+    employeeComment: Joi.string().allow('').optional(),
   };
 
   async componentWillMount() {
@@ -104,7 +98,7 @@ class AllTrainingRecords extends Form {
       const { rows } = res.data.data;
 
       if (rows && rows.length) {
-        rows.forEach(row => {
+        rows.forEach((row) => {
           actualData.push(this.mapToViewModel(row));
         });
       }
@@ -142,15 +136,14 @@ class AllTrainingRecords extends Form {
       serialCount: record.serialCount,
       startDate: record.startDate,
       endDate: record.endDate,
-      numDays: record.numDays,
       individualActualCost: record.individualActualCost,
       trainingLocation: record.trainingLocation,
       residential: record.residential,
-      employeeComment: record.employeeComment
+      employeeComment: record.employeeComment,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -205,11 +198,11 @@ class AllTrainingRecords extends Form {
   renderForm() {
     const { ippisNoVerified } = this.state;
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Add a training record</p>
 
         <EmployeeVerifier
-          checkOnResponseRecieved={employees => employees.length}
+          checkOnResponseRecieved={(employees) => employees.length}
           onEmployeeSelection={this.handleEmployeeSelection}
           onInputChange={this.handleEmployeeInputChange}
         >
@@ -227,7 +220,7 @@ class AllTrainingRecords extends Form {
             {this.renderInput('t year', 'tYear', null, null, 'date')}
             {this.renderSelect('training type', 'trainingTypeId', [
               { id: 1, name: 'corporate' },
-              { id: 2, name: 'community' }
+              { id: 2, name: 'community' },
             ])}
             {this.renderInput(
               'serial count',
@@ -239,13 +232,6 @@ class AllTrainingRecords extends Form {
             {this.renderInput('start date', 'startDate', null, null, 'date')}
             {this.renderInput('end date', 'endDate', null, null, 'date')}
             {this.renderInput(
-              'number of days',
-              'numDays',
-              null,
-              null,
-              'number'
-            )}
-            {this.renderInput(
               'individual actual cost',
               'individualActualCost',
               null,
@@ -255,7 +241,7 @@ class AllTrainingRecords extends Form {
             {this.renderInput('training location', 'trainingLocation')}
             {this.renderSelect('residential', 'residential', [
               { id: 'Y', name: 'Y' },
-              { id: 'N', name: 'N' }
+              { id: 'N', name: 'N' },
             ])}
             {this.renderTextArea('employee comment', 'employeeComment')}
           </>
@@ -274,8 +260,8 @@ class AllTrainingRecords extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title='all records'
-              message='Click a row to preview'
+              title="all records"
+              message="Click a row to preview"
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
@@ -283,7 +269,7 @@ class AllTrainingRecords extends Form {
             ></TableView>
 
             <Modal
-              title='record'
+              title="record"
               openModal={this.state.showDraw}
               onClose={this.closeSideDraw}
             >

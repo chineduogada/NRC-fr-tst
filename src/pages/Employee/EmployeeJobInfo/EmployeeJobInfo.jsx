@@ -21,10 +21,10 @@ export default class EmployeeBasicInfo extends Component {
         districtOptions: [],
         sectionOptions: [],
         employeeStatusOptions: [],
-        salaryStructureOptions: []
+        salaryStructureOptions: [],
       },
 
-      showForm: false
+      showForm: false,
     };
 
     this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
@@ -37,13 +37,13 @@ export default class EmployeeBasicInfo extends Component {
       districts,
       sections,
       employeeStatuses,
-      salaryStructures
+      salaryStructures,
     ] = await httpService.all([
       httpService.get('/departments?statusId=1'),
       httpService.get('/districts?statusId=1'),
       httpService.get('/sections?statusId=1'),
       httpService.get('/employee-statuses'),
-      httpService.get('/salary-structures')
+      httpService.get('/salary-structures'),
     ]);
 
     if (departments) {
@@ -58,10 +58,10 @@ export default class EmployeeBasicInfo extends Component {
         salaryStructureOptions: nameMapper(
           salaryStructures.data.data,
           'description'
-        )
+        ),
       };
       this.setState({
-        options
+        options,
       });
     }
   }
@@ -74,7 +74,7 @@ export default class EmployeeBasicInfo extends Component {
 
       this.setState({
         jobInformation,
-        originalData: res.data.data
+        originalData: res.data.data,
       });
     }
   }
@@ -88,37 +88,39 @@ export default class EmployeeBasicInfo extends Component {
     return [
       {
         label: 'department',
-        value: data && data.department ? data.department.description : null
+        value: data && data.department ? data.department.description : null,
       },
       {
         label: 'district',
-        value: data && data.district ? data.district.siteName : null
+        value: data && data.district ? data.district.siteName : null,
       },
-      { label: 'location', value: data ? data.location : null },
+      // { label: 'location', value: data ? data.location : null },
       {
         label: 'section',
-        value: data && data.section ? data.section.description : null
+        value: data && data.section ? data.section.description : null,
       },
       {
         label: 'salary structure',
         value:
-          data && data.salaryStructure ? data.salaryStructure.description : null
+          data && data.salaryStructure
+            ? data.salaryStructure.description
+            : null,
       },
       {
         label: 'employee status',
         value:
-          data && data.employeeStatus ? data.employeeStatus.description : null
+          data && data.employeeStatus ? data.employeeStatus.description : null,
       },
       { label: 'pensionable', value: data ? data.pensionable : null },
-      {
-        label: 'report to',
-        value:
-          data && data.reportToEmployee ? (
-            <a href={`/employees/${data.reportToEmployee.ippisNo}`}>
-              {`${data.reportToEmployee.firstName} ${data.reportToEmployee.lastName}`}
-            </a>
-          ) : null
-      }
+      // {
+      //   label: 'report to',
+      //   value:
+      //     data && data.reportToEmployee ? (
+      //       <a href={`/employees/${data.reportToEmployee.ippisNo}`}>
+      //         {`${data.reportToEmployee.firstName} ${data.reportToEmployee.lastName}`}
+      //       </a>
+      //     ) : null
+      // }
     ];
   }
 

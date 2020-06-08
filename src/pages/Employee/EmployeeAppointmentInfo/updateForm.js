@@ -26,14 +26,14 @@ export default class UpdateForm extends Form {
         presentPositionJobTypeId: '',
         presentPositionJobTitleId: '',
         presentPositionGradeId: '',
-        presentPositionStepId: ''
+        presentPositionStepId: '',
       },
 
       errors: {},
 
       options: null,
 
-      defaultValues: null
+      defaultValues: null,
     };
 
     this.schema = {
@@ -49,7 +49,7 @@ export default class UpdateForm extends Form {
       presentPositionJobTypeId: Joi.number(),
       presentPositionJobTitleId: Joi.number(),
       presentPositionGradeId: Joi.number(),
-      presentPositionStepId: Joi.number()
+      presentPositionStepId: Joi.number(),
     };
   }
 
@@ -64,21 +64,15 @@ export default class UpdateForm extends Form {
           'firstJobType',
           'firstJobTitle',
           'firstJobGrade',
+          'firstJobStep',
           'presentJobType',
           'presentJobTitle',
-          'presentJobGrade'
-        ])
-        // firstAppointmentJobTypeId: '1',
-        // firstAppointmentJobTitleId: '3',
-        // firstAppointmentGradeId: '1',
-        // firstAppointmentStepId: '2',
-        // presentPositionJobTypeId: '1',
-        // presentPositionJobTitleId: '1',
-        // presentPositionGradeId: '1',
-        // presentPositionStepId: '1'
+          'presentJobGrade',
+          'presentPositionStep',
+        ]),
       },
 
-      options: this.props.options
+      options: this.props.options,
     });
   }
 
@@ -112,7 +106,7 @@ export default class UpdateForm extends Form {
     const { formData, options } = this.state;
     return options ? (
       <React.Fragment>
-        <form onSubmit={this.handleSubmit} ref={form => (this.Form = form)}>
+        <form onSubmit={this.handleSubmit} ref={(form) => (this.Form = form)}>
           <p className="form-header">update employee appointment information</p>
           <InformationBlock>
             {this.renderInput(

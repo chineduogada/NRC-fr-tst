@@ -24,7 +24,7 @@ class TableView extends Component {
    * @param { Array } headers the headers of the react table
    */
   mapHeadersForDownloads(headers) {
-    const mappedHeaders = headers.map(header => {
+    const mappedHeaders = headers.map((header) => {
       return header.Header;
     });
     return mappedHeaders;
@@ -35,7 +35,7 @@ class TableView extends Component {
   }
 
   prepareFilteredRowsFromReactTable(rows) {
-    return rows.map(row => row.values);
+    return rows.map((row) => row.values);
   }
 
   getCurrentDataState() {
@@ -52,7 +52,7 @@ class TableView extends Component {
         showLabels: true,
         showTitle: this.getFileName(),
         filename: this.getFileName(),
-        headers: this.headers
+        headers: this.headers,
       });
 
       csvExporter.generateCsv(this.data);
@@ -64,7 +64,7 @@ class TableView extends Component {
   groupDataByActiveReport(data, activeReport) {
     const result = {};
 
-    data.forEach(row => {
+    data.forEach((row) => {
       const instance = row[activeReport];
       if (result[instance]) {
         result[instance] += 1;
@@ -83,7 +83,7 @@ class TableView extends Component {
 
     if (activeReport) {
       const groupedData = this.groupDataByActiveReport(data, activeReport);
-      Object.keys(groupedData).forEach(group => {
+      Object.keys(groupedData).forEach((group) => {
         summary += `${group}: ${groupedData[group]}; `;
       });
     }
@@ -99,14 +99,14 @@ class TableView extends Component {
       return headers.map(({ accessor, Header }) => {
         return {
           field: accessor,
-          displayName: Header
+          displayName: Header,
         };
       });
     };
 
     const styles = {
       gridHeaderStyle: 'color: #2a2a2a;  border: 2px solid #058f43;',
-      gridStyle: 'border: 2px solid #2a2a2a; padding: 1px'
+      gridStyle: 'border: 2px solid #2a2a2a; padding: 1px',
     };
 
     const header = `
@@ -120,12 +120,13 @@ class TableView extends Component {
           ? `<div className='report-summary' style='margin-bottom: 2em;'>
               <div>
                 <h4 style='margin-bottom: none; margin-right: 0.5em; display: inline;'>Summary:</h4>
-                <span style='text-decoration: underline'>${activeReportTitle} (Total count: ${
+                <span style='text-decoration: underline; font-size: 1.4rem'>${activeReportTitle} (Total count: ${
               data.length
             })</span>
               </div>
-              <p style='text-transform: capitalize;'>${this.getSummary(data) ||
-                ''}</p>
+              <p style='text-transform: capitalize;'>${
+                this.getSummary(data) || ''
+              }</p>
               <hr />
             </div>`
           : ''
@@ -138,7 +139,7 @@ class TableView extends Component {
       printable: data,
       properties: getProperties(columns),
       type: 'json',
-      ...styles
+      ...styles,
     });
   }
 
@@ -155,7 +156,7 @@ class TableView extends Component {
       columns,
       useLinks,
       enablePrint,
-      addNewButtonHandler
+      addNewButtonHandler,
     } = this.props;
 
     return (

@@ -19,10 +19,10 @@ export default class EmployeeBasicInfo extends Component {
         jobTypeOptions: [],
         jobTitleOptions: [],
         jobGradeOptions: [],
-        jobStepOptions: []
+        jobStepOptions: [],
       },
 
-      showForm: false
+      showForm: false,
     };
 
     this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
@@ -34,7 +34,7 @@ export default class EmployeeBasicInfo extends Component {
       httpService.get('/job-types?statusId=1'),
       httpService.get('/job-titles?statusId=1'),
       httpService.get('/job-grades'),
-      httpService.get('/steps')
+      httpService.get('/steps'),
     ]);
 
     if (jobTypes) {
@@ -42,10 +42,10 @@ export default class EmployeeBasicInfo extends Component {
         jobTypeOptions: nameMapper(jobTypes.data.data, 'type'),
         jobTitleOptions: nameMapper(jobTitles.data.data, 'description'),
         jobGradeOptions: nameMapper(jobGrades.data.data, 'con'),
-        jobStepOptions: nameMapper(steps.data.data, 'step')
+        jobStepOptions: nameMapper(steps.data.data, 'step'),
       };
       this.setState({
-        options
+        options,
       });
     }
   }
@@ -60,7 +60,7 @@ export default class EmployeeBasicInfo extends Component {
 
       this.setState({
         appointmentInformation,
-        originalData: res.data.data
+        originalData: res.data.data,
       });
     }
   }
@@ -77,7 +77,8 @@ export default class EmployeeBasicInfo extends Component {
       firstJobTitle,
       presentJobGrade,
       presentJobType,
-      presentJobTitle
+      presentJobTitle,
+      presentPositionStep,
     } = data;
     return [
       { label: 'first appointment date', value: data.firstAppointmentDate },
@@ -87,36 +88,36 @@ export default class EmployeeBasicInfo extends Component {
       { label: 'present appointment date', value: data.presentAppointmentDate },
       {
         label: 'first job type',
-        value: firstJobType ? data.firstJobType.type : null
+        value: firstJobType ? data.firstJobType.type : null,
       },
       {
         label: 'first job title',
-        value: firstJobTitle ? data.firstJobTitle.description : null
+        value: firstJobTitle ? data.firstJobTitle.description : null,
       },
       {
         label: 'first job grade',
-        value: firstJobGrade ? data.firstJobGrade.con : null
+        value: firstJobGrade ? data.firstJobGrade.con : null,
       },
       {
         label: 'first step',
-        value: firstJobGrade ? data.firstJobGrade.con : null
+        value: firstJobGrade ? data.firstJobGrade.con : null,
       },
       {
         label: 'present job type',
-        value: presentJobType ? data.presentJobType.type : null
+        value: presentJobType ? data.presentJobType.type : null,
       },
       {
         label: 'present job title',
-        value: presentJobTitle ? data.presentJobTitle.description : null
+        value: presentJobTitle ? data.presentJobTitle.description : null,
       },
       {
         label: 'present job grade',
-        value: presentJobGrade ? data.presentJobGrade.con : null
+        value: presentJobGrade ? data.presentJobGrade.con : null,
       },
       {
         label: 'present step',
-        value: presentJobGrade ? data.presentJobGrade.con : null
-      }
+        value: presentPositionStep ? data.presentPositionStep.step : null,
+      },
     ];
   }
 

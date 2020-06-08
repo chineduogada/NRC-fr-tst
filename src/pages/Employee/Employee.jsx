@@ -5,8 +5,8 @@ import EmployeeBasicInfo from './EmployeeBasicInfo/EmployeeBasicInfo';
 import EmployeeJobInfo from './EmployeeJobInfo/EmployeeJobInfo';
 import EmployeeAppointmentInfo from './EmployeeAppointmentInfo/EmployeeAppointmentInfo';
 import EmployeeRelationInfo from './EmployeeRelationInfo/EmployeeRelationInfo';
-import EmployeeCareerInfo from './EmployeeCareerInfo/EmployeeCareerInfo';
-import EmployeeTrainingRecords from './EmployeeTrainingRecords/EmployeeTrainingRecords';
+// import EmployeeCareerInfo from './EmployeeCareerInfo/EmployeeCareerInfo';
+import EmployeeTrainings from './EmployeeTrainings/EmployeeTrainings';
 import EmployeeCareer from './EmployeeCareer/EmployeeCareer';
 import EmployeeSkills from '../EmployeeSkills/EmployeeSkills';
 import EmployeeQualifications from '../EmployeeQualifications/EmployeeQualifications';
@@ -33,7 +33,7 @@ export default class Employee extends Component {
         { label: 'Career', key: 'career' },
         { label: 'Trainings', key: 'trainings' },
         { label: 'Skills', key: 'skills' },
-        { label: 'Qualifications', key: 'qualifications' }
+        { label: 'Qualifications', key: 'qualifications' },
       ],
 
       uploading: false,
@@ -45,7 +45,7 @@ export default class Employee extends Component {
       employeeStatus: '',
       presentJobType: '',
 
-      activeTab: 'basicInformation'
+      activeTab: 'basicInformation',
     };
 
     this.handleImageChange = this.handleImageChange.bind(this);
@@ -63,12 +63,12 @@ export default class Employee extends Component {
         firstName,
         lastName,
         employeeJob,
-        employeeAppointment
+        employeeAppointment,
       } = res.data.data.rows[0];
 
       const profile = {
         employeeImageSrc: photo,
-        fullName: `${firstName} ${lastName}`
+        fullName: `${firstName} ${lastName}`,
       };
 
       if (employeeJob) {
@@ -88,7 +88,7 @@ export default class Employee extends Component {
 
       this.setState({
         justFetchingImage: false,
-        ...profile
+        ...profile,
       });
     }
   }
@@ -101,7 +101,7 @@ export default class Employee extends Component {
     this.setState({ uploading: !this.state.uploading });
   }
 
-  handleTabChange = tab => {
+  handleTabChange = (tab) => {
     this.setState({ activeTab: tab });
   };
 
@@ -116,7 +116,7 @@ export default class Employee extends Component {
       `/employees/${this.ippisNo}`,
       formData,
       {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
       }
     );
 
@@ -152,7 +152,7 @@ export default class Employee extends Component {
           ippisNo={this.ippisNo}
           changeCurrentIppis={() =>
             this.setState({
-              currentIppisNumber: this.ippisNo
+              currentIppisNumber: this.ippisNo,
             })
           }
         />
@@ -162,7 +162,7 @@ export default class Employee extends Component {
     } else if (activeTab === 'career') {
       return <EmployeeCareer ippisNo={this.ippisNo} />;
     } else if (activeTab === 'trainings') {
-      return <EmployeeTrainingRecords ippisNo={this.ippisNo} />;
+      return <EmployeeTrainings ippisNo={this.ippisNo} />;
     } else if (activeTab === 'skills') {
       return <EmployeeSkills ippisNo={this.ippisNo} />;
     } else if (activeTab === 'qualifications') {
@@ -179,7 +179,7 @@ export default class Employee extends Component {
       fullName,
       department,
       employeeStatus,
-      presentJobType
+      presentJobType,
     } = this.state;
 
     return (
