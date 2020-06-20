@@ -1,14 +1,14 @@
 import React from 'react';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
 import httpService from '../../../services/httpService';
 import nameMapper from '../../../helpers/nameMapper';
 import obJectKeyEliminator from '../../../helpers/obJectKeyEliminator';
 import InformationBlock from '../../../components/InformationBlock/InformationBlock';
 import Form from '../../../components/Form/Form';
-import Loader from '../../../components/Loader/Loader';
 
-export default class UpdateForm extends Form {
+class UpdateForm extends Form {
   constructor(props) {
     super(props);
 
@@ -30,9 +30,6 @@ export default class UpdateForm extends Form {
       },
 
       errors: {},
-
-      options: null,
-
       defaultValues: null,
     };
 
@@ -54,25 +51,27 @@ export default class UpdateForm extends Form {
   }
 
   async componentDidMount() {
-    this.setState({
-      formData: {
-        ...obJectKeyEliminator(this.props.defaultValues, [
-          'id',
-          'ippisNo',
-          'createdAt',
-          'updatedAt',
-          'firstJobType',
-          'firstJobTitle',
-          'firstJobGrade',
-          'firstJobStep',
-          'presentJobType',
-          'presentJobTitle',
-          'presentJobGrade',
-          'presentPositionStep',
-        ]),
-      },
+    const { defaultValues } = this.props;
 
-      options: this.props.options,
+    this.setState({
+      formData: defaultValues
+        ? {
+            ...obJectKeyEliminator(defaultValues, [
+              'id',
+              'ippisNo',
+              'createdAt',
+              'updatedAt',
+              'firstJobType',
+              'firstJobTitle',
+              'firstJobGrade',
+              'firstJobStep',
+              'presentJobType',
+              'presentJobTitle',
+              'presentJobGrade',
+              'presentPositionStep',
+            ]),
+          }
+        : this.state.formData,
     });
   }
 
@@ -103,8 +102,8 @@ export default class UpdateForm extends Form {
   }
 
   render() {
-    const { formData, options } = this.state;
-    return options ? (
+    const { formData } = this.state;
+    return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={(form) => (this.Form = form)}>
           <p className="form-header">update employee appointment information</p>
@@ -158,7 +157,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'first appointment job type',
               'firstAppointmentJobTypeId',
-              this.state.options.jobTypeOptions,
+              nameMapper(this.props.options.jobTypes, 'type'),
               null,
               true,
               formData.firstAppointmentJobTypeId
@@ -166,7 +165,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'first appointment job title',
               'firstAppointmentJobTitleId',
-              this.state.options.jobTitleOptions,
+              nameMapper(this.props.options.jobTitles, 'description'),
               null,
               true,
               formData.firstAppointmentJobTitleId
@@ -174,7 +173,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'first appointment grade',
               'firstAppointmentGradeId',
-              this.state.options.jobGradeOptions,
+              nameMapper(this.props.options.jobGrades, 'con'),
               null,
               true,
               formData.firstAppointmentGradeId
@@ -182,7 +181,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'first appointment step',
               'firstAppointmentStepId',
-              this.state.options.jobStepOptions,
+              nameMapper(this.props.options.steps, 'step'),
               null,
               true,
               formData.firstAppointmentStepId
@@ -190,7 +189,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'present position job type',
               'presentPositionJobTypeId',
-              this.state.options.jobTypeOptions,
+              nameMapper(this.props.options.jobTypes, 'type'),
               null,
               null,
               formData.presentPositionJobTypeId
@@ -198,7 +197,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'present position job title',
               'presentPositionJobTitleId',
-              this.state.options.jobTitleOptions,
+              nameMapper(this.props.options.jobTitles, 'description'),
               null,
               true,
               formData.presentPositionJobTitleId
@@ -206,7 +205,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'present position grade',
               'presentPositionGradeId',
-              this.state.options.jobGradeOptions,
+              nameMapper(this.props.options.jobGrades, 'con'),
               null,
               null,
               formData.presentPositionGradeId
@@ -214,7 +213,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'present position step',
               'presentPositionStepId',
-              this.state.options.jobStepOptions,
+              nameMapper(this.props.options.steps, 'step'),
               null,
               null,
               formData.presentPositionStepId
@@ -223,6 +222,19 @@ export default class UpdateForm extends Form {
           {this.renderButton('update')}
         </form>
       </React.Fragment>
-    ) : null;
+    );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      jobTypes: state.options.jobType,
+      jobTitles: state.options.jobTitle,
+      jobGrades: state.options.jobGrade,
+      steps: state.options.step,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(UpdateForm);

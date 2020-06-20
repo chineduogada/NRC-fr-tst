@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
 import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
@@ -17,18 +19,18 @@ class Successions extends Component {
 
     this.tableRowOptions = [
       { id: 0, name: 'inactive' },
-      { id: 0, name: 'active' }
+      { id: 0, name: 'active' },
     ];
 
     this.state = {
-      filteredDataFromServer: null,
+      data: null,
 
       columns: [
-        { accessor: 'department', Header: 'Department' },
-        { accessor: 'section', Header: 'Section' },
-        { accessor: 'jobTitle', Header: 'Job Title' },
+        { accessor: 'department.description', Header: 'Department' },
+        { accessor: 'section.description', Header: 'Section' },
+        { accessor: 'jobTitle.description', Header: 'Job Title' },
         { accessor: 'yearsOfExp', Header: 'Years of Experience' },
-        { accessor: 'employeeCount', Header: 'Employee Count' }
+        { accessor: 'employeeCount', Header: 'Employee Count' },
       ],
 
       newData: {},
@@ -40,7 +42,7 @@ class Successions extends Component {
 
       rowToPreview: null,
 
-      isDeleteting: false
+      isDeleteting: false,
     };
 
     this.options = null;
@@ -54,50 +56,10 @@ class Successions extends Component {
   }
 
   async componentDidMount() {
-    this.fetchOptionsFromServer();
-
-    const filteredDataFromServer = [];
-
     const res = await httpService.get('/successions');
 
     if (res) {
-      console.log(res.data);
-      res.data.data.rows.forEach(row => {
-        filteredDataFromServer.push(this.mapToViewModel(row));
-      });
-    }
-
-    this.setState({ filteredDataFromServer });
-  }
-
-  async fetchOptionsFromServer() {
-    const [
-      skills,
-      qualifications,
-      trainingTypes,
-      jobTitles,
-      departments,
-      sections
-    ] = await httpService.all([
-      httpService.get('/skills?statusId=1'),
-      httpService.get('/qualifications?statusId=1'),
-      httpService.get('/training-types?statusId=1'),
-      httpService.get('/job-titles?statusId=1'),
-      httpService.get('/departments?statusId=1'),
-      httpService.get('/sections?statusId=1')
-    ]);
-
-    const options = {};
-
-    if (skills) {
-      options.skills = skills.data.data;
-      options.qualifications = qualifications.data.data;
-      options.trainings = trainingTypes.data.data;
-      options.jobTitles = jobTitles.data.data;
-      options.departments = departments.data.data;
-      options.sections = sections.data.data;
-
-      this.options = options;
+      this.setState({ data: res.data.data.rows });
     }
   }
 
@@ -116,7 +78,7 @@ class Successions extends Component {
       jobTitle: row.jobTitle.description,
       section: row.section.section,
       employeeCount: row.employeeCount,
-      yearsOfExp: row.yearsOfExp
+      yearsOfExp: row.yearsOfExp,
     };
   }
 
@@ -132,14 +94,14 @@ class Successions extends Component {
     const newDataObject = res.data.data.result;
     const filteredNewDataObject = this.mapToViewModel({
       ...newDataObject,
-      ...this.getOptionValues()
+      ...this.getOptionValues(),
     });
     console.log(newDataObject, filteredNewDataObject);
     this.setState({
       filteredDataFromServer: [
         filteredNewDataObject,
-        ...this.state.filteredDataFromServer
-      ]
+        ...this.state.filteredDataFromServer,
+      ],
     });
   }
 
@@ -152,20 +114,20 @@ class Successions extends Component {
    */
   getOptionValues() {
     const { departmentId, sectionId, jobTitleId } = this.state.newData;
-    const { options } = this;
+    const { options } = this.props;
 
     console.log(options);
 
     return {
       department: options.departments.filter(
-        option => option.id === departmentId * 1
+        (option) => option.id === departmentId * 1
       )[0],
       section: options.sections.filter(
-        option => option.id === sectionId * 1
+        (option) => option.id === sectionId * 1
       )[0],
       jobTitle: options.jobTitles.filter(
-        option => option.id === jobTitleId * 1
-      )[0]
+        (option) => option.id === jobTitleId * 1
+      )[0],
     };
   }
 
@@ -182,7 +144,7 @@ class Successions extends Component {
     // map every option to the current value the user may have selected and join them with the from data
     const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
-    const rowIndex = oldState.findIndex(row => row.id === id);
+    const rowIndex = oldState.findIndex((row) => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
     const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
     // updating the copy of the filtered data from the server
@@ -197,7 +159,7 @@ class Successions extends Component {
         <SuccessionForm
           title="define succession conditions"
           subTitle="Please fill out the source details to continue"
-          options={this.options}
+          options={this.props.options}
           onSuccess={this.handleOnSuccess}
         />
         <div className={classes.Close} onClick={this.closeForm}>
@@ -220,11 +182,11 @@ class Successions extends Component {
   }
 
   render() {
-    const { showForm, filteredDataFromServer, columns } = this.state;
+    const { showForm, data, columns } = this.state;
 
     return (
       <React.Fragment>
-        {filteredDataFromServer ? (
+        {data ? (
           <Section>
             {showForm ? (
               this.renderForm()
@@ -233,7 +195,7 @@ class Successions extends Component {
                 title="succession definitions"
                 message="Double click a row to preview or update"
                 columns={columns}
-                data={filteredDataFromServer}
+                data={data}
                 clickHandler={this.handleRowClick}
                 addNewButtonHandler={this.handleAddNew}
               ></TableView>
@@ -247,4 +209,21 @@ class Successions extends Component {
   }
 }
 
-export default withRouter(Successions);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: state.options.department,
+      sections: state.options.section,
+      jobTitles: state.options.jobTitle,
+      skills: state.options.skill,
+      qualifications: state.options.qualification,
+      trainingTypes: state.options.trainingType,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Successions);

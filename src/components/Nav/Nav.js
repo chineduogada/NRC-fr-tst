@@ -6,13 +6,16 @@ import { Link, withRouter } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
 import './Nav.scss';
 import { GetImage } from '../../services/employeeService';
+import { connect } from 'react-redux';
+
+// const department = useSelector((state) => state.options.department);
 
 // Navigation
 class Nav extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageSource: null
+      imageSource: null,
     };
   }
 
@@ -21,16 +24,26 @@ class Nav extends Component {
     const activeNavItem = this.props.location.pathname.split('/')[1];
     console.log(activeNavItem);
 
+    console.log(this.props.options);
+
     return (
       <nav id="main-nav">
         {/* Logo */}
         {/* <Link to='/'><h1 id="logo">NRC HR</h1></Link> */}
-        <div></div>
+        <div className="hamburger">
+          {
+            <MdApps
+              className="icon show-until-tablet"
+              size="25px"
+              onClick={this.props.onHandBurgerClick}
+            />
+          }
+        </div>
+        {/* Logo on tablets and mobile */}
+        <h2 className="logo show-until-tablet">PRM</h2>
 
         {/* Main Menu */}
         <div className="menu main-menu">
-          {/* Hamburger */}
-          <p className="hamburger">{<MdApps className="icon" size="15px" />}</p>
           {/* Menu Items */}
           <ul>
             <li>
@@ -84,4 +97,10 @@ class Nav extends Component {
   }
 }
 
-export default withRouter(Nav);
+const mapStateToProps = (state) => {
+  return {
+    options: state.options,
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(Nav));

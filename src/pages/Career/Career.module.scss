@@ -1,5 +1,7 @@
 .Actions {
   display: flex;
+  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
 
   &.Right {
     justify-content: flex-end;
@@ -7,11 +9,15 @@
 }
 
 .DisplayInfo {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   p {
     font-weight: bold;
     text-transform: capitalize;
-    margin-right: 1em;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  span {
+    font-size: 0.8rem;
   }
 }

@@ -1,5 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
 import Section from '../../hoc/Section/Section';
 import httpService from '../../services/httpService';
 import Form from '../../components/Form/Form';
@@ -8,7 +10,7 @@ import InformationBlock from '../../components/InformationBlock/InformationBlock
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 import nameMapper, { mapForReactSelect } from '../../helpers/nameMapper';
 
-export default class ImportForm extends Form {
+class SuccessionForm extends Form {
   constructor(props) {
     super(props);
 
@@ -27,7 +29,7 @@ export default class ImportForm extends Form {
         otherTrainings: [],
         otherRequirement: '',
         otherRequirement1: '',
-        otherRequirement2: ''
+        otherRequirement2: '',
       },
 
       options: {
@@ -36,14 +38,14 @@ export default class ImportForm extends Form {
         jobTitles: [],
         skills: [],
         qualifications: [],
-        trainings: []
+        trainings: [],
       },
 
       justAddedADefinition: false,
 
       ippisNoVerified: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = this.state.formData;
@@ -59,7 +61,7 @@ export default class ImportForm extends Form {
       departmentId,
       sectionId,
       jobTitleId,
-      employeeCount
+      employeeCount,
     } = this.state.formData;
     return departmentId && sectionId && jobTitleId && employeeCount;
   }
@@ -69,7 +71,7 @@ export default class ImportForm extends Form {
       basicSkillId,
       yearsOfExp,
       basicQualId,
-      basicTrainingId
+      basicTrainingId,
     } = this.state.formData;
 
     return yearsOfExp && basicSkillId && basicQualId && basicTrainingId;
@@ -95,15 +97,13 @@ export default class ImportForm extends Form {
         otherTrainings: data.otherTrainings,
         otherRequirement: data.otherRequirement,
         otherRequirement1: data.otherRequirement1,
-        otherRequirement2: data.otherRequirement2
+        otherRequirement2: data.otherRequirement2,
       };
       this.setState({ formData, ippisNoVerified: true });
     }
   }
 
   async componentDidMount() {
-    console.log(this.props.options);
-    this.setState({ options: this.props.options });
     this.fillUpFormData();
   }
 
@@ -152,12 +152,11 @@ export default class ImportForm extends Form {
   }
 
   render() {
-    const { options, formData, justAddedADefinition } = this.state;
-    console.log('all sections here', options.sections);
+    const { formData, justAddedADefinition } = this.state;
 
     return (
       <Section title={this.props.title} subTitle={this.props.subTitle}>
-        <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+        <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
           {justAddedADefinition ? <p>Add another one?</p> : null}
           <InformationBlock
             title="source details"
@@ -166,7 +165,7 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'department',
               'departmentId',
-              nameMapper(options.departments, 'description'),
+              nameMapper(this.props.options.departments, 'description'),
               null,
               null,
               formData.departmentId
@@ -174,7 +173,7 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'section',
               'sectionId',
-              nameMapper(options.sections, 'description'),
+              nameMapper(this.props.options.sections, 'description'),
               null,
               null,
               formData.sectionId
@@ -182,7 +181,7 @@ export default class ImportForm extends Form {
             {this.renderSelect(
               'jobTitle',
               'jobTitleId',
-              nameMapper(options.jobTitles, 'description'),
+              nameMapper(this.props.options.jobTitles, 'description'),
               null,
               null,
               formData.jobTitleId
@@ -210,7 +209,7 @@ export default class ImportForm extends Form {
                 {this.renderSelect(
                   'basic skill',
                   'basicSkillId',
-                  nameMapper(options.skills, 'skill'),
+                  nameMapper(this.props.options.skills, 'skill'),
                   null,
                   null,
                   formData.basicSkillId
@@ -218,7 +217,10 @@ export default class ImportForm extends Form {
                 {this.renderSelect(
                   'basic qualification',
                   'basicQualId',
-                  nameMapper(options.qualifications, 'qualification'),
+                  nameMapper(
+                    this.props.options.qualifications,
+                    'qualification'
+                  ),
                   null,
                   null,
                   formData.basicQualId
@@ -226,7 +228,7 @@ export default class ImportForm extends Form {
                 {this.renderSelect(
                   'basic training',
                   'basicTrainingId',
-                  nameMapper(options.trainings, 'type'),
+                  nameMapper(this.props.options.trainingTypes, 'type'),
                   null,
                   null,
                   formData.basicTrainingId
@@ -257,15 +259,15 @@ export default class ImportForm extends Form {
                   'other skills',
                   'otherSkills',
                   mapForReactSelect(
-                    nameMapper(options.skills, 'skill'),
+                    nameMapper(this.props.options.skills, 'skill'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== formData.basicSkillId
+                    (option) => `${option.value}` !== formData.basicSkillId
                   ),
                   null,
                   null,
                   [...formData.otherSkills].map(
-                    option => `${option.value}` !== formData.basicSkillId
+                    (option) => `${option.value}` !== formData.basicSkillId
                   ),
                   true
                 )}
@@ -273,15 +275,18 @@ export default class ImportForm extends Form {
                   'other qualifications',
                   'otherQualifications',
                   mapForReactSelect(
-                    nameMapper(options.qualifications, 'qualification'),
+                    nameMapper(
+                      this.props.options.qualifications,
+                      'qualification'
+                    ),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== formData.basicQualId
+                    (option) => `${option.value}` !== formData.basicQualId
                   ),
                   null,
                   null,
                   [...formData.otherQualifications].map(
-                    option => `${option.value}` !== formData.basicQualId
+                    (option) => `${option.value}` !== formData.basicQualId
                   ),
                   true
                 )}
@@ -289,15 +294,15 @@ export default class ImportForm extends Form {
                   'other trainings',
                   'otherTrainings',
                   mapForReactSelect(
-                    nameMapper(options.trainings, 'type'),
+                    nameMapper(this.props.options.trainingTypes, 'type'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== formData.basicTrainingId
+                    (option) => `${option.value}` !== formData.basicTrainingId
                   ),
                   null,
                   null,
                   [...formData.otherTrainings].map(
-                    option => `${option.value}` !== formData.basicTrainingIdId
+                    (option) => `${option.value}` !== formData.basicTrainingIdId
                   ),
                   true
                 )}
@@ -313,3 +318,22 @@ export default class ImportForm extends Form {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: state.options.department,
+      sections: state.options.section,
+      jobTitles: state.options.jobTitle,
+      skills: state.options.skill,
+      qualifications: state.options.qualification,
+      trainingTypes: state.options.trainingType,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SuccessionForm);

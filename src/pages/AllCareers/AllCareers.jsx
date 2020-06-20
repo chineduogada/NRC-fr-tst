@@ -2,6 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
+import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
@@ -9,7 +12,6 @@ import TableView from '../../components/TableView/TableView';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
-import nameMapper from '../../helpers/nameMapper';
 
 class AllCareers extends Form {
   constructor(props) {
@@ -26,7 +28,7 @@ class AllCareers extends Form {
         { accessor: 'memoReference', Header: 'Memo Reference' },
         { accessor: 'reasonCode', Header: 'Reason Code' },
         { accessor: 'oldJobTitle', Header: 'Old Job Title' },
-        { accessor: 'newJobTitle', Header: 'New Job Title' }
+        { accessor: 'newJobTitle', Header: 'New Job Title' },
       ],
 
       pageSize: 20,
@@ -41,7 +43,7 @@ class AllCareers extends Form {
         reasonCodeId: '',
         newJobTitleId: '',
         attachedDoc: '',
-        remarks: ''
+        remarks: '',
       },
 
       options: {
@@ -54,7 +56,7 @@ class AllCareers extends Form {
       jobTitleOptions: [],
       reasonCodeOptions: [],
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -74,32 +76,9 @@ class AllCareers extends Form {
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
     newJobTitleId: Joi.number(),
-    attachedDoc: Joi.string()
-      .allow('')
-      .optional(),
-    remarks: Joi.string()
-      .allow('')
-      .optional()
+    attachedDoc: Joi.string().allow('').optional(),
+    remarks: Joi.string().allow('').optional(),
   };
-
-  async fetchOptions() {
-    const [jobTitles, careerReasonCodes] = await httpService.all([
-        httpService.get(`/job-titles`),
-        httpService.get(`/career-reason-codes`),
-      ]);
-
-    if (jobTitles) {
-      console.log('Career Registration', jobTitles, careerReasonCodes);
-      const options = {
-        jobTitles: jobTitles.data.data,
-        careerReasonCodes: careerReasonCodes.data.data,
-      }
-
-      this.setState({
-        options
-      })
-    }
-  }
 
   async fetchData() {
     const actualData = [];
@@ -112,7 +91,7 @@ class AllCareers extends Form {
       console.log('Career', rows);
 
       if (rows && rows.length) {
-        rows.forEach(row => {
+        rows.forEach((row) => {
           actualData.push(this.mapToViewModel(row));
         });
       }
@@ -125,7 +104,6 @@ class AllCareers extends Form {
     if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showDraw: true });
     }
-    this.fetchOptions();
     await this.fetchData();
   }
 
@@ -153,11 +131,11 @@ class AllCareers extends Form {
       reasonCode: record.reasonCode.code,
       newJobTitle: record.newJobTitle.description,
       oldJobTitle: record.oldJobTitle ? record.oldJobTitle.description : 'null',
-      remarks: record.remarks
+      remarks: record.remarks,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -208,14 +186,14 @@ class AllCareers extends Form {
   }
 
   renderForm() {
-    const { ippisNoVerified, options } = this.state;
+    const { ippisNoVerified } = this.state;
 
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>New career record</p>
 
         <EmployeeVerifier
-          checkOnResponseRecieved={employees => employees.length}
+          checkOnResponseRecieved={(employees) => employees.length}
           onEmployeeSelection={this.handleEmployeeSelection}
           onInputChange={this.handleEmployeeInputChange}
         >
@@ -238,8 +216,16 @@ class AllCareers extends Form {
               'date'
             )}
             {this.renderInput('memo reference', 'memoReference')}
-            {this.renderSelect('reason code', 'reasonCodeId', nameMapper(options.careerReasonCodes, 'code'))}
-            {this.renderSelect('new job title', 'newJobTitleId', nameMapper(options.jobTitles, 'description'))}
+            {this.renderSelect(
+              'reason code',
+              'reasonCodeId',
+              nameMapper(this.props.options.careerReasonCodes, 'code')
+            )}
+            {this.renderSelect(
+              'new job title',
+              'newJobTitleId',
+              nameMapper(this.props.options.jobTitles, 'description')
+            )}
             {this.renderInput(
               'attached document',
               'attachedDoc',
@@ -287,4 +273,19 @@ class AllCareers extends Form {
   }
 }
 
-export default withRouter(AllCareers);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      careerReasonCodes: state.options.careerReasonCode,
+      jobTitles: state.options.jobTitle,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllCareers)
+);

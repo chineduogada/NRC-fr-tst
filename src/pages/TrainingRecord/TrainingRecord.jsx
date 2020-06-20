@@ -1,7 +1,10 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
+import nameMapper from '../../helpers/nameMapper';
 import dates from '../../helpers/dates';
 import autobind from '../../helpers/autobind';
 import currency from '../../helpers/currency';
@@ -22,9 +25,8 @@ class TrainingRecord extends Form {
     this.id = this.props.match.params.id;
 
     this.state = {
-      dataFilteredForView: null,
       dataForView: null,
-      dataForForm: null,
+      data: null,
 
       showForm: false,
       showModal: false,
@@ -55,7 +57,6 @@ class TrainingRecord extends Form {
       'updateDatabase',
       'closeSideDraw',
       'closeModal',
-      'handleViewEmployee',
       'deleteObject',
       'handleDelete',
       'handleProceedDelete'
@@ -80,9 +81,9 @@ class TrainingRecord extends Form {
 
     if (res) {
       this.setState({
-        dataFilteredForView: this.filterDataForView(res.data.data),
+        data: res.data.data,
         dataForView: this.mapDataForView(res.data.data),
-        dataForForm: this.filterForForm(res.data.data),
+        formData: this.filterForForm(res.data.data),
       });
     }
   }
@@ -101,11 +102,15 @@ class TrainingRecord extends Form {
 
   mapDataForView(data) {
     return [
-      { name: 'l year', value: data.tYear },
+      { name: 'training year', value: data.tYear },
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
-        value: `${data.employee.firstName} ${data.employee.lastName}`,
+        value: (
+          <Link to={`/employees/${data.ippisNo}`} target="_blank">
+            {data.employee.firstName} {data.employee.lastName}
+          </Link>
+        ),
       },
       { name: 'training type', value: data.trainingType.type },
       {
@@ -143,26 +148,6 @@ class TrainingRecord extends Form {
     };
   }
 
-  filterDataForView(record) {
-    return {
-      tYear: record.tYear,
-      ippisNo: record.ippisNo,
-      employee: `${record.employee.firstName} ${record.employee.lastName}`,
-      trainingType: record.trainingType.type,
-      serialCount: record.serialCount,
-      startDate: record.startDate,
-      endDate: record.endDate,
-      numDays: dates.getDurationBetween(
-        Date(record.startDate),
-        Date(record.endDate)
-      ),
-      individualActualCost: record.individualActualCost,
-      trainingLocation: record.trainingLocation,
-      residential: record.residential,
-      employeeComment: record.employeeComment,
-    };
-  }
-
   handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
@@ -174,7 +159,7 @@ class TrainingRecord extends Form {
   }
 
   handleUpdateBtnClick(event) {
-    this.setState({ showForm: true, formData: this.state.dataForForm });
+    this.setState({ showForm: true });
   }
 
   async updateDatabase() {
@@ -188,7 +173,6 @@ class TrainingRecord extends Form {
       toast.success('Training record successfully updated!');
       this.stopProcessing();
       this.closeSideDraw();
-      this.resetFormData();
     }
   }
 
@@ -211,17 +195,13 @@ class TrainingRecord extends Form {
     this.setState({ showModal: true });
   }
 
-  handleViewEmployee({ currentTarget }) {
-    this.props.history.push(`/employees/${currentTarget.id}`);
-  }
-
   async doSubmit(event) {
     console.log('updating');
     return this.updateDatabase();
   }
 
   renderUpdateForm() {
-    const { dataForForm } = this.state;
+    const { dataForForm, formData } = this.state;
 
     return (
       <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
@@ -229,56 +209,64 @@ class TrainingRecord extends Form {
           'training year',
           'tYear',
           null,
-          dataForForm.tYear,
+          formData.tYear,
           'date'
         )}
-        {this.renderSelect('training type', 'trainingTypeId', [
-          { id: 1, name: 'corporate' },
-          { id: 2, name: 'community' },
-        ])}
+        {this.renderSelect(
+          'training type',
+          'trainingTypeId',
+          nameMapper(this.props.options.trainingTypes, 'type'),
+          null,
+          null,
+          Number(formData.trainingTypeId)
+        )}
         {this.renderInput(
           'serial count',
           'serialCount',
-          dataForForm.serialCount,
           null,
+          formData.serialCount,
           'number'
         )}
         {this.renderInput(
           'start date',
           'startDate',
           null,
-          dataForForm.startDate,
+          formData.startDate,
           'date'
         )}
         {this.renderInput(
           'end date',
           'endDate',
           null,
-          dataForForm.endDate,
+          formData.endDate,
           'date'
         )}
         {this.renderInput(
           'individual actual cost',
           'individualActualCost',
           null,
-          dataForForm.individualActualCost,
+          formData.individualActualCost,
           'number'
         )}
         {this.renderInput(
           'training location',
           'trainingLocation',
           null,
-          dataForForm.trainingLocation
+          formData.trainingLocation
         )}
-        {this.renderSelect('residential', 'residential', [
-          { id: 'Y', name: 'Y' },
-          { id: 'N', name: 'N' },
-        ])}
+        {this.renderSelect(
+          'residential',
+          'residential',
+          this.props.options.residential,
+          null,
+          null,
+          formData.residential
+        )}
         {this.renderTextArea(
           'employee comment',
           'employeeComment',
           null,
-          dataForForm.employeeComment
+          formData.employeeComment
         )}
 
         {this.renderButton('save')}
@@ -298,29 +286,23 @@ class TrainingRecord extends Form {
   }
 
   render() {
-    const { showForm, showModal, dataForView, dataForForm } = this.state;
+    const { showForm, showModal, formData } = this.state;
 
     return (
       <React.Fragment>
-        {dataForView ? (
+        {this.state.data ? (
           <Section title="training record">
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button label="update" fill onClick={this.handleUpdateBtnClick} />
               <Button label="delete" danger onClick={this.handleDelete} />
-              <Button
-                label="view employee"
-                plain
-                onClick={this.handleViewEmployee}
-                id={dataForForm.ippisNo}
-              />
             </div>
 
             <InformationBlock title="basic">
-              {this.displayInfo(dataForView)}
+              {this.displayInfo(this.mapDataForView(this.state.data))}
             </InformationBlock>
 
             <InformationBlock title="employee comment">
-              {dataForForm.employeeComment}
+              {this.state.data.employeeComment}
             </InformationBlock>
 
             <SideDraw
@@ -355,4 +337,19 @@ class TrainingRecord extends Form {
   }
 }
 
-export default withRouter(TrainingRecord);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      trainingTypes: state.options.trainingType,
+      residential: state.options.residential,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(TrainingRecord)
+);

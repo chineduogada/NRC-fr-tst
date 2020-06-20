@@ -1,7 +1,11 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
+import nameMapper from '../../helpers/nameMapper';
+import autobind from '../../helpers/autobind';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
@@ -10,7 +14,6 @@ import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
-import nameMapper from '../../helpers/nameMapper';
 import classes from './JobIncidence.module.scss';
 
 class JobIncidence extends Form {
@@ -20,12 +23,10 @@ class JobIncidence extends Form {
     this.id = this.props.match.params.id;
 
     this.state = {
-      dataFilteredForView: null,
-      dataForView: null,
-      dataForForm: null,
+      data: null,
       options: {
         reasonCodes: [],
-        decisionCodes: []
+        decisionCodes: [],
       },
       showForm: false,
       showModal: false,
@@ -39,24 +40,26 @@ class JobIncidence extends Form {
         decisionCodeId: '',
         decisionDescription: '',
         attachedDoc: '',
-        remarks: ''
+        remarks: '',
       },
 
       isDeleteting: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
 
-    this.closeSideDraw = this.closeSideDraw.bind(this);
-    this.updateDatabase = this.updateDatabase.bind(this);
-    this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleProceedDelete = this.handleProceedDelete.bind(this);
-    this.deleteObject = this.deleteObject.bind(this);
-    this.handleViewEmployee = this.handleViewEmployee.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    autobind(
+      this,
+      'handleUpdateBtnClick',
+      'updateDatabase',
+      'closeSideDraw',
+      'closeModal',
+      'deleteObject',
+      'handleDelete',
+      'handleProceedDelete'
+    );
   }
 
   schema = {
@@ -64,19 +67,11 @@ class JobIncidence extends Form {
     transactionDate: Joi.string(),
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
-    reasonDescription: Joi.string()
-      .allow('')
-      .optional(),
+    reasonDescription: Joi.string().allow('').optional(),
     decisionCodeId: Joi.number(),
-    decisionDescription: Joi.string()
-      .allow('')
-      .optional(),
-    attachedDoc: Joi.string()
-      .allow('')
-      .optional(),
-    remarks: Joi.string()
-      .allow('')
-      .optional()
+    decisionDescription: Joi.string().allow('').optional(),
+    attachedDoc: Joi.string().allow('').optional(),
+    remarks: Joi.string().allow('').optional(),
   };
 
   async fetchJobIncidence() {
@@ -84,31 +79,13 @@ class JobIncidence extends Form {
 
     if (res) {
       this.setState({
-        dataFilteredForView: this.filterDataForView(res.data.data),
-        dataForView: this.mapDataForView(res.data.data),
-        dataForForm: this.filterForForm(res.data.data)
+        data: res.data.data,
+        formData: this.filterForForm(res.data.data),
       });
     }
   }
 
-  async fetchOptions() {
-    const [reasonCodes, decisionCodes] = await httpService.all([
-      httpService.get('/incidence-reason-codes'),
-      httpService.get('/incidence-decision-codes')
-    ]);
-
-    if (reasonCodes) {
-      const options = {
-        reasonCodes: nameMapper(reasonCodes.data.data, 'code'),
-        decisionCodes: nameMapper(decisionCodes.data.data, 'code')
-      };
-
-      this.setState({ options });
-    }
-  }
-
   async componentDidMount() {
-    this.fetchOptions();
     await this.fetchJobIncidence();
   }
 
@@ -126,17 +103,21 @@ class JobIncidence extends Form {
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
-        value: `${data.employee.firstName} ${data.employee.lastName}`
+        value: (
+          <Link to={`/employees/${data.ippisNo}`} target="_blank">
+            {data.employee.firstName} {data.employee.lastName}
+          </Link>
+        ),
       },
       { name: 'memo reference', value: data.memoReference },
       {
         name: 'reason code',
-        value: data.reasonCode.code
+        value: data.reasonCode.code,
       },
       {
         name: 'decision code',
-        value: data.decisionCode.code
-      }
+        value: data.decisionCode.code,
+      },
     ];
   }
 
@@ -144,12 +125,12 @@ class JobIncidence extends Form {
     return [
       {
         name: 'reason description',
-        value: data.reasonDescription
+        value: data.reasonDescription,
       },
       {
         name: 'decision description',
-        value: data.decisionDescription
-      }
+        value: data.decisionDescription,
+      },
     ];
   }
 
@@ -157,8 +138,8 @@ class JobIncidence extends Form {
     return [
       {
         name: 'remarks',
-        value: data.remarks
-      }
+        value: data.remarks,
+      },
     ];
   }
 
@@ -172,7 +153,7 @@ class JobIncidence extends Form {
       reasonDescription: data.reasonDescription,
       decisionDescription: data.decisionDescription,
       attachedDoc: data.attachedDoc,
-      remarks: data.remarks
+      remarks: data.remarks,
     };
   }
 
@@ -187,22 +168,18 @@ class JobIncidence extends Form {
       reasonDescription: data.reasonDescription,
       decisionDescription: data.decisionDescription,
       attachedDoc: data.attachedDoc,
-      remarks: data.remarks
+      remarks: data.remarks,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
   };
 
-  resetFormData() {
-    this.setState({ formData: this.initialFormState });
-  }
-
   handleUpdateBtnClick(event) {
-    this.setState({ showForm: true, formData: this.state.dataForForm });
+    this.setState({ showForm: true });
   }
 
   async updateDatabase() {
@@ -217,7 +194,6 @@ class JobIncidence extends Form {
       await this.fetchJobIncidence();
       toast.success('Job incidence successfully updated!');
       this.closeSideDraw();
-      this.resetFormData();
     }
   }
 
@@ -240,62 +216,58 @@ class JobIncidence extends Form {
     this.setState({ showModal: true });
   }
 
-  handleViewEmployee({ currentTarget }) {
-    this.props.history.push(`/employees/${currentTarget.id}`);
-  }
-
   async doSubmit(event) {
     console.log('updating');
     return this.updateDatabase();
   }
 
   renderUpdateForm() {
-    const { dataForForm, options } = this.state;
+    const { formData } = this.state;
 
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         {this.renderInput(
           'transaction date',
           'transactionDate',
           null,
-          dataForForm.transactionDate,
+          formData.transactionDate,
           'date'
         )}
         {this.renderInput(
           'memo reference',
           'memoReference',
           null,
-          dataForForm.memoReference
+          formData.memoReference
         )}
         {this.renderSelect(
           'reason code',
           'reasonCodeId',
-          options.reasonCodes,
+          nameMapper(this.props.options.incidenceReasonCodes, 'code'),
           null,
           null,
-          dataForForm.reasonCodeId
+          formData.reasonCodeId
         )}
         {this.renderTextArea(
           'reason description',
           'reasonDescription',
           null,
-          dataForForm.reasonDescription
+          formData.reasonDescription
         )}
         {this.renderSelect(
           'decision code',
           'decisionCodeId',
-          options.decisionCodes,
+          nameMapper(this.props.options.incidenceDecisionCodes, 'code'),
           null,
           null,
-          dataForForm.decisionCodeId
+          formData.decisionCodeId
         )}
         {this.renderTextArea(
           'decision description',
           'decisionDescription',
           null,
-          dataForForm.decisionDescription
+          formData.decisionDescription
         )}
-        {this.renderTextArea('remarks', 'remarks', null, dataForForm.remarks)}
+        {this.renderTextArea('remarks', 'remarks', null, formData.remarks)}
 
         {this.renderButton('save')}
       </form>
@@ -314,35 +286,27 @@ class JobIncidence extends Form {
   }
 
   render() {
-    const { showForm, showModal, dataForView, dataForForm } = this.state;
+    const { showForm, showModal, data } = this.state;
 
     return (
       <React.Fragment>
-        {dataForView ? (
+        {data ? (
           <Section title="job incidence">
             <div className={`${classes.Actions} ${classes.Right}`}>
               <Button label="update" fill onClick={this.handleUpdateBtnClick} />
               <Button label="delete" danger onClick={this.handleDelete} />
-              <Button
-                label="view employee"
-                plain
-                onClick={this.handleViewEmployee}
-                id={dataForForm.ippisNo}
-              />
             </div>
 
             <InformationBlock title="basic">
-              {this.displayInfo(dataForView)}
+              {this.displayInfo(this.mapDataForView(data))}
             </InformationBlock>
 
             <InformationBlock title="descriptions">
-              {this.displayInfo(
-                this.mapDataForIncidenceLines(this.state.dataFilteredForView)
-              )}
+              {this.displayInfo(this.mapDataForIncidenceLines(data))}
             </InformationBlock>
 
             <InformationBlock title="remark">
-              <p className="data-item-value">{dataForForm.remarks}</p>
+              <p className="data-item-value">{data.remarks}</p>
             </InformationBlock>
 
             <SideDraw
@@ -377,4 +341,19 @@ class JobIncidence extends Form {
   }
 }
 
-export default withRouter(JobIncidence);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      incidenceReasonCodes: state.options.incidenceReasonCode,
+      incidenceDecisionCodes: state.options.incidenceDecisionCode,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(JobIncidence)
+);

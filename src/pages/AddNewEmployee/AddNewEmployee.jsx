@@ -2,28 +2,31 @@ import React from 'react';
 import Section from '../../hoc/Section/Section';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
+import nameMapper from '../../helpers/nameMapper';
 import Form from '../../components/Form/Form';
 import InformationBlock from '../../components/InformationBlock/InformationBlock';
-import http from '../../services/httpService';
 import httpService from '../../services/httpService';
-import nameMapper from './../../helpers/nameMapper';
 import PageNotice from '../../components/PageNotice/PageNotice';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 import Loader from '../../components/Loader/Loader';
 import hashMap from '../../helpers/hashMap';
+import autobind from '../../helpers/autobind';
 
-export default class AddNewEmployee extends Form {
+class AddNewEmployee extends Form {
   constructor(props) {
     super(props);
 
-    this.handleEmployeeSelection = this.handleEmployeeSelection.bind(this);
-    this.handleEmployeeInputChange = this.handleEmployeeInputChange.bind(this);
-    this.handleIppisResponseRecieved = this.handleIppisResponseRecieved.bind(
-      this
+    autobind(
+      this,
+      'handleEmployeeSelection',
+      'handleEmployeeInputChange',
+      'handleIppisResponseRecieved',
+      'handleNrcNoResponseRecieved'
     );
-    this.handleNrcNoResponseRecieved = this.handleNrcNoResponseRecieved.bind(
-      this
-    );
+
+    this.initialFormState = { ...this.state.formData };
   }
 
   state = {
@@ -76,98 +79,9 @@ export default class AddNewEmployee extends Form {
     },
 
     errors: {},
-
-    optionsFetched: false,
-
-    departmentOptions: [],
-    districtOptions: [],
-    genderOptions: [],
-    bloodGroupOptions: [],
-    jobTypeOptions: [],
-    jobTitleOptions: [],
-    jobGradeOptions: [],
-    jobStepOptions: [],
-    pfaOptions: [],
-    gpzOptions: [],
-    maritalStatusOptions: [],
-    senatorialDistrictOptions: [],
-    stateOptions: [],
-    lgaOptions: [],
-    countryOptions: [],
-    sectionOptions: [],
-    stepOptions: [],
-    salaryStructureOptions: [],
-    employeeStatusOptions: [],
-
     ippisNoVerified: false,
     nrcNoVerified: false,
   };
-
-  async componentDidMount() {
-    const [
-      departments,
-      districts,
-      bloodGroups,
-      jobTypes,
-      jobTitles,
-      jobGrades,
-      pfa,
-      gpz,
-      maritalStatuses,
-      senatorialDistricts,
-      states,
-      lga,
-      countries,
-      sections,
-      steps,
-      genders,
-      salaryStructures,
-      employeeStatuses,
-    ] = await httpService.all([
-      httpService.get('/departments?statusId=1'),
-      httpService.get('/districts?statusId=1'),
-      httpService.get('/blood-groups'),
-      httpService.get('/job-types?statusId=1'),
-      httpService.get('/job-titles?statusId=1'),
-      httpService.get('/job-grades'),
-      httpService.get('/pfa?statusId=1'),
-      httpService.get('/gpz'),
-      httpService.get('/marital-statuses'),
-      httpService.get('/senatorial-districts'),
-      httpService.get('/states'),
-      httpService.get('/lga'),
-      httpService.get('/countries'),
-      httpService.get('/sections?statusId=1'),
-      httpService.get('/steps'),
-      httpService.get('/genders'),
-      httpService.get('/salary-structures'),
-      httpService.get('/employee-statuses'),
-    ]);
-
-    if (departments) {
-      this.setState({
-        departmentOptions: departments.data.data,
-        districtOptions: districts.data.data,
-        bloodGroupOptions: bloodGroups.data.data,
-        jobTypeOptions: jobTypes.data.data,
-        jobTitleOptions: jobTitles.data.data,
-        jobGradeOptions: jobGrades.data.data,
-        pfaOptions: pfa.data.data,
-        gpzOptions: gpz.data.data,
-        lgaOptions: lga.data.data,
-        maritalStatusOptions: maritalStatuses.data.data,
-        senatorialDistrictOptions: senatorialDistricts.data.data,
-        stateOptions: states.data.data,
-        countryOptions: countries.data.data,
-        sectionOptions: sections.data.data,
-        jobStepOptions: steps.data.data,
-        genderOptions: genders.data.data,
-        salaryStructureOptions: salaryStructures.data.data,
-        employeeStatusOptions: employeeStatuses.data.data,
-        optionsFetched: true,
-      });
-    }
-  }
 
   schema = {
     // BASIC INFORMATION SCHEMA
@@ -232,8 +146,8 @@ export default class AddNewEmployee extends Form {
     }
   }
 
-  handleIppisResponseRecieved(employees) {
-    console.log('ippis character length', this.ippisNo);
+  handleIppisResponseRecieved = (employees) => {
+    console.log('ippis character length', this, this.ippisNo);
     if (
       !employees.length &&
       `${this.ippisNo.value}`.length >= 5 &&
@@ -243,7 +157,7 @@ export default class AddNewEmployee extends Form {
     } else {
       this.setState({ ippisNoVerified: false });
     }
-  }
+  };
 
   handleNrcNoResponseRecieved(employees) {
     if (!employees.length) {
@@ -259,7 +173,7 @@ export default class AddNewEmployee extends Form {
   }
 
   async doSubmit(event, stopProcessing) {
-    const res = await http.post('/employees', this.state.formData);
+    const res = await httpService.post('/employees', this.state.formData);
     stopProcessing();
 
     console.log(res);
@@ -274,7 +188,7 @@ export default class AddNewEmployee extends Form {
   render() {
     const { nrcNoVerified, ippisNoVerified, formData } = this.state;
 
-    return this.state.optionsFetched ? (
+    return this.props.options.bloodGroups.length ? (
       <Section title="add new employee">
         <PageNotice>
           Clicking the "save" button saves the data then clears the form to add
@@ -321,53 +235,41 @@ export default class AddNewEmployee extends Form {
                 )}
                 {this.renderInput('email', 'email', null, null, 'email')}
                 {this.renderSelect(
-                  'pension fund administrator',
-                  'pfaId',
-                  nameMapper(this.state.pfaOptions, 'name')
-                )}
-                {this.renderInput(
-                  'PFA number',
-                  'pfaNumber',
-                  null,
-                  null,
-                  'number'
-                )}
-                {this.renderSelect(
                   'gender',
                   'genderId',
-                  nameMapper(this.state.genderOptions, 'type')
+                  nameMapper(this.props.options.genders, 'type')
                 )}
                 {this.renderSelect(
                   'blood group',
                   'bloodGroupId',
-                  nameMapper(this.state.bloodGroupOptions, 'type')
+                  nameMapper(this.props.options.bloodGroups, 'type')
                 )}
                 {this.renderSelect(
                   'marital status',
                   'maritalStatusId',
-                  nameMapper(this.state.maritalStatusOptions, 'status')
+                  nameMapper(this.props.options.maritalStatuses, 'status')
                 )}
                 {this.renderSelect(
                   'country of birth',
                   'countryOfBirthId',
-                  nameMapper(this.state.countryOptions, 'country')
+                  nameMapper(this.props.options.countries, 'country')
                 )}
                 {this.renderSelect(
                   'nationality',
                   'nationalityId',
-                  nameMapper(this.state.countryOptions, 'country')
+                  nameMapper(this.props.options.countries, 'country')
                 )}
                 {this.renderSelect(
                   'GPZ',
                   'gpzId',
-                  nameMapper(this.state.gpzOptions, 'description')
+                  nameMapper(this.props.options.gpz, 'description')
                 )}
                 {this.renderSelect(
                   'state',
                   'stateId',
                   nameMapper(
                     hashMap(
-                      this.state.stateOptions,
+                      this.props.options.states,
                       'gpzId',
                       Number(formData.gpzId)
                     ),
@@ -379,7 +281,7 @@ export default class AddNewEmployee extends Form {
                   'senatorialDistrictId',
                   nameMapper(
                     hashMap(
-                      this.state.senatorialDistrictOptions,
+                      this.props.options.senatorialDistricts,
                       'stateId',
                       Number(formData.stateId)
                     ),
@@ -391,17 +293,30 @@ export default class AddNewEmployee extends Form {
                   'lgaId',
                   nameMapper(
                     hashMap(
-                      this.state.lgaOptions,
+                      this.props.options.lga,
                       'stateId',
                       Number(formData.stateId)
                     ),
                     'lga'
                   )
                 )}
-                {this.renderSelect('professional', 'professional', [
-                  { id: 'Y', name: 'Y' },
-                  { id: 'N', name: 'N' },
-                ])}
+                {this.renderSelect(
+                  'pension fund administrator',
+                  'pfaId',
+                  nameMapper(this.props.options.pfa, 'name')
+                )}
+                {this.renderInput(
+                  'PFA number',
+                  'pfaNumber',
+                  null,
+                  null,
+                  'number'
+                )}
+                {this.renderSelect(
+                  'professional',
+                  'professional',
+                  this.props.options.professional
+                )}
                 {this.renderInput('address', 'address', null)}
               </InformationBlock>
 
@@ -418,31 +333,32 @@ export default class AddNewEmployee extends Form {
                 {this.renderSelect(
                   'section',
                   'sectionId',
-                  nameMapper(this.state.sectionOptions, 'description')
+                  nameMapper(this.props.options.sections, 'description')
                 )}
                 {this.renderSelect(
                   'salary structure',
                   'salaryStructureId',
-                  nameMapper(this.state.salaryStructureOptions, 'description')
+                  nameMapper(this.props.options.salaryStructures, 'description')
                 )}
                 {this.renderSelect(
                   'employee status',
                   'employeeStatusId',
-                  nameMapper(this.state.employeeStatusOptions, 'description')
+                  nameMapper(this.props.options.employeeStatuses, 'description')
                 )}
-                {this.renderSelect('pensionable', 'pensionable', [
-                  { id: 'Y', name: 'Y' },
-                  { id: 'N', name: 'N' },
-                ])}
+                {this.renderSelect(
+                  'pensionable',
+                  'pensionable',
+                  this.props.options.pensionable
+                )}
                 {this.renderSelect(
                   'department',
                   'departmentId',
-                  nameMapper(this.state.departmentOptions, 'description')
+                  nameMapper(this.props.options.departments, 'description')
                 )}
                 {this.renderSelect(
                   'district',
                   'districtId',
-                  nameMapper(this.state.districtOptions, 'siteName')
+                  nameMapper(this.props.options.districts, 'siteName')
                 )}
               </InformationBlock>
 
@@ -479,42 +395,42 @@ export default class AddNewEmployee extends Form {
                 {this.renderSelect(
                   'first appointment job type',
                   'firstAppointmentJobTypeId',
-                  nameMapper(this.state.jobTypeOptions, 'type')
+                  nameMapper(this.props.options.jobTypes, 'type')
                 )}
                 {this.renderSelect(
                   'first appointment job title',
                   'firstAppointmentJobTitleId',
-                  nameMapper(this.state.jobTitleOptions, 'description')
+                  nameMapper(this.props.options.jobTitles, 'description')
                 )}
                 {this.renderSelect(
                   'first appointment grade',
                   'firstAppointmentGradeId',
-                  nameMapper(this.state.jobGradeOptions, 'con')
+                  nameMapper(this.props.options.jobGrades, 'con')
                 )}
                 {this.renderSelect(
                   'first appointment step',
                   'firstAppointmentStepId',
-                  nameMapper(this.state.jobStepOptions, 'step')
+                  nameMapper(this.props.options.steps, 'step')
                 )}
                 {this.renderSelect(
                   'present position job type',
                   'presentPositionJobTypeId',
-                  nameMapper(this.state.jobTypeOptions, 'type')
+                  nameMapper(this.props.options.jobTypes, 'type')
                 )}
                 {this.renderSelect(
                   'present position job title',
                   'presentPositionJobTitleId',
-                  nameMapper(this.state.jobTitleOptions, 'description')
+                  nameMapper(this.props.options.jobTitles, 'description')
                 )}
                 {this.renderSelect(
                   'present position grade',
                   'presentPositionGradeId',
-                  nameMapper(this.state.jobGradeOptions, 'con')
+                  nameMapper(this.props.options.jobGrades, 'con')
                 )}
                 {this.renderSelect(
                   'present position step',
                   'presentPositionStepId',
-                  nameMapper(this.state.jobStepOptions, 'step')
+                  nameMapper(this.props.options.steps, 'step')
                 )}
               </InformationBlock>
             </>
@@ -529,3 +445,36 @@ export default class AddNewEmployee extends Form {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: state.options.department,
+      districts: state.options.district,
+      bloodGroups: state.options.bloodGroup,
+      jobTypes: state.options.jobType,
+      jobTitles: state.options.jobTitle,
+      jobGrades: state.options.jobGrade,
+      pfa: state.options.pfa,
+      gpz: state.options.gpz,
+      maritalStatuses: state.options.maritalStatus,
+      senatorialDistricts: state.options.senatorialDistrict,
+      states: state.options.state,
+      lga: state.options.lga,
+      countries: state.options.country,
+      sections: state.options.section,
+      steps: state.options.step,
+      genders: state.options.gender,
+      salaryStructures: state.options.salaryStructure,
+      employeeStatuses: state.options.employeeStatus,
+      professional: state.options.professional,
+      pensionable: state.options.pensionable,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewEmployee);

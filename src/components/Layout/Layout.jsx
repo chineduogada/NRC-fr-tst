@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Redirect, withRouter } from 'react-router-dom';
+import { Redirect, withRouter, Switch, Route } from 'react-router-dom';
+import { fetchOptions } from '../../store/options/actionCreators';
+import Loader from '../Loader/Loader';
+import { connect } from 'react-redux';
 import { getToken } from '../../services/Credentials';
-import { Switch, Route } from 'react-router-dom';
 import Nav from '../Nav/Nav';
 import Aside from './Aside/Aside';
 import MainArea from './MainArea/MainArea';
@@ -45,26 +47,55 @@ class Layout extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      showAside: false,
+    };
+
     // set token
     const token = getToken();
     if (token) {
       axios.defaults.headers = {
-        token
+        token,
       };
     }
   }
 
+  componentDidMount() {
+    this.props.fetchOptions();
+  }
+
+  handleShowAside = () => {
+    this.setState({ showAside: true });
+  };
+  handleCloseAside = () => {
+    this.setState({ showAside: false });
+  };
+
   renderLayout() {
     const { signOutHandler } = this.props;
 
-    return (
+    return this.props.optionsFetched ? (
       <div className={classes.Layout}>
         {/* Aside */}
-        <Aside />
+        <Aside
+          show={this.state.showAside}
+          handleCloseAside={this.handleCloseAside}
+        />
         {/* Main Section */}
-        <div className="d-flex flex-column" style={{ position: 'relative' }}>
+        <div
+          className="d-flex flex-column"
+          style={{
+            position: 'relative',
+            display: 'grid',
+            // width: '100%',
+            // flexGrow: 0,
+          }}
+        >
           {/* Navigation */}
-          <Nav triggerSignOut={signOutHandler} />
+          <Nav
+            triggerSignOut={signOutHandler}
+            onHandBurgerClick={this.handleShowAside}
+          />
           <MainArea>
             {/* <AllEmployees /> */}
             <Switch>
@@ -169,6 +200,10 @@ class Layout extends Component {
           </MainArea>
         </div>
       </div>
+    ) : (
+      <div className="brand-loader-wrapper">
+        <Loader brand="PRM" message="Waiting is the hardest part." />
+      </div>
     );
   }
 
@@ -177,4 +212,14 @@ class Layout extends Component {
   }
 }
 
-export default withRouter(Layout);
+const mapStateToProps = (state) => {
+  return {
+    optionsFetched: state.options.optionsFetched,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { fetchOptions: (payload) => dispatch(fetchOptions(payload)) };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

@@ -1,6 +1,7 @@
 import React from 'react';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
 import httpService from '../../../services/httpService';
 import obJectKeyEliminator from '../../../helpers/obJectKeyEliminator';
 import InformationBlock from '../../../components/InformationBlock/InformationBlock';
@@ -8,7 +9,7 @@ import Form from '../../../components/Form/Form';
 import hashMap from '../../../helpers/hashMap';
 import nameMapper from '../../../helpers/nameMapper';
 
-export default class UpdateForm extends Form {
+class UpdateForm extends Form {
   constructor(props) {
     super(props);
 
@@ -69,36 +70,38 @@ export default class UpdateForm extends Form {
   }
 
   async componentDidMount() {
+    const { defaultValues } = this.props;
     this.setState({
-      formData: obJectKeyEliminator(this.props.defaultValues, [
-        'id',
-        'efxf01',
-        'efxf02',
-        'efxf03',
-        'efxf04',
-        'efxf05',
-        'ef9f01',
-        'ef9f02',
-        'ef9f03',
-        'ef9f04',
-        'efdf01',
-        'efdf02',
-        'photo',
-        'createdAt',
-        'updatedAt',
-        'gender',
-        'bloodGroup',
-        'countryOfBirth',
-        'nationality',
-        'gpz',
-        'lga',
-        'maritalStatus',
-        'senatorialDistrict',
-        'state',
-        'pfa',
-        'address',
-      ]),
-      options: this.props.options,
+      formData: defaultValues
+        ? obJectKeyEliminator(defaultValues, [
+            'id',
+            'efxf01',
+            'efxf02',
+            'efxf03',
+            'efxf04',
+            'efxf05',
+            'ef9f01',
+            'ef9f02',
+            'ef9f03',
+            'ef9f04',
+            'efdf01',
+            'efdf02',
+            'photo',
+            'createdAt',
+            'updatedAt',
+            'gender',
+            'bloodGroup',
+            'countryOfBirth',
+            'nationality',
+            'gpz',
+            'lga',
+            'maritalStatus',
+            'senatorialDistrict',
+            'state',
+            'pfa',
+            'address',
+          ])
+        : this.state.formData,
     });
   }
 
@@ -131,7 +134,7 @@ export default class UpdateForm extends Form {
   render() {
     const { formData, options } = this.state;
     console.log(formData);
-    return options ? (
+    return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={(form) => (this.Form = form)}>
           <p className="form-header">Update Employee Basic Information</p>
@@ -195,7 +198,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'pension fund administrator',
               'pfaId',
-              nameMapper(this.state.options.pfaOptions, 'name'),
+              nameMapper(this.props.options.pfa, 'name'),
               null,
               null,
               formData.pfaId || ''
@@ -210,7 +213,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'country of birth',
               'countryOfBirthId',
-              nameMapper(this.state.options.countryOptions, 'country'),
+              nameMapper(this.props.options.countries, 'country'),
               null,
               null,
               formData.countryOfBirthId || ''
@@ -218,7 +221,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'nationality',
               'nationalityId',
-              nameMapper(this.state.options.countryOptions, 'country'),
+              nameMapper(this.props.options.countries, 'country'),
               null,
               null,
               formData.nationalityId || ''
@@ -226,7 +229,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'gender',
               'genderId',
-              nameMapper(this.state.options.genders, 'type'),
+              nameMapper(this.props.options.genders, 'type'),
               null,
               null,
               formData.genderId || ''
@@ -234,7 +237,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'blood group',
               'bloodGroupId',
-              nameMapper(this.state.options.bloodGroupOptions, 'type'),
+              nameMapper(this.props.options.bloodGroups, 'type'),
               null,
               null,
               formData.bloodGroupId || ''
@@ -242,7 +245,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'marital status',
               'maritalStatusId',
-              nameMapper(this.state.options.maritalStatusOptions, 'status'),
+              nameMapper(this.props.options.maritalStatuses, 'status'),
               null,
               null,
               formData.maritalStatusId || ''
@@ -250,7 +253,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'GPZ',
               'gpzId',
-              nameMapper(this.state.options.gpzOptions, 'description'),
+              nameMapper(this.props.options.gpz, 'description'),
               null,
               null,
               formData.gpzId || ''
@@ -260,7 +263,7 @@ export default class UpdateForm extends Form {
               'stateId',
               nameMapper(
                 hashMap(
-                  this.state.options.stateOptions,
+                  this.props.options.states,
                   'gpzId',
                   Number(formData.gpzId)
                 ),
@@ -275,7 +278,7 @@ export default class UpdateForm extends Form {
               'senatorialDistrictId',
               nameMapper(
                 hashMap(
-                  this.state.options.senatorialDistrictOptions,
+                  this.props.options.senatorialDistricts,
                   'stateId',
                   Number(formData.stateId)
                 ),
@@ -290,7 +293,7 @@ export default class UpdateForm extends Form {
               'lgaId',
               nameMapper(
                 hashMap(
-                  this.state.options.lgaOptions,
+                  this.props.options.lga,
                   'stateId',
                   Number(formData.stateId)
                 ),
@@ -303,10 +306,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'professional',
               'professional',
-              [
-                { id: 'Y', name: 'Y' },
-                { id: 'N', name: 'N' },
-              ],
+              this.props.options.professional,
               null,
               null,
               formData.professional || ''
@@ -315,6 +315,27 @@ export default class UpdateForm extends Form {
           {this.renderButton('update')}
         </form>
       </React.Fragment>
-    ) : null;
+    );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: state.options.department,
+      districts: state.options.district,
+      bloodGroups: state.options.bloodGroup,
+      pfa: state.options.pfa,
+      gpz: state.options.gpz,
+      maritalStatuses: state.options.maritalStatus,
+      senatorialDistricts: state.options.senatorialDistrict,
+      states: state.options.state,
+      lga: state.options.lga,
+      countries: state.options.country,
+      genders: state.options.gender,
+      professional: state.options.professional,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(UpdateForm);

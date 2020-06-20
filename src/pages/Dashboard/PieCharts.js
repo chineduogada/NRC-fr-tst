@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import httpService from '../../services/httpService';
 import prepareChartData from '../../helpers/prepareChartData';
 import Select from '../../components/Select/Select';
@@ -7,7 +8,7 @@ import PieChart from '../../components/Charts/PieChart';
 import Section from '../../hoc/Section/Section';
 import classes from './Dashboard.module.scss';
 
-export default class Distributions extends PureComponent {
+class BarCharts extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -17,7 +18,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employees?groupBy=genderId',
         data: [],
         targetKeyInRow: 'genderId',
-        targetKeyInOption: 'type'
+        targetKeyInOption: 'type',
       },
 
       employeeStatuses: {
@@ -25,7 +26,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employee-jobs?groupBy=employeeStatusId',
         data: [],
         targetKeyInRow: 'employeeStatusId',
-        targetKeyInOption: 'description'
+        targetKeyInOption: 'description',
       },
 
       salaryStructures: {
@@ -33,15 +34,15 @@ export default class Distributions extends PureComponent {
         url: '/summary/employee-jobs?groupBy=salaryStructureId',
         data: [],
         targetKeyInRow: 'salaryStructureId',
-        targetKeyInOption: 'description'
+        targetKeyInOption: 'description',
       },
 
-      options: {}
+      options: {},
     };
   }
 
   async processSummaryData(res, targetSummary) {
-    const { options } = this.state;
+    const { options } = this.props;
     const { targetKeyInRow, targetKeyInOption } = this.state[targetSummary];
 
     let preparedData = [];
@@ -58,38 +59,16 @@ export default class Distributions extends PureComponent {
     return preparedData;
   }
 
-  async fetchAllOptions() {
-    const [
-      salaryStructures,
-      employeeStatuses,
-      genders
-    ] = await httpService.all([
-      httpService.get('/salary-structures'),
-      httpService.get('/employee-statuses'),
-      httpService.get('/genders')
-    ]);
-
-    if (salaryStructures) {
-      const options = {
-        salaryStructures: salaryStructures.data.data,
-        genders: genders.data.data,
-        employeeStatuses: employeeStatuses.data.data
-      };
-
-      this.setState({ options });
-    }
-  }
-
   async fetchActiveSummary() {
     const { salaryStructures, employeeStatuses, genders } = this.state;
     const [
       salaryStructureData,
       employeeStatusData,
-      genderData
+      genderData,
     ] = await httpService.all([
       httpService.get(salaryStructures.url),
       httpService.get(employeeStatuses.url),
-      httpService.get(genders.url)
+      httpService.get(genders.url),
     ]);
 
     const updatedSalaryStructures = {
@@ -97,29 +76,28 @@ export default class Distributions extends PureComponent {
       data: await this.processSummaryData(
         salaryStructureData,
         'salaryStructures'
-      )
+      ),
     };
     const updatedEmployeeStatuses = {
       ...salaryStructures,
       data: await this.processSummaryData(
         employeeStatusData,
         'employeeStatuses'
-      )
+      ),
     };
     const updatedGenders = {
       ...salaryStructures,
-      data: await this.processSummaryData(genderData, 'genders')
+      data: await this.processSummaryData(genderData, 'genders'),
     };
 
     this.setState({
       salaryStructures: updatedSalaryStructures,
       employeeStatuses: updatedEmployeeStatuses,
-      genders: updatedGenders
+      genders: updatedGenders,
     });
   }
 
   async componentDidMount() {
-    await this.fetchAllOptions();
     await this.fetchActiveSummary();
   }
 
@@ -153,3 +131,15 @@ export default class Distributions extends PureComponent {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      salaryStructures: state.options.salaryStructure,
+      genders: state.options.gender,
+      employeeStatuses: state.options.employeeStatus,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(BarCharts);

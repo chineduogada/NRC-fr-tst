@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import { IoMdPerson, IoMdCloudUpload } from 'react-icons/io';
 import { Link, withRouter } from 'react-router-dom';
 import {
   IoMdHome,
   IoIosMan,
-  IoIosContacts,
+  IoIosClose,
   IoIosSchool,
   IoMdMedal,
-  IoIosCalendar
+  IoIosCalendar,
 } from 'react-icons/io';
 import {
   MdSettings,
@@ -14,26 +15,37 @@ import {
   MdHelp,
   MdPieChart,
   MdBook,
-  MdFlag
+  MdFlag,
 } from 'react-icons/md';
 import classes from './Aside.module.scss';
 
 class Aside extends Component {
   render() {
+    const { show } = this.props;
     const activeNavItem = this.props.location.pathname.split('/')[1];
     console.log(activeNavItem);
 
     return (
-      <aside className={classes.Aside}>
+      <aside
+        className={`${classes.Aside} ${show ? classes.Show : classes.Hide}`}
+      >
         <div className={classes.Brand}>
           <h1>
             <span>P R M</span>
           </h1>
+          <IoIosClose
+            className={`${classes.CloseIcon} icon show-until-tablet`}
+            size="25px"
+            onClick={this.props.handleCloseAside}
+          />
         </div>
 
         <div className={classes.Menu}>
           <ul>
-            <li className={`${activeNavItem === '' ? classes.Active : null}`}>
+            <li
+              onClick={this.props.handleCloseAside}
+              className={`${activeNavItem === '' ? classes.Active : null}`}
+            >
               <Link to="/">
                 <span className="icon">
                   <IoMdHome className="icon" />
@@ -42,6 +54,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'employees' ? classes.Active : null
               }`}
@@ -54,6 +67,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'training-schedules' ? classes.Active : null
               }`}
@@ -66,6 +80,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'training-records' ? classes.Active : null
               }`}
@@ -78,6 +93,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'successions' ? classes.Active : null
               }`}
@@ -90,6 +106,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'careers' ? classes.Active : null
               }`}
@@ -102,6 +119,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'job-incidence' ? classes.Active : null
               }`}
@@ -114,6 +132,7 @@ class Aside extends Component {
               </Link>
             </li>
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'reports' ? classes.Active : null
               }`}
@@ -150,6 +169,7 @@ class Aside extends Component {
               </Link>
             </li> */}
             <li
+              onClick={this.props.handleCloseAside}
               className={`${
                 activeNavItem === 'settings' ? classes.Active : null
               }`}

@@ -70,12 +70,27 @@ body {
   background: var(--core-bg-color) !important;
   color: var(--text);
   overflow: hidden;
+  font-size: 90%;
 }
 
 #root {
   max-width: 100vw;
   width: 100%;
   overflow: hidden;
+}
+
+/* BRAND */
+.brand {
+  color: var(--basic-color);
+}
+
+.brand-loader-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(0%, -10%);
 }
 
 h1,
@@ -263,4 +278,21 @@ ol {
     color: var(--basic-color);
     border-bottom: 2px solid var(--basic-color);
   }
+}
+
+// Displays
+@media screen and (min-width: 768px) {
+  .show-until-tablet {
+    display: none;
+  }
+}
+
+.hide {
+  // display: none !important;
+}
+
+.slide-left {
+  position: absolute;
+  // transform: translateX(-100%);
+  left: -100%;
 }

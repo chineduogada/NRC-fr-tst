@@ -8,14 +8,15 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
 } from 'recharts';
+import { connect } from 'react-redux';
 import httpService from '../../services/httpService';
 import prepareChartData from '../../helpers/prepareChartData';
 import Select from '../../components/Select/Select';
 import Loader from '../../components/Loader/Loader';
 
-export default class Distributions extends PureComponent {
+class Distributions extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -25,7 +26,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employee-jobs?groupBy=departmentId',
         data: [],
         targetKeyInRow: 'departmentId',
-        targetKeyInOption: 'description'
+        targetKeyInOption: 'description',
       },
 
       jobTitles: {
@@ -33,7 +34,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employee-appointments?groupBy=presentPositionJobTitleId',
         data: [],
         targetKeyInRow: 'presentPositionJobTitleId',
-        targetKeyInOption: 'code'
+        targetKeyInOption: 'code',
       },
 
       jobTypes: {
@@ -41,7 +42,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employee-appointments?groupBy=presentPositionJobTypeId',
         data: [],
         targetKeyInRow: 'presentPositionJobTypeId',
-        targetKeyInOption: 'type'
+        targetKeyInOption: 'type',
       },
 
       genders: {
@@ -49,7 +50,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employees?groupBy=genderId',
         data: [],
         targetKeyInRow: 'genderId',
-        targetKeyInOption: 'type'
+        targetKeyInOption: 'type',
       },
 
       maritalStatuses: {
@@ -57,7 +58,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employees?groupBy=maritalStatusId',
         data: [],
         targetKeyInRow: 'maritalStatusId',
-        targetKeyInOption: 'status'
+        targetKeyInOption: 'status',
       },
 
       salaryStructures: {
@@ -65,7 +66,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employee-jobs?groupBy=salaryStructureId',
         data: [],
         targetKeyInRow: 'salaryStructureId',
-        targetKeyInOption: 'description'
+        targetKeyInOption: 'description',
       },
 
       LGA: {
@@ -73,7 +74,7 @@ export default class Distributions extends PureComponent {
         url: '/summary/employees?groupBy=lgaId',
         data: [],
         targetKeyInRow: 'lgaId',
-        targetKeyInOption: 'lga'
+        targetKeyInOption: 'lga',
       },
 
       states: {
@@ -81,20 +82,20 @@ export default class Distributions extends PureComponent {
         url: '/summary/employees?groupBy=stateId',
         data: [],
         targetKeyInRow: 'stateId',
-        targetKeyInOption: 'state'
+        targetKeyInOption: 'state',
       },
 
       activeSummary: 'departments',
-      options: {},
 
-      isFetchingData: false
+      isFetchingData: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
   async processSummaryData(res) {
-    const { activeSummary, options } = this.state;
+    const { activeSummary } = this.state;
+    const { options } = this.props;
     const { targetKeyInRow, targetKeyInOption } = this.state[activeSummary];
 
     const oldState = { ...this.state[activeSummary] };
@@ -109,45 +110,8 @@ export default class Distributions extends PureComponent {
       );
       this.setState({
         [activeSummary]: { ...oldState, data: preparedData },
-        isFetchingData: false
+        isFetchingData: false,
       });
-    }
-  }
-
-  async fetchAllOptions() {
-    const [
-      departments,
-      salaryStructures,
-      jobTypes,
-      jobTitles,
-      genders,
-      states,
-      lga,
-      maritalStatuses
-    ] = await httpService.all([
-      httpService.get('/departments'),
-      httpService.get('/salary-structures'),
-      httpService.get('/job-types'),
-      httpService.get('/job-titles'),
-      httpService.get('/genders'),
-      httpService.get('/states'),
-      httpService.get('/lga'),
-      httpService.get('/marital-statuses')
-    ]);
-
-    if (departments) {
-      const options = {
-        departments: departments.data.data,
-        jobTypes: jobTypes.data.data,
-        jobTitles: jobTitles.data.data,
-        salaryStructures: salaryStructures.data.data,
-        genders: genders.data.data,
-        states: states.data.data,
-        LGA: lga.data.data,
-        maritalStatuses: maritalStatuses.data.data
-      };
-
-      this.setState({ options });
     }
   }
 
@@ -164,7 +128,6 @@ export default class Distributions extends PureComponent {
   }
 
   async componentDidMount() {
-    await this.fetchAllOptions();
     await this.fetchActiveSummary();
   }
 
@@ -188,7 +151,7 @@ export default class Distributions extends PureComponent {
       { id: 'states', name: 'states' },
       { id: 'jobTitles', name: 'job titles' },
       { id: 'jobTypes', name: 'job types' },
-      { id: 'maritalStatuses', name: 'marital statuses' }
+      { id: 'maritalStatuses', name: 'marital statuses' },
     ];
 
     return (
@@ -210,7 +173,7 @@ export default class Distributions extends PureComponent {
               height: '100%',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <Loader />
@@ -224,7 +187,7 @@ export default class Distributions extends PureComponent {
                   top: 5,
                   right: 10,
                   left: -10,
-                  bottom: 5
+                  bottom: 5,
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
@@ -241,3 +204,18 @@ export default class Distributions extends PureComponent {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: state.options.department,
+      jobTypes: state.options.jobType,
+      jobTitles: state.options.jobTitle,
+      states: state.options.state,
+      LGA: state.options.lga,
+      maritalStatuses: state.options.maritalStatus,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(Distributions);

@@ -1,14 +1,14 @@
 import React from 'react';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
 import httpService from '../../../services/httpService';
-// import nameMapper from '../../../helpers/nameMapper';
+import nameMapper from '../../../helpers/nameMapper';
 import obJectKeyEliminator from '../../../helpers/obJectKeyEliminator';
 import InformationBlock from '../../../components/InformationBlock/InformationBlock';
 import Form from '../../../components/Form/Form';
-// import Loader from '../../../components/Loader/Loader';
 
-export default class UpdateForm extends Form {
+class UpdateForm extends Form {
   constructor(props) {
     super(props);
 
@@ -63,7 +63,6 @@ export default class UpdateForm extends Form {
             'salaryStructure',
           ])
         : this.state.formData,
-      options: this.props.options,
     });
   }
 
@@ -94,8 +93,8 @@ export default class UpdateForm extends Form {
   }
 
   render() {
-    const { formData, options } = this.state;
-    return options ? (
+    const { formData } = this.state;
+    return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} ref={(form) => (this.Form = form)}>
           <p className="form-header">update employee job information</p>
@@ -103,7 +102,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'section',
               'sectionId',
-              this.state.options.sectionOptions,
+              nameMapper(this.props.options.sections, 'description'),
               null,
               null,
               formData.sectionId
@@ -111,7 +110,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'salary structure',
               'salaryStructureId',
-              this.state.options.salaryStructureOptions,
+              nameMapper(this.props.options.salaryStructures, 'description'),
               null,
               null,
               formData.salaryStructureId
@@ -128,7 +127,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'employee status',
               'employeeStatusId',
-              this.state.options.employeeStatusOptions,
+              nameMapper(this.props.options.employeeStatuses, 'description'),
               null,
               null,
               formData.employeeStatusId
@@ -136,10 +135,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'pensionable',
               'pensionable',
-              [
-                { id: 'Y', name: 'Y' },
-                { id: 'N', name: 'N' },
-              ],
+              this.props.options.pensionable,
               null,
               null,
               formData.pensionable
@@ -147,7 +143,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'department',
               'departmentId',
-              this.state.options.departmentOptions,
+              nameMapper(this.props.options.departments, 'description'),
               null,
               null,
               formData.departmentId
@@ -155,7 +151,7 @@ export default class UpdateForm extends Form {
             {this.renderSelect(
               'district',
               'districtId',
-              this.state.options.districtOptions,
+              nameMapper(this.props.options.districts, 'siteName'),
               null,
               null,
               formData.districtId
@@ -164,6 +160,21 @@ export default class UpdateForm extends Form {
           {this.renderButton('update')}
         </form>
       </React.Fragment>
-    ) : null;
+    );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: state.options.department,
+      districts: state.options.district,
+      sections: state.options.section,
+      salaryStructures: state.options.salaryStructure,
+      employeeStatuses: state.options.employeeStatus,
+      pensionable: state.options.pensionable,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(UpdateForm);

@@ -5,7 +5,6 @@
   display: grid;
   grid-template-rows: auto 30%;
   overflow: hidden;
-  cursor: pointer;
   transition: all 0.5s ease-out;
   position: relative;
   box-shadow: 0 7px 30px #550fb144;
@@ -19,22 +18,27 @@
     position: absolute;
     right: 1em;
     top: 1em;
-    font-size: 1.2em;
+    font-size: 1.2rem;
     color: var(--gray);
+    cursor: pointer;
+    transition: all 0.3s;
 
     a {
       color: var(--dogwood-rose);
+      padding: 0.3em;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
     }
   }
 
   .Body {
     height: 100%;
     color: var(--gray);
-    display: flex;
     align-items: center;
 
     h4 {
-      font-size: 4rem;
+      font-size: 2.75rem;
       color: var(--basic-color);
     }
   }

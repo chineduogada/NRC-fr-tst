@@ -1,7 +1,11 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
+import nameMapper from '../../helpers/nameMapper';
+import autobind from '../../helpers/autobind';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
@@ -11,7 +15,6 @@ import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import Button from '../../components/Button/Button';
 import classes from './Career.module.scss';
-import nameMapper from '../../helpers/nameMapper';
 
 class Career extends Form {
   constructor(props) {
@@ -20,9 +23,7 @@ class Career extends Form {
     this.id = this.props.match.params.id;
 
     this.state = {
-      dataFilteredForView: null,
-      dataForView: null,
-      dataForForm: null,
+      data: null,
 
       showForm: false,
       showModal: false,
@@ -34,29 +35,26 @@ class Career extends Form {
         reasonCodeId: '',
         newJobTitleId: '',
         attachedDoc: '',
-        remarks: ''
-      },
-
-      options: {
-        jobTitles: [],
-        careerReasonCodes: [],
+        remarks: '',
       },
 
       isDeleteting: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
 
-    this.closeSideDraw = this.closeSideDraw.bind(this);
-    this.updateDatabase = this.updateDatabase.bind(this);
-    this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleProceedDelete = this.handleProceedDelete.bind(this);
-    this.deleteObject = this.deleteObject.bind(this);
-    this.handleViewEmployee = this.handleViewEmployee.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    autobind(
+      this,
+      'handleUpdateBtnClick',
+      'updateDatabase',
+      'closeSideDraw',
+      'closeModal',
+      'deleteObject',
+      'handleDelete',
+      'handleProceedDelete'
+    );
   }
 
   schema = {
@@ -65,48 +63,23 @@ class Career extends Form {
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
     newJobTitleId: Joi.number(),
-    attachedDoc: Joi.string()
-      .allow('')
-      .optional(),
-    remarks: Joi.string()
-      .allow('')
-      .optional()
+    attachedDoc: Joi.string().allow('').optional(),
+    remarks: Joi.string().allow('').optional(),
   };
 
   async fetchCareer() {
     const res = await httpService.get(`/careers/${this.id}`);
 
     if (res) {
-      console.log(res.data)
+      console.log(res.data);
       this.setState({
-        dataFilteredForView: this.filterDataForView(res.data.data),
-        dataForView: this.mapDataForView(res.data.data),
-        dataForForm: this.filterForForm(res.data.data)
+        data: res.data.data,
+        formData: this.filterForForm(res.data.data),
       });
     }
   }
 
-  async fetchOptions() {
-    const [jobTitles, careerReasonCodes] = await httpService.all([
-        httpService.get(`/job-titles`),
-        httpService.get(`/career-reason-codes`),
-      ]);
-
-    if (jobTitles) {
-      console.log('Career Registration', jobTitles, careerReasonCodes);
-      const options = {
-        jobTitles: jobTitles.data.data,
-        careerReasonCodes: careerReasonCodes.data.data,
-      }
-
-      this.setState({
-        options
-      })
-    }
-  }
-
   async componentDidMount() {
-    this.fetchOptions();
     await this.fetchCareer();
   }
 
@@ -124,12 +97,16 @@ class Career extends Form {
       { name: 'ippisNo', value: data.ippisNo },
       {
         name: 'full name',
-        value: `${data.employee.firstName} ${data.employee.lastName}`
+        value: (
+          <Link to={`/employees/${data.ippisNo}`} target="_blank">
+            {data.employee.firstName} {data.employee.lastName}
+          </Link>
+        ),
       },
       { name: 'memo reference', value: data.memoReference },
       {
         name: 'reason code',
-        value: data.reasonCode.code
+        value: data.reasonCode.code,
       },
       {
         name: 'old job title',
@@ -137,8 +114,8 @@ class Career extends Form {
       },
       {
         name: 'new job title',
-        value: data.newJobTitle.description
-      }
+        value: data.newJobTitle.description,
+      },
     ];
   }
 
@@ -150,35 +127,18 @@ class Career extends Form {
       reasonCodeId: data.reasonCodeId,
       newJobTitleId: data.newJobTitleId,
       attachedDoc: data.attachedDoc,
-      remarks: data.remarks
+      remarks: data.remarks,
     };
   }
 
-  filterDataForView(data) {
-    return {
-      employee: `${data.employee.firstName} ${data.employee.lastName}`,
-      transactionDate: data.transactionDate,
-      ippisNo: data.ippisNo,
-      memoReference: data.memoReference,
-      reasonCodeId: data.reasonCodeId,
-      newJobTitleId: data.newJobTitleId,
-      attachedDoc: data.attachedDoc,
-      remarks: data.remarks
-    };
-  }
-
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
   };
 
-  resetFormData() {
-    this.setState({ formData: this.initialFormState });
-  }
-
   handleUpdateBtnClick(event) {
-    this.setState({ showForm: true, formData: this.state.dataForForm });
+    this.setState({ showForm: true });
   }
 
   async updateDatabase() {
@@ -192,7 +152,6 @@ class Career extends Form {
       toast.success('Career record successfully updated!');
       this.stopProcessing();
       this.closeSideDraw();
-      this.resetFormData();
     }
   }
 
@@ -225,26 +184,40 @@ class Career extends Form {
   }
 
   renderUpdateForm() {
-    const { dataForForm, options } = this.state;
+    const { formData } = this.state;
 
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         {this.renderInput(
           'transaction date',
           'transactionDate',
           null,
-          dataForForm.transactionDate,
+          formData.transactionDate,
           'date'
         )}
         {this.renderInput(
           'memo reference',
           'memoReference',
           null,
-          dataForForm.memoReference
+          formData.memoReference
         )}
-        {this.renderSelect('reason code', 'reasonCodeId', nameMapper(options.careerReasonCodes, 'code'), null, false, dataForForm.reasonCodeId)}
-        {this.renderSelect('new job title', 'newJobTitleId', nameMapper(options.jobTitles, 'description'), null, false, dataForForm.newJobTitleId)}
-        {this.renderTextArea('remarks', 'remarks', null, dataForForm.remarks)}
+        {this.renderSelect(
+          'reason code',
+          'reasonCodeId',
+          nameMapper(this.props.options.careerReasonCodes, 'code'),
+          null,
+          false,
+          Number(formData.reasonCodeId)
+        )}
+        {this.renderSelect(
+          'new job title',
+          'newJobTitleId',
+          nameMapper(this.props.options.jobTitles, 'description'),
+          null,
+          false,
+          Number(formData.newJobTitleId)
+        )}
+        {this.renderTextArea('remarks', 'remarks', null, formData.remarks)}
 
         {this.renderButton('save')}
       </form>
@@ -263,33 +236,31 @@ class Career extends Form {
   }
 
   render() {
-    const { showForm, showModal, dataForView, dataForForm } = this.state;
+    const { showForm, showModal, data } = this.state;
 
     return (
       <React.Fragment>
-        {dataForView ? (
-          <Section title='career'>
+        {data ? (
+          <Section title="career">
             <div className={`${classes.Actions} ${classes.Right}`}>
-              <Button label='update' fill onClick={this.handleUpdateBtnClick} />
-              <Button label='delete' danger onClick={this.handleDelete} />
+              <Button label="update" fill onClick={this.handleUpdateBtnClick} />
+              <Button label="delete" danger onClick={this.handleDelete} />
               <Button
-                label='view employee'
+                label="view employee"
                 plain
                 onClick={this.handleViewEmployee}
-                id={dataForForm.ippisNo}
+                id={data.ippisNo}
               />
             </div>
 
-            <InformationBlock title='basic'>
-              {this.displayInfo(dataForView)}
+            <InformationBlock title="basic">
+              {this.displayInfo(this.mapDataForView(data))}
             </InformationBlock>
 
-            <InformationBlock title='remark'>
-              {dataForForm.remarks}
-            </InformationBlock>
+            <InformationBlock title="remark">{data.remarks}</InformationBlock>
 
             <SideDraw
-              title='Career'
+              title="Career"
               openDraw={showForm}
               onClose={this.closeSideDraw}
             >
@@ -297,14 +268,14 @@ class Career extends Form {
             </SideDraw>
 
             <Modal
-              title='delete career record'
+              title="delete career record"
               openModal={showModal}
               onClose={this.closeModal}
             >
               <p>This operation can not be reversed. Proceed?</p>
               <div className={`${classes.Actions} ${classes.Right}`}>
                 <Button
-                  label='proceed'
+                  label="proceed"
                   danger
                   onClick={this.handleProceedDelete}
                   disabled={this.state.isDeleteting}
@@ -313,11 +284,24 @@ class Career extends Form {
             </Modal>
           </Section>
         ) : (
-          <Loader message='please wait' />
+          <Loader message="please wait" />
         )}
       </React.Fragment>
     );
   }
 }
 
-export default withRouter(Career);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      careerReasonCodes: state.options.careerReasonCode,
+      jobTitles: state.options.jobTitle,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Career));

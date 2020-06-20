@@ -2,12 +2,15 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
 import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
+import { setOptions } from '../../store/options/actionCreators';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 
@@ -28,7 +31,7 @@ class AllTrainingSchedules extends Form {
         { accessor: 'resourceOrg', Header: 'Resource Org' },
         { accessor: 'residential', Header: 'Residential' },
         { accessor: 'approved', Header: 'Approved' },
-        { accessor: 'objectiveMet', Header: 'Objective Met' }
+        { accessor: 'objectiveMet', Header: 'Objective Met' },
       ],
 
       pageSize: 20,
@@ -57,14 +60,14 @@ class AllTrainingSchedules extends Form {
         authorisor1Id: '',
         authorisor2Id: '',
         reportSubmitted: 'N',
-        objectiveMet: 'N'
+        objectiveMet: 'N',
       },
 
       ippisNoVerified: false,
       authorisor1Verified: false,
       authorisor2Verified: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -111,7 +114,7 @@ class AllTrainingSchedules extends Form {
     authorisor1Id: Joi.number(),
     authorisor2Id: Joi.number(),
     reportSubmitted: Joi.string(),
-    objectiveMet: Joi.string()
+    objectiveMet: Joi.string(),
   };
 
   async componentWillMount() {
@@ -130,7 +133,7 @@ class AllTrainingSchedules extends Form {
       const { rows } = res.data.data;
 
       if (rows && rows.length) {
-        rows.forEach(row => {
+        rows.forEach((row) => {
           actualData.push(this.mapToViewModel(row));
         });
       }
@@ -213,11 +216,11 @@ class AllTrainingSchedules extends Form {
       reportSubmitted: schedule.reportSubmitted,
       residential: schedule.residential,
       approved: schedule.approved,
-      objectiveMet: schedule.objectiveMet
+      objectiveMet: schedule.objectiveMet,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -265,7 +268,7 @@ class AllTrainingSchedules extends Form {
       ippisNoVerified,
       authorisor1Verified,
       authorisor2Verified,
-      formData
+      formData,
     } = this.state;
 
     const selfAuthWarning = 'Self-authorisation is not allowed';
@@ -278,10 +281,10 @@ class AllTrainingSchedules extends Form {
       formData.authorisor1Id === formData.authorisor2Id;
 
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Schedule a training</p>
         <EmployeeVerifier
-          checkOnResponseRecieved={employees => employees.length}
+          checkOnResponseRecieved={(employees) => employees.length}
           onEmployeeSelection={this.handleEmployeeSelection}
           onInputChange={this.handleEmployeeInputChange}
         >
@@ -296,15 +299,15 @@ class AllTrainingSchedules extends Form {
 
         {ippisNoVerified ? (
           <>
-            <p className='form-field-instruction'>
+            <p className="form-field-instruction">
               Please specify authorisors to continue
             </p>
             {authorisor1IsAuthorisor2 ? (
-              <span className='alert alert-danger'>{sameAuthWarning}</span>
+              <span className="alert alert-danger">{sameAuthWarning}</span>
             ) : null}
 
             <EmployeeVerifier
-              checkOnResponseRecieved={employees => employees.length}
+              checkOnResponseRecieved={(employees) => employees.length}
               onEmployeeSelection={this.handleAuthorisor1Selection}
               onInputChange={this.handleAuthorisor1InputChange}
             >
@@ -316,11 +319,11 @@ class AllTrainingSchedules extends Form {
                 'number'
               )}
               {authorisor1IsTrainee ? (
-                <span className='alert alert-danger'>{selfAuthWarning}</span>
+                <span className="alert alert-danger">{selfAuthWarning}</span>
               ) : null}
             </EmployeeVerifier>
             <EmployeeVerifier
-              checkOnResponseRecieved={employees => employees.length}
+              checkOnResponseRecieved={(employees) => employees.length}
               onEmployeeSelection={this.handleAuthorisor2Selection}
               onInputChange={this.handleAuthorisor2InputChange}
             >
@@ -332,7 +335,7 @@ class AllTrainingSchedules extends Form {
                 'number'
               )}
               {authorisor2IsTrainee ? (
-                <span className='alert alert-danger'>{selfAuthWarning}</span>
+                <span className="alert alert-danger">{selfAuthWarning}</span>
               ) : null}
             </EmployeeVerifier>
 
@@ -342,10 +345,11 @@ class AllTrainingSchedules extends Form {
             !authorisor1IsAuthorisor2 ? (
               <>
                 {this.renderInput('leave year', 'lYear', null, null, 'date')}
-                {this.renderSelect('training type', 'trainingTypeId', [
-                  { id: 1, name: 'corporate' },
-                  { id: 2, name: 'community' }
-                ])}
+                {this.renderSelect(
+                  'training type',
+                  'trainingTypeId',
+                  nameMapper(this.props.options.trainingTypes, 'type')
+                )}
                 {this.renderTextArea('objective', 'objective')}
                 {this.renderInput(
                   'expected start date',
@@ -378,10 +382,11 @@ class AllTrainingSchedules extends Form {
                 {this.renderInput('resource organisation', 'resourceOrg')}
                 {this.renderInput('email', 'email', null, null, 'email')}
                 {this.renderInput('main resource person', 'mainResourcePerson')}
-                {this.renderSelect('residential', 'residential', [
-                  { id: 'Y', name: 'Y' },
-                  { id: 'N', name: 'N' }
-                ])}
+                {this.renderSelect(
+                  'residential',
+                  'residential',
+                  this.props.options.residential
+                )}
               </>
             ) : null}
           </>
@@ -400,8 +405,8 @@ class AllTrainingSchedules extends Form {
         {this.state.actualData ? (
           <Section>
             <TableView
-              title='all schedules'
-              message='Click a row to preview'
+              title="all schedules"
+              message="Click a row to preview"
               columns={columns}
               data={actualData}
               clickHandler={this.handleRowClick}
@@ -409,7 +414,7 @@ class AllTrainingSchedules extends Form {
             ></TableView>
 
             <Modal
-              title='schedule'
+              title="schedule"
               openModal={this.state.showForm}
               onClose={this.closeSideDraw}
             >
@@ -424,4 +429,19 @@ class AllTrainingSchedules extends Form {
   }
 }
 
-export default withRouter(AllTrainingSchedules);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      trainingTypes: state.options.trainingType,
+      residential: state.options.residential,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllTrainingSchedules)
+);

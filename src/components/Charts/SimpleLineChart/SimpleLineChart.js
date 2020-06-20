@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import httpServices from '../../../services/httpService';
 import prepareChartData from '../../../helpers/prepareChartData';
 import {
@@ -9,7 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 
 const data = [
@@ -17,59 +18,55 @@ const data = [
     name: 'Finance',
     active: 400,
     retired: 240,
-    suspended: 24
+    suspended: 24,
   },
   {
     name: 'Public Relations',
     active: 300,
     retired: 139,
-    suspended: 41
+    suspended: 41,
   },
   {
     name: 'Accounts',
     active: 573,
     retired: 98,
-    suspended: 14
+    suspended: 14,
   },
   {
     name: 'Admin',
     active: 278,
     retired: 39,
-    suspended: 14
+    suspended: 14,
   },
   {
     name: 'Customer Service',
     active: 389,
     retired: 48,
-    suspended: 18
+    suspended: 18,
   },
   {
     name: 'Engineering',
     active: 239,
     retired: 380,
-    suspended: 20
-  }
+    suspended: 20,
+  },
 ];
 
-export default class SimpleLineChart extends PureComponent {
+class SimpleLineChart extends PureComponent {
   state = {
     data: [],
     primaryGroup: {
       name: 'department',
       targetKeyInRow: 'departmentId',
       targetKeyInOption: 'code',
-      optionsUrl: '/departments'
+      optionsUrl: '/departments',
     },
     secondaryGroup: {
       name: 'employee status',
       targetKeyInRow: 'employeeStatusId',
       targetKeyInOption: 'description',
-      optionsUrl: '/employee-statuses'
+      optionsUrl: '/employee-statuses',
     },
-    options: {
-      primaryOptions: [],
-      secondaryOptions: []
-    }
   };
 
   mapSecondaryGroupCount(
@@ -78,14 +75,14 @@ export default class SimpleLineChart extends PureComponent {
     data = [],
     options = []
   ) {
-    return data.map(row => {
+    return data.map((row) => {
       const matchedOptionRow = options.filter(
-        option => option.id === row[targetKeyInRow]
+        (option) => option.id === row[targetKeyInRow]
       )[0];
 
       return {
         ...row,
-        [matchedOptionRow[targetKeyInOptions]]: row.count
+        [matchedOptionRow[targetKeyInOptions]]: row.count,
       };
     });
   }
@@ -95,12 +92,12 @@ export default class SimpleLineChart extends PureComponent {
 
     const mergedGroups = {};
 
-    data.forEach(row => {
+    data.forEach((row) => {
       const currentPrimaryGroup =
         mergedGroups[row[primaryGroup.targetKeyInRow]] || {};
       mergedGroups[row[primaryGroup.targetKeyInRow]] = {
         ...currentPrimaryGroup,
-        ...row
+        ...row,
       };
     });
 
@@ -108,7 +105,8 @@ export default class SimpleLineChart extends PureComponent {
   }
 
   async processSummaryData(res) {
-    const { primaryGroup, secondaryGroup, options } = this.state;
+    const { primaryGroup, secondaryGroup } = this.state;
+    const { options } = this.props;
 
     let preparedData = [];
 
@@ -133,26 +131,8 @@ export default class SimpleLineChart extends PureComponent {
       console.log(mergedPrimaryGroups);
       this.setState({
         data: mergedPrimaryGroups,
-        isFetchingData: false
+        isFetchingData: false,
       });
-    }
-  }
-
-  async fetchOptions() {
-    const { primaryGroup, secondaryGroup } = this.state;
-
-    const [primaryOptions, secondaryOptions] = await httpServices.all([
-      httpServices.get(primaryGroup.optionsUrl),
-      httpServices.get(secondaryGroup.optionsUrl)
-    ]);
-
-    if (primaryOptions) {
-      const options = {
-        primaryOptions: primaryOptions.data.data,
-        secondaryOptions: secondaryOptions.data.data
-      };
-
-      this.setState({ options });
     }
   }
 
@@ -170,7 +150,6 @@ export default class SimpleLineChart extends PureComponent {
   }
 
   async componentDidMount() {
-    await this.fetchOptions();
     this.fetchData();
   }
 
@@ -183,7 +162,7 @@ export default class SimpleLineChart extends PureComponent {
             top: 5,
             right: 30,
             left: 20,
-            bottom: 5
+            bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -204,3 +183,14 @@ export default class SimpleLineChart extends PureComponent {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      primaryOptions: state.options.department,
+      secondaryOptions: state.options.employeeStatus,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(SimpleLineChart);

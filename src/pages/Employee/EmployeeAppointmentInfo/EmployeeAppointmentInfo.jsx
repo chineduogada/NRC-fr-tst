@@ -15,13 +15,6 @@ export default class EmployeeBasicInfo extends Component {
 
       originalData: {},
 
-      options: {
-        jobTypeOptions: [],
-        jobTitleOptions: [],
-        jobGradeOptions: [],
-        jobStepOptions: [],
-      },
-
       showForm: false,
     };
 

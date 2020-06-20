@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import httpService from '../../../services/httpService';
-import nameMapper from '../../../helpers/nameMapper';
 import EmployeeInfoBlock from '../EmployeeInfoBlock/EmployeeInfoBlock';
 import Loader from '../../../components/Loader/Loader';
 import UpdateForm from './updateForm';
@@ -35,48 +34,6 @@ export default class EmployeeBasicInfo extends Component {
     this.handleUpdateSuccess = this.handleUpdateSuccess.bind(this);
   }
 
-  async fetchSelectComponentOptions() {
-    const [
-      bloodGroups,
-      pfa,
-      gpz,
-      maritalStatuses,
-      senatorialDistricts,
-      states,
-      lga,
-      countries,
-      genders,
-    ] = await httpService.all([
-      httpService.get('/blood-groups'),
-      httpService.get('/pfa?statusId=1'),
-      httpService.get('/gpz'),
-      httpService.get('/marital-statuses'),
-      httpService.get('/senatorial-districts'),
-      httpService.get('/states'),
-      httpService.get('/lga'),
-      httpService.get('/countries'),
-      httpService.get('/genders'),
-    ]);
-
-    if (bloodGroups) {
-      const options = {
-        bloodGroupOptions: bloodGroups.data.data,
-        pfaOptions: pfa.data.data,
-        gpzOptions: gpz.data.data,
-        lgaOptions: lga.data.data,
-        maritalStatusOptions: maritalStatuses.data.data,
-        senatorialDistrictOptions: senatorialDistricts.data.data,
-        stateOptions: states.data.data,
-        countryOptions: countries.data.data,
-        genders: genders.data.data,
-      };
-
-      this.setState({
-        options,
-      });
-    }
-  }
-
   async fetchEmployeeData() {
     const res = await httpService.get(`/employees/${this.props.ippisNo}`);
 
@@ -92,7 +49,6 @@ export default class EmployeeBasicInfo extends Component {
 
   async componentDidMount() {
     this.fetchEmployeeData();
-    this.fetchSelectComponentOptions();
   }
 
   mapToBasicView(data) {
@@ -173,7 +129,6 @@ export default class EmployeeBasicInfo extends Component {
         {showForm ? (
           <div>
             <UpdateForm
-              options={this.state.options}
               ippisNo={this.props.ippisNo}
               defaultValues={this.state.originalData}
               onSuccess={this.handleUpdateSuccess}

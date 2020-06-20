@@ -1,15 +1,15 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
-// import Joi from '@hapi/joi';
-// import yup from 'yup';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
-import SideDraw from '../../components/SideDraw/SideDraw';
 import Modal from '../../components/Modal/Modal';
+import { setOptions } from '../../store/options/actionCreators';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
 
@@ -27,7 +27,6 @@ class AllTrainingRecords extends Form {
         { accessor: 'ippisNo', Header: 'IPPSI No' },
         { accessor: 'employee', Header: 'Employee Name' },
         { accessor: 'trainingType', Header: 'Training Type' },
-        { accessor: 'numDays', Header: 'Number of Days' },
         { accessor: 'startDate', Header: 'Start Date' },
         { accessor: 'endDate', Header: 'End Date' },
         { accessor: 'residential', Header: 'Residential' },
@@ -218,10 +217,11 @@ class AllTrainingRecords extends Form {
         {ippisNoVerified ? (
           <>
             {this.renderInput('t year', 'tYear', null, null, 'date')}
-            {this.renderSelect('training type', 'trainingTypeId', [
-              { id: 1, name: 'corporate' },
-              { id: 2, name: 'community' },
-            ])}
+            {this.renderSelect(
+              'training type',
+              'trainingTypeId',
+              nameMapper(this.props.options.trainingTypes, 'type')
+            )}
             {this.renderInput(
               'serial count',
               'serialCount',
@@ -239,10 +239,11 @@ class AllTrainingRecords extends Form {
               'number'
             )}
             {this.renderInput('training location', 'trainingLocation')}
-            {this.renderSelect('residential', 'residential', [
-              { id: 'Y', name: 'Y' },
-              { id: 'N', name: 'N' },
-            ])}
+            {this.renderSelect(
+              'residential',
+              'residential',
+              this.props.options.residential
+            )}
             {this.renderTextArea('employee comment', 'employeeComment')}
           </>
         ) : null}
@@ -284,4 +285,19 @@ class AllTrainingRecords extends Form {
   }
 }
 
-export default withRouter(AllTrainingRecords);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      trainingTypes: state.options.trainingType,
+      residential: state.options.residential,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllTrainingRecords)
+);

@@ -6,7 +6,7 @@ export const Spinner = ({ size }) => {
   return <ClipLoader size={size || 25} loading={true} />;
 };
 
-export const Scaler = props => {
+export const Scaler = (props) => {
   return <ScaleLoader loading={true} />;
 };
 
@@ -15,12 +15,12 @@ const Loader = ({ brand, message }) => {
     <div className={classes.Loader}>
       <div className={classes.LoaderContainer} data-test="LoaderContainer">
         {brand ? (
-          <h3 className={classes.Brand} data-test="brand">
+          <h3 className="brand" data-test="brand">
             {brand}
           </h3>
         ) : null}
-        <Scaler />
       </div>
+      <Scaler />
       {message ? <p className={classes.LoaderMessage}>{message}</p> : null}
     </div>
   );

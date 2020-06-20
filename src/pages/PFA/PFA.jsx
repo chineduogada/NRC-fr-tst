@@ -19,12 +19,12 @@ class PFA extends Form {
 
     this.tableRowOptions = [
       { id: 0, name: 'inactive' },
-      { id: 0, name: 'active' }
+      { id: 0, name: 'active' },
     ];
 
     this.statusOptions = [
       { id: 1, status: 'active' },
-      { id: 2, status: 'inactive' }
+      { id: 2, status: 'inactive' },
     ];
 
     this.state = {
@@ -32,7 +32,7 @@ class PFA extends Form {
 
       columns: [
         { accessor: 'name', Header: 'Pension Fund Admin' },
-        { accessor: 'status', Header: 'Status' }
+        { accessor: 'status', Header: 'Status' },
       ],
 
       pageSize: 20,
@@ -42,14 +42,14 @@ class PFA extends Form {
 
       formData: {
         name: '',
-        statusId: ''
+        statusId: '',
       },
 
       rowToPreview: null,
 
       isDeleteting: false,
 
-      errors: {}
+      errors: {},
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -67,7 +67,7 @@ class PFA extends Form {
 
   schema = {
     name: Joi.string(),
-    statusId: Joi.number()
+    statusId: Joi.number(),
   };
 
   async componentDidMount() {
@@ -76,7 +76,7 @@ class PFA extends Form {
     const res = await httpService.get('/pfa');
 
     if (res) {
-      res.data.data.forEach(pfa => {
+      res.data.data.forEach((pfa) => {
         filteredDataFromServer.push(this.mapToViewModel(pfa));
       });
     }
@@ -97,11 +97,11 @@ class PFA extends Form {
       id: row.id,
       name: row.name,
       status: row.status.status,
-      statusId: row.statusId
+      statusId: row.statusId,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -114,13 +114,13 @@ class PFA extends Form {
   handleRowClick(event) {
     if (event.detail > 1) {
       const rowToPreview = this.state.filteredDataFromServer.filter(
-        row => row.id === event.currentTarget.id * 1
+        (row) => row.id === event.currentTarget.id * 1
       )[0];
 
       this.setState({
         rowToPreview,
         showForm: true,
-        formData: objectKeyEliminator(rowToPreview, ['id', 'status'])
+        formData: objectKeyEliminator(rowToPreview, ['id', 'status']),
       });
     }
   }
@@ -133,14 +133,14 @@ class PFA extends Form {
     const newDataObject = res.data.data;
     const filteredNewDataObject = this.mapToViewModel({
       ...newDataObject,
-      ...this.getOptionValues()
+      ...this.getOptionValues(),
     });
 
     this.setState({
       filteredDataFromServer: [
         filteredNewDataObject,
-        ...this.state.filteredDataFromServer
-      ]
+        ...this.state.filteredDataFromServer,
+      ],
     });
   }
 
@@ -154,7 +154,9 @@ class PFA extends Form {
   getOptionValues() {
     const { statusId } = this.state.formData;
     return {
-      status: this.statusOptions.filter(option => option.id === statusId * 1)[0]
+      status: this.statusOptions.filter(
+        (option) => option.id === statusId * 1
+      )[0],
     };
   }
 
@@ -171,7 +173,7 @@ class PFA extends Form {
     // map every option to the current value the user may have selected and join them with the from data
     const updatedRowToPreview = { ...formData, ...this.getOptionValues() };
     // obtain the index of the row the use jus
-    const rowIndex = oldState.findIndex(row => row.id === id);
+    const rowIndex = oldState.findIndex((row) => row.id === id);
     // map the updated data to the desired view (Ex: for table display)
     const filteredUpdatedRow = this.mapToViewModel(updatedRowToPreview);
     // updating the copy of the filtered data from the server
@@ -202,7 +204,7 @@ class PFA extends Form {
   removeTableRow() {
     const oldState = [...this.state.filteredDataFromServer];
     let rowIndex = oldState.findIndex(
-      row => row.id === this.state.rowToPreview.id
+      (row) => row.id === this.state.rowToPreview.id
     );
 
     oldState.splice(rowIndex, 1);
@@ -263,7 +265,7 @@ class PFA extends Form {
           /> */}
         </div>
         <form
-          ref={form => (this.updateForm = form)}
+          ref={(form) => (this.updateForm = form)}
           onSubmit={this.handleSubmit}
         >
           {this.renderInput(
@@ -289,7 +291,7 @@ class PFA extends Form {
 
   renderCreateForm() {
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>Add a new administrator</p>
 
         {this.renderInput('administrator name', 'name')}

@@ -2,11 +2,13 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setOptions } from '../../store/options/actionCreators';
+import nameMapper from '../../helpers/nameMapper';
 import Loader from '../../components/Loader/Loader';
 import httpService from '../../services/httpService';
 import Section from '../../hoc/Section/Section';
 import TableView from '../../components/TableView/TableView';
-import nameMapper from '../../helpers/nameMapper';
 import Modal from '../../components/Modal/Modal';
 import Form from '../../components/Form/Form';
 import EmployeeVerifier from '../../components/EmployeeVerifier/EmployeeVerifier';
@@ -25,7 +27,7 @@ class AllJobIncidence extends Form {
         { accessor: 'employee', Header: 'Employee' },
         { accessor: 'memoReference', Header: 'Memo Reference' },
         { accessor: 'reasonCode', Header: 'Reason Code' },
-        { accessor: 'decisionCode', Header: 'Decision Code' }
+        { accessor: 'decisionCode', Header: 'Decision Code' },
       ],
 
       pageSize: 20,
@@ -42,7 +44,7 @@ class AllJobIncidence extends Form {
         decisionCodeId: '',
         decisionDescription: '',
         attachedDoc: '',
-        remarks: ''
+        remarks: '',
       },
 
       ippisNoVerified: false,
@@ -53,8 +55,8 @@ class AllJobIncidence extends Form {
 
       options: {
         reasonCodes: [],
-        decisionCodes: []
-      }
+        decisionCodes: [],
+      },
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -73,19 +75,11 @@ class AllJobIncidence extends Form {
     transactionDate: Joi.string(),
     memoReference: Joi.string(),
     reasonCodeId: Joi.number(),
-    reasonDescription: Joi.string()
-      .allow('')
-      .optional(),
+    reasonDescription: Joi.string().allow('').optional(),
     decisionCodeId: Joi.number(),
-    decisionDescription: Joi.string()
-      .allow('')
-      .optional(),
-    attachedDoc: Joi.string()
-      .allow('')
-      .optional(),
-    remarks: Joi.string()
-      .allow('')
-      .optional()
+    decisionDescription: Joi.string().allow('').optional(),
+    attachedDoc: Joi.string().allow('').optional(),
+    remarks: Joi.string().allow('').optional(),
   };
 
   async fetchData() {
@@ -97,7 +91,7 @@ class AllJobIncidence extends Form {
       const { rows } = res.data.data;
 
       if (rows && rows.length) {
-        rows.forEach(row => {
+        rows.forEach((row) => {
           actualData.push(this.mapToViewModel(row));
         });
       }
@@ -106,24 +100,7 @@ class AllJobIncidence extends Form {
     }
   }
 
-  async fetchOptions() {
-    const [reasonCodes, decisionCodes] = await httpService.all([
-      httpService.get('/incidence-reason-codes'),
-      httpService.get('/incidence-decision-codes')
-    ]);
-
-    if (reasonCodes) {
-      const options = {
-        reasonCodes: nameMapper(reasonCodes.data.data, 'code'),
-        decisionCodes: nameMapper(decisionCodes.data.data, 'code')
-      };
-
-      this.setState({ options });
-    }
-  }
-
   async componentDidMount() {
-    this.fetchOptions();
     if (/\?new$/.test(this.props.location.search)) {
       this.setState({ showDraw: true });
     }
@@ -153,11 +130,11 @@ class AllJobIncidence extends Form {
       memoReference: record.memoReference,
       reasonCode: record.reasonCode.code,
       decisionCode: record.decisionCode.code,
-      remarks: record.remarks
+      remarks: record.remarks,
     };
   }
 
-  handlePageChange = page => {
+  handlePageChange = (page) => {
     if (page) {
       this.setState({ currentPage: page });
     }
@@ -207,13 +184,13 @@ class AllJobIncidence extends Form {
   }
 
   renderForm() {
-    const { ippisNoVerified, options } = this.state;
+    const { ippisNoVerified } = this.state;
     return (
-      <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+      <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
         <p>New career record</p>
 
         <EmployeeVerifier
-          checkOnResponseRecieved={employees => employees.length}
+          checkOnResponseRecieved={(employees) => employees.length}
           onEmployeeSelection={this.handleEmployeeSelection}
           onInputChange={this.handleEmployeeInputChange}
         >
@@ -239,13 +216,13 @@ class AllJobIncidence extends Form {
             {this.renderSelect(
               'reason code',
               'reasonCodeId',
-              options.reasonCodes
+              nameMapper(this.props.options.incidenceReasonCodes, 'code')
             )}
             {this.renderTextArea('reason description', 'reasonDescription')}
             {this.renderSelect(
               'decision code',
               'decisionCodeId',
-              options.decisionCodes
+              nameMapper(this.props.options.incidenceDecisionCodes, 'code')
             )}
             {this.renderTextArea('decision description', 'decisionDescription')}
             {this.renderInput(
@@ -296,4 +273,19 @@ class AllJobIncidence extends Form {
   }
 }
 
-export default withRouter(AllJobIncidence);
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      incidenceReasonCodes: state.options.incidenceReasonCode,
+      incidenceDecisionCodes: state.options.incidenceDecisionCode,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setOptions: (payload) => dispatch(setOptions(payload)) };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllJobIncidence)
+);

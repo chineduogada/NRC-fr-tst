@@ -13,7 +13,7 @@ class Auth extends Component {
     this.state = {
       userLoggedIn: false,
       errorFeedback: '',
-      isLoggingIn: false
+      isLoggingIn: false,
     };
 
     // bindings
@@ -25,7 +25,7 @@ class Auth extends Component {
   // Login form input element values
   loginDetails = {
     username: '',
-    password: ''
+    password: '',
   };
 
   componentWillMount() {
@@ -70,16 +70,6 @@ class Auth extends Component {
     // Attempt Login
     try {
       const res = await axios.post('/auth', this.loginDetails);
-
-      console.log(res);
-
-      // store user credentials in local storage
-      // this.storeCredentials({
-      //   firstName: 'Steve',
-      //   lastName: 'Nwakasi',
-      //   role: 'admin',
-      //   token: 'hello boss'
-      // });
       if (res) {
         this.storeCredentials(res.data.data);
 
@@ -89,7 +79,7 @@ class Auth extends Component {
         this.setState({
           userLoggedIn: true,
           isLoggingIn: false,
-          errorFeedback: ''
+          errorFeedback: '',
         });
       } else {
         this.setState({ isLoggingIn: true });
@@ -113,7 +103,7 @@ class Auth extends Component {
     return (
       <Login
         errorFeedback={this.state.errorFeedback}
-        changed={event => this.getInputValueHandler(event, this.loginDetails)}
+        changed={(event) => this.getInputValueHandler(event, this.loginDetails)}
         submitted={this.loginHandler}
         toggleScreen={this.toggleLoginAndSignUpScreen}
         isLoggingIn={this.state.isLoggingIn}

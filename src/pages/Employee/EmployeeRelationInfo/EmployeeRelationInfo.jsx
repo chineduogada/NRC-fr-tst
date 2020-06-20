@@ -13,9 +13,10 @@ import Input from '../../../components/Input/Input';
 import Modal from '../../../components/Modal/Modal';
 import nameMapper from '../../../helpers/nameMapper';
 import objectKeyEliminator from '../../../helpers/obJectKeyEliminator';
+import { connect } from 'react-redux';
 import classes from './EmployeeRelation.module.scss';
 
-export default class EmployeeRelationInfo extends Form {
+class EmployeeRelationInfo extends Form {
   constructor(props) {
     super(props);
 
@@ -33,7 +34,7 @@ export default class EmployeeRelationInfo extends Form {
         { accessor: 'addressLine4', Header: 'Address Line 4' },
         { accessor: 'email', Header: 'Email' },
         { accessor: 'beneficiary', Header: 'Beneficiary' },
-        { accessor: 'beneficiaryPercentage', Header: 'Beneficiary Percentage' }
+        { accessor: 'beneficiaryPercentage', Header: 'Beneficiary Percentage' },
       ],
 
       formData: {
@@ -49,7 +50,7 @@ export default class EmployeeRelationInfo extends Form {
         email: '',
         beneficiary: '',
         beneficiaryPercentage: '',
-        serialCode: ''
+        serialCode: '',
       },
       errors: {},
       hasRelation: null,
@@ -59,7 +60,7 @@ export default class EmployeeRelationInfo extends Form {
       activeRelation: {},
 
       options: {
-        relationshipTypes: []
+        relationshipTypes: [],
       },
 
       beneficiaryPercentages: [],
@@ -70,7 +71,7 @@ export default class EmployeeRelationInfo extends Form {
 
       showModal: false,
 
-      isDeleteting: false
+      isDeleteting: false,
     };
 
     this.initialFormState = { ...this.state.formData };
@@ -97,25 +98,15 @@ export default class EmployeeRelationInfo extends Form {
     surname: Joi.string(),
     otherNames: Joi.string(),
     dateOfBirth: Joi.string(),
-    mobileNumber: Joi.number()
-      .allow('')
-      .optional(),
+    mobileNumber: Joi.number().allow('').optional(),
     addressLine1: Joi.string(),
-    addressLine2: Joi.string()
-      .allow('')
-      .optional(),
-    addressLine3: Joi.string()
-      .allow('')
-      .optional(),
-    addressLine4: Joi.string()
-      .allow('')
-      .optional(),
+    addressLine2: Joi.string().allow('').optional(),
+    addressLine3: Joi.string().allow('').optional(),
+    addressLine4: Joi.string().allow('').optional(),
     email: Joi.string().email(),
     beneficiary: Joi.string(),
-    beneficiaryPercentage: Joi.number()
-      .allow('')
-      .optional(),
-    serialCode: Joi.number()
+    beneficiaryPercentage: Joi.number().allow('').optional(),
+    serialCode: Joi.number(),
   };
 
   handleSlate = () => {
@@ -168,14 +159,14 @@ export default class EmployeeRelationInfo extends Form {
     this.setState({
       formData: objectKeyEliminator(this.state.activeRelation, [
         'id',
-        'relationshipType'
-      ])
+        'relationshipType',
+      ]),
     });
   }
 
   setActiveRelation(id) {
     const activeRelation = this.state.relations.filter(
-      relation => relation.id === id
+      (relation) => relation.id === id
     )[0];
     this.setState({ activeRelation });
   }
@@ -218,7 +209,7 @@ export default class EmployeeRelationInfo extends Form {
       const res = httpService.delete(
         `/employee-relations/${activeRelation.id}`,
         {
-          data: beneficiaryPercentages
+          data: beneficiaryPercentages,
         }
       );
 
@@ -261,7 +252,7 @@ export default class EmployeeRelationInfo extends Form {
         {
           ...formData,
           ippisNo: this.props.ippisNo,
-          beneficiaries: this.state.beneficiaryPercentages
+          beneficiaries: this.state.beneficiaryPercentages,
         }
       );
 
@@ -285,7 +276,7 @@ export default class EmployeeRelationInfo extends Form {
         {
           ...formData,
           ippisNo: this.props.ippisNo,
-          beneficiaries: this.state.beneficiaryPercentages
+          beneficiaries: this.state.beneficiaryPercentages,
         }
       );
 
@@ -318,19 +309,6 @@ export default class EmployeeRelationInfo extends Form {
     }
   }
 
-  async getOptions() {
-    const res = await httpService.get('/relationship-types');
-
-    if (res) {
-      console.log(res.data.data);
-      const options = {};
-      options.relationshipTypes = nameMapper(res.data.data, 'type');
-
-      console.log(options);
-      this.setState({ options });
-    }
-  }
-
   async fetchRelations() {
     const relations = [];
     const res = await httpService.get(
@@ -340,7 +318,7 @@ export default class EmployeeRelationInfo extends Form {
     if (res) {
       console.log(res.data.data);
 
-      res.data.data.forEach(relation => {
+      res.data.data.forEach((relation) => {
         relations.push(this.mapToViewModel(relation));
       });
 
@@ -349,11 +327,10 @@ export default class EmployeeRelationInfo extends Form {
   }
 
   componentDidMount() {
-    this.getOptions();
     this.fetchRelations();
   }
 
-  mapToViewModel = relation => {
+  mapToViewModel = (relation) => {
     return {
       id: relation.id,
       serialCode: relation.serialCode,
@@ -371,7 +348,7 @@ export default class EmployeeRelationInfo extends Form {
       addressLine4: relation.addressLine4 || '',
       email: relation.email || '',
       beneficiary: relation.beneficiary,
-      beneficiaryPercentage: relation.beneficiaryPercentage || ''
+      beneficiaryPercentage: relation.beneficiaryPercentage || '',
     };
   };
 
@@ -379,8 +356,8 @@ export default class EmployeeRelationInfo extends Form {
     this.setState({
       formData: {
         ...this.state.formData,
-        beneficiaryPercentage: currentTarget.value
-      }
+        beneficiaryPercentage: currentTarget.value,
+      },
     });
   }
 
@@ -388,7 +365,7 @@ export default class EmployeeRelationInfo extends Form {
     const { activeRelation } = this.state;
 
     const beneficiaryPercentages = this.state.relations.filter(
-      relation =>
+      (relation) =>
         (relation.beneficiaryPercentage && relation.id !== activeRelation.id) ||
         (relation.beneficiary.toLowerCase() === 'y' &&
           relation.id !== activeRelation.id)
@@ -398,17 +375,17 @@ export default class EmployeeRelationInfo extends Form {
   }
 
   embedRelationshipType(newRelation) {
-    const { relationshipTypes } = this.state.options;
+    const { relationshipTypes } = this.props.options;
 
     const relationshipType = relationshipTypes.filter(
-      type => type.id === Number(newRelation.relationshipTypeId)
+      (type) => type.id === Number(newRelation.relationshipTypeId)
     );
 
     return {
       ...newRelation,
       relationshipType: relationshipTypes.filter(
-        type => type.id === Number(newRelation.relationshipTypeId)
-      )[0].type
+        (type) => type.id === Number(newRelation.relationshipTypeId)
+      )[0].type,
     };
   }
 
@@ -418,7 +395,7 @@ export default class EmployeeRelationInfo extends Form {
     let totalPercentage = 0;
 
     beneficiaries.forEach(
-      beneficiary =>
+      (beneficiary) =>
         (totalPercentage += Number(beneficiary.beneficiaryPercentage, 10))
     );
 
@@ -435,7 +412,7 @@ export default class EmployeeRelationInfo extends Form {
     const oldState = [...this.state.beneficiaryPercentages];
     const { dataset, value } = currentTarget;
 
-    const updatedBeneficiaryPercentages = oldState.map(beneficiary => {
+    const updatedBeneficiaryPercentages = oldState.map((beneficiary) => {
       if (beneficiary.id === Number(dataset.id, 10)) {
         return { ...beneficiary, beneficiaryPercentage: value };
       }
@@ -487,7 +464,7 @@ export default class EmployeeRelationInfo extends Form {
       formData,
       activeRelation,
       addRelation,
-      totalPercentage
+      totalPercentage,
     } = this.state;
 
     return (
@@ -504,12 +481,12 @@ export default class EmployeeRelationInfo extends Form {
           </div>
         ) : null}
 
-        <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+        <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
           <InformationBlock>
             {this.renderSelect(
               'relationship type',
               'relationshipTypeId',
-              options.relationshipTypes,
+              nameMapper(this.props.options.relationshipTypes, 'type'),
               null,
               null,
               formData.relationshipTypeId
@@ -570,10 +547,7 @@ export default class EmployeeRelationInfo extends Form {
             {this.renderSelect(
               'beneficiary',
               'beneficiary',
-              [
-                { id: 'Y', name: 'yes' },
-                { id: 'N', name: 'no' }
-              ],
+              this.props.options.beneficiary,
               this.handleBeneficiaryStatusChange,
               this.cannotMakeNoBeneficiary(),
               formData.beneficiary
@@ -654,7 +628,7 @@ export default class EmployeeRelationInfo extends Form {
       addRelation,
       showModal,
       formData,
-      activeRelation
+      activeRelation,
     } = this.state;
 
     return hasRelation !== null ? (
@@ -703,3 +677,15 @@ export default class EmployeeRelationInfo extends Form {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { options } = state;
+  return {
+    options: {
+      relationshipTypes: options.relationshipType,
+      beneficiary: options.beneficiary,
+    },
+  };
+};
+
+export default connect(mapStateToProps)(EmployeeRelationInfo);

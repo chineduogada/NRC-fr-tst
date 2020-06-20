@@ -15,6 +15,18 @@
   z-index: 2;
 }
 
+.logo {
+  color: var(--basic-color);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.hamburger {
+  .icon:hover {
+    color: var(--basic-color);
+  }
+}
+
 nav .main-menu {
   display: flex;
 }

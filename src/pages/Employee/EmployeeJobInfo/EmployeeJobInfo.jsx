@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import EmployeeInfoBlock from '../EmployeeInfoBlock/EmployeeInfoBlock';
 import httpService from '../../../services/httpService';
-import nameMapper from '../../../helpers/nameMapper';
 import Loader from '../../../components/Loader/Loader';
 import UpdateForm from './updateForm';
 import Button from '../../../components/Button/Button';
@@ -31,41 +30,6 @@ export default class EmployeeBasicInfo extends Component {
     this.handleUpdateSuccess = this.handleUpdateSuccess.bind(this);
   }
 
-  async fetchSelectComponentOptions() {
-    const [
-      departments,
-      districts,
-      sections,
-      employeeStatuses,
-      salaryStructures,
-    ] = await httpService.all([
-      httpService.get('/departments?statusId=1'),
-      httpService.get('/districts?statusId=1'),
-      httpService.get('/sections?statusId=1'),
-      httpService.get('/employee-statuses'),
-      httpService.get('/salary-structures'),
-    ]);
-
-    if (departments) {
-      const options = {
-        departmentOptions: nameMapper(departments.data.data, 'description'),
-        districtOptions: nameMapper(districts.data.data, 'siteName'),
-        sectionOptions: nameMapper(sections.data.data, 'description'),
-        employeeStatusOptions: nameMapper(
-          employeeStatuses.data.data,
-          'description'
-        ),
-        salaryStructureOptions: nameMapper(
-          salaryStructures.data.data,
-          'description'
-        ),
-      };
-      this.setState({
-        options,
-      });
-    }
-  }
-
   async fetchEmployeeData() {
     const res = await httpService.get(`/employees/${this.props.ippisNo}/job`);
 
@@ -81,7 +45,6 @@ export default class EmployeeBasicInfo extends Component {
 
   async componentDidMount() {
     this.fetchEmployeeData();
-    this.fetchSelectComponentOptions();
   }
 
   mapToViewModel(data) {
@@ -157,7 +120,6 @@ export default class EmployeeBasicInfo extends Component {
         {showForm ? (
           <div>
             <UpdateForm
-              options={this.state.options}
               ippisNo={this.props.ippisNo}
               defaultValues={this.state.originalData}
               onSuccess={this.handleUpdateSuccess}

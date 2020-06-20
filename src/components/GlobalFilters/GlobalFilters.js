@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import DropDrawal from '../DropDrawal/DropDrawal';
 import httpService from '../../services/httpService';
 import { mapForReactSelect } from '../../helpers/nameMapper';
@@ -7,7 +8,7 @@ import FilterForm from './FilterForm';
 import Button from '../Button/Button';
 import classes from './GlobalFilters.module.scss';
 
-export default class extends Component {
+class GlobalFilters extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -150,7 +151,7 @@ export default class extends Component {
   }
 
   render() {
-    const { options, formDataIsRequested, resetForm } = this.state;
+    const { formDataIsRequested } = this.state;
     const { isProcessing, showOnly } = this.props;
 
     return (
@@ -177,7 +178,7 @@ export default class extends Component {
         >
           <div className={classes.GlobalFilters_Inner}>
             <FilterForm
-              options={options}
+              options={this.props.options}
               formDataIsResquested={formDataIsRequested}
               formDataConsumer={this.extractFormData}
               showOnly={showOnly}
@@ -189,3 +190,35 @@ export default class extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    options: {
+      departments: mapForReactSelect(state.options.department, 'description'),
+      districts: mapForReactSelect(state.options.district, 'siteName'),
+      jobTypes: mapForReactSelect(state.options.jobType, 'type'),
+      jobTitles: mapForReactSelect(state.options.jobTitle, 'description'),
+      jobGrades: mapForReactSelect(state.options.jobGrade, 'con'),
+      gpz: mapForReactSelect(state.options.gpz, 'description'),
+      senatorialDistricts: mapForReactSelect(
+        state.options.senatorialDistrict,
+        'name'
+      ),
+      states: mapForReactSelect(state.options.state, 'state'),
+      lga: mapForReactSelect(state.options.lga, 'lga'),
+      sections: mapForReactSelect(state.options.section, 'description'),
+      steps: mapForReactSelect(state.options.step, 'step'),
+      genders: mapForReactSelect(state.options.gender, 'type'),
+      salaryStructures: mapForReactSelect(
+        state.options.salaryStructure,
+        'description'
+      ),
+      employeeStatuses: mapForReactSelect(
+        state.options.employeeStatus,
+        'description'
+      ),
+    },
+  };
+};
+
+export default connect(mapStateToProps)(GlobalFilters);
