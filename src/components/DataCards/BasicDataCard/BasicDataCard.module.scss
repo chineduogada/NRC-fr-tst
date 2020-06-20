@@ -1,5 +1,5 @@
 .BasicDataCard {
-  height: 200px;
+  min-height: 200px;
   background-color: #fff;
   border-radius: 10px;
   display: grid;
@@ -8,6 +8,7 @@
   transition: all 0.5s ease-out;
   position: relative;
   box-shadow: 0 7px 30px #550fb144;
+  padding: 0.3em 0;
 
   .Loader {
     color: var(inverse-text);
