@@ -66,8 +66,7 @@ class Districts extends StaticModel {
             null,
             this.state.rowToPreview.siteName,
             null,
-            null,
-            true
+            null
           )}
           {this.renderInput(
             'address',
