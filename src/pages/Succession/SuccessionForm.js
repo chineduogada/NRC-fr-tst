@@ -27,7 +27,7 @@ export default class ImportForm extends Form {
         yearsOfExp: '',
         otherRequirement: '',
         otherRequirement1: '',
-        otherRequirement2: ''
+        otherRequirement2: '',
       },
 
       options: {
@@ -36,7 +36,7 @@ export default class ImportForm extends Form {
         jobTitles: [],
         skills: [],
         qualifications: [],
-        trainings: []
+        trainings: [],
       },
 
       otherQualifications: [],
@@ -49,7 +49,7 @@ export default class ImportForm extends Form {
 
       errors: {},
 
-      inProgress: false
+      inProgress: false,
     };
 
     this.optionalRequirmentMap = {
@@ -57,20 +57,20 @@ export default class ImportForm extends Form {
         endpoint: 'other-succession-skills',
         key: 'skillId',
         optionIdentifier: 'skill',
-        options: this.props.options.skills
+        options: this.props.options.skills,
       },
       otherTrainings: {
         endpoint: 'other-succession-trainings',
         key: 'trainingId',
         optionIdentifier: 'training',
-        options: this.props.options.trainings
+        options: this.props.options.trainings,
       },
       otherQualifications: {
         endpoint: 'other-succession-qualifications',
         key: 'qualificationId',
         optionIdentifier: 'qualification',
-        options: this.props.options.qualifications
-      }
+        options: this.props.options.qualifications,
+      },
     };
 
     this.initialFormState = this.state.formData;
@@ -87,7 +87,7 @@ export default class ImportForm extends Form {
       departmentId,
       sectionId,
       jobTitleId,
-      employeeCount
+      employeeCount,
     } = this.state.formData;
     return departmentId && sectionId && jobTitleId && employeeCount;
   }
@@ -97,17 +97,17 @@ export default class ImportForm extends Form {
       basicSkillId,
       yearsOfExp,
       basicQualId,
-      basicTrainingId
+      basicTrainingId,
     } = this.state.formData;
 
     return yearsOfExp && basicSkillId && basicQualId && basicTrainingId;
   }
 
   prepareToPushToFormData(data, key, options, optionIdentifier) {
-    const option = options.filter(option => options.id === data[key])[0];
+    const option = options.filter((option) => options.id === data[key])[0];
     return {
       ...data,
-      [optionIdentifier]: option
+      [optionIdentifier]: option,
     };
   }
 
@@ -118,11 +118,11 @@ export default class ImportForm extends Form {
 
     // obtain a list of IDs
     const IDsOfRequirementsToRemove = toRemove.map(
-      requirement => requirement.id
+      (requirement) => requirement.id
     );
 
     const res = await Promise.all(
-      IDsOfRequirementsToRemove.map(async id => {
+      IDsOfRequirementsToRemove.map(async (id) => {
         await httpService.delete(`${endpoint}/${id}`);
       })
     );
@@ -141,13 +141,15 @@ export default class ImportForm extends Form {
       endpoint,
       key,
       options,
-      optionIdentifier
+      optionIdentifier,
     } = this.optionalRequirmentMap[name];
 
     console.log(options);
 
     // obtain a list of IDs
-    const IDsOfRequirementsToAdd = toAdd.map(requirement => requirement.value);
+    const IDsOfRequirementsToAdd = toAdd.map(
+      (requirement) => requirement.value
+    );
     console.log(IDsOfRequirementsToAdd, toAdd);
 
     const data = prepareOptionalRequirements(
@@ -168,7 +170,7 @@ export default class ImportForm extends Form {
       console.log(res, preparedData);
       this.setState({
         inProgress: false,
-        [name]: [...this.state[name], preparedData]
+        [name]: [...this.state[name], preparedData],
       });
       toast.success('operation successful');
     }
@@ -184,9 +186,11 @@ export default class ImportForm extends Form {
     const optionalRequirement = this.state[name];
 
     if (action === 'select-option') {
-      const toAdd = value.filter(option => {
+      const toAdd = value.filter((option) => {
         return !optionalRequirement
-          .map(requirement => requirement[this.optionalRequirmentMap[name].key])
+          .map(
+            (requirement) => requirement[this.optionalRequirmentMap[name].key]
+          )
           .includes(option.value);
       });
 
@@ -194,9 +198,9 @@ export default class ImportForm extends Form {
     }
 
     if (action === 'remove-value') {
-      const toRemove = optionalRequirement.filter(requirement => {
+      const toRemove = optionalRequirement.filter((requirement) => {
         return !value
-          .map(option => option.value)
+          .map((option) => option.value)
           .includes(requirement[this.optionalRequirmentMap[name].key]);
       });
 
@@ -228,7 +232,7 @@ export default class ImportForm extends Form {
         getSelectObjectOnChange={(reactSelectComponent, triggeredAction) => {
           this.handleReactSelectChange(reactSelectComponent, triggeredAction);
         }}
-        ref={input => (this[name] = input)}
+        ref={(input) => (this[name] = input)}
         disabled={disabled}
         defaultValue={selectedOption}
       />
@@ -252,14 +256,14 @@ export default class ImportForm extends Form {
         yearsOfExp: data.yearsOfExp,
         otherRequirement: data.otherRequirement,
         otherRequirement1: data.otherRequirement1,
-        otherRequirement2: data.otherRequirement2
+        otherRequirement2: data.otherRequirement2,
       };
       this.setState({
         formData,
         ippisNoVerified: true,
         otherQualifications: data.otherQualifications,
         otherSkills: data.otherSkills,
-        otherTrainings: data.otherTrainings
+        otherTrainings: data.otherTrainings,
       });
     }
   }
@@ -308,16 +312,18 @@ export default class ImportForm extends Form {
       toast.success('Definition successfully updated');
       this.runOnSuccess(res);
       this.Form.querySelector(`.formControl`).focus();
-      this.stopProcessing();
     }
+    this.stopProcessing();
   }
 
   render() {
     const { options, formData, justAddedADefinition } = this.state;
 
+    console.log(formData);
+
     return (
       <Section title={this.props.title} subTitle={this.props.subTitle}>
-        <form ref={form => (this.Form = form)} onSubmit={this.handleSubmit}>
+        <form ref={(form) => (this.Form = form)} onSubmit={this.handleSubmit}>
           {justAddedADefinition ? <p>Add another one?</p> : null}
           <InformationBlock
             title="source details"
@@ -386,7 +392,7 @@ export default class ImportForm extends Form {
                   nameMapper(options.skills, 'skill'),
                   null,
                   null,
-                  formData.basicSkillId
+                  formData.basicSkillId,
                 )}
                 {this.renderSelect(
                   'basic qualification',
@@ -433,7 +439,7 @@ export default class ImportForm extends Form {
                     nameMapper(options.skills, 'skill'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== `${formData.basicSkillId}`
+                    (option) => `${option.value}` !== `${formData.basicSkillId}`
                   ),
                   null,
                   mapForReactSelect(
@@ -453,7 +459,7 @@ export default class ImportForm extends Form {
                     nameMapper(options.qualifications, 'qualification'),
                     'name'
                   ).filter(
-                    option => `${option.value}` !== `${formData.basicQualId}`
+                    (option) => `${option.value}` !== `${formData.basicQualId}`
                   ),
                   null,
                   mapForReactSelect(
@@ -473,7 +479,7 @@ export default class ImportForm extends Form {
                     nameMapper(options.trainings, 'type'),
                     'name'
                   ).filter(
-                    option =>
+                    (option) =>
                       `${option.value}` !== `${formData.basicTrainingId}`
                   ),
                   null,

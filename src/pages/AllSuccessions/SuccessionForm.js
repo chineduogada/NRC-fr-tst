@@ -139,8 +139,6 @@ class SuccessionForm extends Form {
   async doSubmit(event) {
     const res = await httpService.post('/successions', this.state.formData);
 
-    this.stopProcessing();
-
     if (res) {
       toast.success('Definition successfully added');
       this.runOnSuccess(res);
@@ -149,6 +147,7 @@ class SuccessionForm extends Form {
       this.setState({ justAddedADefinition: true });
       this.Form.querySelector(`.formControl`).focus();
     }
+    this.stopProcessing();
   }
 
   render() {

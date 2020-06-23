@@ -17,11 +17,6 @@ class Successions extends Component {
   constructor(props) {
     super(props);
 
-    this.tableRowOptions = [
-      { id: 0, name: 'inactive' },
-      { id: 0, name: 'active' },
-    ];
-
     this.state = {
       data: null,
 
@@ -98,10 +93,7 @@ class Successions extends Component {
     });
     console.log(newDataObject, filteredNewDataObject);
     this.setState({
-      filteredDataFromServer: [
-        filteredNewDataObject,
-        ...this.state.filteredDataFromServer,
-      ],
+      data: [filteredNewDataObject, ...this.state.data],
     });
   }
 

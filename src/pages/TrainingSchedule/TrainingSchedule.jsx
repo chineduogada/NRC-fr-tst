@@ -86,10 +86,10 @@ class TrainingSchedule extends Form {
     expectedEndDate: Joi.string(),
     expectedCost: Joi.number(),
     expectedAttendeeNo: Joi.number(),
-    actualStartDate: Joi.string(),
-    actualEndDate: Joi.string(),
-    actualCost: Joi.number(),
-    actualAttendeeNo: Joi.number(),
+    actualStartDate: Joi.string().optional().allow(''),
+    actualEndDate: Joi.string().optional().allow(''),
+    actualCost: Joi.number().optional().allow(''),
+    actualAttendeeNo: Joi.number().optional().allow(''),
     resourceOrg: Joi.string(),
     email: Joi.string(),
     mainResourcePerson: Joi.string(),
@@ -282,8 +282,16 @@ class TrainingSchedule extends Form {
         formData: { ...this.state.data, approved: 'Y' },
       });
 
-      console.log(this.state.formData);
-      await this.updateDatabase();
+      const res = await httpService.patch(
+        `/training-schedules/${this.id}/approve`
+      );
+
+      if (res) {
+        await this.fetchTraining();
+        toast.success('TrainingSchedule successfully updated!');
+        this.stopProcessing();
+        this.closeSideDraw();
+      }
     }
   }
 
