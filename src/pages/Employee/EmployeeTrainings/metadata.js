@@ -41,6 +41,11 @@ export default {
     schedules: 'training-schedules',
   },
 
+  linkToCreateNew: {
+    records: 'training-records',
+    schedules: 'training-schedules',
+  },
+
   baseRouteOnRowClick: {
     records: 'training-records',
     schedules: 'training-schedules',

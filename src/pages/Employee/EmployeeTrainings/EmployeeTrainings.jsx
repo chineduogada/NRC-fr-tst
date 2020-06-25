@@ -123,6 +123,11 @@ class EmployeeTrainingRecords extends Component {
               columns={columns[activeTab]}
               data={actualData[activeTab]}
               clickHandler={this.handleRowClick}
+              addNewButtonHandler={() =>
+                this.props.history.push(
+                  `/${trainingMetaData.linkToCreateNew[activeTab]}`
+                )
+              }
             ></TableView>
           </Section>
         ) : (

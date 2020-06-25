@@ -121,7 +121,7 @@ class EmployeeRelationInfo extends Form {
     await this.setState({ addRelation: !addRelation });
 
     this.resetBeneficiaryPercentages();
-    this.resetForm();
+    this.resetFormData();
 
     if (!addRelation) {
       this.setBeneficiaryPercentages();
@@ -141,7 +141,7 @@ class EmployeeRelationInfo extends Form {
     if (event.detail === 1) {
       this.setState({ addRelation: true });
       await this.resetActiveRelationState();
-      await this.resetForm();
+      await this.resetFormData();
       await this.setState({ beneficiaryPercentages: [] });
       await this.setActiveRelation(Number(currentTarget.id, 10));
       await this.fillFormWithActiveRelation();
@@ -151,7 +151,7 @@ class EmployeeRelationInfo extends Form {
     }
   }
 
-  resetForm() {
+  resetFormData() {
     this.setState({ formData: this.initialFormState });
   }
 
@@ -214,7 +214,7 @@ class EmployeeRelationInfo extends Form {
       );
 
       if (res) {
-        this.resetForm();
+        this.resetFormData();
         this.Form.reset();
         this.fetchRelations();
         this.hideModal();
@@ -258,7 +258,7 @@ class EmployeeRelationInfo extends Form {
 
       if (res) {
         this.stopProcessing();
-        // this.resetForm();
+        this.resetFormData();
         // this.Form.reset();
         this.fetchRelations();
         toast.success('relation successfully added');
@@ -283,7 +283,7 @@ class EmployeeRelationInfo extends Form {
       if (res) {
         this.stopProcessing();
         toast.success('relation successfully added');
-        this.resetForm();
+        this.resetFormData();
         this.Form.reset();
         this.Form.querySelectorAll('select')[0].focus();
         // const relations = [

@@ -98,6 +98,9 @@ class EmployeeCareer extends Component {
                 columns={columns}
                 data={actualData}
                 clickHandler={this.handleRowClick}
+                addNewButtonHandler={() =>
+                  this.props.history.push('/careers')
+                }
               />
             ) : (
               <CleanSlate
