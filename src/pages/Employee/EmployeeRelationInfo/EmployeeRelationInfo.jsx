@@ -446,11 +446,11 @@ class EmployeeRelationInfo extends Form {
     return (
       (formData.beneficiary === 'Y' &&
         activeRelation.id &&
-        formData.beneficiaryPercentage !== '' &&
+        Number(formData.beneficiaryPercentage || 0) !== 0 &&
         Number(totalPercentage, 10) === 100) ||
       (Number(totalPercentage, 10) !== 100 &&
-        formData.beneficiaryPercentage !== '') ||
-      (formData.beneficiaryPercentage !== '' &&
+        Number(formData.beneficiaryPercentage || 0) !== 0) ||
+      (Number(formData.beneficiaryPercentage || 0) !== 0 &&
         formData.beneficiary === 'Y' &&
         Number(totalPercentage, 10) !== 100)
     );
