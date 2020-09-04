@@ -1,14 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import InputField from '../../../components/InputField/InputField';
 import Button from '../../../components/Button/Button';
 import { Spinner } from '../../../components/Loader/Loader';
 import classes from './Login.module.scss';
 
-const login = props => {
-  const errorFeedback =
-    props.errorFeedback !== '' ? (
-      <p className="error">{props.errorFeedback}</p>
-    ) : null;
+// Stores User Credentials from server in the local storage
+const storeCredentials = (userData) => {
+  localStorage.setItem('curUser', JSON.stringify(userData));
+};
+
+const initialState = {
+  username: '',
+  password: '',
+};
+
+function Login({ onComplete }) {
+  const [state, setState] = useState(initialState);
+  const [errorFeedback, setErrorFeedback] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleChange = ({ currentTarget: { name, value } }) => {
+    setState((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const loginHandler = async (event) => {
+    event.preventDefault();
+    if (isProcessing) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const res = await axios.post('/auth', state);
+
+      if (res) {
+        storeCredentials(res.data.data);
+        onComplete(true);
+        setIsProcessing(false);
+      } else {
+        console.log(res);
+        setErrorFeedback(res.data.error);
+      }
+    } catch (error) {
+      // setErrorFeedback(response.data.error);
+      console.log(error);
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className={classes.LoginWrapper}>
@@ -20,24 +60,43 @@ const login = props => {
             </h1>
           </div>
 
-          <form onSubmit={props.submitted}>
+          <form onSubmit={loginHandler}>
             {/* Show error feedback if any */}
             {errorFeedback}
-            <InputField
-              changed={props.changed}
-              id="username"
-              type="text"
-              name="username *"
+            <div className="form-group">
+              <input
+                id="username"
+                name="username"
+                className="form-control"
+                type="text"
+                value={state.username}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <input
+                id="password"
+                name="password"
+                className="form-control"
+                type="password"
+                value={state.password}
+                onChange={handleChange}
+              />
+            </div>
+            <Button
+              disabled={isProcessing}
+              label={
+                isProcessing ? (
+                  <>
+                    signing in.. <Spinner size="1em" />{' '}
+                  </>
+                ) : (
+                  'sign in'
+                )
+              }
+              fullwidth
+              fill
             />
-            <InputField
-              changed={props.changed}
-              id="password"
-              type="password"
-              name="password *"
-            />
-            <Button label="sign in" fullwidth fill>
-              sign in {props.isLoggingIn ? <Spinner size="1em" /> : null}
-            </Button>
 
             {/* <span className={classes.Footer} onClick={props.toggleScreen}>Don't have an account?</span> */}
           </form>
@@ -48,27 +107,27 @@ const login = props => {
         <h2>Experience the workflow of a life time.</h2>
         <ul>
           <li>
-            <span>></span> Track Employees
+            <span>&gt;</span> Track Employees
           </li>
           <li>
-            <span>></span> Manage Departments
+            <span>&gt;</span> Manage Departments
           </li>
           <li>
-            <span>></span> Manage Successions
+            <span>&gt;</span> Manage Successions
           </li>
           <li>
-            <span>></span> Schedule Trainings
+            <span>&gt;</span> Schedule Trainings
           </li>
           <li>
-            <span>></span> Genarate Reports
+            <span>&gt;</span> Genarate Reports
           </li>
           <li>
-            <span>></span> and more.
+            <span>&gt;</span> and more.
           </li>
         </ul>
       </div>
     </div>
   );
-};
+}
 
-export default login;
+export default Login;

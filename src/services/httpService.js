@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
 class HTTP {
   constructor() {
@@ -15,7 +16,7 @@ class HTTP {
   }
 
   handleErrors() {
-    axios.interceptors.response.use(null, error => {
+    axios.interceptors.response.use(null, (error) => {
       const expectedError =
         error.response &&
         error.response.status >= 400 &&
@@ -37,14 +38,17 @@ class HTTP {
         }
       } else {
         if (error.response.status === 401) {
+          toast.error(error.response.data.message);
           localStorage.removeItem('curUser');
-          if (
-            window.location &&
-            window.location !== undefined &&
-            window.location !== null
-          ) {
-            window.location.reload();
-          }
+          const history = useHistory();
+          history.push('/');
+          // if (
+          //   window.location &&
+          //   window.location !== undefined &&
+          //   window.location !== null
+          // ) {
+          //   // window.location.reload();
+          // }
         } else {
           console.log('Logging the error', error);
           toast.error(error.response.data.message);

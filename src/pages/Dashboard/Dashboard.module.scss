@@ -24,6 +24,10 @@
   grid-gap: 2em;
 }
 
+.PieChartSummary {
+  gap: 3em;
+}
+
 .MainSummary .Summary {
   min-height: 300px;
   max-height: 500px;
@@ -49,6 +53,10 @@
   padding: 1.2em 0.5em;
   color: var(--basic-color);
 
+  &:not(:last-child) {
+    margin-bottom: 2em;
+  }
+
   h5 {
     font-size: 0.85rem;
   }
@@ -71,6 +79,9 @@
 @media screen and (min-width: 900px) {
   .PieChartSummary {
     grid-template-columns: repeat(2, 1fr);
+    &:not(:last-child) {
+      margin-bottom: 0em;
+    }
   }
 }
 

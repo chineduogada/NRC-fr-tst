@@ -20,6 +20,7 @@ class Auth extends Component {
     this.getInputValueHandler = this.getInputValueHandler.bind(this);
     this.loginHandler = this.loginHandler.bind(this);
     this.signOutHandler = this.signOutHandler.bind(this);
+    this.onLoggedIn = this.onLoggedIn.bind(this);
   }
 
   // Login form input element values
@@ -73,8 +74,6 @@ class Auth extends Component {
       if (res) {
         this.storeCredentials(res.data.data);
 
-        console.log(this.state);
-
         // update user sign in state and reset the errorFeedback
         this.setState({
           userLoggedIn: true,
@@ -82,11 +81,17 @@ class Auth extends Component {
           errorFeedback: '',
         });
       } else {
-        this.setState({ isLoggingIn: true });
+        console.log(res);
+        // this.setState({ isLoggingIn: false });
       }
     } catch ({ response }) {
-      this.setState({ errorFeedback: response.data.error });
+      // this.setState({ isLoggingIn: false });
+      // this.setState({ errorFeedback: response.data.error });
     }
+  }
+
+  onLoggedIn(isLoggedIn) {
+    this.setState({ userLoggedIn: isLoggedIn });
   }
 
   // Handles sign out
@@ -100,15 +105,7 @@ class Auth extends Component {
 
   // returns the Login Screen
   renderLoginScreen() {
-    return (
-      <Login
-        errorFeedback={this.state.errorFeedback}
-        changed={(event) => this.getInputValueHandler(event, this.loginDetails)}
-        submitted={this.loginHandler}
-        toggleScreen={this.toggleLoginAndSignUpScreen}
-        isLoggingIn={this.state.isLoggingIn}
-      />
-    );
+    return <Login onComplete={this.onLoggedIn} />;
   }
 
   // Returns the main app. This will only be accessible when the user is loggged in
@@ -127,9 +124,11 @@ class Auth extends Component {
   render() {
     return (
       <Aux>
-        {this.state.userLoggedIn
-          ? this.renderAppCore()
-          : this.renderLoginScreen()}
+        {this.state.userLoggedIn ? (
+          this.renderAppCore()
+        ) : (
+          <Login onComplete={this.onLoggedIn} />
+        )}
       </Aux>
     );
   }
